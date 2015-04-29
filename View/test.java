@@ -9,4 +9,8 @@ public class test {
 	public String toString() {
 		return chaine;
 	}
+	
+	public printChaine() {
+		System.out.println(chaine);
+	}
 }
