@@ -1,4 +1,4 @@
-package jSonToGS;
+package jsonToGS;
 import java.io.File;
 import java.io.IOException;
 
@@ -13,6 +13,8 @@ import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
 public class JSonToGS {
+	final static String FILE_PATH = "C:\\Users\\hugo\\Desktop\\jsonTest";
+	
 	public static void main(String[] args) {
 		Graph graph = new SingleGraph("Test1");
 		String id = null, know = null;
