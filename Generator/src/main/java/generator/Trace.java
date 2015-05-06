@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Trace {
 	
-	public final static String end = "END";
+	public final static String _end = "END";
 
 	private List<Action> _actions;
 	
@@ -21,9 +21,9 @@ public class Trace {
 	public String toString() {
 		String string = "";
 		for (Action action: _actions) {
-			string += action + " -> ";
+			string += (action != null) ? action + " -> " : "X";
 		}
-		return string += end;
+		return string += _end;
 	}
 	
 }

@@ -1,22 +1,23 @@
 package generator;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Random;
 
 public class State {
 
 	private String _name;
-	private List<Action> _possiblesActions;
+	private Map<Action, State> _possiblesActions;
 	
 	public State(String name) {
 		_name = name;
-		_possiblesActions = new ArrayList<Action>();
+		_possiblesActions = new HashMap<Action, State>();
 	}
 	
-	public void addAction(Action action) {
-		if (!_possiblesActions.contains(action)) {
-			_possiblesActions.add(action);
+	public void addAction(Action action, State state) {
+		if (!_possiblesActions.containsKey(action)) {
+			_possiblesActions.put(action, state);
 		}
 	}
 	
@@ -24,14 +25,31 @@ public class State {
 		return _name;
 	}
 	
+	/**
+	 * 
+	 * @return action aleatoire ou null pour FIN
+	 */
 	public Action getActionAleat() {
-		if (_possiblesActions.size() == 0) {
-			return null;
+		int nbAleat = new Random().nextInt(_possiblesActions.size() + 1);
+		
+		Action actionAleat = null;
+		Iterator<Action> iterator = _possiblesActions.keySet().iterator();
+		
+		for (int i = 0; i <= nbAleat && i < _possiblesActions.size(); i++) {
+			actionAleat = iterator.next();
 		}
 		
-		int i = new Random().nextInt(_possiblesActions.size() + 1);
-		return (i < _possiblesActions.size())
-				? _possiblesActions.get(i) : null;
+		return actionAleat;
+	}
+
+	public State executeAction(Action actionAleat) {
+		return _possiblesActions.get(actionAleat);
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		return (obj instanceof State)
+				? _name.equals(((State)obj).getName()) : false;
 	}
 	
 }
