@@ -12,7 +12,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 public class Main {
 
 	private static final int _nbTraces = 10;
-	private static final int _maxActions = 5;
+	private static final int _maxActions = 1;
 	
 	private static final String _DB_PATH = "target/graphe1-db"; //Chemin BDD
 	private static GraphDatabaseService _graphDb;
@@ -24,7 +24,14 @@ public class Main {
 
 		GraphToData graphToData = new GraphToData(_graphDb);
 		List<Trace> traces = graphToData.traceGenerate(_nbTraces, _maxActions);
-		System.out.println(traces);
+		
+		if (traces.size() == 0) {
+			System.out.println("Aucune possibilite");
+		}
+		
+		for (Trace t: traces) {
+			System.out.println(t);
+		}
 		
 		shutDown();
 

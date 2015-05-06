@@ -17,11 +17,15 @@ public class Trace {
 		_actions.add(action);
 	}
 	
+	public List<Action> getActions() {
+		return _actions;
+	}
+	
 	@Override
 	public String toString() {
 		String string = "";
 		for (Action action: _actions) {
-			string += (action != null) ? action + " -> " : "X";
+			string += (action != null) ? action + " -> " : "";
 		}
 		return string += _end;
 	}

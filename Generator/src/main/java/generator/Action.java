@@ -13,4 +13,10 @@ public class Action {
 		return _name;
 	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		return (obj instanceof Action)
+			? ((Action)obj).toString().equals(_name) : false;
+	}
+	
 }
