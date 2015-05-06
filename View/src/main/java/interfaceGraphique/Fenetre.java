@@ -31,6 +31,7 @@ public class Fenetre extends JFrame implements ActionListener {
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setLocationRelativeTo(null);
 		chemin.setPreferredSize(new Dimension(250, 20));
+		chemin.setEditable(false);
 		
 		panButton.add(buttonImport);
 		panButton.add(chemin);
