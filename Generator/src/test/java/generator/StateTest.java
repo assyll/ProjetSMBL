@@ -1,3 +1,4 @@
+package generator;
 import static org.junit.Assert.*;
 
 import java.util.HashMap;
@@ -56,10 +57,25 @@ public class StateTest {
 	}
 	
 	@Test
-	public void testGetActionAleat() {
+	public void testGetStatesAfter() {
+		assertTrue(state1.getStatesAfter().isEmpty());
+		state1.addAction(action1, state2);
+		assertEquals(state1.getStatesAfter().size(), 1);
+		assertEquals(state1.getStatesAfter().get(0), state2);
+	}
+	
+	@Test
+	public void testGetActionAleat1() {
+		Action action = state1.getActionAleat();
+		assertEquals(action, null);
+	}
+	
+	@Test
+	public void testGetActionAleat2() {
 		final int NB_ACTIONS = 5;
 		final int NB_ESSAIS = 100;
 		
+		// Ajout de NB_ACTIONS actions dans state1 et state2.
 		Action[] actions = new Action[NB_ACTIONS];
 		for (int i = 0; i < NB_ACTIONS; i++) {
 			actions[i] = new Action("action " + i);
@@ -67,6 +83,8 @@ public class StateTest {
 			state2.addAction(actions[i], state1);
 		}
 		
+		// Generation de NB_ESSAIS actions aleatoires pour state1 et state2.
+		// Compte les actions generees pour ces deux states.
 		Map<Action, Integer> actionsAleat1 = new HashMap<Action, Integer>();
 		Map<Action, Integer> actionsAleat2 = new HashMap<Action, Integer>();
 		for (int i = 0; i < NB_ESSAIS; i++) {
@@ -81,9 +99,14 @@ public class StateTest {
 						? actionsAleat2.get(action2) + 1 : 0);
 		}
 		
+		// Verifie que pour state1, un etat non final,
+		//il y ait bien NB_ACTIONS actions generees.
+		// Et verifie que pour state2, un etat final,
+		//il y ait bien NB_ACTIONS+1 actions generees (en comptant le "OUT").
 		assertEquals(actionsAleat1.keySet().size(), NB_ACTIONS);
 		assertEquals(actionsAleat2.keySet().size(), NB_ACTIONS + 1);
 		
+		// Verifie qu'il y ait au moins une action generee de chaque par etat.
 		for (Integer nombreFois: actionsAleat1.values()) {
 			assertTrue(nombreFois >= 1);
 		}
@@ -94,7 +117,7 @@ public class StateTest {
 	}
 	
 	@Test
-	public void testExecuteAction() {
+	public void testExecuteAction1() {
 		State state3 = state1;
 		state3.addAction(action1, state2);
 		state3 = state3.executeAction(action1);
@@ -102,9 +125,33 @@ public class StateTest {
 	}
 	
 	@Test
-	public void testEquals() {
+	public void testExecuteAction2() {
+		State state3 = state1.executeAction(null);
+		assertEquals(state3, null);
+	}
+	
+	@Test
+	public void testEquals1() {
 		State state3 = new State("etat 1", false);
 		assertEquals(state3, state1);
+	}
+	
+	@Test
+	public void testEquals2() {
+		State state3 = new State("etat 1", true);
+		assertNotEquals(state3, state1);
+	}
+	
+	@Test
+	public void testEquals3() {
+		State state3 = new State("etat 1", false);
+		assertNotEquals(state3, "etat 1");
+	}
+	
+	@Test
+	public void testEquals4() {
+		State state3 = new State("etat 3", true);
+		assertNotEquals(state3, state1);
 	}
 	
 }

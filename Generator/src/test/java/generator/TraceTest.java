@@ -1,3 +1,4 @@
+package generator;
 import static org.junit.Assert.*;
 import generator.Action;
 import generator.Trace;
@@ -33,6 +34,7 @@ public class TraceTest {
 		assertEquals(trace.getActions().get(0), action1);
 	}
 	
+	@Test
 	public void testGetActions() {
 		assertEquals(trace.getActions().size(), 0);
 		trace.addAction(action1);
@@ -55,6 +57,19 @@ public class TraceTest {
 		trace.addAction(null);
 		assertEquals(trace.toString(),
 				"action 1 -> END");
+	}
+	
+	@Test
+	public void testEquals1() {
+		assertNotEquals(trace, "END");
+	}
+	
+	@Test
+	public void testEquals2() {
+		Trace trace2 = new Trace();
+		trace.addAction(action1);
+		trace2.addAction(action1);
+		assertEquals(trace, trace2);
 	}
 	
 }

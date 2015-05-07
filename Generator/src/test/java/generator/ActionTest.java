@@ -1,3 +1,4 @@
+package generator;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
@@ -13,10 +14,15 @@ public class ActionTest {
 	}
 	
 	@Test
-	public void testEquals() {
+	public void testEquals1() {
 		Action action = new Action("action 1");
 		assertEquals(action, new Action("action 1"));
 	}
 	
+	@Test
+	public void testEquals2() {
+		Action action = new Action("action 1");
+		assertNotEquals(action, "action 1");
+	}
 	
 }

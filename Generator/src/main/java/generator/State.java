@@ -1,7 +1,9 @@
 package generator;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -42,8 +44,8 @@ public class State {
 		int max = _possiblesActions.size() + (_isFinal ? 1 : 0); // max exclus
 		int nbAleat = new Random().nextInt((max > 0) ? max : 1);
 		
-		if (_possiblesActions.size() == 0) {
-			return actionAleat;
+		if (nbAleat == _possiblesActions.size()) {
+			return null;
 		}
 				
 		Iterator<Action> iterator = getActions();
@@ -58,6 +60,12 @@ public class State {
 	public Iterator<Action> getActions() {
 		return _possiblesActions.keySet().iterator();
 	}
+	
+	public List<State> getStatesAfter() {
+		List<State> statesAfter = new ArrayList<State>();
+		statesAfter.addAll(_possiblesActions.values());
+		return statesAfter;
+	}
 
 	public State executeAction(Action action) {
 		return (action != null) ? _possiblesActions.get(action) : null;
@@ -65,8 +73,9 @@ public class State {
 	
 	@Override
 	public boolean equals(Object obj) {
-		return (obj instanceof State)
-				? _name.equals(((State)obj).getName()) : false;
+		return (!(obj instanceof State)) ? false
+				: ((State)obj).getName().equals(_name)
+					&& ((State)obj).isFinal() == _isFinal;
 	}
 	
 	@Override

@@ -30,4 +30,10 @@ public class Trace {
 		return string += _end;
 	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		return (obj instanceof Trace)
+				? toString().equals(((Trace)obj).toString()) : false;
+	}
+	
 }
