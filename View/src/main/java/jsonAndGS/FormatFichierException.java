@@ -1,4 +1,4 @@
-package jSonAndGS;
+package jsonAndGS;
 
 @SuppressWarnings("serial")
 public class FormatFichierException extends Exception {

@@ -1,4 +1,4 @@
-package jSonAndGS;
+package jsonAndGS;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,10 +15,9 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
-public class JSonToGS {
-	final static String FILE_PATH = "C:\\Users\\hugo\\Desktop\\jsonTest";
+public class JsonToGS {
 
-	public static void generateNode(JsonParser jParser, Graph graph) {
+	public void generateNode(JsonParser jParser, Graph graph) {
 		String name;
 		Node node;
 		try {
@@ -42,6 +41,7 @@ public class JSonToGS {
 				jParser.nextToken();
 				node.addAttribute(fieldname, jParser.getText());
 			}
+			
 		} catch (JsonParseException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -51,7 +51,7 @@ public class JSonToGS {
 		}
 	}
 	
-	public static void generateTransitions(JsonParser jParser, Graph graph){
+	public void generateTransitions(JsonParser jParser, Graph graph){
 		String label = null, noeudD, noeudA;
 		Edge edge;
 		try {
@@ -98,6 +98,7 @@ public class JSonToGS {
 				jParser.nextToken();
 				edge.addAttribute(fieldname, jParser.getText());
 			}
+			
 		} catch (JsonParseException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -107,7 +108,7 @@ public class JSonToGS {
 		}
 	}
 
-	public static void generateGraph() {
+	public Graph generateGraph(String filePath) {
 		Graph graph = new SingleGraph("graph");
 
 		graph.display();
@@ -121,7 +122,7 @@ public class JSonToGS {
 			JsonFactory jfactory = new JsonFactory();
 
 			/*** read from file ***/
-			JsonParser jParser = jfactory.createParser(new File(FILE_PATH));
+			JsonParser jParser = jfactory.createParser(new File(filePath));
 			jParser.nextToken();
 			jParser.nextToken();
 			String fieldname = jParser.getCurrentName();
@@ -155,27 +156,17 @@ public class JSonToGS {
 			jParser.close();
 
 		} catch (JsonGenerationException e) {
-
 			e.printStackTrace();
-
 		} catch (JsonMappingException e) {
-
 			e.printStackTrace();
-
 		} catch (IOException e) {
-
 			e.printStackTrace();
-
 		} catch (FormatFichierException e) {
-
 			e.printStackTrace();
-
 		}
+		
+		return graph;
 
-	}
-
-	public static void main(String[] args) {
-		generateGraph();
 	}
 
 }

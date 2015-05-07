@@ -1,4 +1,4 @@
-package jSonAndGS;
+package jsonAndGS;
 
 import java.util.List;
 
