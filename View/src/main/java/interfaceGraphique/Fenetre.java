@@ -43,6 +43,7 @@ public class Fenetre extends JFrame implements ActionListener {
 	JPanel panelboutton;
 	JPanel panelgen;
 	JPanel graphJSon;
+	JScrollPane scrollJSon;
 	JPanel graphAgent;
 	JTextField directory;
 	JButton buttonGS;
@@ -113,6 +114,7 @@ public class Fenetre extends JFrame implements ActionListener {
 			    View defaultView = vue.getDefaultView();
 			    graphJSon.setLayout(new BorderLayout());
 			    graphJSon.add(defaultView, BorderLayout.CENTER);
+			    scrollJSon.setViewportView(graphJSon);
 			}
 		});
 
@@ -135,8 +137,9 @@ public class Fenetre extends JFrame implements ActionListener {
 
 		graphJSon = new JPanel();
 		graphAgent = new JPanel();
+		scrollJSon = new JScrollPane();
 
-		splitPane2 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, graphJSon,
+		splitPane2 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, scrollJSon,
 				graphAgent);
 		splitPane2.setDividerSize(5);
 		splitPane2.setDividerLocation((widthWindow - sizeSeparator) / 2);
