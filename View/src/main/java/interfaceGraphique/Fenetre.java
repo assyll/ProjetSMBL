@@ -42,8 +42,8 @@ public class Fenetre extends JFrame implements ActionListener {
 	JSplitPane splitPane, splitPane2;
 	JPanel panelboutton;
 	JPanel panelgen;
-	JScrollPane graphJSon;
-	JScrollPane graphAgent;
+	JPanel graphJSon;
+	JPanel graphAgent;
 	JTextField directory;
 	JButton buttonGS;
 
@@ -111,7 +111,8 @@ public class Fenetre extends JFrame implements ActionListener {
 			   
 			    View view = vue.addDefaultView(false);
 			    View defaultView = vue.getDefaultView();
-			    graphJSon.add(defaultView, graphJSon.VERTICAL_SCROLLBAR_ALWAYS, graphJSon.HORIZONTAL_SCROLLBAR_ALWAYS);
+			    graphJSon.setLayout(new BorderLayout());
+			    graphJSon.add(defaultView, BorderLayout.CENTER);
 			}
 		});
 
@@ -132,8 +133,8 @@ public class Fenetre extends JFrame implements ActionListener {
 		// Place la barre de séparation a 50 px
 		splitPane.setDividerLocation(50);
 
-		graphJSon = new JScrollPane();
-		graphAgent = new JScrollPane();
+		graphJSon = new JPanel();
+		graphAgent = new JPanel();
 
 		splitPane2 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, graphJSon,
 				graphAgent);
