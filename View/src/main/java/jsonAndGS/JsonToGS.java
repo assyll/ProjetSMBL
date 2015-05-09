@@ -16,14 +16,17 @@ import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
 public class JsonToGS {
+	
+	static final String FILE_FORMAT_ERROR = "Le format du fichier sélectionné est invalide";
 
 	public void generateNode(JsonParser jParser, Graph graph) {
 		String name;
 		Node node;
+		
 		try {
 			jParser.nextToken();
 			String fieldname = jParser.getCurrentName();
-			if ("Name".equals(fieldname)) {
+			if (MyJsonGenerator.FORMAT_NODE_NAME.equals(fieldname)) {
 				// current token is "Name",
 				// move to next, which is "Name"'s value
 				jParser.nextToken();
@@ -32,7 +35,7 @@ public class JsonToGS {
 				node.setAttribute("ui.label", name);
 			} else {
 				throw new FormatFichierException(
-						"Le format du fichier sélectionné est invalide");
+						FILE_FORMAT_ERROR);
 			}
 
 			// loop until token equal to "}"
@@ -54,32 +57,33 @@ public class JsonToGS {
 	public void generateTransitions(JsonParser jParser, Graph graph){
 		String label = null, noeudD, noeudA;
 		Edge edge;
+		
 		try {
 			jParser.nextToken();
 			String fieldname = jParser.getCurrentName();
-			if ("Label".equals(fieldname)) {
+			if (MyJsonGenerator.FORMAT_TRANSITION_LABEL.equals(fieldname)) {
 				// current token is "Label",
 				// move to next, which is "Label"'s value
 				jParser.nextToken();
 				label = jParser.getText();
 			} else {
 				throw new FormatFichierException(
-						"Le format du fichier sélectionné est invalide");
+						FILE_FORMAT_ERROR);
 			}
 			jParser.nextToken();
 			fieldname = jParser.getCurrentName();
-			if ("NoeudD".equals(fieldname)) {
+			if (MyJsonGenerator.FORMAT_TRANSITION_BEGIN_NODE.equals(fieldname)) {
 				// current token is "NoeudD",
 				// move to next, which is "NoeudD"'s value
 				jParser.nextToken();
 				noeudD = jParser.getText();
 			} else {
 				throw new FormatFichierException(
-						"Le format du fichier sélectionné est invalide");
+						FILE_FORMAT_ERROR);
 			}
 			jParser.nextToken();
 			fieldname = jParser.getCurrentName();
-			if ("NoeudA".equals(fieldname)) {
+			if (MyJsonGenerator.FORMAT_TRANSITION_END_NODE.equals(fieldname)) {
 				// current token is "NoeudA",
 				// move to next, which is "NoeudA"'s value
 				jParser.nextToken();
@@ -88,7 +92,7 @@ public class JsonToGS {
 				edge.setAttribute("ui.label", label);
 			} else {
 				throw new FormatFichierException(
-						"Le format du fichier sélectionné est invalide");
+						FILE_FORMAT_ERROR);
 			}
 
 			// loop until token equal to "}"
@@ -126,22 +130,21 @@ public class JsonToGS {
 			jParser.nextToken();
 			String fieldname = jParser.getCurrentName();
 
-			if ("Nodes".equals(fieldname)) {
+			if (MyJsonGenerator.FORMAT_NODES.equals(fieldname)) {
 				jParser.nextToken(); // current token is "[", move next
 				while (jParser.nextToken() != JsonToken.END_ARRAY) {
 					// nodes is array, loop until token equal to "]"
 					generateNode(jParser, graph);
 				}
 			} else {
-				System.out.println(fieldname);
 				throw new FormatFichierException(
-						"Le format du fichier sélectionné est invalide");
+						FILE_FORMAT_ERROR);
 			}
 
 			jParser.nextToken();
 			fieldname = jParser.getCurrentName();
 
-			if ("Transitions".equals(fieldname)) {
+			if (MyJsonGenerator.FORMAT_TRANSITIONS.equals(fieldname)) {
 				jParser.nextToken(); // current token is "[", move next
 				while (jParser.nextToken() != JsonToken.END_ARRAY) {
 					// transitions is array, loop until token equal to "]"
@@ -149,7 +152,7 @@ public class JsonToGS {
 				}
 			} else {
 				throw new FormatFichierException(
-						"Le format du fichier sélectionné est invalide");
+						FILE_FORMAT_ERROR);
 			}
 			
 			jParser.close();
