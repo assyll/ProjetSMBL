@@ -34,7 +34,7 @@ public void testGenerateJson() {
 		MyJsonNode n8 = new MyJsonNode("node 8", new LinkedList<String>());
 		MyJsonNode n9 = new MyJsonNode("node 9", new LinkedList<String>());
 		MyJsonNode n10 = new MyJsonNode("node 10", new LinkedList<String>());
-		mLN.addNode(n1, n2, n3, n4, n5, n6, n7, n8, n9);
+		mLN.addNode(n1, n2, n3, n4, n5, n6, n7, n8, n9, n10);
 
 		MyJsonTransition t1 = new MyJsonTransition("transition 1", "node 1",
 				"node 2", new LinkedList<String>());
@@ -66,7 +66,7 @@ public void testGenerateJson() {
 				"node 10", new LinkedList<String>());
 		MyJsonTransition t12 = new MyJsonTransition("transition 12", "node 4",
 				"node 10", new LinkedList<String>());
-		mLT.addTransition(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10);
+		mLT.addTransition(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12);
 
 		assertEquals(generator.generateJson(mLN, mLT).exists(), true);
 	}
