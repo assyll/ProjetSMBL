@@ -14,15 +14,23 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
 public class MyJsonGenerator {
+	static final String FORMAT_NODES = "Nodes";
+	static final String FORMAT_TRANSITIONS = "Transitions";
+	static final String FORMAT_NODE_NAME = "Name";
+	static final String FORMAT_NODE_ATTRIBUT = "Attribut ";
+	static final String FORMAT_TRANSITION_LABEL = "Label";
+	static final String FORMAT_TRANSITION_BEGIN_NODE = "NodeB";
+	static final String FORMAT_TRANSITION_END_NODE = "NodeE";
+	static final String FORMAT_TRANSITION_ATTRIBUT = "Attribut ";
 
 	public void generateNodes(JsonGenerator jGenerator, MyListNodes mLN) {
 		for (MyJsonNode node : mLN.get_listNodes()) {
 			try {
 				jGenerator.writeStartObject(); // {
-				jGenerator.writeStringField("Name", node.get_name());
+				jGenerator.writeStringField(FORMAT_NODE_NAME, node.get_name());
 				int cpt = 1;
 				for (String attribut : node.get_attributs()) {
-					jGenerator.writeStringField("Attribut " + cpt++, attribut);
+					jGenerator.writeStringField(FORMAT_NODE_ATTRIBUT + cpt++, attribut);
 				}
 				jGenerator.writeEndObject(); // }
 
@@ -41,12 +49,12 @@ public class MyJsonGenerator {
 		for (MyJsonTransition transition : mLT.get_listTransitions()) {
 			try {
 				jGenerator.writeStartObject(); // {
-				jGenerator.writeStringField("Label", transition.get_label());
-				jGenerator.writeStringField("NoeudD", transition.get_noeudD());
-				jGenerator.writeStringField("NoeudA", transition.get_noeudA());
+				jGenerator.writeStringField(FORMAT_TRANSITION_LABEL, transition.get_label());
+				jGenerator.writeStringField(FORMAT_TRANSITION_BEGIN_NODE, transition.get_noeudD());
+				jGenerator.writeStringField(FORMAT_TRANSITION_END_NODE, transition.get_noeudA());
 				int cpt = 1;
 				for (String attribut : transition.get_attributs()) {
-					jGenerator.writeStringField("Attribut " + cpt++, attribut);
+					jGenerator.writeStringField(FORMAT_TRANSITION_ATTRIBUT + cpt++, attribut);
 				}
 				jGenerator.writeEndObject(); // }
 
@@ -85,12 +93,12 @@ public class MyJsonGenerator {
 						JsonEncoding.UTF8);
 				jGenerator.writeStartObject(); // {
 
-				jGenerator.writeFieldName("Nodes"); // "Nodes" :
+				jGenerator.writeFieldName(FORMAT_NODES); // "Nodes" :
 				jGenerator.writeStartArray(); // [
 				generateNodes(jGenerator, mLN);
 				jGenerator.writeEndArray(); // ]
 
-				jGenerator.writeFieldName("Transitions"); // "Transitions" :
+				jGenerator.writeFieldName(FORMAT_TRANSITIONS); // "Transitions" :
 				jGenerator.writeStartArray(); // [
 				generateTransitions(jGenerator, mLT);
 				jGenerator.writeEndArray(); // ]
