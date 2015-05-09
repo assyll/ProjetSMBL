@@ -1,7 +1,11 @@
 package jsonAndGS;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.swing.JFileChooser;
 
 import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonFactory;
@@ -21,7 +25,7 @@ public class MyJsonGenerator {
 					jGenerator.writeStringField("Attribut " + cpt++, attribut);
 				}
 				jGenerator.writeEndObject(); // }
-				
+
 			} catch (JsonGenerationException e) {
 				e.printStackTrace();
 			} catch (JsonMappingException e) {
@@ -45,7 +49,7 @@ public class MyJsonGenerator {
 					jGenerator.writeStringField("Attribut " + cpt++, attribut);
 				}
 				jGenerator.writeEndObject(); // }
-				
+
 			} catch (JsonGenerationException e) {
 				e.printStackTrace();
 			} catch (JsonMappingException e) {
@@ -56,38 +60,56 @@ public class MyJsonGenerator {
 		}
 	}
 
-	public void generateJson(MyListNodes mLN, MyListTransitions mLT, String filePath) {
-		System.out.println("a");
-		try {
+	public File generateJson(MyListNodes mLN, MyListTransitions mLT) {
 
-			JsonFactory jfactory = new JsonFactory();
+		JFileChooser dialogue = new JFileChooser(new File("."));
+		PrintWriter sortie = null;
+		File fichier;
 
-			/*** write to file ***/
-			JsonGenerator jGenerator = jfactory.createGenerator(new File(
-					filePath), JsonEncoding.UTF8);
-			jGenerator.writeStartObject(); // {
+		if (dialogue.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+			fichier = dialogue.getSelectedFile();
+			try {
+				sortie = new PrintWriter(
+						new FileWriter(fichier.getPath(), true));
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+			sortie.close();
 
-			jGenerator.writeFieldName("Nodes"); // "Nodes" :
-			jGenerator.writeStartArray(); // [
-			generateNodes(jGenerator, mLN);
-			jGenerator.writeEndArray(); // ]
+			try {
 
-			jGenerator.writeFieldName("Transitions"); // "Transitions" :
-			jGenerator.writeStartArray(); // [
-			generateTransitions(jGenerator, mLT);
-			jGenerator.writeEndArray(); // ]
+				JsonFactory jfactory = new JsonFactory();
 
-			jGenerator.writeEndObject(); // }
+				/*** write to file ***/
+				JsonGenerator jGenerator = jfactory.createGenerator(fichier,
+						JsonEncoding.UTF8);
+				jGenerator.writeStartObject(); // {
 
-			jGenerator.close();
+				jGenerator.writeFieldName("Nodes"); // "Nodes" :
+				jGenerator.writeStartArray(); // [
+				generateNodes(jGenerator, mLN);
+				jGenerator.writeEndArray(); // ]
 
-		} catch (JsonGenerationException e) {
-			e.printStackTrace();
-		} catch (JsonMappingException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+				jGenerator.writeFieldName("Transitions"); // "Transitions" :
+				jGenerator.writeStartArray(); // [
+				generateTransitions(jGenerator, mLT);
+				jGenerator.writeEndArray(); // ]
+
+				jGenerator.writeEndObject(); // }
+
+				jGenerator.close();
+
+				return fichier;
+
+			} catch (JsonGenerationException e) {
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
+		return null;
 	}
 
 }

@@ -13,8 +13,6 @@ import junit.framework.TestCase;
 public class MyJsonGeneratorTest extends TestCase {
 
 public void testGenerateJson() {
-		
-		String filePath = "C:\\Users\\hugo\\Desktop\\jsonTest";
 
 		MyJsonGenerator generator = new MyJsonGenerator();
 
@@ -46,9 +44,7 @@ public void testGenerateJson() {
 		t3.get_attributs().add("att 2");
 		mLT.addTransition(t1, t2, t3);
 
-		generator.generateJson(mLN, mLT, filePath);
-
-		assertEquals(new File(filePath).exists(), true);
+		assertEquals(generator.generateJson(mLN, mLT).exists(), true);
 	}
 
 }

@@ -63,7 +63,6 @@ public class JsonToGS {
 				jParser.nextToken();
 				label = jParser.getText();
 			} else {
-				System.out.println(label);
 				throw new FormatFichierException(
 						"Le format du fichier sélectionné est invalide");
 			}
