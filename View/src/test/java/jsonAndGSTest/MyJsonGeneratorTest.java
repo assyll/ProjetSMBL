@@ -1,6 +1,5 @@
 package jsonAndGSTest;
 
-import java.io.File;
 import java.util.LinkedList;
 
 import jsonAndGS.MyJsonGenerator;

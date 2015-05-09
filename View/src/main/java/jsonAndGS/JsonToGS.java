@@ -114,11 +114,11 @@ public class JsonToGS {
 	public static Graph generateGraph(String filePath) {
 		Graph graph = new SingleGraph("graph");
 
-		graph.display();
+		/*graph.display();
 
 		graph.addAttribute("ui.quality");
 		graph.addAttribute("ui.antialias");
-		graph.addAttribute("ui.stylesheet", "edge { fill-color: grey; }");
+		graph.addAttribute("ui.stylesheet", "edge { fill-color: grey; }");*/
 
 		try {
 

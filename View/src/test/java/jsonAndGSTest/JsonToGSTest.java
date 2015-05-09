@@ -10,8 +10,7 @@ public class JsonToGSTest extends TestCase {
 	public void testJsonToGS(){
 		
 		String filePath = "C:\\Users\\hugo\\Desktop\\jsonTest";
-		JsonToGS jTGS = new JsonToGS();
-		Graph graph = jTGS.generateGraph(filePath);
+		Graph graph = JsonToGS.generateGraph(filePath);
 		
 		while(true){}
 	}
