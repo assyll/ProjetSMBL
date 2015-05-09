@@ -1,67 +1,207 @@
 package interfaceGraphique;
 
+//import java.awt.Dimension;
+//import java.awt.GridLayout;
+//import java.awt.event.ActionEvent;
+//import java.awt.event.ActionListener;
+//import java.io.File;
+//
+//import javax.swing.JButton;
+//import javax.swing.JFileChooser;
+//import javax.swing.JFrame;
+//import javax.swing.JPanel;
+//import javax.swing.JScrollPane;
+//import javax.swing.JTextField;
+//
+//@SuppressWarnings("serial")
+//public class Fenetre extends JFrame implements ActionListener {
+//
+//	private JPanel panButton = new JPanel();
+//	private JPanel panGraphs = new JPanel(new GridLayout(1,50,2,5));
+//	private JButton buttonImport = new JButton("Import");
+//	private JButton buttonGS = new JButton("to GraphStream");
+//	private JTextField directory = new JTextField("directory du fichier");
+//	private JScrollPane graphJson = new JScrollPane();
+//	private JScrollPane graphAgent = new JScrollPane();
+//
+//	public Fenetre() {
+//		this.setTitle("Projet");
+//		this.setSize(800, 600);
+//		this.getContentPane().setLayout(new GridLayout(2,50,1,5));
+//		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//		this.setLocationRelativeTo(null);
+//		directory.setPreferredSize(new Dimension(250, 20));
+//		directory.setEditable(false);
+//		
+//		panButton.add(buttonImport);
+//		panButton.add(directory);
+//		panButton.add(buttonGS);
+//		this.getContentPane().add(panButton);
+//		
+//		panGraphs.add(graphJson);
+//		panGraphs.add(graphAgent);
+//		this.getContentPane().add(panGraphs);
+//		
+//		this.setVisible(true);
+//		
+//		buttonImport.addActionListener(this);
+//		
+//	}
+//
+//	public static void main(String[] args) {
+//
+//		Fenetre fen = new Fenetre();
+//	}
+//
+//	public void actionPerformed(ActionEvent arg0) {
+//		
+//		JFileChooser dialogue = new JFileChooser(new File("C:\\"));
+//		File fichier;
+//		
+//		if(dialogue.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+//			fichier = dialogue.getSelectedFile();
+//			directory.setText(fichier.toString());
+//		}
+//	}
+//	
+//}
+
+import java.awt.BorderLayout;
+import java.awt.Choice;
+import java.awt.Color;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
+import javax.swing.JTree;
 
 @SuppressWarnings("serial")
 public class Fenetre extends JFrame implements ActionListener {
+	JFrame frame;
+	JPanel panelFile;
+	JPanel panelGraph;
+	JScrollPane jsp;
+	JSplitPane splitPane, splitPane2;
+	JPanel panelboutton;
+	JPanel panelgen;
+	JScrollPane graphJSon;
+	JScrollPane graphAgent;
+	JTextField directory;
+	JButton buttonGS;
 
-	private JPanel panButton = new JPanel();
-	private JPanel panGraphs = new JPanel(new GridLayout(1,50,2,5));
-	private JButton buttonImport = new JButton("Import");
-	private JButton buttonGS = new JButton("to GraphStream");
-	private JTextField chemin = new JTextField("Chemin du fichier");
-	private JScrollPane graphJson = new JScrollPane();
-	private JScrollPane graphAgent = new JScrollPane();
+	final int xWindow = 300;
+	final int yWindow = 100;
+	final int widthWindow = 800;
+	final int heightWindow = 600;
+	final int sizeSeparator = 5;
 
-	public Fenetre() {
-		this.setTitle("Projet");
-		this.setSize(800, 600);
-		this.getContentPane().setLayout(new GridLayout(2,50,1,5));
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setLocationRelativeTo(null);
-		chemin.setPreferredSize(new Dimension(250, 20));
-		chemin.setEditable(false);
+	Fenetre() {
 		
-		panButton.add(buttonImport);
-		panButton.add(chemin);
-		panButton.add(buttonGS);
-		this.getContentPane().add(panButton);
+		frame = new JFrame("Projet SMBL");
+
+		panelFile = new JPanel(new GridLayout(1,2,20,5));
+		panelFile.setBorder(BorderFactory.createCompoundBorder(
+				BorderFactory.createTitledBorder("JSon File"),
+				BorderFactory.createEmptyBorder(1, 1, 1, 1)));
+
+		buttonGS = new JButton("To GraphStream");
+		directory = new JTextField("Directory");
+		directory.setPreferredSize(new Dimension(250, 20));
+		directory.setEditable(false);
+
+		panelFile.add(directory);
+		panelFile.add(buttonGS);
+
+		JMenuBar menu_bar1 = new JMenuBar();
+		JMenu menu1 = new JMenu("File");
 		
-		panGraphs.add(graphJson);
-		panGraphs.add(graphAgent);
-		this.getContentPane().add(panGraphs);
+		/* differents choix du menu */
+		JMenuItem importMenu = new JMenuItem("Import");
+		JMenuItem aboutUs = new JMenuItem("About Us");
+		JMenuItem exitMenu = new JMenuItem("Exit");
+
+		menu1.add(importMenu);
+		menu1.add(exitMenu);
+
+		// Action lors du clic sur l'item "Import"
+		importMenu.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser dialogue = new JFileChooser(new File("C:\\"));
+				File fichier;
+
+				if (dialogue.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+					fichier = dialogue.getSelectedFile();
+					directory.setText(fichier.toString());
+				}
+			}
+		});
+
+		// Action lors du clic sur l'item "Exit"
+		exitMenu.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.exit(1);
+			}
+		});
+
+		menu_bar1.add(menu1);
+
+		panelGraph = new JPanel();
+		panelGraph.setLayout(null);
+		panelGraph.setLayout(new BoxLayout(panelGraph, BoxLayout.Y_AXIS));
+		panelGraph.setBorder(BorderFactory.createCompoundBorder(
+				BorderFactory.createTitledBorder("Graphs"),
+				BorderFactory.createEmptyBorder(1, 1, 1, 1)));
+
+		// on créé le splitPane avec une separation Horizontal (barre à la
+		// vertical)
+		splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, panelFile,
+				panelGraph);
 		
-		this.setVisible(true);
-		
-		buttonImport.addActionListener(this);
-		
+		// Place la barre de séparation a 50 px
+		splitPane.setDividerLocation(50);
+
+		graphJSon = new JScrollPane();
+		graphAgent = new JScrollPane();
+
+		splitPane2 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, graphJSon,
+				graphAgent);
+		splitPane2.setDividerSize(5);
+		splitPane2.setDividerLocation((widthWindow - sizeSeparator) / 2);
+
+		panelGraph.add(splitPane2);
+		frame.add(splitPane);
+		frame.setJMenuBar(menu_bar1);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setResizable(false);
+		frame.setBounds(xWindow, yWindow, widthWindow, heightWindow);
+		frame.setVisible(true);
+
 	}
 
 	public static void main(String[] args) {
-
-		Fenetre fen = new Fenetre();
+		Fenetre f = new Fenetre();
 	}
 
 	public void actionPerformed(ActionEvent arg0) {
-		
-		JFileChooser dialogue = new JFileChooser(new File("C:\\"));
-		File fichier;
-		
-		if(dialogue.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-			fichier = dialogue.getSelectedFile();
-			chemin.setText(fichier.toString());
-		}
+		// TODO Auto-generated method stub
+
 	}
-	
 }
