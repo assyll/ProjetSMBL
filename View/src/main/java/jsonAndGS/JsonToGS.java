@@ -19,7 +19,7 @@ public class JsonToGS {
 	
 	static final String FILE_FORMAT_ERROR = "Le format du fichier sélectionné est invalide";
 
-	public void generateNode(JsonParser jParser, Graph graph) {
+	public static void generateNode(JsonParser jParser, Graph graph) {
 		String name;
 		Node node;
 		
@@ -54,7 +54,7 @@ public class JsonToGS {
 		}
 	}
 	
-	public void generateTransitions(JsonParser jParser, Graph graph){
+	public static void generateTransitions(JsonParser jParser, Graph graph){
 		String label = null, noeudD, noeudA;
 		Edge edge;
 		
@@ -111,7 +111,7 @@ public class JsonToGS {
 		}
 	}
 
-	public Graph generateGraph(String filePath) {
+	public static Graph generateGraph(String filePath) {
 		Graph graph = new SingleGraph("graph");
 
 		graph.display();
