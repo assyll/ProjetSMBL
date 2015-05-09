@@ -10,6 +10,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
+import jsonAndGS.*;
+
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -26,6 +28,10 @@ import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.JTree;
+
+import org.graphstream.graph.Graph;
+import org.graphstream.ui.swingViewer.Viewer;
+import org.graphstream.ui.swingViewer.View;
 
 @SuppressWarnings("serial")
 public class Fenetre extends JFrame implements ActionListener {
@@ -93,6 +99,19 @@ public class Fenetre extends JFrame implements ActionListener {
 		exitMenu.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.exit(1);
+			}
+		});
+		
+		buttonGS.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Graph g;
+				g = JsonToGS.generateGraph(directory.getText());
+				Viewer vue = new Viewer(g, Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
+			    vue.enableAutoLayout();
+			   
+			    View view = vue.addDefaultView(false);
+			    View defaultView = vue.getDefaultView();
+			    graphJSon.add(defaultView, graphJSon.VERTICAL_SCROLLBAR_ALWAYS, graphJSon.HORIZONTAL_SCROLLBAR_ALWAYS);
 			}
 		});
 
