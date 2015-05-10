@@ -111,6 +111,8 @@ public class Fenetre extends JFrame implements ActionListener {
 			    vue.enableAutoLayout();
 			   
 			    View view = vue.addDefaultView(false);
+			    view.removeAll();
+			    graphJSon.removeAll();
 			    graphJSon.setLayout(new BorderLayout());
 			    graphJSon.add(view, BorderLayout.CENTER);
 			    scrollJSon.setViewportView(graphJSon);

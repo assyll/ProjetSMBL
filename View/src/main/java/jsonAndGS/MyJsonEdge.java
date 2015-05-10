@@ -2,18 +2,18 @@ package jsonAndGS;
 
 import java.util.List;
 
-public class MyJsonTransition {
+public class MyJsonEdge {
 	private String _label;
-	private String _noeudD;
-	private String _noeudA;
+	private String _nodeB;
+	private String _nodeE;
 	private List<String> _attributs;
 
-	public MyJsonTransition(String label, String noeudD, String noeudA,
+	public MyJsonEdge(String label, String nodeB, String nodeE,
 			List<String> attributs) {
 		super();
 		_label = label;
-		_noeudD = noeudD;
-		_noeudA = noeudA;
+		_nodeB = nodeB;
+		_nodeE = nodeE;
 		_attributs = attributs;
 	}
 
@@ -21,12 +21,12 @@ public class MyJsonTransition {
 		return _label;
 	}
 
-	public String get_noeudD() {
-		return _noeudD;
+	public String get_nodeB() {
+		return _nodeB;
 	}
 
-	public String get_noeudA() {
-		return _noeudA;
+	public String get_nodeE() {
+		return _nodeE;
 	}
 
 	public List<String> get_attributs() {

@@ -1,27 +1,27 @@
 package jsonAndGS;
 
 @SuppressWarnings("serial")
-public class FormatFichierException extends Exception {
+public class FileFormatException extends Exception {
 	
 	//créé une nouvelle instance de TypeFichierException
-	public FormatFichierException(){}
+	public FileFormatException(){}
 	
 	/*créé une nouvelle instance de TypeFichierException
 	 * @param message Le message détaillant l'exception */
-	public FormatFichierException(String message){
+	public FileFormatException(String message){
 		super(message);
 	}
 	
 	/*créé une nouvelle instance de TypeFichierException
 	 * @param cause L'exception à l'origine de cette exception */
-	public FormatFichierException(Throwable cause){
+	public FileFormatException(Throwable cause){
 		super(cause);
 	}
 	
 	/*créé une nouvelle instance de TypeFichierException
 	 * @param message Le message détaillant l'exception
 	 * @param cause L'exception à l'origine de cette exception */
-	public FormatFichierException(String message, Throwable cause){
+	public FileFormatException(String message, Throwable cause){
 		super(message, cause);
 	}
 	
