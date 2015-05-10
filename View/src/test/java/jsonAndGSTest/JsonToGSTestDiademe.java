@@ -5,7 +5,7 @@ import org.graphstream.graph.Graph;
 import jsonAndGS.JsonToGS;
 import junit.framework.TestCase;
 
-public class JsonToGSTestRubis extends TestCase {
+public class JsonToGSTestDiademe extends TestCase {
 
 	public void testJsonToGS(){
 		
