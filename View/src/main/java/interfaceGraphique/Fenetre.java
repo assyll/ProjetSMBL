@@ -29,7 +29,10 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.JTree;
 
+import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
+import org.graphstream.graph.Node;
+import org.graphstream.graph.implementations.MultiGraph;
 import org.graphstream.ui.swingViewer.Viewer;
 import org.graphstream.ui.swingViewer.View;
 
@@ -45,6 +48,7 @@ public class Fenetre extends JFrame implements ActionListener {
 	JPanel graphJSon;
 	JScrollPane scrollJSon;
 	JPanel graphAgent;
+	JScrollPane scrollAgent;
 	JTextField directory;
 	JButton buttonGS;
 
@@ -55,10 +59,10 @@ public class Fenetre extends JFrame implements ActionListener {
 	final int sizeSeparator = 5;
 
 	Fenetre() {
-		
+
 		frame = new JFrame("Projet SMBL");
 
-		panelFile = new JPanel(new GridLayout(1,2,20,5));
+		panelFile = new JPanel(new GridLayout(1, 2, 20, 5));
 
 		panelFile.setBorder(BorderFactory.createCompoundBorder(
 				BorderFactory.createTitledBorder("JSon File"),
@@ -74,7 +78,7 @@ public class Fenetre extends JFrame implements ActionListener {
 
 		JMenuBar menu_bar1 = new JMenuBar();
 		JMenu menu1 = new JMenu("File");
-		
+
 		/* differents choix du menu */
 		JMenuItem importMenu = new JMenuItem("Import");
 		JMenuItem aboutUs = new JMenuItem("About Us");
@@ -102,25 +106,58 @@ public class Fenetre extends JFrame implements ActionListener {
 				System.exit(1);
 			}
 		});
-		
+
 		buttonGS.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Graph g;
 				g = JsonToGS.generateGraph(directory.getText());
-				Viewer vue = new Viewer(g, Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
-			    vue.enableAutoLayout();
-			   
-			    View view = vue.addDefaultView(false);
-			    
-			    graphJSon.removeAll();
-			    graphJSon.setLayout(new BorderLayout());
-			    graphJSon.add(view, BorderLayout.CENTER);
-			    scrollJSon.setViewportView(graphJSon);
+				Viewer vue = new Viewer(g,
+						Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
+				vue.enableAutoLayout();
+
+				View view = vue.addDefaultView(false);
+
+				graphJSon.removeAll();
+				graphJSon.setLayout(new BorderLayout());
+				graphJSon.add(view, BorderLayout.CENTER);
+				scrollJSon.setViewportView(graphJSon);
+
+				Graph g2 = new MultiGraph("graph2");
+
+				Viewer vue2 = new Viewer(g2,
+						Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
+				vue2.enableAutoLayout();
+
+				View view2 = vue2.addDefaultView(false);
+
+				graphAgent.removeAll();
+				graphAgent.setLayout(new BorderLayout());
+				graphAgent.add(view2, BorderLayout.CENTER);
+				scrollAgent.setViewportView(graphAgent);
+
+				for (Node n : g.getEachNode()) {
+					Node node = g2.addNode(n.getId());
+					node.setAttribute("ui.label", "a");
+					/*
+					 * for (String attribute : n.getAttributeKeySet()) {
+					 * node.addAttribute(attribute); }
+					 */
+
+				}
+				for (Edge ed : g.getEachEdge()) {
+					Edge edge = g2.addEdge(ed.getId(), ed.getSourceNode().getId(),
+							ed.getTargetNode().getId(), true);
+					edge.setAttribute("ui.label", "a");
+					/*
+					 * for (String attribute : ed.getAttributeKeySet()){
+					 * edge.addAttribute(attribute); }
+					 */
+				}
+
 			}
 		});
 
 		menu_bar1.add(menu1);
-
 		panelGraph = new JPanel();
 		panelGraph.setLayout(null);
 		panelGraph.setLayout(new BoxLayout(panelGraph, BoxLayout.Y_AXIS));
@@ -132,16 +169,17 @@ public class Fenetre extends JFrame implements ActionListener {
 		// vertical)
 		splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, panelFile,
 				panelGraph);
-		
+
 		// Place la barre de séparation a 50 px
 		splitPane.setDividerLocation(50);
 
 		graphJSon = new JPanel();
 		graphAgent = new JPanel();
 		scrollJSon = new JScrollPane();
+		scrollAgent = new JScrollPane();
 
 		splitPane2 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, scrollJSon,
-				graphAgent);
+				scrollAgent);
 		splitPane2.setDividerSize(5);
 		splitPane2.setDividerLocation((widthWindow - sizeSeparator) / 2);
 

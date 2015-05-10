@@ -6,7 +6,7 @@ import java.io.IOException;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
-import org.graphstream.graph.implementations.SingleGraph;
+import org.graphstream.graph.implementations.MultiGraph;
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerationException;
@@ -54,7 +54,7 @@ public class JsonToGS {
 	}
 
 	public static void generateEdges(JsonParser jParser, Graph graph) {
-		String label, noeudD, noeudA;
+		String label, nodeB, nodeE;
 		Edge edge;
 
 		try {
@@ -74,7 +74,7 @@ public class JsonToGS {
 				// current token is "NodeB",
 				// move to next, which is "NodeB"'s value
 				jParser.nextToken();
-				noeudD = jParser.getText();
+				nodeB = jParser.getText();
 			} else {
 				throw new FileFormatException(FILE_FORMAT_ERROR);
 			}
@@ -84,8 +84,8 @@ public class JsonToGS {
 				// current token is "NodeE",
 				// move to next, which is "NodeE"'s value
 				jParser.nextToken();
-				noeudA = jParser.getText();
-				edge = graph.addEdge(label, noeudD, noeudA, true);
+				nodeE = jParser.getText();
+				edge = graph.addEdge(label, nodeB, nodeE, true);
 				edge.setAttribute("ui.label", label);
 			} else {
 				throw new FileFormatException(FILE_FORMAT_ERROR);
@@ -108,7 +108,7 @@ public class JsonToGS {
 	}
 
 	public static Graph generateGraph(String filePath) {
-		Graph graph = new SingleGraph("graph");
+		Graph graph = new MultiGraph("graph");
 
 		graph.addAttribute("ui.quality");
 		graph.addAttribute("ui.antialias");
