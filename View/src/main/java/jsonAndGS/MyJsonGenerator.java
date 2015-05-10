@@ -15,13 +15,13 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 
 public class MyJsonGenerator {
 	static final String FORMAT_NODES = "Nodes";
-	static final String FORMAT_TRANSITIONS = "Transitions";
+	static final String FORMAT_EDGES = "Edges";
 	static final String FORMAT_NODE_NAME = "Name";
 	static final String FORMAT_NODE_ATTRIBUT = "Attribut ";
-	static final String FORMAT_TRANSITION_LABEL = "Label";
-	static final String FORMAT_TRANSITION_BEGIN_NODE = "NodeB";
-	static final String FORMAT_TRANSITION_END_NODE = "NodeE";
-	static final String FORMAT_TRANSITION_ATTRIBUT = "Attribut ";
+	static final String FORMAT_EDGE_LABEL = "Label";
+	static final String FORMAT_EDGE_BEGIN_NODE = "NodeB";
+	static final String FORMAT_EDGE_END_NODE = "NodeE";
+	static final String FORMAT_EDGE_ATTRIBUT = "Attribut ";
 
 	public void generateNodes(JsonGenerator jGenerator, MyListNodes mLN) {
 		for (MyJsonNode node : mLN.get_listNodes()) {
@@ -44,17 +44,17 @@ public class MyJsonGenerator {
 		}
 	}
 
-	public void generateTransitions(JsonGenerator jGenerator,
-			MyListTransitions mLT) {
-		for (MyJsonTransition transition : mLT.get_listTransitions()) {
+	public void generateEdges(JsonGenerator jGenerator,
+			MyListEdges mLE) {
+		for (MyJsonEdge edge : mLE.get_listEdges()) {
 			try {
 				jGenerator.writeStartObject(); // {
-				jGenerator.writeStringField(FORMAT_TRANSITION_LABEL, transition.get_label());
-				jGenerator.writeStringField(FORMAT_TRANSITION_BEGIN_NODE, transition.get_noeudD());
-				jGenerator.writeStringField(FORMAT_TRANSITION_END_NODE, transition.get_noeudA());
+				jGenerator.writeStringField(FORMAT_EDGE_LABEL, edge.get_label());
+				jGenerator.writeStringField(FORMAT_EDGE_BEGIN_NODE, edge.get_nodeB());
+				jGenerator.writeStringField(FORMAT_EDGE_END_NODE, edge.get_nodeE());
 				int cpt = 1;
-				for (String attribut : transition.get_attributs()) {
-					jGenerator.writeStringField(FORMAT_TRANSITION_ATTRIBUT + cpt++, attribut);
+				for (String attribut : edge.get_attributs()) {
+					jGenerator.writeStringField(FORMAT_EDGE_ATTRIBUT + cpt++, attribut);
 				}
 				jGenerator.writeEndObject(); // }
 
@@ -68,7 +68,7 @@ public class MyJsonGenerator {
 		}
 	}
 
-	public File generateJson(MyListNodes mLN, MyListTransitions mLT) {
+	public File generateJson(MyListNodes mLN, MyListEdges mLT) {
 
 		JFileChooser dialogue = new JFileChooser(new File("."));
 		PrintWriter sortie = null;
@@ -98,9 +98,9 @@ public class MyJsonGenerator {
 				generateNodes(jGenerator, mLN);
 				jGenerator.writeEndArray(); // ]
 
-				jGenerator.writeFieldName(FORMAT_TRANSITIONS); // "Transitions" :
+				jGenerator.writeFieldName(FORMAT_EDGES); // "Edges" :
 				jGenerator.writeStartArray(); // [
-				generateTransitions(jGenerator, mLT);
+				generateEdges(jGenerator, mLT);
 				jGenerator.writeEndArray(); // ]
 
 				jGenerator.writeEndObject(); // }

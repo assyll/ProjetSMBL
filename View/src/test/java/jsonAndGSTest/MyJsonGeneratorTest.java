@@ -4,9 +4,9 @@ import java.util.LinkedList;
 
 import jsonAndGS.MyJsonGenerator;
 import jsonAndGS.MyJsonNode;
-import jsonAndGS.MyJsonTransition;
+import jsonAndGS.MyJsonEdge;
 import jsonAndGS.MyListNodes;
-import jsonAndGS.MyListTransitions;
+import jsonAndGS.MyListEdges;
 import junit.framework.TestCase;
 
 public class MyJsonGeneratorTest extends TestCase {
@@ -16,7 +16,7 @@ public void testGenerateJson() {
 		MyJsonGenerator generator = new MyJsonGenerator();
 
 		MyListNodes mLN = new MyListNodes();
-		MyListTransitions mLT = new MyListTransitions();
+		MyListEdges mLE = new MyListEdges();
 
 		MyJsonNode n1 = new MyJsonNode("node 1", new LinkedList<String>());
 		n1.get_attributs().add("att 1");
@@ -36,39 +36,39 @@ public void testGenerateJson() {
 		MyJsonNode n10 = new MyJsonNode("node 10", new LinkedList<String>());
 		mLN.addNode(n1, n2, n3, n4, n5, n6, n7, n8, n9, n10);
 
-		MyJsonTransition t1 = new MyJsonTransition("transition 1", "node 1",
+		MyJsonEdge e1 = new MyJsonEdge("edge 1", "node 1",
 				"node 2", new LinkedList<String>());
-		t1.get_attributs().add("att 1");
-		t1.get_attributs().add("att 2");
-		MyJsonTransition t2 = new MyJsonTransition("transition 2", "node 2",
+		e1.get_attributs().add("att 1");
+		e1.get_attributs().add("att 2");
+		MyJsonEdge e2 = new MyJsonEdge("edge 2", "node 2",
 				"node 3", new LinkedList<String>());
-		t2.get_attributs().add("att 1");
-		t2.get_attributs().add("att 2");
-		MyJsonTransition t3 = new MyJsonTransition("transition 3", "node 1",
+		e2.get_attributs().add("att 1");
+		e2.get_attributs().add("att 2");
+		MyJsonEdge e3 = new MyJsonEdge("edge 3", "node 1",
 				"node 3", new LinkedList<String>());
-		t3.get_attributs().add("att 1");
-		t3.get_attributs().add("att 2");
-		MyJsonTransition t4 = new MyJsonTransition("transition 4", "node 1",
+		e3.get_attributs().add("att 1");
+		e3.get_attributs().add("att 2");
+		MyJsonEdge e4 = new MyJsonEdge("edge 4", "node 1",
 				"node 4", new LinkedList<String>());
-		MyJsonTransition t5 = new MyJsonTransition("transition 5", "node 4",
+		MyJsonEdge e5 = new MyJsonEdge("edge 5", "node 4",
 				"node 7", new LinkedList<String>());
-		MyJsonTransition t6 = new MyJsonTransition("transition 6", "node 6",
+		MyJsonEdge e6 = new MyJsonEdge("edge 6", "node 6",
 				"node 5", new LinkedList<String>());
-		MyJsonTransition t7 = new MyJsonTransition("transition 7", "node 5",
+		MyJsonEdge e7 = new MyJsonEdge("edge 7", "node 5",
 				"node 7", new LinkedList<String>());
-		MyJsonTransition t8 = new MyJsonTransition("transition 8", "node 6",
+		MyJsonEdge e8 = new MyJsonEdge("edge 8", "node 6",
 				"node 8", new LinkedList<String>());
-		MyJsonTransition t9 = new MyJsonTransition("transition 9", "node 8",
+		MyJsonEdge e9 = new MyJsonEdge("edge 9", "node 8",
 				"node 9", new LinkedList<String>());
-		MyJsonTransition t10 = new MyJsonTransition("transition 10", "node 9",
+		MyJsonEdge e10 = new MyJsonEdge("edge 10", "node 9",
 				"node 3", new LinkedList<String>());
-		MyJsonTransition t11 = new MyJsonTransition("transition 11", "node 1",
+		MyJsonEdge e11 = new MyJsonEdge("edge 11", "node 1",
 				"node 10", new LinkedList<String>());
-		MyJsonTransition t12 = new MyJsonTransition("transition 12", "node 4",
+		MyJsonEdge e12 = new MyJsonEdge("edge 12", "node 4",
 				"node 10", new LinkedList<String>());
-		mLT.addTransition(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12);
+		mLE.addEdges(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12);
 
-		assertEquals(generator.generateJson(mLN, mLT).exists(), true);
+		assertEquals(generator.generateJson(mLN, mLE).exists(), true);
 	}
 
 }

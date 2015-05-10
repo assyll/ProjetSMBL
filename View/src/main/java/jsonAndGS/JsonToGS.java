@@ -34,7 +34,7 @@ public class JsonToGS {
 				node = graph.addNode(name);
 				node.setAttribute("ui.label", name);
 			} else {
-				throw new FormatFichierException(FILE_FORMAT_ERROR);
+				throw new FileFormatException(FILE_FORMAT_ERROR);
 			}
 
 			// loop until token equal to "}"
@@ -48,39 +48,39 @@ public class JsonToGS {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
-		} catch (FormatFichierException e) {
+		} catch (FileFormatException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public static void generateTransitions(JsonParser jParser, Graph graph) {
+	public static void generateEdges(JsonParser jParser, Graph graph) {
 		String label, noeudD, noeudA;
 		Edge edge;
 
 		try {
 			jParser.nextToken();
 			String fieldname = jParser.getCurrentName();
-			if (MyJsonGenerator.FORMAT_TRANSITION_LABEL.equals(fieldname)) {
+			if (MyJsonGenerator.FORMAT_EDGE_LABEL.equals(fieldname)) {
 				// current token is "Label",
 				// move to next, which is "Label"'s value
 				jParser.nextToken();
 				label = jParser.getText();
 			} else {
-				throw new FormatFichierException(FILE_FORMAT_ERROR);
+				throw new FileFormatException(FILE_FORMAT_ERROR);
 			}
 			jParser.nextToken();
 			fieldname = jParser.getCurrentName();
-			if (MyJsonGenerator.FORMAT_TRANSITION_BEGIN_NODE.equals(fieldname)) {
+			if (MyJsonGenerator.FORMAT_EDGE_BEGIN_NODE.equals(fieldname)) {
 				// current token is "NodeB",
 				// move to next, which is "NodeB"'s value
 				jParser.nextToken();
 				noeudD = jParser.getText();
 			} else {
-				throw new FormatFichierException(FILE_FORMAT_ERROR);
+				throw new FileFormatException(FILE_FORMAT_ERROR);
 			}
 			jParser.nextToken();
 			fieldname = jParser.getCurrentName();
-			if (MyJsonGenerator.FORMAT_TRANSITION_END_NODE.equals(fieldname)) {
+			if (MyJsonGenerator.FORMAT_EDGE_END_NODE.equals(fieldname)) {
 				// current token is "NodeE",
 				// move to next, which is "NodeE"'s value
 				jParser.nextToken();
@@ -88,7 +88,7 @@ public class JsonToGS {
 				edge = graph.addEdge(label, noeudD, noeudA, true);
 				edge.setAttribute("ui.label", label);
 			} else {
-				throw new FormatFichierException(FILE_FORMAT_ERROR);
+				throw new FileFormatException(FILE_FORMAT_ERROR);
 			}
 
 			// loop until token equal to "}"
@@ -102,7 +102,7 @@ public class JsonToGS {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
-		} catch (FormatFichierException e) {
+		} catch (FileFormatException e) {
 			e.printStackTrace();
 		}
 	}
@@ -131,20 +131,20 @@ public class JsonToGS {
 					generateNode(jParser, graph);
 				}
 			} else {
-				throw new FormatFichierException(FILE_FORMAT_ERROR);
+				throw new FileFormatException(FILE_FORMAT_ERROR);
 			}
 
 			jParser.nextToken();
 			fieldname = jParser.getCurrentName();
 
-			if (MyJsonGenerator.FORMAT_TRANSITIONS.equals(fieldname)) {
+			if (MyJsonGenerator.FORMAT_EDGES.equals(fieldname)) {
 				jParser.nextToken(); // current token is "[", move next
 				while (jParser.nextToken() != JsonToken.END_ARRAY) {
 					// transitions is array, loop until token equal to "]"
-					generateTransitions(jParser, graph);
+					generateEdges(jParser, graph);
 				}
 			} else {
-				throw new FormatFichierException(FILE_FORMAT_ERROR);
+				throw new FileFormatException(FILE_FORMAT_ERROR);
 			}
 
 			jParser.close();
@@ -158,7 +158,7 @@ public class JsonToGS {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
-		} catch (FormatFichierException e) {
+		} catch (FileFormatException e) {
 			e.printStackTrace();
 		}
 
