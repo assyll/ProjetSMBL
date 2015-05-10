@@ -16,13 +16,13 @@ import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
 public class JsonToGS {
-	
+
 	static final String FILE_FORMAT_ERROR = "Le format du fichier sélectionné est invalide";
 
 	public static void generateNode(JsonParser jParser, Graph graph) {
 		String name;
 		Node node;
-		
+
 		try {
 			jParser.nextToken();
 			String fieldname = jParser.getCurrentName();
@@ -34,8 +34,7 @@ public class JsonToGS {
 				node = graph.addNode(name);
 				node.setAttribute("ui.label", name);
 			} else {
-				throw new FormatFichierException(
-						FILE_FORMAT_ERROR);
+				throw new FormatFichierException(FILE_FORMAT_ERROR);
 			}
 
 			// loop until token equal to "}"
@@ -44,7 +43,7 @@ public class JsonToGS {
 				jParser.nextToken();
 				node.addAttribute(fieldname, jParser.getText());
 			}
-			
+
 		} catch (JsonParseException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -53,11 +52,11 @@ public class JsonToGS {
 			e.printStackTrace();
 		}
 	}
-	
-	public static void generateTransitions(JsonParser jParser, Graph graph){
-		String label = null, noeudD, noeudA;
+
+	public static void generateTransitions(JsonParser jParser, Graph graph) {
+		String label, noeudD, noeudA;
 		Edge edge;
-		
+
 		try {
 			jParser.nextToken();
 			String fieldname = jParser.getCurrentName();
@@ -67,32 +66,29 @@ public class JsonToGS {
 				jParser.nextToken();
 				label = jParser.getText();
 			} else {
-				throw new FormatFichierException(
-						FILE_FORMAT_ERROR);
+				throw new FormatFichierException(FILE_FORMAT_ERROR);
 			}
 			jParser.nextToken();
 			fieldname = jParser.getCurrentName();
 			if (MyJsonGenerator.FORMAT_TRANSITION_BEGIN_NODE.equals(fieldname)) {
-				// current token is "NoeudD",
-				// move to next, which is "NoeudD"'s value
+				// current token is "NodeB",
+				// move to next, which is "NodeB"'s value
 				jParser.nextToken();
 				noeudD = jParser.getText();
 			} else {
-				throw new FormatFichierException(
-						FILE_FORMAT_ERROR);
+				throw new FormatFichierException(FILE_FORMAT_ERROR);
 			}
 			jParser.nextToken();
 			fieldname = jParser.getCurrentName();
 			if (MyJsonGenerator.FORMAT_TRANSITION_END_NODE.equals(fieldname)) {
-				// current token is "NoeudA",
-				// move to next, which is "NoeudA"'s value
+				// current token is "NodeE",
+				// move to next, which is "NodeE"'s value
 				jParser.nextToken();
 				noeudA = jParser.getText();
 				edge = graph.addEdge(label, noeudD, noeudA, true);
 				edge.setAttribute("ui.label", label);
 			} else {
-				throw new FormatFichierException(
-						FILE_FORMAT_ERROR);
+				throw new FormatFichierException(FILE_FORMAT_ERROR);
 			}
 
 			// loop until token equal to "}"
@@ -101,7 +97,7 @@ public class JsonToGS {
 				jParser.nextToken();
 				edge.addAttribute(fieldname, jParser.getText());
 			}
-			
+
 		} catch (JsonParseException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -114,11 +110,9 @@ public class JsonToGS {
 	public static Graph generateGraph(String filePath) {
 		Graph graph = new SingleGraph("graph");
 
-		/*graph.display();
-
 		graph.addAttribute("ui.quality");
 		graph.addAttribute("ui.antialias");
-		graph.addAttribute("ui.stylesheet", "edge { fill-color: grey; }");*/
+		graph.addAttribute("ui.stylesheet", "edge { fill-color: grey; }");
 
 		try {
 
@@ -137,8 +131,7 @@ public class JsonToGS {
 					generateNode(jParser, graph);
 				}
 			} else {
-				throw new FormatFichierException(
-						FILE_FORMAT_ERROR);
+				throw new FormatFichierException(FILE_FORMAT_ERROR);
 			}
 
 			jParser.nextToken();
@@ -151,22 +144,24 @@ public class JsonToGS {
 					generateTransitions(jParser, graph);
 				}
 			} else {
-				throw new FormatFichierException(
-						FILE_FORMAT_ERROR);
+				throw new FormatFichierException(FILE_FORMAT_ERROR);
 			}
-			
-			jParser.close();
 
+			jParser.close();
+			
+			//TODO APPEL FENETRE D'ALERTE QUAND EXCEPTION
 		} catch (JsonGenerationException e) {
 			e.printStackTrace();
 		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (JsonParseException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (FormatFichierException e) {
 			e.printStackTrace();
 		}
-		
+
 		return graph;
 
 	}
