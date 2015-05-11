@@ -38,54 +38,69 @@ import org.graphstream.ui.swingViewer.View;
 
 @SuppressWarnings("serial")
 public class Fenetre extends JFrame implements ActionListener {
+
+	// Instanciation des différents Components
+
 	JFrame frame;
-	JPanel panelFile;
-	JPanel panelGraph;
-	JScrollPane jsp;
+
+	JPanel panelFile, panelGraph, panelboutton, panelgen, graphJSon,
+			graphAgent;
+
 	JSplitPane splitPane, splitPane2;
-	JPanel panelboutton;
-	JPanel panelgen;
-	JPanel graphJSon;
-	JScrollPane scrollJSon;
-	JPanel graphAgent;
-	JScrollPane scrollAgent;
+
+	JScrollPane scrollJSon, scrollAgent;
+
 	JTextField directory;
+
 	JButton buttonGS;
 
-	final int xWindow = 300;
-	final int yWindow = 100;
-	final int widthWindow = 800;
-	final int heightWindow = 600;
-	final int sizeSeparator = 5;
+	JMenuBar menu_bar1;
 
-	Fenetre() {
+	JMenu menu1;
 
+	JMenuItem importMenu, exitMenu;
+
+	final int xWindow = 50, yWindow = 0, widthWindow = 1280,
+			heightWindow = 700, sizeSeparator = 5;
+
+	public Fenetre() {
+
+		// Initialisation de la fenêtre principale
 		frame = new JFrame("Projet SMBL");
 
+		// Initialisation et définition du 1er panneau
 		panelFile = new JPanel(new GridLayout(1, 2, 20, 5));
-
 		panelFile.setBorder(BorderFactory.createCompoundBorder(
 				BorderFactory.createTitledBorder("JSon File"),
 				BorderFactory.createEmptyBorder(1, 1, 1, 1)));
 
+		// Initialisation et définition du 2ème panneau
+		panelGraph = new JPanel();
+		panelGraph.setLayout(new BoxLayout(panelGraph, BoxLayout.Y_AXIS));
+		panelGraph.setBorder(BorderFactory.createCompoundBorder(
+				BorderFactory.createTitledBorder("Graphs"),
+				BorderFactory.createEmptyBorder(1, 1, 1, 1)));
+
+		// Ajout de Components au 1er panneau
 		buttonGS = new JButton("To GraphStream");
 		directory = new JTextField("Directory");
 		directory.setPreferredSize(new Dimension(250, 20));
 		directory.setEditable(false);
-
 		panelFile.add(directory);
 		panelFile.add(buttonGS);
 
-		JMenuBar menu_bar1 = new JMenuBar();
-		JMenu menu1 = new JMenu("File");
+		// Initialisation et définition de la barre de menu et ses composants
+		menu_bar1 = new JMenuBar();
 
-		/* differents choix du menu */
-		JMenuItem importMenu = new JMenuItem("Import");
-		JMenuItem aboutUs = new JMenuItem("About Us");
-		JMenuItem exitMenu = new JMenuItem("Exit");
+		menu1 = new JMenu("File");
+
+		importMenu = new JMenuItem("Import");
+		exitMenu = new JMenuItem("Exit");
 
 		menu1.add(importMenu);
 		menu1.add(exitMenu);
+
+		menu_bar1.add(menu1);
 
 		// Action lors du clic sur l'item "Import"
 		importMenu.addActionListener(new ActionListener() {
@@ -107,8 +122,11 @@ public class Fenetre extends JFrame implements ActionListener {
 			}
 		});
 
+		// Action lors du clic sur l'item "To GraphStream"
 		buttonGS.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				// Visualisation du graph généré par le fichier importé au
+				// format .json
 				Graph g;
 				g = JsonToGS.generateGraph(directory.getText());
 				Viewer vue = new Viewer(g,
@@ -118,7 +136,6 @@ public class Fenetre extends JFrame implements ActionListener {
 				View view = vue.addDefaultView(false);
 
 				graphJSon.removeAll();
-				graphJSon.setLayout(new BorderLayout());
 				graphJSon.add(view, BorderLayout.CENTER);
 				scrollJSon.setViewportView(graphJSon);
 
@@ -131,17 +148,18 @@ public class Fenetre extends JFrame implements ActionListener {
 				View view2 = vue2.addDefaultView(false);
 
 				graphAgent.removeAll();
-				graphAgent.setLayout(new BorderLayout());
 				graphAgent.add(view2, BorderLayout.CENTER);
 				scrollAgent.setViewportView(graphAgent);
 
+				// Visualisation du graphe généré par rapport au 1er graphe
 				for (Node n : g.getEachNode()) {
 					Node node = g2.addNode(n.getId());
 					for (String attributeKey : n.getAttributeKeySet()) {
-						node.addAttribute(attributeKey, n.getAttribute(attributeKey));
+						node.addAttribute(attributeKey,
+								n.getAttribute(attributeKey));
 					}
 				}
-				
+
 				for (Edge ed : g.getEachEdge()) {
 					Edge edge = g2.addEdge(ed.getId(), ed.getSourceNode()
 							.getId(), ed.getTargetNode().getId(), true);
@@ -154,37 +172,30 @@ public class Fenetre extends JFrame implements ActionListener {
 			}
 		});
 
-		menu_bar1.add(menu1);
-		panelGraph = new JPanel();
-		panelGraph.setLayout(null);
-		panelGraph.setLayout(new BoxLayout(panelGraph, BoxLayout.Y_AXIS));
-		panelGraph.setBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createTitledBorder("Graphs"),
-				BorderFactory.createEmptyBorder(1, 1, 1, 1)));
-
-		// on créé le splitPane avec une separation Horizontal (barre à la
-		// vertical)
+		// Création et définition du splitPane de la fenêtre principale
 		splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, panelFile,
 				panelGraph);
-
-		// Place la barre de séparation a 50 px
 		splitPane.setDividerLocation(50);
 
-		graphJSon = new JPanel();
-		graphAgent = new JPanel();
-		scrollJSon = new JScrollPane();
-		scrollAgent = new JScrollPane();
-
+		// Création et définition du splitPane qui sera dans le 2nd panneau
 		splitPane2 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, scrollJSon,
 				scrollAgent);
 		splitPane2.setDividerSize(5);
 		splitPane2.setDividerLocation((widthWindow - sizeSeparator) / 2);
 
+		// Initialisation des paramètres que va contenir le 2nd splitPane
+		graphJSon = new JPanel();
+		graphAgent = new JPanel();
+		scrollJSon = new JScrollPane();
+		scrollAgent = new JScrollPane();
+
 		panelGraph.add(splitPane2);
+
+		// Définition de la fenêtre principale
 		frame.add(splitPane);
 		frame.setJMenuBar(menu_bar1);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setResizable(false);
+		frame.setResizable(true);
 		frame.setBounds(xWindow, yWindow, widthWindow, heightWindow);
 		frame.setVisible(true);
 
