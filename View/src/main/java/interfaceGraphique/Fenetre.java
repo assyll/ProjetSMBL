@@ -44,7 +44,7 @@ public class Fenetre extends JFrame implements ActionListener {
 	JFrame frame;
 
 	JPanel panelFile, panelGraph, panelboutton, panelgen, graphJSon,
-			graphAgent;
+			graphAgent, zoomJSon, zoomAgent, barreStatut;
 
 	JSplitPane splitPane, splitPane2;
 
@@ -52,7 +52,8 @@ public class Fenetre extends JFrame implements ActionListener {
 
 	JTextField directory;
 
-	JButton buttonGS;
+	JButton buttonGS, zoomAvantJSon, zoomArrJSon, zoomTotalJSon, zoomAvantAg,
+			zoomArrAg, zoomTotalAg;
 
 	JMenuBar menu_bar1;
 
@@ -75,11 +76,37 @@ public class Fenetre extends JFrame implements ActionListener {
 				BorderFactory.createEmptyBorder(1, 1, 1, 1)));
 
 		// Initialisation et définition du 2ème panneau
-		panelGraph = new JPanel();
-		panelGraph.setLayout(new BoxLayout(panelGraph, BoxLayout.Y_AXIS));
+		panelGraph = new JPanel(new BorderLayout());
 		panelGraph.setBorder(BorderFactory.createCompoundBorder(
 				BorderFactory.createTitledBorder("Graphs"),
 				BorderFactory.createEmptyBorder(1, 1, 1, 1)));
+		
+		// Initialisation des bouttons de zoom
+		zoomAvantJSon = new JButton("<html><b>+</b></html>");
+		zoomArrJSon = new JButton("<html><b>-</b></html>");
+		zoomTotalJSon = new JButton("<html><b>%</b></html>");
+		zoomAvantAg = new JButton("<html><b>+</b></html>");
+		zoomArrAg = new JButton("<html><b>-</b></html>");
+		zoomTotalAg = new JButton("<html><b>%</b></html>");
+
+		// Initialisation et définition du panneau pour zoomer le graphe Json
+		zoomJSon = new JPanel(new GridLayout(3, 1, 20, 5));
+		zoomJSon.add(zoomAvantJSon);
+		zoomJSon.add(zoomArrJSon);
+		zoomJSon.add(zoomTotalJSon);
+
+		// Initialisation et définition du panneau pour zoomer le graphe Agent
+		zoomAgent = new JPanel(new GridLayout(3, 1, 20, 5));
+		zoomAgent.add(zoomAvantAg);
+		zoomAgent.add(zoomArrAg);
+		zoomAgent.add(zoomTotalAg);
+
+		// Initialisation du panneau de statut
+		barreStatut = new JPanel();
+		barreStatut.setBorder(BorderFactory.createCompoundBorder(
+				BorderFactory.createTitledBorder("Statut"),
+				BorderFactory.createEmptyBorder(1, 1, 1, 1)));
+		
 
 		// Ajout de Components au 1er panneau
 		buttonGS = new JButton("To GraphStream");
@@ -101,6 +128,9 @@ public class Fenetre extends JFrame implements ActionListener {
 		menu1.add(exitMenu);
 
 		menu_bar1.add(menu1);
+		
+		graphJSon = new JPanel();
+		graphAgent = new JPanel();
 
 		// Action lors du clic sur l'item "Import"
 		importMenu.addActionListener(new ActionListener() {
@@ -176,20 +206,22 @@ public class Fenetre extends JFrame implements ActionListener {
 		splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, panelFile,
 				panelGraph);
 		splitPane.setDividerLocation(50);
+		
+		// Initialisation des paramètres que va contenir le 2nd splitPane
+		
+		scrollJSon = new JScrollPane();
+		scrollAgent = new JScrollPane();
 
 		// Création et définition du splitPane qui sera dans le 2nd panneau
 		splitPane2 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, scrollJSon,
 				scrollAgent);
 		splitPane2.setDividerSize(5);
-		splitPane2.setDividerLocation((widthWindow - sizeSeparator) / 2);
+		splitPane2.setDividerLocation((widthWindow - sizeSeparator - 130) / 2);	
 
-		// Initialisation des paramètres que va contenir le 2nd splitPane
-		graphJSon = new JPanel();
-		graphAgent = new JPanel();
-		scrollJSon = new JScrollPane();
-		scrollAgent = new JScrollPane();
-
-		panelGraph.add(splitPane2);
+		panelGraph.add(zoomAgent, BorderLayout.EAST);
+		panelGraph.add(zoomJSon, BorderLayout.WEST);
+		panelGraph.add(splitPane2, BorderLayout.CENTER);
+		panelGraph.add(barreStatut, BorderLayout.SOUTH);
 
 		// Définition de la fenêtre principale
 		frame.add(splitPane);
