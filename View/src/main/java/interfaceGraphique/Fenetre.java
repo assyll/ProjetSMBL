@@ -5,6 +5,7 @@ import java.awt.Choice;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -48,7 +49,7 @@ public class Fenetre extends JFrame implements ActionListener {
 
 	JSplitPane splitPane, splitPane2;
 
-	JScrollPane scrollJSon, scrollAgent;
+	JScrollPane scrollJSon, scrollAgent, scrollStatut;
 
 	JTextField directory;
 
@@ -80,7 +81,7 @@ public class Fenetre extends JFrame implements ActionListener {
 		panelGraph.setBorder(BorderFactory.createCompoundBorder(
 				BorderFactory.createTitledBorder("Graphs"),
 				BorderFactory.createEmptyBorder(1, 1, 1, 1)));
-		
+
 		// Initialisation des bouttons de zoom
 		zoomAvantJSon = new JButton("<html><b>+</b></html>");
 		zoomArrJSon = new JButton("<html><b>-</b></html>");
@@ -106,7 +107,7 @@ public class Fenetre extends JFrame implements ActionListener {
 		barreStatut.setBorder(BorderFactory.createCompoundBorder(
 				BorderFactory.createTitledBorder("Statut"),
 				BorderFactory.createEmptyBorder(1, 1, 1, 1)));
-		
+		barreStatut.setPreferredSize(new Dimension(700,150));
 
 		// Ajout de Components au 1er panneau
 		buttonGS = new JButton("To GraphStream");
@@ -128,7 +129,12 @@ public class Fenetre extends JFrame implements ActionListener {
 		menu1.add(exitMenu);
 
 		menu_bar1.add(menu1);
-		
+
+		// Initialisation des paramètres que va contenir le 2nd splitPane
+		scrollJSon = new JScrollPane();
+		scrollAgent = new JScrollPane();
+		scrollStatut = new JScrollPane();
+		scrollStatut.setViewportView(barreStatut);
 		graphJSon = new JPanel();
 		graphAgent = new JPanel();
 
@@ -166,6 +172,7 @@ public class Fenetre extends JFrame implements ActionListener {
 				View view = vue.addDefaultView(false);
 
 				graphJSon.removeAll();
+				graphJSon.setLayout(new BorderLayout());
 				graphJSon.add(view, BorderLayout.CENTER);
 				scrollJSon.setViewportView(graphJSon);
 
@@ -178,7 +185,8 @@ public class Fenetre extends JFrame implements ActionListener {
 				View view2 = vue2.addDefaultView(false);
 
 				graphAgent.removeAll();
-				graphAgent.add(view2, BorderLayout.CENTER);
+				graphAgent.setLayout(new BorderLayout());
+				graphAgent.add(view2,  BorderLayout.CENTER);
 				scrollAgent.setViewportView(graphAgent);
 
 				// Visualisation du graphe généré par rapport au 1er graphe
@@ -202,26 +210,63 @@ public class Fenetre extends JFrame implements ActionListener {
 			}
 		});
 
+		// Action lors du clic sur l'item "+"
+		zoomAvantJSon.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+			}
+		});
+
+		// Action lors du clic sur l'item "+"
+		zoomArrJSon.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+			}
+		});
+
+		// Action lors du clic sur l'item "+"
+		zoomTotalJSon.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+			}
+		});
+
+		// Action lors du clic sur l'item "+"
+		zoomAvantAg.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+			}
+		});
+
+		// Action lors du clic sur l'item "+"
+		zoomArrAg.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+			}
+		});
+
+		// Action lors du clic sur l'item "+"
+		zoomTotalAg.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+			}
+		});
+
 		// Création et définition du splitPane de la fenêtre principale
 		splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, panelFile,
 				panelGraph);
 		splitPane.setDividerLocation(50);
-		
-		// Initialisation des paramètres que va contenir le 2nd splitPane
-		
-		scrollJSon = new JScrollPane();
-		scrollAgent = new JScrollPane();
 
 		// Création et définition du splitPane qui sera dans le 2nd panneau
 		splitPane2 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, scrollJSon,
 				scrollAgent);
 		splitPane2.setDividerSize(5);
-		splitPane2.setDividerLocation((widthWindow - sizeSeparator - 130) / 2);	
+		splitPane2.setDividerLocation((widthWindow - sizeSeparator - 130) / 2);
 
 		panelGraph.add(zoomAgent, BorderLayout.EAST);
 		panelGraph.add(zoomJSon, BorderLayout.WEST);
 		panelGraph.add(splitPane2, BorderLayout.CENTER);
-		panelGraph.add(barreStatut, BorderLayout.SOUTH);
+		panelGraph.add(scrollStatut, BorderLayout.SOUTH);
 
 		// Définition de la fenêtre principale
 		frame.add(splitPane);
