@@ -101,9 +101,8 @@ public class GraphToData {
 				if (state.getName().equals(_nameStartNode)) {
 					_initState = state;
 				}
-				
-			    tx.success();
 			}
+			tx.success();
 		}
 		shutDown();
 	}
