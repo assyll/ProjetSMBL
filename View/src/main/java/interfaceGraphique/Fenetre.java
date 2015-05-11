@@ -137,21 +137,18 @@ public class Fenetre extends JFrame implements ActionListener {
 
 				for (Node n : g.getEachNode()) {
 					Node node = g2.addNode(n.getId());
-					node.setAttribute("ui.label", "a");
-					/*
-					 * for (String attribute : n.getAttributeKeySet()) {
-					 * node.addAttribute(attribute); }
-					 */
-
+					for (String attributeKey : n.getAttributeKeySet()) {
+						node.addAttribute(attributeKey, n.getAttribute(attributeKey));
+					}
 				}
+				
 				for (Edge ed : g.getEachEdge()) {
-					Edge edge = g2.addEdge(ed.getId(), ed.getSourceNode().getId(),
-							ed.getTargetNode().getId(), true);
-					edge.setAttribute("ui.label", "a");
-					/*
-					 * for (String attribute : ed.getAttributeKeySet()){
-					 * edge.addAttribute(attribute); }
-					 */
+					Edge edge = g2.addEdge(ed.getId(), ed.getSourceNode()
+							.getId(), ed.getTargetNode().getId(), true);
+					for (String attributeKey : ed.getAttributeKeySet()) {
+						edge.addAttribute(attributeKey,
+								ed.getAttribute(attributeKey));
+					}
 				}
 
 			}
