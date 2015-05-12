@@ -107,7 +107,7 @@ public class Fenetre extends JFrame implements ActionListener {
 		barreStatut.setBorder(BorderFactory.createCompoundBorder(
 				BorderFactory.createTitledBorder("Statut"),
 				BorderFactory.createEmptyBorder(1, 1, 1, 1)));
-		barreStatut.setPreferredSize(new Dimension(700,150));
+		barreStatut.setPreferredSize(new Dimension(700, 150));
 
 		// Ajout de Components au 1er panneau
 		buttonGS = new JButton("To GraphStream");
@@ -189,7 +189,7 @@ public class Fenetre extends JFrame implements ActionListener {
 
 				graphAgent.removeAll();
 				graphAgent.setLayout(new BorderLayout());
-				graphAgent.add(view2,  BorderLayout.CENTER);
+				graphAgent.add(view2, BorderLayout.CENTER);
 				scrollAgent.setViewportView(graphAgent);
 
 				// Visualisation du graphe généré par rapport au 1er graphe
@@ -216,42 +216,42 @@ public class Fenetre extends JFrame implements ActionListener {
 		// Action lors du clic sur l'item "+"
 		zoomAvantJSon.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
+
 			}
 		});
 
 		// Action lors du clic sur l'item "+"
 		zoomArrJSon.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
+
 			}
 		});
 
 		// Action lors du clic sur l'item "+"
 		zoomTotalJSon.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
+
 			}
 		});
 
 		// Action lors du clic sur l'item "+"
 		zoomAvantAg.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
+
 			}
 		});
 
 		// Action lors du clic sur l'item "+"
 		zoomArrAg.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
+
 			}
 		});
 
 		// Action lors du clic sur l'item "+"
 		zoomTotalAg.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
+
 			}
 		});
 
@@ -280,14 +280,17 @@ public class Fenetre extends JFrame implements ActionListener {
 		frame.setVisible(true);
 
 	}
-	
+
 	public void setStyleGraph(Graph graph) {
 		graph.addAttribute("ui.quality");
 		graph.addAttribute("ui.antialias");
 		graph.addAttribute("ui.stylesheet", "edge { fill-color: grey; }"
-				+ "node." + MyJsonGenerator.FORMAT_NODE_SOURCE + "{ shape: cross; }"
-				+ "node." + MyJsonGenerator.FORMAT_NODE_FINAL + "{ fill-color: red; }"
-				+ "node." + MyJsonGenerator.FORMAT_NODE_SOURCE + MyJsonGenerator.FORMAT_NODE_FINAL + "{ shape: cross; fill-color: red; }");
+				+ "node." + MyJsonGenerator.FORMAT_NODE_SOURCE
+				+ "{ shape: cross; }" + "node."
+				+ MyJsonGenerator.FORMAT_NODE_FINAL + "{ fill-color: red;  }"
+				+ "node." + MyJsonGenerator.FORMAT_NODE_SOURCE
+				+ MyJsonGenerator.FORMAT_NODE_FINAL
+				+ "{ shape: cross; fill-color: red; }");
 	}
 
 	public void setNodeClass(Graph graph) {
@@ -299,13 +302,13 @@ public class Fenetre extends JFrame implements ActionListener {
 					.equals("true");
 			if (isSource && isFinal) {
 				node.setAttribute("ui.class",
-						MyJsonGenerator.FORMAT_NODE_SOURCE + MyJsonGenerator.FORMAT_NODE_FINAL);
-			} else if(isSource){
+						MyJsonGenerator.FORMAT_NODE_SOURCE
+								+ MyJsonGenerator.FORMAT_NODE_FINAL);
+			} else if (isSource) {
 				node.setAttribute("ui.class",
 						MyJsonGenerator.FORMAT_NODE_SOURCE);
-			} else if(isFinal){
-				node.setAttribute("ui.class",
-						MyJsonGenerator.FORMAT_NODE_FINAL);
+			} else if (isFinal) {
+				node.setAttribute("ui.class", MyJsonGenerator.FORMAT_NODE_FINAL);
 			}
 		}
 	}
