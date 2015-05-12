@@ -17,7 +17,7 @@ public class JacksonStreamExampleGenerator {
 	JsonFactory jfactory = new JsonFactory();
  
 	/*** write to file ***/
-	JsonGenerator jGenerator = jfactory.createJsonGenerator(new File(
+	JsonGenerator jGenerator = jfactory.createGenerator(new File(
 			"C:\\Users\\hugo\\Desktop\\json"), JsonEncoding.UTF8);
 	jGenerator.writeStartObject(); // {
  

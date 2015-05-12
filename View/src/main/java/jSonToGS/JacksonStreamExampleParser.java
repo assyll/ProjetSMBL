@@ -16,7 +16,7 @@ public class JacksonStreamExampleParser {
 	JsonFactory jfactory = new JsonFactory();
  
 	/*** read from file ***/
-	JsonParser jParser = jfactory.createJsonParser(new File("C:\\Users\\hugo\\Desktop\\json"));
+	JsonParser jParser = jfactory.createParser(new File("C:\\Users\\hugo\\Desktop\\json"));
  
 	// loop until token equal to "}"
 	while (jParser.nextToken() != JsonToken.END_OBJECT) {
