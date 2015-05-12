@@ -19,13 +19,13 @@ public class JsonToGS {
 
 	static final String FILE_FORMAT_ERROR = "Le format du fichier sélectionné est invalide";
 
-	public static void generateNode(JsonParser jParser, Graph graph) {
-		String name;
+	public void generateNode(JsonParser jParser, Graph graph) {
+		String name, fieldname;
 		Node node;
 
 		try {
 			jParser.nextToken();
-			String fieldname = jParser.getCurrentName();
+			fieldname = jParser.getCurrentName();
 			if (MyJsonGenerator.FORMAT_NODE_NAME.equals(fieldname)) {
 				// current token is "Name",
 				// move to next, which is "Name"'s value
@@ -53,8 +53,8 @@ public class JsonToGS {
 		}
 	}
 
-	public static void generateEdges(JsonParser jParser, Graph graph) {
-		String label, nodeB, nodeE;
+	public void generateEdges(JsonParser jParser, Graph graph) {
+		String label, nodeB, nodeE, action;
 		Edge edge;
 
 		try {
@@ -68,6 +68,7 @@ public class JsonToGS {
 			} else {
 				throw new FileFormatException(FILE_FORMAT_ERROR);
 			}
+			
 			jParser.nextToken();
 			fieldname = jParser.getCurrentName();
 			if (MyJsonGenerator.FORMAT_EDGE_BEGIN_NODE.equals(fieldname)) {
@@ -78,6 +79,7 @@ public class JsonToGS {
 			} else {
 				throw new FileFormatException(FILE_FORMAT_ERROR);
 			}
+			
 			jParser.nextToken();
 			fieldname = jParser.getCurrentName();
 			if (MyJsonGenerator.FORMAT_EDGE_END_NODE.equals(fieldname)) {
@@ -86,7 +88,18 @@ public class JsonToGS {
 				jParser.nextToken();
 				nodeE = jParser.getText();
 				edge = graph.addEdge(label, nodeB, nodeE, true);
-				edge.setAttribute("ui.label", label);
+			} else {
+				throw new FileFormatException(FILE_FORMAT_ERROR);
+			}
+			
+			jParser.nextToken();
+			fieldname = jParser.getCurrentName();
+			if (MyJsonGenerator.FORMAT_EDGE_ACTION.equals(fieldname)) {
+				// current token is "Action",
+				// move to next, which is "Action"'s value
+				jParser.nextToken();
+				action = jParser.getText();
+				edge.setAttribute("ui.label", action);
 			} else {
 				throw new FileFormatException(FILE_FORMAT_ERROR);
 			}
@@ -107,12 +120,8 @@ public class JsonToGS {
 		}
 	}
 
-	public static Graph generateGraph(String filePath) {
+	public Graph generateGraph(String filePath) {
 		Graph graph = new MultiGraph("graph");
-
-		graph.addAttribute("ui.quality");
-		graph.addAttribute("ui.antialias");
-		graph.addAttribute("ui.stylesheet", "edge { fill-color: grey; }");
 
 		try {
 
@@ -148,8 +157,8 @@ public class JsonToGS {
 			}
 
 			jParser.close();
-			
-			//TODO APPEL FENETRE D'ALERTE QUAND EXCEPTION
+
+			// TODO APPEL FENETRE D'ALERTE QUAND EXCEPTION
 		} catch (JsonGenerationException e) {
 			e.printStackTrace();
 		} catch (JsonMappingException e) {

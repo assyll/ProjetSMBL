@@ -163,9 +163,12 @@ public class Fenetre extends JFrame implements ActionListener {
 			public void actionPerformed(ActionEvent e) {
 				// Visualisation du graph généré par le fichier importé au
 				// format .json
-				Graph g;
-				g = JsonToGS.generateGraph(directory.getText());
-				Viewer vue = new Viewer(g,
+				Graph graph;
+				JsonToGS jSTGS = new JsonToGS();
+				graph = jSTGS.generateGraph(directory.getText());
+				setStyleGraph(graph);
+				setNodeClass(graph);
+				Viewer vue = new Viewer(graph,
 						Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
 				vue.enableAutoLayout();
 
@@ -190,7 +193,7 @@ public class Fenetre extends JFrame implements ActionListener {
 				scrollAgent.setViewportView(graphAgent);
 
 				// Visualisation du graphe généré par rapport au 1er graphe
-				for (Node n : g.getEachNode()) {
+				for (Node n : graph.getEachNode()) {
 					Node node = g2.addNode(n.getId());
 					for (String attributeKey : n.getAttributeKeySet()) {
 						node.addAttribute(attributeKey,
@@ -198,7 +201,7 @@ public class Fenetre extends JFrame implements ActionListener {
 					}
 				}
 
-				for (Edge ed : g.getEachEdge()) {
+				for (Edge ed : graph.getEachEdge()) {
 					Edge edge = g2.addEdge(ed.getId(), ed.getSourceNode()
 							.getId(), ed.getTargetNode().getId(), true);
 					for (String attributeKey : ed.getAttributeKeySet()) {
@@ -276,6 +279,35 @@ public class Fenetre extends JFrame implements ActionListener {
 		frame.setBounds(xWindow, yWindow, widthWindow, heightWindow);
 		frame.setVisible(true);
 
+	}
+	
+	public void setStyleGraph(Graph graph) {
+		graph.addAttribute("ui.quality");
+		graph.addAttribute("ui.antialias");
+		graph.addAttribute("ui.stylesheet", "edge { fill-color: grey; }"
+				+ "node." + MyJsonGenerator.FORMAT_NODE_SOURCE + "{ shape: cross; }"
+				+ "node." + MyJsonGenerator.FORMAT_NODE_FINAL + "{ fill-color: red; }"
+				+ "node." + MyJsonGenerator.FORMAT_NODE_SOURCE + MyJsonGenerator.FORMAT_NODE_FINAL + "{ shape: cross; fill-color: red; }");
+	}
+
+	public void setNodeClass(Graph graph) {
+		Boolean isSource, isFinal;
+		for (Node node : graph.getEachNode()) {
+			isSource = node.getAttribute(MyJsonGenerator.FORMAT_NODE_SOURCE)
+					.equals("true");
+			isFinal = node.getAttribute(MyJsonGenerator.FORMAT_NODE_FINAL)
+					.equals("true");
+			if (isSource && isFinal) {
+				node.setAttribute("ui.class",
+						MyJsonGenerator.FORMAT_NODE_SOURCE + MyJsonGenerator.FORMAT_NODE_FINAL);
+			} else if(isSource){
+				node.setAttribute("ui.class",
+						MyJsonGenerator.FORMAT_NODE_SOURCE);
+			} else if(isFinal){
+				node.setAttribute("ui.class",
+						MyJsonGenerator.FORMAT_NODE_FINAL);
+			}
+		}
 	}
 
 	public static void main(String[] args) {

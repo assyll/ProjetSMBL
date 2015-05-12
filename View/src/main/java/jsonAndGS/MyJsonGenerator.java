@@ -14,20 +14,25 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
 public class MyJsonGenerator {
-	static final String FORMAT_NODES = "Nodes";
-	static final String FORMAT_EDGES = "Edges";
-	static final String FORMAT_NODE_NAME = "Name";
-	static final String FORMAT_NODE_ATTRIBUT = "Attribut ";
-	static final String FORMAT_EDGE_LABEL = "Label";
-	static final String FORMAT_EDGE_BEGIN_NODE = "NodeB";
-	static final String FORMAT_EDGE_END_NODE = "NodeE";
-	static final String FORMAT_EDGE_ATTRIBUT = "Attribut ";
+	public static final String FORMAT_NODES = "Nodes";
+	public static final String FORMAT_EDGES = "Edges";
+	public static final String FORMAT_NODE_NAME = "Name";
+	public static final String FORMAT_NODE_SOURCE = "Source";
+	public static final String FORMAT_NODE_FINAL = "Final";
+	public static final String FORMAT_NODE_ATTRIBUT = "Attribut ";
+	public static final String FORMAT_EDGE_LABEL = "Label";
+	public static final String FORMAT_EDGE_BEGIN_NODE = "NodeB";
+	public static final String FORMAT_EDGE_END_NODE = "NodeE";
+	public static final String FORMAT_EDGE_ACTION = "Action";
+	public static final String FORMAT_EDGE_ATTRIBUT = "Attribut ";
 
 	public void generateNodes(JsonGenerator jGenerator, MyListNodes mLN) {
 		for (MyJsonNode node : mLN.get_listNodes()) {
 			try {
 				jGenerator.writeStartObject(); // {
 				jGenerator.writeStringField(FORMAT_NODE_NAME, node.get_name());
+				jGenerator.writeBooleanField(FORMAT_NODE_SOURCE, node.is_source());
+				jGenerator.writeBooleanField(FORMAT_NODE_FINAL, node.is_final());
 				int cpt = 1;
 				for (String attribut : node.get_attributs()) {
 					jGenerator.writeStringField(FORMAT_NODE_ATTRIBUT + cpt++, attribut);
@@ -52,6 +57,7 @@ public class MyJsonGenerator {
 				jGenerator.writeStringField(FORMAT_EDGE_LABEL, edge.get_label());
 				jGenerator.writeStringField(FORMAT_EDGE_BEGIN_NODE, edge.get_nodeB());
 				jGenerator.writeStringField(FORMAT_EDGE_END_NODE, edge.get_nodeE());
+				jGenerator.writeStringField(FORMAT_EDGE_ACTION, edge.get_action());
 				int cpt = 1;
 				for (String attribut : edge.get_attributs()) {
 					jGenerator.writeStringField(FORMAT_EDGE_ATTRIBUT + cpt++, attribut);
