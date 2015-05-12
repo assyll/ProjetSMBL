@@ -1,12 +1,12 @@
-package generator;
+package generatorTracesTestAleat;
 import static org.junit.Assert.*;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import generator.Action;
-import generator.State;
+import generatorTracesTestAleat.Action;
+import generatorTracesTestAleat.State;
 
 import org.junit.After;
 import org.junit.Before;
@@ -72,6 +72,11 @@ public class StateTest {
 	
 	@Test
 	public void testGetActionAleat2() {
+		
+	}
+	
+	@Test
+	public void testGetActionAleat3() {
 		final int NB_ACTIONS = 5;
 		final int NB_ESSAIS = 100;
 		

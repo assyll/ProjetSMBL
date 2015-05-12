@@ -1,4 +1,4 @@
-package generator;
+package generatorTracesTestAleat;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -113,7 +113,8 @@ public class GraphToData {
 	 * @param maxActions nombre d'actions maxi par trace
 	 * @return la liste des traces
 	 */
-	public List<Trace> traceGenerate(int nbTraces, int maxActions) {
+	public List<Trace> traceGenerate(int nbTraces, int maxActions,
+			boolean stopToFinal, boolean withRepetition) {
 		
 		List<Trace> traces = new ArrayList<Trace>();
 
@@ -128,8 +129,10 @@ public class GraphToData {
 				trace.addAction(actionAleat);
 			}
 			
-			if ((state == null || state.isFinal())
-					&& !traces.contains(trace)) {
+			if ((state == null || !stopToFinal ||
+					(state.isFinal() /*&& stopToFinal*/))
+					&& (withRepetition ||
+							(!traces.contains(trace) /*&& !withRepetition*/))) {
 				traces.add(trace);
 			}
 		}

@@ -10,15 +10,19 @@
 	
 	<build>
 		<plugins>
+			
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven­-compiler-plugin</artifactId>
-				<version>2.3.2</version>
-				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
-				</configuration>
-			</plugin>
+	        	<groupId>org.codehaus.mojo</groupId>
+	        	<artifactId>cobertura-maven-plugin</artifactId>
+	        	<version>2.7</version>
+	        	<executions>
+	          		<execution>
+	            		<goals>
+	              			<goal>clean</goal>
+	            		</goals>
+	          		</execution>
+	        	</executions>
+	      	</plugin>
 		</plugins>
 	</build>
 	

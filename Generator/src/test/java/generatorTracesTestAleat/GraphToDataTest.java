@@ -1,13 +1,13 @@
-package generator;
+package generatorTracesTestAleat;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import generator.Action;
-import generator.GraphToData;
-import generator.State;
-import generator.Trace;
+import generatorTracesTestAleat.Action;
+import generatorTracesTestAleat.GraphToData;
+import generatorTracesTestAleat.State;
+import generatorTracesTestAleat.Trace;
 
 import org.junit.After;
 import org.junit.Before;
@@ -99,32 +99,32 @@ public class GraphToDataTest {
 	
 	@Test
 	public void testTraceGenerate1() {
-		List<Trace> traces = _graph.traceGenerate(0, 10);
+		List<Trace> traces = _graph.traceGenerate(0, 10, true, false);
 		assertTrue(traces.isEmpty());
 	}
 	
 	@Test
 	public void testTraceGenerate2() {
-		List<Trace> traces = _graph.traceGenerate(10, 0);
+		List<Trace> traces = _graph.traceGenerate(10, 0, true, false);
 		assertTrue(traces.isEmpty());
 	}
 	
 	@Test
 	public void testTraceGenerate3() {
-		List<Trace> traces = _graph.traceGenerate(10, 1);
+		List<Trace> traces = _graph.traceGenerate(10, 1, true, false);
 		assertTrue(traces.isEmpty());
 	}
 	
 	@Test
 	public void testTraceGenerate4() {
-		List<Trace> traces = _graph.traceGenerate(50, 2);
+		List<Trace> traces = _graph.traceGenerate(50, 2, true, false);
 		assertEquals(traces.size(), 1);
 		assertEquals(traces.get(0), _trace1);
 	}
 	
 	@Test
 	public void testTraceGenerate5() {
-		List<Trace> traces = _graph.traceGenerate(50, 3);
+		List<Trace> traces = _graph.traceGenerate(50, 3, true, false);
 		assertEquals(traces.size(), 2);
 		assertTrue(traces.contains(_trace1));
 		assertTrue(traces.contains(_trace2));
@@ -132,7 +132,7 @@ public class GraphToDataTest {
 	
 	@Test
 	public void testTraceGenerate6() {
-		List<Trace> traces = _graph.traceGenerate(100, 5);
+		List<Trace> traces = _graph.traceGenerate(100, 5, true, false);
 		assertEquals(traces.size(), 4);
 		assertTrue(traces.contains(_trace1));
 		assertTrue(traces.contains(_trace2));
@@ -142,7 +142,7 @@ public class GraphToDataTest {
 	
 	@Test
 	public void testTraceGenerate7() {
-		List<Trace> traces = _graph.traceGenerate(100, 100);
+		List<Trace> traces = _graph.traceGenerate(100, 100, true, false);
 		assertTrue(!traces.isEmpty());
 		assertTrue(traces.size() <= 100);
 	}

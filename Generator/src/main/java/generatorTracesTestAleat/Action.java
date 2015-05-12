@@ -1,4 +1,4 @@
-package generator;
+package generatorTracesTestAleat;
 
 public class Action {
 

@@ -1,8 +1,9 @@
-package generator;
+package generatorTracesTestAleat;
 import static org.junit.Assert.*;
+
 import org.junit.Test;
 
-import generator.Action;
+import generatorTracesTestAleat.Action;
 
 
 public class ActionTest {

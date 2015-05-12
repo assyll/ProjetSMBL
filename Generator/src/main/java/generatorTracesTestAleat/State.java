@@ -1,4 +1,4 @@
-package generator;
+package generatorTracesTestAleat;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,8 +39,6 @@ public class State {
 	 */
 	public Action getActionAleat() {
 		
-		Action actionAleat = null;
-		
 		int max = _possiblesActions.size() + (_isFinal ? 1 : 0); // max exclus
 		int nbAleat = new Random().nextInt((max > 0) ? max : 1);
 		
@@ -48,13 +46,10 @@ public class State {
 			return null;
 		}
 				
-		Iterator<Action> iterator = getActions();
+		List<Action> actions = new ArrayList<Action>();
+		actions.addAll(_possiblesActions.keySet());
 		
-		for (int i = 0; i <= nbAleat && iterator.hasNext(); i++) {
-			actionAleat = iterator.next();
-		}
-				
-		return actionAleat;
+		return actions.get(nbAleat);
 	}
 	
 	public Iterator<Action> getActions() {
