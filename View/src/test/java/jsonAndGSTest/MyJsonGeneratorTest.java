@@ -2,7 +2,6 @@ package jsonAndGSTest;
 
 import java.util.LinkedList;
 
-import jsonAndGS.JsonToGS;
 import jsonAndGS.MyJsonGenerator;
 import jsonAndGS.MyJsonNode;
 import jsonAndGS.MyJsonEdge;
@@ -15,7 +14,6 @@ public class MyJsonGeneratorTest extends TestCase {
 public void testGenerateJson() {
 
 		MyJsonGenerator generator = new MyJsonGenerator();
-		JsonToGS jTGS = new JsonToGS();
 
 		MyListNodes mLN = new MyListNodes();
 		MyListEdges mLE = new MyListEdges();
