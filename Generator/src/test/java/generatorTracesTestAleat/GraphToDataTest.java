@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import generatorTracesTestAleat.Action;
-import generatorTracesTestAleat.GraphToData;
+import generatorTracesTestAleat.GeneratorTraces;
 import generatorTracesTestAleat.State;
 import generatorTracesTestAleat.Trace;
 
@@ -21,13 +21,13 @@ public class GraphToDataTest {
 	private Trace _trace2;
 	private Trace _trace3;
 	private Trace _trace4;
-	private GraphToData _graph;
+	private GeneratorTraces _graph;
 	
 	private static final String _DB_PATH = "target/graphe1-db";
 	
 	@Before
 	public void start() throws Exception {
-		_graph = new GraphToData(_DB_PATH);
+		_graph = new GeneratorTraces(_DB_PATH);
 		
 		_trace1 = new Trace();
 		_trace2 = new Trace();
@@ -81,7 +81,7 @@ public class GraphToDataTest {
 		
 		// teste l'etat initial
 		assertEquals(_graph.getInitState(),
-				new State(GraphToData._nameStartNode, false));
+				new State(GeneratorTraces._nameStartNode, false));
 		
 		// teste si les etats sont bien tous enregistres
 		assertTrue(_graph.getStates().contains(new State("Noeud1", false)));
@@ -99,32 +99,32 @@ public class GraphToDataTest {
 	
 	@Test
 	public void testTraceGenerate1() {
-		List<Trace> traces = _graph.traceGenerate(0, 10, true, false);
+		List<Trace> traces = _graph.traceGenerateAleat(0, 10, true, false);
 		assertTrue(traces.isEmpty());
 	}
 	
 	@Test
 	public void testTraceGenerate2() {
-		List<Trace> traces = _graph.traceGenerate(10, 0, true, false);
+		List<Trace> traces = _graph.traceGenerateAleat(10, 0, true, false);
 		assertTrue(traces.isEmpty());
 	}
 	
 	@Test
 	public void testTraceGenerate3() {
-		List<Trace> traces = _graph.traceGenerate(10, 1, true, false);
+		List<Trace> traces = _graph.traceGenerateAleat(10, 1, true, false);
 		assertTrue(traces.isEmpty());
 	}
 	
 	@Test
 	public void testTraceGenerate4() {
-		List<Trace> traces = _graph.traceGenerate(50, 2, true, false);
+		List<Trace> traces = _graph.traceGenerateAleat(50, 2, true, false);
 		assertEquals(traces.size(), 1);
 		assertEquals(traces.get(0), _trace1);
 	}
 	
 	@Test
 	public void testTraceGenerate5() {
-		List<Trace> traces = _graph.traceGenerate(50, 3, true, false);
+		List<Trace> traces = _graph.traceGenerateAleat(50, 3, true, false);
 		assertEquals(traces.size(), 2);
 		assertTrue(traces.contains(_trace1));
 		assertTrue(traces.contains(_trace2));
@@ -132,7 +132,7 @@ public class GraphToDataTest {
 	
 	@Test
 	public void testTraceGenerate6() {
-		List<Trace> traces = _graph.traceGenerate(100, 5, true, false);
+		List<Trace> traces = _graph.traceGenerateAleat(100, 5, true, false);
 		assertEquals(traces.size(), 4);
 		assertTrue(traces.contains(_trace1));
 		assertTrue(traces.contains(_trace2));
@@ -142,7 +142,7 @@ public class GraphToDataTest {
 	
 	@Test
 	public void testTraceGenerate7() {
-		List<Trace> traces = _graph.traceGenerate(100, 100, true, false);
+		List<Trace> traces = _graph.traceGenerateAleat(100, 100, true, false);
 		assertTrue(!traces.isEmpty());
 		assertTrue(traces.size() <= 100);
 	}

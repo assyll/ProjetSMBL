@@ -12,7 +12,7 @@ import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 
-public class Generator {
+public class GeneratorGraph {
 
 	/**
 	 * Une chance sur NB_CHANCE_CREER de creer un nouveau noeud

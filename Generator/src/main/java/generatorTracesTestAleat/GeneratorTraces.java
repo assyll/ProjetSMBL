@@ -11,7 +11,7 @@ import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 
-public class GraphToData {
+public class GeneratorTraces {
 	
 	public final static String _nameIdAttribut = "name";
 	public final static String _nameStartNode = "Racine";
@@ -21,7 +21,7 @@ public class GraphToData {
 	private List<State> _states;
 	private GraphDatabaseService _graphDB;
 	
-	public GraphToData(String db_Path) throws Exception {
+	public GeneratorTraces(String db_Path) throws Exception {
 		
 		_DB_PATH = db_Path;
 		_states = new ArrayList<State>();
@@ -108,12 +108,16 @@ public class GraphToData {
 	}
 	
 	/**
-	 * Generateur de traces.
+	 * Generateur de traces de facon aleatoire.
 	 * @param nbTraces nombre de traces a generer
 	 * @param maxActions nombre d'actions maxi par trace
+	 * @param stopToFinal booleen avertissant si un trace peut sarreter ou pas
+	 *                    sur un etat final.
+	 * @param withRepetition booleen avertissant si la liste des traces
+	 *                       retournee peut contenir des doublons ou pas.
 	 * @return la liste des traces
 	 */
-	public List<Trace> traceGenerate(int nbTraces, int maxActions,
+	public List<Trace> traceGenerateAleat(int nbTraces, int maxActions,
 			boolean stopToFinal, boolean withRepetition) {
 		
 		List<Trace> traces = new ArrayList<Trace>();
@@ -136,6 +140,56 @@ public class GraphToData {
 				traces.add(trace);
 			}
 		}
+		
+		return traces;
+	}
+	
+	/**
+	 * Generateur de traces de facon a remplir un certain pourcentage
+	 * de recouvrement du graphe.
+	 * @param stopToFinal booleen avertissant si la liste des traces
+	 *                       retournee peut contenir des doublons ou pas.
+	 * @param percentToCover pourcentage du graphe a couvrir
+	 * @return la liste des traces
+	 */
+	public List<Trace> traceGenerateCoverage(
+			boolean stopToFinal, float percentToCover) {
+		
+		float percent = 0.0f;
+		List<Trace> traces = new ArrayList<Trace>();
+		List<State> statesVisited = new ArrayList<State>();
+
+		for (; percent < percentToCover; ) {
+			
+			State state = _initState;
+			Trace trace = new Trace();
+			
+			if (!statesVisited.contains(state)) {
+				statesVisited.add(state);
+			}
+						
+			while (state != null) {
+				Action actionIntelligente =
+						state.getActionIntelligent(statesVisited);
+				state = state.executeAction(actionIntelligente);
+				trace.addAction(actionIntelligente);
+				
+				if (!statesVisited.contains(state)) {
+					statesVisited.add(state);
+				}
+			}
+			
+			if ((state == null || !stopToFinal || state.isFinal())
+					&& !traces.contains(trace)) {
+				traces.add(trace);
+			}
+			
+			percent = (float) statesVisited.size() / (float) _states.size();
+			System.out.println(statesVisited.size()+"/"+_states.size()+"="+percent);
+		}
+		
+		System.out.println("pourcentage couverture = "
+				+ (percent * 100) + "%");
 		
 		return traces;
 	}

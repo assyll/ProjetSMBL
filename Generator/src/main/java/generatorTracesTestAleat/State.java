@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
 
 public class State {
@@ -50,6 +51,15 @@ public class State {
 		actions.addAll(_possiblesActions.keySet());
 		
 		return actions.get(nbAleat);
+	}
+	
+	public Action getActionIntelligent(List<State> stateVisited) {
+		for (Entry<Action, State> e: _possiblesActions.entrySet()) {
+			if (!stateVisited.contains(e.getValue())) {
+				return e.getKey();
+			}
+		}
+		return null;
 	}
 	
 	public Iterator<Action> getActions() {

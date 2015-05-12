@@ -7,7 +7,7 @@ public class Main {
 	
 	public static void main(String[] args) throws Exception {
 
-		Generator generator = new Generator();
+		GeneratorGraph generator = new GeneratorGraph();
 		
 		System.out.println("Graphe: en cours de construction ...");
 		
