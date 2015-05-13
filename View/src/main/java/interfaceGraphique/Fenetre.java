@@ -3,6 +3,7 @@ package interfaceGraphique;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -38,8 +39,8 @@ public class Fenetre extends JFrame implements ActionListener {
 
 	JFrame frame;
 
-	JPanel panelFile, panelGraph, panelboutton, panelgen, graphJSon,
-			graphAgent, zoomJSon, zoomAgent;
+	JPanel panelFile, panelGraph, graphJSon, graphAgent, zoomJSon, zoomAgent,
+			panelModifJSon, panelModifAg, panelOptionJSon, panelOptionAg;
 
 	JSplitPane splitPane, splitPane2;
 
@@ -50,7 +51,7 @@ public class Fenetre extends JFrame implements ActionListener {
 	JTextArea textStatut;
 
 	JButton buttonGS, zoomAvantJSon, zoomArrJSon, zoomTextJSon, zoomAvantAg,
-			zoomArrAg, zoomTextAg;
+			zoomArrAg, zoomTextAg, addNodeJSon, addEdgeJSon, addNodeAg, addEdgeAg;
 
 	JMenuBar menu_bar1;
 
@@ -85,32 +86,61 @@ public class Fenetre extends JFrame implements ActionListener {
 		panelGraph.setBorder(BorderFactory.createCompoundBorder(
 				BorderFactory.createTitledBorder("Graphs"),
 				BorderFactory.createEmptyBorder(1, 1, 1, 1)));
-
+		
+		// Initialisation et définition du panneau d'ajout de noeuds et de transition gauche
+		panelModifJSon = new JPanel(new GridLayout(2, 1, 20, 50));
+		
+		// Initialisation et définition du panneau d'ajout de noeuds et de transition droit
+		panelModifAg = new JPanel(new GridLayout(2, 1, 20, 50));
+		
 		// Initialisation des bouttons de zoom
-		zoomAvantJSon = new JButton("<html><b>+</b></html>");
-		zoomArrJSon = new JButton("<html><b>-</b></html>");
+		zoomAvantJSon = new JButton("<html><b>Zoom +</b></html>");
+		zoomArrJSon = new JButton("<html><b>Zoom -</b></html>");
 		zoomTextJSon = new JButton("<html><b>%</b></html>");
-		zoomAvantAg = new JButton("<html><b>+</b></html>");
-		zoomArrAg = new JButton("<html><b>-</b></html>");
+		zoomAvantAg = new JButton("<html><b>Zoom +</b></html>");
+		zoomArrAg = new JButton("<html><b>Zoom -</b></html>");
 		zoomTextAg = new JButton("<html><b>%</b></html>");
 
 		// initialisation de la zone de texte pour le pourcentage de zoom
 		textJSon = new JTextField();
+		textJSon.setPreferredSize(new Dimension(40,30));
 		textAg = new JTextField();
 
 		// Initialisation et définition du panneau pour zoomer le graphe Json
-		zoomJSon = new JPanel(new GridLayout(4, 1, 20, 5));
+		zoomJSon = new JPanel(new GridLayout(2, 2, 20, 50));
 		zoomJSon.add(zoomAvantJSon);
 		zoomJSon.add(zoomArrJSon);
 		zoomJSon.add(zoomTextJSon);
 		zoomJSon.add(textJSon);
 
 		// Initialisation et définition du panneau pour zoomer le graphe Agent
-		zoomAgent = new JPanel(new GridLayout(4, 1, 20, 5));
+		zoomAgent = new JPanel(new GridLayout(2, 2, 20, 50));
 		zoomAgent.add(zoomAvantAg);
 		zoomAgent.add(zoomArrAg);
 		zoomAgent.add(zoomTextAg);
 		zoomAgent.add(textAg);
+		
+		// Initialisation des boutons d'option
+		addNodeJSon = new JButton("Node +");
+		addEdgeJSon = new JButton("Edge +");
+		addNodeAg = new JButton("Node +");
+		addEdgeAg = new JButton("Edge +");
+		
+		// Ajout des boutons dans les panneaux respectifs
+		panelModifJSon.add(addNodeJSon);
+		panelModifJSon.add(addEdgeJSon);
+		panelModifAg.add(addNodeAg);
+		panelModifAg.add(addEdgeAg);
+		
+		// Initialisation et définition panneau option gauche
+		panelOptionJSon = new JPanel(new GridLayout(2, 1, 20, 50));
+		panelOptionJSon.add(zoomJSon);
+		panelOptionJSon.add(panelModifJSon);
+		
+		// Initialisation et définition panneau option droit
+		panelOptionAg = new JPanel(new GridLayout(2, 1, 20, 50));
+		panelOptionAg.add(zoomAgent);
+		panelOptionAg.add(panelModifAg);	
 
 		// Initialisation de la zone de texte de la barre de statut
 		textStatut = new JTextArea("");
@@ -146,7 +176,7 @@ public class Fenetre extends JFrame implements ActionListener {
 				BorderFactory.createTitledBorder("Statut"),
 				BorderFactory.createEmptyBorder(1, 1, 1, 1)));
 		scrollStatut.setPreferredSize(new Dimension(panelGraph.getWidth(),
-				panelGraph.getHeight() + 150));
+				panelGraph.getHeight() + 100));
 		scrollStatut.setViewportView(textStatut);
 		graphJSon = new JPanel();
 		graphAgent = new JPanel();
@@ -181,7 +211,7 @@ public class Fenetre extends JFrame implements ActionListener {
 				graph = jSTGS.generateGraph(directory.getText());
 				setStyleGraph(graph);
 				setNodeClass(graph);
-				
+
 				viewer = new Viewer(graph,
 						Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
 				viewer.enableAutoLayout();
@@ -324,7 +354,7 @@ public class Fenetre extends JFrame implements ActionListener {
 						view.getCamera().setViewPercent(total);
 						textStatut
 								.append("Zoom avant: " + pourcentage + "% \n");
-					} else {
+					} else if (pourcentage < 100){
 						zoomArr = 100 - pourcentage;
 						total = 1 + (zoomArr / 100);
 						view.getCamera().setViewPercent(total);
@@ -344,10 +374,10 @@ public class Fenetre extends JFrame implements ActionListener {
 		splitPane2 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, scrollJSon,
 				scrollAgent);
 		splitPane2.setDividerSize(5);
-		splitPane2.setDividerLocation((widthWindow - sizeSeparator - 130) / 2);
+		splitPane2.setDividerLocation((widthWindow - sizeSeparator + 75) / 3);
 
-		panelGraph.add(zoomAgent, BorderLayout.EAST);
-		panelGraph.add(zoomJSon, BorderLayout.WEST);
+		panelGraph.add(panelOptionAg, BorderLayout.EAST);
+		panelGraph.add(panelOptionJSon, BorderLayout.WEST);
 		panelGraph.add(splitPane2, BorderLayout.CENTER);
 		panelGraph.add(scrollStatut, BorderLayout.SOUTH);
 
