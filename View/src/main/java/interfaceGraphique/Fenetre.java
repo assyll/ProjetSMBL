@@ -45,12 +45,12 @@ public class Fenetre extends JFrame implements ActionListener {
 
 	JScrollPane scrollJSon, scrollAgent, scrollStatut;
 
-	JTextField directory, zoomTextJSon, zoomTextAg;
+	JTextField directory, textJSon, textAg;
 
 	JTextArea textStatut;
 
-	JButton buttonGS, zoomAvantJSon, zoomArrJSon, zoomTotalJSon, zoomAvantAg,
-			zoomArrAg, zoomTotalAg;
+	JButton buttonGS, zoomAvantJSon, zoomArrJSon, zoomTextJSon, zoomAvantAg,
+			zoomArrAg, zoomTextAg;
 
 	JMenuBar menu_bar1;
 
@@ -58,7 +58,7 @@ public class Fenetre extends JFrame implements ActionListener {
 
 	JMenuItem importMenu, exitMenu;
 
-	Viewer vue, vue2;
+	Viewer viewer, viewer2;
 
 	View view, view2;
 
@@ -89,28 +89,28 @@ public class Fenetre extends JFrame implements ActionListener {
 		// Initialisation des bouttons de zoom
 		zoomAvantJSon = new JButton("<html><b>+</b></html>");
 		zoomArrJSon = new JButton("<html><b>-</b></html>");
-		zoomTotalJSon = new JButton("<html><b>%</b></html>");
+		zoomTextJSon = new JButton("<html><b>%</b></html>");
 		zoomAvantAg = new JButton("<html><b>+</b></html>");
 		zoomArrAg = new JButton("<html><b>-</b></html>");
-		zoomTotalAg = new JButton("<html><b>%</b></html>");
+		zoomTextAg = new JButton("<html><b>%</b></html>");
 
 		// initialisation de la zone de texte pour le pourcentage de zoom
-		zoomTextJSon = new JTextField();
-		zoomTextAg = new JTextField();
+		textJSon = new JTextField();
+		textAg = new JTextField();
 
 		// Initialisation et définition du panneau pour zoomer le graphe Json
 		zoomJSon = new JPanel(new GridLayout(4, 1, 20, 5));
 		zoomJSon.add(zoomAvantJSon);
 		zoomJSon.add(zoomArrJSon);
-		zoomJSon.add(zoomTotalJSon);
 		zoomJSon.add(zoomTextJSon);
+		zoomJSon.add(textJSon);
 
 		// Initialisation et définition du panneau pour zoomer le graphe Agent
 		zoomAgent = new JPanel(new GridLayout(4, 1, 20, 5));
 		zoomAgent.add(zoomAvantAg);
 		zoomAgent.add(zoomArrAg);
-		zoomAgent.add(zoomTotalAg);
 		zoomAgent.add(zoomTextAg);
+		zoomAgent.add(textAg);
 
 		// Initialisation de la zone de texte de la barre de statut
 		textStatut = new JTextArea("");
@@ -181,11 +181,11 @@ public class Fenetre extends JFrame implements ActionListener {
 				graph = jSTGS.generateGraph(directory.getText());
 				setStyleGraph(graph);
 				setNodeClass(graph);
-				vue = new Viewer(graph,
+				viewer = new Viewer(graph,
 						Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
-				vue.enableAutoLayout();
+				viewer.enableAutoLayout();
 
-				view = vue.addDefaultView(false);
+				view = viewer.addDefaultView(false);
 
 				graphJSon.removeAll();
 				graphJSon.setLayout(new BorderLayout());
@@ -194,11 +194,11 @@ public class Fenetre extends JFrame implements ActionListener {
 
 				Graph g2 = new MultiGraph("graph2");
 
-				vue2 = new Viewer(g2,
+				viewer2 = new Viewer(g2,
 						Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
-				vue2.enableAutoLayout();
+				viewer2.enableAutoLayout();
 
-				view2 = vue2.addDefaultView(false);
+				view2 = viewer2.addDefaultView(false);
 
 				graphAgent.removeAll();
 				graphAgent.setLayout(new BorderLayout());
@@ -230,7 +230,7 @@ public class Fenetre extends JFrame implements ActionListener {
 		zoomAvantJSon.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				zoom = view.getCamera().getViewPercent();
-				view = vue.getDefaultView();
+				view = viewer.getDefaultView();
 				view.getCamera().setViewPercent(zoom - 0.1);
 			}
 		});
@@ -239,15 +239,15 @@ public class Fenetre extends JFrame implements ActionListener {
 		zoomArrJSon.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				dezoom = view.getCamera().getViewPercent();
-				view = vue.getDefaultView();
+				view = viewer.getDefaultView();
 				view.getCamera().setViewPercent(dezoom + 0.1);
 			}
 		});
 
 		// Action lors du clic sur l'item "%" de la partie gauche
-		zoomTotalJSon.addActionListener(new ActionListener() {
+		zoomTextJSon.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				String s = zoomTextJSon.getText();
+				String s = textJSon.getText();
 				double pourcentage = 0, zoomAvant = 0, zoomArr = 0, total = 0;
 				boolean isNumber = false;
 				for (int i = 0; i < s.length(); i++) {
@@ -262,7 +262,7 @@ public class Fenetre extends JFrame implements ActionListener {
 					textStatut.append("Ce n'est pas un entier \n");
 				} else {
 					pourcentage = Integer.parseInt(s);
-					view = vue.getDefaultView();
+					view = viewer.getDefaultView();
 					if (pourcentage > 100) {
 						zoomAvant = pourcentage - 100;
 						total = 1 - (zoomAvant / 100);
@@ -285,7 +285,7 @@ public class Fenetre extends JFrame implements ActionListener {
 		zoomAvantAg.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				zoom = view.getCamera().getViewPercent();
-				view = vue2.getDefaultView();
+				view = viewer2.getDefaultView();
 				view.getCamera().setViewPercent(zoom - 0.1);
 			}
 		});
@@ -294,15 +294,15 @@ public class Fenetre extends JFrame implements ActionListener {
 		zoomArrAg.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				dezoom = view.getCamera().getViewPercent();
-				view = vue2.getDefaultView();
+				view = viewer2.getDefaultView();
 				view.getCamera().setViewPercent(dezoom + 0.1);
 			}
 		});
 
 		// Action lors du clic sur l'item "%" de la partie droite
-		zoomTotalAg.addActionListener(new ActionListener() {
+		zoomTextAg.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				String s = zoomTextAg.getText();
+				String s = textAg.getText();
 				double pourcentage = 0, zoomAvant = 0, zoomArr = 0, total = 0;
 				boolean isNumber = false;
 				for (int i = 0; i < s.length(); i++) {
@@ -317,7 +317,7 @@ public class Fenetre extends JFrame implements ActionListener {
 					textStatut.append("Ce n'est pas un entier \n");
 				} else {
 					pourcentage = Integer.parseInt(s);
-					view = vue2.getDefaultView();
+					view = viewer2.getDefaultView();
 					if (pourcentage > 100) {
 						zoomAvant = pourcentage - 100;
 						total = 1 - (zoomAvant / 100);
