@@ -18,11 +18,13 @@ public class JsonToGSTestDiademe extends TestCase {
 
 	public void testJsonToGS(){
 		
+		System.setProperty("org.graphstream.ui.renderer",
+				"org.graphstream.ui.j2dviewer.J2DGraphRenderer");
+		
 		String filePath;
 		
 		MyJsonGenerator generator = new MyJsonGenerator();
 		JsonToGS jTGS = new JsonToGS();
-		Fenetre fenetre = new Fenetre();
 
 		MyListNodes mLN = new MyListNodes();
 		MyListEdges mLE = new MyListEdges();
@@ -60,8 +62,10 @@ public class JsonToGSTestDiademe extends TestCase {
 		filePath = generator.generateJson(mLN, mLE).getAbsolutePath();
 
 		Graph graph = jTGS.generateGraph(filePath);
+		Fenetre.setStyleGraph(graph);
 		graph.display();
-		fenetre.setNodeClass(graph);
+		Fenetre.setNodeClass(graph);
+		System.out.println(graph.getNode("node 2").getAttribute("ui.class"));
 		
 		while(true){}
 	}
