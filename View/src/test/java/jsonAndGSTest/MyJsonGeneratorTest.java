@@ -168,9 +168,12 @@ public class MyJsonGeneratorTest extends TestCase {
 		MyJsonNode n1 = new MyJsonNode("node 1", true, false,
 				new LinkedList<String>());
 		n1.get_attributs().add("att 1");
+		MyJsonNode n2 = new MyJsonNode("node 2", true, false,
+				new LinkedList<String>());
+		n2.get_attributs().add("att 1");
 
 		MyListNodes mLN = new MyListNodes();
-		mLN.addNode(n1);
+		mLN.addNode(n1, n2);
 
 		MyJsonEdge e1 = new MyJsonEdge("edge 1", "node 1", "node 2",
 				"action !", new LinkedList<String>());
@@ -183,7 +186,7 @@ public class MyJsonGeneratorTest extends TestCase {
 
 			/*** write to file ***/
 			File file = generator.generateJson(mLN, mLE);
-			file.deleteOnExit();
+			//file.deleteOnExit();
 
 			/*** read from file ***/
 			JsonFactory jfactory = new JsonFactory();

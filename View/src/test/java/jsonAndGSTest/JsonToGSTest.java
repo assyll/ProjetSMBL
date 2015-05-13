@@ -43,6 +43,8 @@ public class JsonToGSTest extends TestCase {
 			
 			assertEquals(node.getAttribute(MyJsonGenerator.FORMAT_NODE_ATTRIBUT + "1"), "att 1");
 			
+			parser.close();
+			
 		} catch (JsonParseException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -82,6 +84,8 @@ public class JsonToGSTest extends TestCase {
 			
 			assertEquals(edge.getAttribute(MyJsonGenerator.FORMAT_EDGE_ATTRIBUT + "1"), "att 1");
 			
+			parser.close();
+			
 		} catch (JsonParseException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -92,7 +96,6 @@ public class JsonToGSTest extends TestCase {
 	
 	public void testGenerateJson() {
 		JsonToGS jTGS = new JsonToGS();
-		Graph graph = new MultiGraph("graph");
 		
 		File fileTest = new File("./src/test/resources/TestJson");
 		
@@ -101,12 +104,8 @@ public class JsonToGSTest extends TestCase {
 		JsonParser parser;
 		try {
 			parser = jfactory.createParser(fileTest);
-			/*parser.nextToken();
-			jTGS.generateNodes(parser, graph);
 			parser.nextToken();
-			jTGS.generateNodes(parser, graph);
-			parser.nextToken();
-			jTGS.generateEdges(parser, graph);
+			Graph graph = jTGS.generateGraph(fileTest.getAbsolutePath());
 			
 			assertEquals(graph.getEdgeCount(), 1);
 			
@@ -119,7 +118,29 @@ public class JsonToGSTest extends TestCase {
 			
 			assertEquals(edge.getAttribute("ui.label"), "action !");
 			
-			assertEquals(edge.getAttribute(MyJsonGenerator.FORMAT_EDGE_ATTRIBUT + "1"), "att 1");*/
+			assertEquals(edge.getAttribute(MyJsonGenerator.FORMAT_EDGE_ATTRIBUT + "1"), "att 1");
+			
+			assertEquals(graph.getNodeCount(), 2);
+			
+			Node node = graph.getNode("node 1");
+			assertNotNull(node);
+			
+			assertEquals(node.getAttribute(MyJsonGenerator.FORMAT_NODE_SOURCE), "true");
+			
+			assertEquals(node.getAttribute(MyJsonGenerator.FORMAT_NODE_FINAL), "false");
+			
+			assertEquals(node.getAttribute(MyJsonGenerator.FORMAT_NODE_ATTRIBUT + "1"), "att 1");
+			
+			node = graph.getNode("node 2");
+			assertNotNull(node);
+			
+			assertEquals(node.getAttribute(MyJsonGenerator.FORMAT_NODE_SOURCE), "true");
+			
+			assertEquals(node.getAttribute(MyJsonGenerator.FORMAT_NODE_FINAL), "false");
+			
+			assertEquals(node.getAttribute(MyJsonGenerator.FORMAT_NODE_ATTRIBUT + "1"), "att 1");
+			
+			parser.close();
 			
 		} catch (JsonParseException e) {
 			e.printStackTrace();
