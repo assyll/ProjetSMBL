@@ -1,41 +1,35 @@
 package interfaceGraphique;
 
 import java.awt.BorderLayout;
-import java.awt.Choice;
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
-import jsonAndGS.*;
-
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.JTree;
+
+import jsonAndGS.JsonToGS;
+import jsonAndGS.MyJsonGenerator;
 
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.MultiGraph;
-import org.graphstream.ui.swingViewer.Viewer;
 import org.graphstream.ui.swingViewer.View;
+import org.graphstream.ui.swingViewer.Viewer;
 
 @SuppressWarnings("serial")
 public class Fenetre extends JFrame implements ActionListener {
@@ -45,13 +39,15 @@ public class Fenetre extends JFrame implements ActionListener {
 	JFrame frame;
 
 	JPanel panelFile, panelGraph, panelboutton, panelgen, graphJSon,
-			graphAgent, zoomJSon, zoomAgent, barreStatut;
+			graphAgent, zoomJSon, zoomAgent;
 
 	JSplitPane splitPane, splitPane2;
 
 	JScrollPane scrollJSon, scrollAgent, scrollStatut;
 
-	JTextField directory;
+	JTextField directory, zoomTextJSon, zoomTextAg;
+
+	JTextArea textStatut;
 
 	JButton buttonGS, zoomAvantJSon, zoomArrJSon, zoomTotalJSon, zoomAvantAg,
 			zoomArrAg, zoomTotalAg;
@@ -61,6 +57,14 @@ public class Fenetre extends JFrame implements ActionListener {
 	JMenu menu1;
 
 	JMenuItem importMenu, exitMenu;
+
+	Viewer vue, vue2;
+
+	View view, view2;
+
+	Graph graph;
+
+	double zoom = 1, dezoom = 1;
 
 	final int xWindow = 50, yWindow = 0, widthWindow = 1280,
 			heightWindow = 700, sizeSeparator = 5;
@@ -90,24 +94,28 @@ public class Fenetre extends JFrame implements ActionListener {
 		zoomArrAg = new JButton("<html><b>-</b></html>");
 		zoomTotalAg = new JButton("<html><b>%</b></html>");
 
+		// initialisation de la zone de texte pour le pourcentage de zoom
+		zoomTextJSon = new JTextField();
+		zoomTextAg = new JTextField();
+
 		// Initialisation et définition du panneau pour zoomer le graphe Json
-		zoomJSon = new JPanel(new GridLayout(3, 1, 20, 5));
+		zoomJSon = new JPanel(new GridLayout(4, 1, 20, 5));
 		zoomJSon.add(zoomAvantJSon);
 		zoomJSon.add(zoomArrJSon);
 		zoomJSon.add(zoomTotalJSon);
+		zoomJSon.add(zoomTextJSon);
 
 		// Initialisation et définition du panneau pour zoomer le graphe Agent
-		zoomAgent = new JPanel(new GridLayout(3, 1, 20, 5));
+		zoomAgent = new JPanel(new GridLayout(4, 1, 20, 5));
 		zoomAgent.add(zoomAvantAg);
 		zoomAgent.add(zoomArrAg);
 		zoomAgent.add(zoomTotalAg);
+		zoomAgent.add(zoomTextAg);
 
-		// Initialisation du panneau de statut
-		barreStatut = new JPanel();
-		barreStatut.setBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createTitledBorder("Statut"),
-				BorderFactory.createEmptyBorder(1, 1, 1, 1)));
-		barreStatut.setPreferredSize(new Dimension(700, 150));
+		// Initialisation de la zone de texte de la barre de statut
+		textStatut = new JTextArea("");
+		textStatut.setEditable(false);
+		textStatut.setBackground(new Color(238, 238, 238));
 
 		// Ajout de Components au 1er panneau
 		buttonGS = new JButton("To GraphStream");
@@ -134,7 +142,12 @@ public class Fenetre extends JFrame implements ActionListener {
 		scrollJSon = new JScrollPane();
 		scrollAgent = new JScrollPane();
 		scrollStatut = new JScrollPane();
-		scrollStatut.setViewportView(barreStatut);
+		scrollStatut.setBorder(BorderFactory.createCompoundBorder(
+				BorderFactory.createTitledBorder("Statut"),
+				BorderFactory.createEmptyBorder(1, 1, 1, 1)));
+		scrollStatut.setPreferredSize(new Dimension(panelGraph.getWidth(),
+				panelGraph.getHeight() + 150));
+		scrollStatut.setViewportView(textStatut);
 		graphJSon = new JPanel();
 		graphAgent = new JPanel();
 
@@ -163,16 +176,16 @@ public class Fenetre extends JFrame implements ActionListener {
 			public void actionPerformed(ActionEvent e) {
 				// Visualisation du graph généré par le fichier importé au
 				// format .json
-				Graph graph;
+
 				JsonToGS jSTGS = new JsonToGS();
 				graph = jSTGS.generateGraph(directory.getText());
 				setStyleGraph(graph);
 				setNodeClass(graph);
-				Viewer vue = new Viewer(graph,
+				vue = new Viewer(graph,
 						Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
 				vue.enableAutoLayout();
 
-				View view = vue.addDefaultView(false);
+				view = vue.addDefaultView(false);
 
 				graphJSon.removeAll();
 				graphJSon.setLayout(new BorderLayout());
@@ -181,11 +194,11 @@ public class Fenetre extends JFrame implements ActionListener {
 
 				Graph g2 = new MultiGraph("graph2");
 
-				Viewer vue2 = new Viewer(g2,
+				vue2 = new Viewer(g2,
 						Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
 				vue2.enableAutoLayout();
 
-				View view2 = vue2.addDefaultView(false);
+				view2 = vue2.addDefaultView(false);
 
 				graphAgent.removeAll();
 				graphAgent.setLayout(new BorderLayout());
@@ -213,45 +226,112 @@ public class Fenetre extends JFrame implements ActionListener {
 			}
 		});
 
-		// Action lors du clic sur l'item "+"
+		// Action lors du clic sur l'item "+" de la partie gauche
 		zoomAvantJSon.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-
+				zoom = view.getCamera().getViewPercent();
+				view = vue.getDefaultView();
+				view.getCamera().setViewPercent(zoom - 0.1);
 			}
 		});
 
-		// Action lors du clic sur l'item "+"
+		// Action lors du clic sur l'item "-" de la partie gauche
 		zoomArrJSon.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-
+				dezoom = view.getCamera().getViewPercent();
+				view = vue.getDefaultView();
+				view.getCamera().setViewPercent(dezoom + 0.1);
 			}
 		});
 
-		// Action lors du clic sur l'item "+"
+		// Action lors du clic sur l'item "%" de la partie gauche
 		zoomTotalJSon.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				String s = zoomTextJSon.getText();
+				double pourcentage = 0, zoomAvant = 0, zoomArr = 0, total = 0;
+				boolean isNumber = false;
+				for (int i = 0; i < s.length(); i++) {
+					if (!Character.isDigit(s.charAt(i))) {
+						isNumber = false;
+					} else {
+						isNumber = true;
+					}
+				}
+
+				if (!isNumber) {
+					textStatut.append("Ce n'est pas un entier \n");
+				} else {
+					pourcentage = Integer.parseInt(s);
+					view = vue.getDefaultView();
+					if (pourcentage > 100) {
+						zoomAvant = pourcentage - 100;
+						total = 1 - (zoomAvant / 100);
+						view.getCamera().setViewPercent(total);
+						textStatut
+								.append("Zoom avant: " + pourcentage + "% \n");
+					} else {
+						zoomArr = 100 - pourcentage;
+						total = 1 + (zoomArr / 100);
+						view.getCamera().setViewPercent(total);
+						textStatut.append("Zoom arrière: " + pourcentage
+								+ "% \n");
+					}
+				}
 
 			}
 		});
 
-		// Action lors du clic sur l'item "+"
+		// Action lors du clic sur l'item "+" de la partie droite
 		zoomAvantAg.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-
+				zoom = view.getCamera().getViewPercent();
+				view = vue2.getDefaultView();
+				view.getCamera().setViewPercent(zoom - 0.1);
 			}
 		});
 
-		// Action lors du clic sur l'item "+"
+		// Action lors du clic sur l'item "-" de la partie droite
 		zoomArrAg.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-
+				dezoom = view.getCamera().getViewPercent();
+				view = vue2.getDefaultView();
+				view.getCamera().setViewPercent(dezoom + 0.1);
 			}
 		});
 
-		// Action lors du clic sur l'item "+"
+		// Action lors du clic sur l'item "%" de la partie droite
 		zoomTotalAg.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				String s = zoomTextAg.getText();
+				double pourcentage = 0, zoomAvant = 0, zoomArr = 0, total = 0;
+				boolean isNumber = false;
+				for (int i = 0; i < s.length(); i++) {
+					if (!Character.isDigit(s.charAt(i))) {
+						isNumber = false;
+					} else {
+						isNumber = true;
+					}
+				}
 
+				if (!isNumber) {
+					textStatut.append("Ce n'est pas un entier \n");
+				} else {
+					pourcentage = Integer.parseInt(s);
+					view = vue2.getDefaultView();
+					if (pourcentage > 100) {
+						zoomAvant = pourcentage - 100;
+						total = 1 - (zoomAvant / 100);
+						view.getCamera().setViewPercent(total);
+						textStatut
+								.append("Zoom avant: " + pourcentage + "% \n");
+					} else {
+						zoomArr = 100 - pourcentage;
+						total = 1 + (zoomArr / 100);
+						view.getCamera().setViewPercent(total);
+						textStatut.append("Zoom arrière: " + pourcentage
+								+ "% \n");
+					}
+				}
 			}
 		});
 
