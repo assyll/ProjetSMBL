@@ -76,7 +76,8 @@ public class MyJsonGenerator {
 
 	public File generateJson(MyListNodes mLN, MyListEdges mLT) {
 
-		JFileChooser dialogue = new JFileChooser(new File("."));
+		//TODO changer le chemin d'acces lors de la release
+		JFileChooser dialogue = new JFileChooser(new File("./src/test/resources"));
 		PrintWriter sortie = null;
 		File fichier;
 
