@@ -1,6 +1,5 @@
 package jsonAndGSTest;
 
-import interfaceGraphique.Fenetre;
 import interfaceGraphique.GraphModel;
 import interfaceGraphique.GraphRenderer;
 

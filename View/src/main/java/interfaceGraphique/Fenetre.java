@@ -3,7 +3,6 @@ package interfaceGraphique;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -23,11 +22,8 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import jsonAndGS.JsonToGS;
-import jsonAndGS.MyJsonGenerator;
 
-import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
-import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.MultiGraph;
 import org.graphstream.ui.swingViewer.View;
 import org.graphstream.ui.swingViewer.Viewer;
@@ -210,6 +206,7 @@ public class Fenetre extends JFrame implements ActionListener {
 				JsonToGS jSTGS = new JsonToGS();
 				graph = jSTGS.generateGraph(directory.getText());
 
+				GraphRenderer.SetRenderer();
 				GraphRenderer.setStyleGraph(graph);
 				GraphModel.setNodeClass(graph);
 				
@@ -223,9 +220,9 @@ public class Fenetre extends JFrame implements ActionListener {
 				graphJSon.add(view, BorderLayout.CENTER);
 				scrollJSon.setViewportView(graphJSon);
 
-				Graph g2 = new MultiGraph("graph2");
+				Graph graph2 = new MultiGraph("graph2");
 
-				viewer2 = new Viewer(g2,
+				viewer2 = new Viewer(graph2,
 						Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
 				viewer2.enableAutoLayout();
 
@@ -236,23 +233,10 @@ public class Fenetre extends JFrame implements ActionListener {
 				graphAgent.add(view2, BorderLayout.CENTER);
 				scrollAgent.setViewportView(graphAgent);
 
-				// Visualisation du graphe généré par rapport au 1er graphe
-				for (Node n : graph.getEachNode()) {
-					Node node = g2.addNode(n.getId());
-					for (String attributeKey : n.getAttributeKeySet()) {
-						node.addAttribute(attributeKey,
-								n.getAttribute(attributeKey));
-					}
-				}
-
-				for (Edge ed : graph.getEachEdge()) {
-					Edge edge = g2.addEdge(ed.getId(), ed.getSourceNode()
-							.getId(), ed.getTargetNode().getId(), true);
-					for (String attributeKey : ed.getAttributeKeySet()) {
-						edge.addAttribute(attributeKey,
-								ed.getAttribute(attributeKey));
-					}
-				}
+				GraphModel.GraphToGraph(graph, graph2);
+				
+				GraphRenderer.setStyleGraph(graph2);
+				GraphModel.setNodeClass(graph2);
 
 			}
 		});
