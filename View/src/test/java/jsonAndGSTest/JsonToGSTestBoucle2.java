@@ -53,7 +53,11 @@ public class JsonToGSTestBoucle2 extends TestCase {
 				"node 4", "action !", new LinkedList<String>());
 		MyJsonEdge e5 = new MyJsonEdge("edge 5", "node 4",
 				"node 3", "action !", new LinkedList<String>());
-		mLE.addEdges(e1, e2, e3, e4, e5);
+		MyJsonEdge e6 = new MyJsonEdge("edge 6", "node 4",
+				"node 3", "action !", new LinkedList<String>());
+		MyJsonEdge e7 = new MyJsonEdge("edge 7", "node 3",
+				"node 4", "action !", new LinkedList<String>());
+		mLE.addEdges(e1, e2, e3, e4, e5, e6, e7);
 
 		filePath = generator.generateJson(mLN, mLE).getAbsolutePath();
 

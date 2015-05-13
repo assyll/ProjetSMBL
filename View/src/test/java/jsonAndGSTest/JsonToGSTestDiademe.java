@@ -1,6 +1,8 @@
 package jsonAndGSTest;
 
 import interfaceGraphique.Fenetre;
+import interfaceGraphique.GraphModel;
+import interfaceGraphique.GraphRenderer;
 
 import java.util.LinkedList;
 
@@ -62,9 +64,9 @@ public class JsonToGSTestDiademe extends TestCase {
 		filePath = generator.generateJson(mLN, mLE).getAbsolutePath();
 
 		Graph graph = jTGS.generateGraph(filePath);
-		Fenetre.setStyleGraph(graph);
+		GraphRenderer.setStyleGraph(graph);
 		graph.display();
-		Fenetre.setNodeClass(graph);
+		GraphModel.setNodeClass(graph);
 		System.out.println(graph.getNode("node 2").getAttribute("ui.class"));
 		
 		while(true){}

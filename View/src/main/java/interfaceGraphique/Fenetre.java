@@ -179,8 +179,8 @@ public class Fenetre extends JFrame implements ActionListener {
 
 				JsonToGS jSTGS = new JsonToGS();
 				graph = jSTGS.generateGraph(directory.getText());
-				setStyleGraph(graph);
-				setNodeClass(graph);
+				GraphRenderer.setStyleGraph(graph);
+				GraphModel.setNodeClass(graph);
 				
 				viewer = new Viewer(graph,
 						Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
@@ -361,42 +361,7 @@ public class Fenetre extends JFrame implements ActionListener {
 
 	}
 
-	public static void setStyleGraph(Graph graph) {
-		graph.addAttribute("ui.quality");
-		graph.addAttribute("ui.antialias");
-		graph.addAttribute("ui.stylesheet", "edge { fill-color: grey; }"
-				+ "node." + MyJsonGenerator.FORMAT_NODE_SOURCE
-				+ "{ shape: triangle; }" + "node."
-				+ MyJsonGenerator.FORMAT_NODE_FINAL + "{ fill-color: red;  }"
-				+ "node." + MyJsonGenerator.FORMAT_NODE_SOURCE
-				+ MyJsonGenerator.FORMAT_NODE_FINAL
-				+ "{ shape: triangle; fill-color: red; }");
-	}
-
-	public static void setNodeClass(Graph graph) {
-		Boolean isSource, isFinal;
-		for (Node node : graph.getEachNode()) {
-			isSource = node.getAttribute(MyJsonGenerator.FORMAT_NODE_SOURCE)
-					.equals("true");
-			isFinal = node.getAttribute(MyJsonGenerator.FORMAT_NODE_FINAL)
-					.equals("true");
-			if (isSource && isFinal) {
-				node.setAttribute("ui.class",
-						MyJsonGenerator.FORMAT_NODE_SOURCE
-								+ MyJsonGenerator.FORMAT_NODE_FINAL);
-			} else if (isSource) {
-				node.setAttribute("ui.class",
-						MyJsonGenerator.FORMAT_NODE_SOURCE);
-			} else if (isFinal) {
-				node.addAttribute("ui.class", MyJsonGenerator.FORMAT_NODE_FINAL);
-			}
-		}
-	}
-
 	public static void main(String[] args) {
-		// remplacement du renderer par défaut
-		System.setProperty("org.graphstream.ui.renderer",
-				"org.graphstream.ui.j2dviewer.J2DGraphRenderer");
 		Fenetre f = new Fenetre();
 	}
 
