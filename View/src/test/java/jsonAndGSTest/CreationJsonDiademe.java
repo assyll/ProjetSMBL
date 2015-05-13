@@ -2,24 +2,17 @@ package jsonAndGSTest;
 
 import java.util.LinkedList;
 
-import org.graphstream.graph.Graph;
-
-import jsonAndGS.JsonToGS;
 import jsonAndGS.MyJsonGenerator;
 import jsonAndGS.MyJsonNode;
 import jsonAndGS.MyJsonEdge;
 import jsonAndGS.MyListNodes;
 import jsonAndGS.MyListEdges;
-import junit.framework.TestCase;
 
-public class JsonToGSTestBoucle2 extends TestCase {
+public class CreationJsonDiademe {
 
-	public void testJsonToGS(){
-		
-		String filePath;
+	public static void main(String[] args){
 		
 		MyJsonGenerator generator = new MyJsonGenerator();
-		JsonToGS jTGS = new JsonToGS();
 
 		MyListNodes mLN = new MyListNodes();
 		MyListEdges mLE = new MyListEdges();
@@ -27,7 +20,7 @@ public class JsonToGSTestBoucle2 extends TestCase {
 		MyJsonNode n1 = new MyJsonNode("node 1", true, false, new LinkedList<String>());
 		n1.get_attributs().add("att 1");
 		n1.get_attributs().add("att 2");
-		MyJsonNode n2 = new MyJsonNode("node 2", false, false, new LinkedList<String>());
+		MyJsonNode n2 = new MyJsonNode("node 2", true, true, new LinkedList<String>());
 		n2.get_attributs().add("att 1");
 		n2.get_attributs().add("att 2");
 		MyJsonNode n3 = new MyJsonNode("node 3", false, false, new LinkedList<String>());
@@ -51,20 +44,10 @@ public class JsonToGSTestBoucle2 extends TestCase {
 		e3.get_attributs().add("att 2");
 		MyJsonEdge e4 = new MyJsonEdge("edge 4", "node 3",
 				"node 4", "action !", new LinkedList<String>());
-		MyJsonEdge e5 = new MyJsonEdge("edge 5", "node 4",
-				"node 3", "action !", new LinkedList<String>());
-		MyJsonEdge e6 = new MyJsonEdge("edge 6", "node 4",
-				"node 3", "action !", new LinkedList<String>());
-		MyJsonEdge e7 = new MyJsonEdge("edge 7", "node 3",
-				"node 4", "action !", new LinkedList<String>());
-		mLE.addEdges(e1, e2, e3, e4, e5, e6, e7);
-
-		filePath = generator.generateJson(mLN, mLE).getAbsolutePath();
-
-		Graph graph = jTGS.generateGraph(filePath);
-		graph.display();
 		
-		while(true){}
+		mLE.addEdges(e1, e2, e3, e4);
+
+		generator.generateJson(mLN, mLE).getAbsolutePath();
 	}
 	
 }

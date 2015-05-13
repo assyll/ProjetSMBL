@@ -180,7 +180,7 @@ public class Fenetre extends JFrame implements ActionListener {
 		// Action lors du clic sur l'item "Import"
 		importMenu.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				JFileChooser dialogue = new JFileChooser(new File("C:\\"));
+				JFileChooser dialogue = new JFileChooser(new File("./"));
 				File fichier;
 
 				if (dialogue.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {

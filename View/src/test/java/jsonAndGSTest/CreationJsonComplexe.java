@@ -7,11 +7,10 @@ import jsonAndGS.MyJsonGenerator;
 import jsonAndGS.MyJsonNode;
 import jsonAndGS.MyListEdges;
 import jsonAndGS.MyListNodes;
-import junit.framework.TestCase;
 
-public class MyJsonGeneratorJsonComplexe extends TestCase {
+public class CreationJsonComplexe {
 
-	public void testGenerateJson() {
+	public static void main(String[] args) {
 
 		MyJsonGenerator generator = new MyJsonGenerator();
 
@@ -78,6 +77,6 @@ public class MyJsonGeneratorJsonComplexe extends TestCase {
 				"action !", new LinkedList<String>());
 		mLE.addEdges(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12);
 
-		assertTrue(generator.generateJson(mLN, mLE).exists());
+		generator.generateJson(mLN, mLE);
 	}
 }
