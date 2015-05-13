@@ -19,7 +19,7 @@ public class JsonToGS {
 
 	static final String FILE_FORMAT_ERROR = "Le format du fichier sélectionné est invalide";
 
-	public void generateNode(JsonParser jParser, Graph graph) {
+	public void generateNodes(JsonParser jParser, Graph graph) {
 		String name, fieldname;
 		Node node;
 
@@ -124,7 +124,7 @@ public class JsonToGS {
 		Graph graph = new MultiGraph("graph");
 
 		try {
-
+			
 			JsonFactory jfactory = new JsonFactory();
 
 			/*** read from file ***/
@@ -137,7 +137,7 @@ public class JsonToGS {
 				jParser.nextToken(); // current token is "[", move next
 				while (jParser.nextToken() != JsonToken.END_ARRAY) {
 					// nodes is array, loop until token equal to "]"
-					generateNode(jParser, graph);
+					generateNodes(jParser, graph);
 				}
 			} else {
 				throw new FileFormatException(FILE_FORMAT_ERROR);

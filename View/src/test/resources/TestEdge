@@ -1,0 +1,19 @@
+{
+		"Name": "node 1",
+		"Source": true,
+		"Final": false,
+		"Attribut 1": "att 1"
+}
+{
+		"Name": "node 2",
+		"Source": false,
+		"Final": true,
+		"Attribut 1": "att 1"
+}
+{
+		"Label": "edge 1",
+		"NodeB": "node 1",
+		"NodeE": "node 2",
+		"Action": "action !",
+		"Attribut 1": "att 1"
+}

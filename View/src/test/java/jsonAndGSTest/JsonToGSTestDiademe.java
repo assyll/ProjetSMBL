@@ -66,7 +66,6 @@ public class JsonToGSTestDiademe extends TestCase {
 		GraphRenderer.setStyleGraph(graph);
 		graph.display();
 		GraphModel.setNodeClass(graph);
-		System.out.println(graph.getNode("node 2").getAttribute("ui.class"));
 		
 		while(true){}
 	}

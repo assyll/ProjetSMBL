@@ -1,0 +1,136 @@
+{
+	"Nodes": [{
+		"Name": "node 1",
+		"Source": true,
+		"Final": false,
+		"Attribut 1": "att 1",
+		"Attribut 2": "att 2"
+	},
+	{
+		"Name": "node 2",
+		"Source": false,
+		"Final": false,
+		"Attribut 1": "att 1",
+		"Attribut 2": "att 2"
+	},
+	{
+		"Name": "node 3",
+		"Source": false,
+		"Final": false,
+		"Attribut 1": "att 1",
+		"Attribut 2": "att 2"
+	},
+	{
+		"Name": "node 4",
+		"Source": false,
+		"Final": true
+	},
+	{
+		"Name": "node 5",
+		"Source": false,
+		"Final": false
+	},
+	{
+		"Name": "node 6",
+		"Source": false,
+		"Final": false
+	},
+	{
+		"Name": "node 7",
+		"Source": false,
+		"Final": false
+	},
+	{
+		"Name": "node 8",
+		"Source": false,
+		"Final": false
+	},
+	{
+		"Name": "node 9",
+		"Source": false,
+		"Final": false
+	},
+	{
+		"Name": "node 10",
+		"Source": false,
+		"Final": false
+	}],
+	"Edges": [{
+		"Label": "edge 1",
+		"NodeB": "node 1",
+		"NodeE": "node 2",
+		"Action": "action !",
+		"Attribut 1": "att 1",
+		"Attribut 2": "att 2"
+	},
+	{
+		"Label": "edge 2",
+		"NodeB": "node 2",
+		"NodeE": "node 3",
+		"Action": "action !",
+		"Attribut 1": "att 1",
+		"Attribut 2": "att 2"
+	},
+	{
+		"Label": "edge 3",
+		"NodeB": "node 1",
+		"NodeE": "node 3",
+		"Action": "action !",
+		"Attribut 1": "att 1",
+		"Attribut 2": "att 2"
+	},
+	{
+		"Label": "edge 4",
+		"NodeB": "node 1",
+		"NodeE": "node 4",
+		"Action": "action !"
+	},
+	{
+		"Label": "edge 5",
+		"NodeB": "node 4",
+		"NodeE": "node 7",
+		"Action": "action !"
+	},
+	{
+		"Label": "edge 6",
+		"NodeB": "node 6",
+		"NodeE": "node 5",
+		"Action": "action !"
+	},
+	{
+		"Label": "edge 7",
+		"NodeB": "node 5",
+		"NodeE": "node 7",
+		"Action": "action !"
+	},
+	{
+		"Label": "edge 8",
+		"NodeB": "node 6",
+		"NodeE": "node 8",
+		"Action": "action !"
+	},
+	{
+		"Label": "edge 9",
+		"NodeB": "node 8",
+		"NodeE": "node 9",
+		"Action": "action !"
+	},
+	{
+		"Label": "edge 10",
+		"NodeB": "node 9",
+		"NodeE": "node 3",
+		"Action": "action !"
+	},
+	{
+		"Label": "edge 11",
+		"NodeB": "node 1",
+		"NodeE": "node 10",
+		"Action": "action !"
+	},
+	{
+		"Label": "edge 12",
+		"NodeB": "node 4",
+		"NodeE": "node 10",
+		"Action": "action !"
+	}]
+}
