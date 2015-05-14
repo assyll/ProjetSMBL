@@ -27,6 +27,7 @@ import org.graphstream.graph.Graph;
 import org.graphstream.graph.implementations.MultiGraph;
 import org.graphstream.ui.swingViewer.View;
 import org.graphstream.ui.swingViewer.Viewer;
+import org.neo4j.kernel.impl.cache.AutoLoadingCache;
 
 @SuppressWarnings("serial")
 public class Fenetre extends JFrame implements ActionListener {
@@ -47,7 +48,8 @@ public class Fenetre extends JFrame implements ActionListener {
 	JTextArea textStatut;
 
 	JButton buttonGS, zoomAvantJSon, zoomArrJSon, zoomTextJSon, zoomAvantAg,
-			zoomArrAg, zoomTextAg, addNodeJSon, addEdgeJSon, addNodeAg, addEdgeAg;
+			zoomArrAg, zoomTextAg, addNodeJSon, addEdgeJSon, addNodeAg,
+			addEdgeAg, structGraphJson, structGraphAg;
 
 	JMenuBar menu_bar1;
 
@@ -66,6 +68,9 @@ public class Fenetre extends JFrame implements ActionListener {
 	final int xWindow = 50, yWindow = 0, widthWindow = 1280,
 			heightWindow = 700, sizeSeparator = 5;
 
+	boolean isAutoLayoutJson, isAutoLayoutAg, isGraphJsonLoaded = false,
+			isGraphAgLoaded = false;
+
 	public Fenetre() {
 
 		// Initialisation de la fenêtre principale
@@ -82,13 +87,15 @@ public class Fenetre extends JFrame implements ActionListener {
 		panelGraph.setBorder(BorderFactory.createCompoundBorder(
 				BorderFactory.createTitledBorder("Graphs"),
 				BorderFactory.createEmptyBorder(1, 1, 1, 1)));
-		
-		// Initialisation et définition du panneau d'ajout de noeuds et de transition gauche
-		panelModifJSon = new JPanel(new GridLayout(2, 1, 20, 50));
-		
-		// Initialisation et définition du panneau d'ajout de noeuds et de transition droit
-		panelModifAg = new JPanel(new GridLayout(2, 1, 20, 50));
-		
+
+		// Initialisation et définition du panneau d'ajout de noeuds et de
+		// transition gauche
+		panelModifJSon = new JPanel(new GridLayout(3, 1, 15, 50));
+
+		// Initialisation et définition du panneau d'ajout de noeuds et de
+		// transition droit
+		panelModifAg = new JPanel(new GridLayout(3, 1, 15, 50));
+
 		// Initialisation des bouttons de zoom
 		zoomAvantJSon = new JButton("<html><b>Zoom +</b></html>");
 		zoomArrJSon = new JButton("<html><b>Zoom -</b></html>");
@@ -99,7 +106,7 @@ public class Fenetre extends JFrame implements ActionListener {
 
 		// initialisation de la zone de texte pour le pourcentage de zoom
 		textJSon = new JTextField();
-		textJSon.setPreferredSize(new Dimension(40,30));
+		textJSon.setPreferredSize(new Dimension(40, 30));
 		textAg = new JTextField();
 
 		// Initialisation et définition du panneau pour zoomer le graphe Json
@@ -115,28 +122,32 @@ public class Fenetre extends JFrame implements ActionListener {
 		zoomAgent.add(zoomArrAg);
 		zoomAgent.add(zoomTextAg);
 		zoomAgent.add(textAg);
-		
+
 		// Initialisation des boutons d'option
 		addNodeJSon = new JButton("Node +");
 		addEdgeJSon = new JButton("Edge +");
+		structGraphJson = new JButton("Structurer / Déstructurer");
 		addNodeAg = new JButton("Node +");
 		addEdgeAg = new JButton("Edge +");
-		
+		structGraphAg = new JButton("Structurer / Déstructurer");
+
 		// Ajout des boutons dans les panneaux respectifs
 		panelModifJSon.add(addNodeJSon);
 		panelModifJSon.add(addEdgeJSon);
+		panelModifJSon.add(structGraphJson);
 		panelModifAg.add(addNodeAg);
 		panelModifAg.add(addEdgeAg);
-		
+		panelModifAg.add(structGraphAg);
+
 		// Initialisation et définition panneau option gauche
 		panelOptionJSon = new JPanel(new GridLayout(2, 1, 20, 50));
 		panelOptionJSon.add(zoomJSon);
 		panelOptionJSon.add(panelModifJSon);
-		
+
 		// Initialisation et définition panneau option droit
 		panelOptionAg = new JPanel(new GridLayout(2, 1, 20, 50));
 		panelOptionAg.add(zoomAgent);
-		panelOptionAg.add(panelModifAg);	
+		panelOptionAg.add(panelModifAg);
 
 		// Initialisation de la zone de texte de la barre de statut
 		textStatut = new JTextArea("");
@@ -180,8 +191,9 @@ public class Fenetre extends JFrame implements ActionListener {
 		// Action lors du clic sur l'item "Import"
 		importMenu.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//TODO changer le chemin d'acces lors de la release
-				JFileChooser dialogue = new JFileChooser(new File("./src/test/resources"));
+				// TODO changer le chemin d'acces lors de la release
+				JFileChooser dialogue = new JFileChooser(new File(
+						"./src/test/resources"));
 				File fichier;
 
 				if (dialogue.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
@@ -204,148 +216,215 @@ public class Fenetre extends JFrame implements ActionListener {
 				// Visualisation du graph généré par le fichier importé au
 				// format .json
 
-				JsonToGS jSTGS = new JsonToGS();
-				graph = jSTGS.generateGraph(directory.getText());
+				if (!directory.getText().equals("Directory")) {
+					JsonToGS jSTGS = new JsonToGS();
+					graph = jSTGS.generateGraph(directory.getText());
 
-				GraphRenderer.SetRenderer();
-				GraphRenderer.setStyleGraph(graph);
-				GraphModel.setNodeClass(graph);
-				
-				viewer = new Viewer(graph,
-						Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
-				viewer.enableAutoLayout();
-				view = viewer.addDefaultView(false);
+					GraphRenderer.SetRenderer();
+					GraphRenderer.setStyleGraph(graph);
+					GraphModel.setNodeClass(graph);
 
-				graphJSon.removeAll();
-				graphJSon.setLayout(new BorderLayout());
-				graphJSon.add(view, BorderLayout.CENTER);
-				scrollJSon.setViewportView(graphJSon);
+					viewer = new Viewer(graph,
+							Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
+					viewer.enableAutoLayout();
+					isAutoLayoutJson = true;
+					view = viewer.addDefaultView(false);
 
-				Graph graph2 = new MultiGraph("graph2");
+					graphJSon.removeAll();
+					graphJSon.setLayout(new BorderLayout());
+					graphJSon.add(view, BorderLayout.CENTER);
+					scrollJSon.setViewportView(graphJSon);
 
-				viewer2 = new Viewer(graph2,
-						Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
-				viewer2.enableAutoLayout();
+					isGraphJsonLoaded = true;
 
-				view2 = viewer2.addDefaultView(false);
+					Graph graph2 = new MultiGraph("graph2");
 
-				graphAgent.removeAll();
-				graphAgent.setLayout(new BorderLayout());
-				graphAgent.add(view2, BorderLayout.CENTER);
-				scrollAgent.setViewportView(graphAgent);
+					viewer2 = new Viewer(graph2,
+							Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
+					viewer2.enableAutoLayout();
+					isAutoLayoutAg = true;
 
-				GraphModel.GraphToGraph(graph, graph2);
-				
-				GraphRenderer.setStyleGraph(graph2);
-				GraphModel.setNodeClass(graph2);
+					view2 = viewer2.addDefaultView(false);
 
+					graphAgent.removeAll();
+					graphAgent.setLayout(new BorderLayout());
+					graphAgent.add(view2, BorderLayout.CENTER);
+					scrollAgent.setViewportView(graphAgent);
+
+					GraphModel.GraphToGraph(graph, graph2);
+
+					GraphRenderer.setStyleGraph(graph2);
+					GraphModel.setNodeClass(graph2);
+
+					isGraphAgLoaded = true;
+				}
 			}
 		});
 
 		// Action lors du clic sur l'item "+" de la partie gauche
 		zoomAvantJSon.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				zoom = view.getCamera().getViewPercent();
-				view = viewer.getDefaultView();
-				view.getCamera().setViewPercent(zoom - 0.1);
+				if (isGraphJsonLoaded) {
+					zoom = view.getCamera().getViewPercent();
+					view = viewer.getDefaultView();
+					view.getCamera().setViewPercent(zoom - 0.1);
+				}
 			}
 		});
 
 		// Action lors du clic sur l'item "-" de la partie gauche
 		zoomArrJSon.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				dezoom = view.getCamera().getViewPercent();
-				view = viewer.getDefaultView();
-				view.getCamera().setViewPercent(dezoom + 0.1);
+				if (isGraphJsonLoaded) {
+					dezoom = view.getCamera().getViewPercent();
+					view = viewer.getDefaultView();
+					view.getCamera().setViewPercent(dezoom + 0.1);
+				}
 			}
 		});
 
 		// Action lors du clic sur l'item "%" de la partie gauche
 		zoomTextJSon.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				String s = textJSon.getText();
-				double pourcentage = 0, zoomAvant = 0, zoomArr = 0, total = 0;
-				boolean isNumber = false;
-				for (int i = 0; i < s.length(); i++) {
-					if (!Character.isDigit(s.charAt(i))) {
-						isNumber = false;
-					} else {
-						isNumber = true;
+				if (isGraphJsonLoaded) {
+					String s = textJSon.getText();
+					double pourcentage = 0, zoomAvant = 0, zoomArr = 0, total = 0;
+					boolean isNumber = false;
+					for (int i = 0; i < s.length(); i++) {
+						if (!Character.isDigit(s.charAt(i))) {
+							isNumber = false;
+						} else {
+							isNumber = true;
+						}
 					}
-				}
 
-				if (!isNumber) {
-					textStatut.append("Ce n'est pas un entier \n");
-				} else {
-					pourcentage = Integer.parseInt(s);
-					view = viewer.getDefaultView();
-					if (pourcentage > 100) {
-						zoomAvant = pourcentage - 100;
-						total = 1 - (zoomAvant / 100);
-						view.getCamera().setViewPercent(total);
-						textStatut
-								.append("Zoom avant: " + pourcentage + "% \n");
+					if (!isNumber) {
+						textStatut.append("Ce n'est pas un entier \n");
 					} else {
-						zoomArr = 100 - pourcentage;
-						total = 1 + (zoomArr / 100);
-						view.getCamera().setViewPercent(total);
-						textStatut.append("Zoom arrière: " + pourcentage
-								+ "% \n");
+						pourcentage = Integer.parseInt(s);
+						view = viewer.getDefaultView();
+						if (pourcentage > 100) {
+							zoomAvant = pourcentage - 100;
+							total = 1 - (zoomAvant / 100);
+							view.getCamera().setViewPercent(total);
+							textStatut.append("Zoom avant: " + pourcentage
+									+ "% \n");
+						} else {
+							zoomArr = 100 - pourcentage;
+							total = 1 + (zoomArr / 100);
+							view.getCamera().setViewPercent(total);
+							textStatut.append("Zoom arrière: " + pourcentage
+									+ "% \n");
+						}
 					}
 				}
 
 			}
 		});
 
+		// Action lors du clic sur l'item "Structurer / Déstructurer" de la
+		// partie gauche
+		structGraphJson.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if (isGraphJsonLoaded) {
+					if (isAutoLayoutJson) {
+						viewer.disableAutoLayout();
+						isAutoLayoutJson = false;
+					} else {
+						viewer.enableAutoLayout();
+						isAutoLayoutJson = true;
+					}
+				}
+			}
+		});
+		
+		// Action lors du clic sur l'item "Structurer / Déstructurer" de la
+				// partie gauche
+				structGraphJson.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						if (isGraphJsonLoaded) {
+							if (isAutoLayoutJson) {
+								viewer.disableAutoLayout();
+								isAutoLayoutJson = false;
+							} else {
+								viewer.enableAutoLayout();
+								isAutoLayoutJson = true;
+							}
+						}
+					}
+				});
+
 		// Action lors du clic sur l'item "+" de la partie droite
 		zoomAvantAg.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				zoom = view.getCamera().getViewPercent();
-				view = viewer2.getDefaultView();
-				view.getCamera().setViewPercent(zoom - 0.1);
+				if (isGraphAgLoaded) {
+					zoom = view.getCamera().getViewPercent();
+					view = viewer2.getDefaultView();
+					view.getCamera().setViewPercent(zoom - 0.1);
+				}
 			}
 		});
 
 		// Action lors du clic sur l'item "-" de la partie droite
 		zoomArrAg.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				dezoom = view.getCamera().getViewPercent();
-				view = viewer2.getDefaultView();
-				view.getCamera().setViewPercent(dezoom + 0.1);
+				if (isGraphAgLoaded) {
+					dezoom = view.getCamera().getViewPercent();
+					view = viewer2.getDefaultView();
+					view.getCamera().setViewPercent(dezoom + 0.1);
+				}
 			}
 		});
 
 		// Action lors du clic sur l'item "%" de la partie droite
 		zoomTextAg.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				String s = textAg.getText();
-				double pourcentage = 0, zoomAvant = 0, zoomArr = 0, total = 0;
-				boolean isNumber = false;
-				for (int i = 0; i < s.length(); i++) {
-					if (!Character.isDigit(s.charAt(i))) {
-						isNumber = false;
+				if (isGraphAgLoaded) {
+					String s = textAg.getText();
+					double pourcentage = 0, zoomAvant = 0, zoomArr = 0, total = 0;
+					boolean isNumber = false;
+					for (int i = 0; i < s.length(); i++) {
+						if (!Character.isDigit(s.charAt(i))) {
+							isNumber = false;
+						} else {
+							isNumber = true;
+						}
+					}
+
+					if (!isNumber) {
+						textStatut.append("Ce n'est pas un entier \n");
 					} else {
-						isNumber = true;
+						pourcentage = Integer.parseInt(s);
+						view = viewer2.getDefaultView();
+						if (pourcentage > 100) {
+							zoomAvant = pourcentage - 100;
+							total = 1 - (zoomAvant / 100);
+							view.getCamera().setViewPercent(total);
+							textStatut.append("Zoom avant: " + pourcentage
+									+ "% \n");
+						} else if (pourcentage < 100) {
+							zoomArr = 100 - pourcentage;
+							total = 1 + (zoomArr / 100);
+							view.getCamera().setViewPercent(total);
+							textStatut.append("Zoom arrière: " + pourcentage
+									+ "% \n");
+						}
 					}
 				}
+			}
+		});
 
-				if (!isNumber) {
-					textStatut.append("Ce n'est pas un entier \n");
-				} else {
-					pourcentage = Integer.parseInt(s);
-					view = viewer2.getDefaultView();
-					if (pourcentage > 100) {
-						zoomAvant = pourcentage - 100;
-						total = 1 - (zoomAvant / 100);
-						view.getCamera().setViewPercent(total);
-						textStatut
-								.append("Zoom avant: " + pourcentage + "% \n");
-					} else if (pourcentage < 100){
-						zoomArr = 100 - pourcentage;
-						total = 1 + (zoomArr / 100);
-						view.getCamera().setViewPercent(total);
-						textStatut.append("Zoom arrière: " + pourcentage
-								+ "% \n");
+		// Action lors du clic sur l'item "Structurer / Déstructurer" de la
+		// partie droite
+		structGraphAg.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if (isGraphAgLoaded) {
+					if (isAutoLayoutAg) {
+						viewer2.disableAutoLayout();
+						isAutoLayoutAg = false;
+					} else {
+						viewer2.enableAutoLayout();
+						isAutoLayoutAg = true;
 					}
 				}
 			}
