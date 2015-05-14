@@ -308,15 +308,34 @@ public class Fenetre extends JFrame implements ActionListener {
 							view.getCamera().setViewPercent(total);
 							textStatut.append("Zoom avant: " + pourcentage
 									+ "% \n");
-						} else {
+						} else if (pourcentage < 100) {
 							zoomArr = 100 - pourcentage;
 							total = 1 + (zoomArr / 100);
 							view.getCamera().setViewPercent(total);
 							textStatut.append("Zoom arrière: " + pourcentage
 									+ "% \n");
+						} else {
+							view.getCamera().resetView();
 						}
 					}
 				}
+
+			}
+		});
+
+		// Action lors du clic sur l'item "Node +" de la partie gauche
+
+		addNodeJSon.addActionListener(new ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				NodeDialog nodeLeft = new NodeDialog(frame, "Add Node");
+			}
+		});
+
+		// Action lors du clic sur l'item "Edge +" de la partie gauche
+
+		addEdgeJSon.addActionListener(new ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				EdgeDialog edgeLeft = new EdgeDialog(frame, "Add Edge");
 
 			}
 		});
@@ -391,9 +410,27 @@ public class Fenetre extends JFrame implements ActionListener {
 							view.getCamera().setViewPercent(total);
 							textStatut.append("Zoom arrière: " + pourcentage
 									+ "% \n");
+						} else {
+							view.getCamera().resetView();
 						}
 					}
 				}
+			}
+		});
+
+		// Action lors du clic sur l'item "Node +" de la partie droite
+
+		addNodeAg.addActionListener(new ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				NodeDialog nodeRight = new NodeDialog(frame, "Add Node");
+			}
+		});
+
+		// Action lors du clic sur l'item "Edge +" de la partie droite
+
+		addEdgeAg.addActionListener(new ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				EdgeDialog edgeRight = new EdgeDialog(frame, "Add Edge");
 			}
 		});
 
@@ -433,7 +470,7 @@ public class Fenetre extends JFrame implements ActionListener {
 		frame.add(splitPane);
 		frame.setJMenuBar(menu_bar1);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setResizable(true);
+		frame.setResizable(false);
 		frame.setBounds(xWindow, yWindow, widthWindow, heightWindow);
 		frame.setVisible(true);
 
