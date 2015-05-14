@@ -1,6 +1,7 @@
 package interfaceGraphique;
 
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -11,6 +12,7 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 @SuppressWarnings("serial")
@@ -19,13 +21,17 @@ public class AttributDialog extends JDialog implements ActionListener {
 	private int nbAttribut;
 	JButton ok, cancel;
 	JPanel panelDialog;
+	JScrollPane scrollAtt;
+	Box boite;
 	String[] attributs;
 
 	public AttributDialog(Frame f, String s, int nbAtt) {
 		super(f, s, true);
 		nbAttribut = nbAtt;
-		Box boite = Box.createVerticalBox();
+		boite = Box.createVerticalBox();
 		panelDialog = new JPanel();
+		panelDialog.setPreferredSize(new Dimension(300,400));
+		scrollAtt = new JScrollPane(panelDialog);
 		panelDialog.setLayout(new GridLayout(nbAtt + 1, 2, 20, 5));
 
 		for (int i = 0; i < nbAtt; i++) {
@@ -44,9 +50,9 @@ public class AttributDialog extends JDialog implements ActionListener {
 		ok.addActionListener(this);
 		cancel.addActionListener(this);
 
-		boite.add(panelDialog);
+		boite.add(scrollAtt);
 		this.add(boite);
-		this.setBounds(400, 200, 300, 300);
+		this.setBounds(400, 200, 400, 400);
 		this.setVisible(true);
 	}
 
@@ -69,10 +75,6 @@ public class AttributDialog extends JDialog implements ActionListener {
 		String[] tmp;
 		if (evt.getSource() == ok) {
 			tmp = getAttributs();
-			for (int i = 0; i < tmp.length; i++) {
-				System.out
-						.println("Attribut " + (i+1) + ": " + tmp[i] + " \n");
-			}
 			this.dispose();
 		} else if (evt.getSource() == cancel) {
 			this.dispose();

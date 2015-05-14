@@ -98,10 +98,6 @@ public class NodeDialog extends JDialog implements ActionListener {
 			this.rootN = getRoot();
 			this.finalN = getFinal();
 			this.nbAtt = this.getNbAtt();
-			System.out
-					.println("Nom: " + name + " / Source? " + rootN
-							+ " / Final? " + finalN + " / Nombre d'attributs: "
-							+ nbAtt);
 			this.dispose();
 			AttributDialog attDialog = new AttributDialog(getFrame(),
 					"Attributs Node", getNbAtt());

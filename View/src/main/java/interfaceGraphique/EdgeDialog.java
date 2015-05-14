@@ -101,9 +101,6 @@ public class EdgeDialog extends JDialog implements ActionListener {
 			this.endE = getEnd();
 			this.actionE = getAction();
 			this.nbAtt = getNbAtt();
-			System.out.println("Nom: " + name + " / Source Node: " + sourceE
-					+ " / End Node: " + endE + " / Action: " + actionE
-					+ " / Nombre d'attributs: " + nbAtt);
 			this.dispose();
 			AttributDialog attDialog = new AttributDialog(getFrame(),
 					"Attributs Node", getNbAtt());
