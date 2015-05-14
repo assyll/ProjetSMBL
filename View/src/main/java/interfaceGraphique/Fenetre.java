@@ -27,7 +27,6 @@ import org.graphstream.graph.Graph;
 import org.graphstream.graph.implementations.MultiGraph;
 import org.graphstream.ui.swingViewer.View;
 import org.graphstream.ui.swingViewer.Viewer;
-import org.neo4j.kernel.impl.cache.AutoLoadingCache;
 
 @SuppressWarnings("serial")
 public class Fenetre extends JFrame implements ActionListener {
@@ -337,22 +336,6 @@ public class Fenetre extends JFrame implements ActionListener {
 				}
 			}
 		});
-		
-		// Action lors du clic sur l'item "Structurer / Déstructurer" de la
-				// partie gauche
-				structGraphJson.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent arg0) {
-						if (isGraphJsonLoaded) {
-							if (isAutoLayoutJson) {
-								viewer.disableAutoLayout();
-								isAutoLayoutJson = false;
-							} else {
-								viewer.enableAutoLayout();
-								isAutoLayoutJson = true;
-							}
-						}
-					}
-				});
 
 		// Action lors du clic sur l'item "+" de la partie droite
 		zoomAvantAg.addActionListener(new ActionListener() {
