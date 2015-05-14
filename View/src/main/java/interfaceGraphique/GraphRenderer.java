@@ -15,12 +15,12 @@ public class GraphRenderer {
 	public static void setStyleGraph(Graph graph) {
 		graph.addAttribute("ui.quality");
 		graph.addAttribute("ui.antialias");
-		graph.addAttribute("ui.stylesheet", "edge { fill-color: grey; }"
-				+ "node." + MyJsonGenerator.FORMAT_NODE_SOURCE
-				+ "{ shape: triangle; }" + "node."
-				+ MyJsonGenerator.FORMAT_NODE_FINAL + "{ fill-color: red;  }"
-				+ "node." + MyJsonGenerator.FORMAT_NODE_SOURCE
-				+ MyJsonGenerator.FORMAT_NODE_FINAL
-				+ "{ shape: triangle; fill-color: red; }");
+		graph.addAttribute(
+				"ui.stylesheet",
+				"edge { fill-color: grey; }"
+						+ "node." + MyJsonGenerator.FORMAT_NODE_SOURCE
+						+ "{ shape: triangle; }" + "node."
+						+ MyJsonGenerator.FORMAT_NODE_FINAL
+						+ "{ fill-color: red;  }");
 	}
 }

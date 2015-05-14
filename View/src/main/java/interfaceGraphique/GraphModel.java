@@ -17,8 +17,8 @@ public class GraphModel {
 					.equals("true");
 			if (isSource && isFinal) {
 				node.setAttribute("ui.class",
-						MyJsonGenerator.FORMAT_NODE_SOURCE
-								+ MyJsonGenerator.FORMAT_NODE_FINAL);
+						MyJsonGenerator.FORMAT_NODE_SOURCE,
+						MyJsonGenerator.FORMAT_NODE_FINAL);
 			} else if (isSource) {
 				node.setAttribute("ui.class",
 						MyJsonGenerator.FORMAT_NODE_SOURCE);
@@ -27,23 +27,22 @@ public class GraphModel {
 			}
 		}
 	}
-	
-	public static void GraphToGraph(Graph graph, Graph graphRes){
+
+	public static void GraphToGraph(Graph graph, Graph graphRes) {
 		// Génération du graphe par rapport au 1er graphe
 		for (Node n : graph.getEachNode()) {
 			Node node = graphRes.addNode(n.getId());
 			for (String attributeKey : n.getAttributeKeySet()) {
-				node.addAttribute(attributeKey,
-						n.getAttribute(attributeKey));
+				node.addAttribute(attributeKey, n.getAttribute(attributeKey));
 			}
 		}
 
 		for (Edge ed : graph.getEachEdge()) {
-			Edge edge = graphRes.addEdge(ed.getId(), ed.getSourceNode()
-					.getId(), ed.getTargetNode().getId(), true);
+			Edge edge = graphRes.addEdge(ed.getId(),
+					ed.getSourceNode().getId(), ed.getTargetNode().getId(),
+					true);
 			for (String attributeKey : ed.getAttributeKeySet()) {
-				edge.addAttribute(attributeKey,
-						ed.getAttribute(attributeKey));
+				edge.addAttribute(attributeKey, ed.getAttribute(attributeKey));
 			}
 		}
 	}
