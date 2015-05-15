@@ -4,9 +4,12 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.GraphicsEnvironment;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 import java.io.File;
 
 import javax.swing.BorderFactory;
@@ -21,15 +24,19 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.text.AbstractDocument.AbstractElement;
 
 import jsonAndGS.JsonToGS;
 
+import org.graphstream.graph.Element;
 import org.graphstream.graph.Graph;
+import org.graphstream.graph.Node;
+import org.graphstream.ui.graphicGraph.GraphicNode;
 import org.graphstream.ui.view.View;
 import org.graphstream.ui.view.Viewer;
 
 @SuppressWarnings("serial")
-public class Fenetre extends JFrame implements ActionListener {
+public class Fenetre extends JFrame {
 
 	// Instanciation des différents Components
 
@@ -227,6 +234,7 @@ public class Fenetre extends JFrame implements ActionListener {
 					viewer.enableAutoLayout();
 					isAutoLayoutJson = true;
 					view = viewer.addDefaultView(false);
+					setListenerOnViewer();
 
 					graphJSon.removeAll();
 					graphJSon.setLayout(new BorderLayout());
@@ -477,15 +485,38 @@ public class Fenetre extends JFrame implements ActionListener {
 		frame.setBounds(xWindow, yWindow, widthWindow, heightWindow);
 		frame.setVisible(true);
 
+		pack();
+		frame.setLocationRelativeTo(null);
+	}
+
+	public void setListenerOnViewer() {
+		// Action lors du clic sur le graphe de la partie gauche
+		viewer.getDefaultView().addMouseMotionListener(
+				new MouseMotionListener() {
+
+					public void mouseMoved(MouseEvent e) {
+						Element elem = view.findNodeOrSpriteAt(e.getX(),
+								e.getY());
+						if (elem instanceof Node) {
+							GraphicNode gNode = (GraphicNode) elem;
+							Node node = graph.getNode(gNode.getId());
+							for (String attKey : node.getAttributeKeySet()) {
+								System.out.println(node.getAttribute(attKey));
+							}
+						}
+
+					}
+
+					public void mouseDragged(MouseEvent e) {
+						// TODO Auto-generated method stub
+
+					}
+				});
 	}
 
 	public static void main(String[] args) {
 		GraphRendererPerso.SetRenderer();
-		Fenetre f = new Fenetre();
+		new Fenetre();
 	}
-
-	public void actionPerformed(ActionEvent arg0) {
-		// TODO Auto-generated method stub
-
-	}
+	
 }
