@@ -2,6 +2,7 @@ package interfaceGraphique;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -25,8 +26,8 @@ import jsonAndGS.JsonToGS;
 
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.implementations.MultiGraph;
-import org.graphstream.ui.swingViewer.View;
-import org.graphstream.ui.swingViewer.Viewer;
+import org.graphstream.ui.view.View;
+import org.graphstream.ui.view.Viewer;
 
 @SuppressWarnings("serial")
 public class Fenetre extends JFrame implements ActionListener {
@@ -219,9 +220,8 @@ public class Fenetre extends JFrame implements ActionListener {
 					JsonToGS jSTGS = new JsonToGS();
 					graph = jSTGS.generateGraph(directory.getText());
 
-					GraphRenderer.SetRenderer();
-					GraphRenderer.setStyleGraph(graph);
-					GraphModel.setNodeClass(graph);
+					GraphRendererPerso.setStyleGraph(graph);
+					GraphModifier.setNodeClass(graph);
 
 					viewer = new Viewer(graph,
 							Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
@@ -231,29 +231,26 @@ public class Fenetre extends JFrame implements ActionListener {
 
 					graphJSon.removeAll();
 					graphJSon.setLayout(new BorderLayout());
-					graphJSon.add(view, BorderLayout.CENTER);
+					graphJSon.add((Component) view, BorderLayout.CENTER);
 					scrollJSon.setViewportView(graphJSon);
 
 					isGraphJsonLoaded = true;
 
-					Graph graph2 = new MultiGraph("graph2");
+					Graph graph2 = GraphModifier.GraphToGraph(graph, "graph2");
+
+					GraphRendererPerso.setStyleGraph(graph2);
+					GraphModifier.setNodeClass(graph2);
 
 					viewer2 = new Viewer(graph2,
 							Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
 					viewer2.enableAutoLayout();
 					isAutoLayoutAg = true;
-
 					view2 = viewer2.addDefaultView(false);
 
 					graphAgent.removeAll();
 					graphAgent.setLayout(new BorderLayout());
-					graphAgent.add(view2, BorderLayout.CENTER);
+					graphAgent.add((Component) view2, BorderLayout.CENTER);
 					scrollAgent.setViewportView(graphAgent);
-
-					GraphModel.GraphToGraph(graph, graph2);
-
-					GraphRenderer.setStyleGraph(graph2);
-					GraphModel.setNodeClass(graph2);
 
 					isGraphAgLoaded = true;
 				}
@@ -327,7 +324,9 @@ public class Fenetre extends JFrame implements ActionListener {
 
 		addNodeJSon.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				NodeDialog nodeLeft = new NodeDialog(frame, "Add Node");
+				if (isGraphJsonLoaded) {
+					NodeDialog nodeLeft = new NodeDialog(frame, "Add Node");
+				}
 			}
 		});
 
@@ -335,8 +334,9 @@ public class Fenetre extends JFrame implements ActionListener {
 
 		addEdgeJSon.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				EdgeDialog edgeLeft = new EdgeDialog(frame, "Add Edge");
-
+				if (isGraphJsonLoaded) {
+					EdgeDialog edgeLeft = new EdgeDialog(frame, "Add Edge");
+				}
 			}
 		});
 
@@ -422,7 +422,9 @@ public class Fenetre extends JFrame implements ActionListener {
 
 		addNodeAg.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				NodeDialog nodeRight = new NodeDialog(frame, "Add Node");
+				if (isGraphAgLoaded) {
+					NodeDialog nodeRight = new NodeDialog(frame, "Add Node");
+				}
 			}
 		});
 
@@ -430,7 +432,9 @@ public class Fenetre extends JFrame implements ActionListener {
 
 		addEdgeAg.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				EdgeDialog edgeRight = new EdgeDialog(frame, "Add Edge");
+				if (isGraphAgLoaded) {
+					EdgeDialog edgeRight = new EdgeDialog(frame, "Add Edge");
+				}
 			}
 		});
 
@@ -477,6 +481,7 @@ public class Fenetre extends JFrame implements ActionListener {
 	}
 
 	public static void main(String[] args) {
+		GraphRendererPerso.SetRenderer();
 		Fenetre f = new Fenetre();
 	}
 

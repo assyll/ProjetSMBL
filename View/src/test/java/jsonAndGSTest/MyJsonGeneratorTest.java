@@ -186,7 +186,7 @@ public class MyJsonGeneratorTest extends TestCase {
 
 			/*** write to file ***/
 			File file = generator.generateJson(mLN, mLE);
-			//file.deleteOnExit();
+			file.deleteOnExit();
 
 			/*** read from file ***/
 			JsonFactory jfactory = new JsonFactory();

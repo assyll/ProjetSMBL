@@ -4,7 +4,7 @@ import jsonAndGS.MyJsonGenerator;
 
 import org.graphstream.graph.Graph;
 
-public class GraphRenderer {
+public class GraphRendererPerso {
 
 	public static void SetRenderer() {
 		// remplacement du renderer par défaut

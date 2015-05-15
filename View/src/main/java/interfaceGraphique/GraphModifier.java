@@ -5,8 +5,9 @@ import jsonAndGS.MyJsonGenerator;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
+import org.graphstream.graph.implementations.MultiGraph;
 
-public class GraphModel {
+public class GraphModifier {
 
 	public static void setNodeClass(Graph graph) {
 		Boolean isSource, isFinal;
@@ -28,7 +29,8 @@ public class GraphModel {
 		}
 	}
 
-	public static void GraphToGraph(Graph graph, Graph graphRes) {
+	public static Graph GraphToGraph(Graph graph, String graphName) {
+		Graph graphRes = new MultiGraph(graphName);
 		// Génération du graphe par rapport au 1er graphe
 		for (Node n : graph.getEachNode()) {
 			Node node = graphRes.addNode(n.getId());
@@ -45,5 +47,7 @@ public class GraphModel {
 				edge.addAttribute(attributeKey, ed.getAttribute(attributeKey));
 			}
 		}
+		
+		return graphRes;
 	}
 }
