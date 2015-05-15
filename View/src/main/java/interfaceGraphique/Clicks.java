@@ -31,7 +31,7 @@ public class Clicks implements ViewerListener {
  
         // The default action when closing the view is to quit
         // the program.
-        viewer.setCloseFramePolicy(Viewer.CloseFramePolicy.HIDE_ONLY);
+        viewer.setCloseFramePolicy(Viewer.CloseFramePolicy.EXIT);
  
         // We connect back the viewer to the graph,
         // the graph becomes a sink for the viewer.

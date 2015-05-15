@@ -25,7 +25,6 @@ import javax.swing.JTextField;
 import jsonAndGS.JsonToGS;
 
 import org.graphstream.graph.Graph;
-import org.graphstream.graph.implementations.MultiGraph;
 import org.graphstream.ui.view.View;
 import org.graphstream.ui.view.Viewer;
 
