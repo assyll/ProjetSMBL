@@ -495,14 +495,18 @@ public class Fenetre extends JFrame {
 				new MouseMotionListener() {
 
 					public void mouseMoved(MouseEvent e) {
+						String s = "";
 						Element elem = view.findNodeOrSpriteAt(e.getX(),
 								e.getY());
 						if (elem instanceof Node) {
 							GraphicNode gNode = (GraphicNode) elem;
 							Node node = graph.getNode(gNode.getId());
 							for (String attKey : node.getAttributeKeySet()) {
-								System.out.println(node.getAttribute(attKey));
+								s += attKey + " : " + node.getAttribute(attKey) + " - ";
 							}
+							viewer.getDefaultView().setToolTipText(s);
+						} else {
+							viewer.getDefaultView().setToolTipText(null);
 						}
 
 					}
