@@ -3,11 +3,13 @@ package interfaceGraphique;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
@@ -24,16 +26,16 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.JTextPane;
 
 import jsonAndGS.FileFormatException;
 import jsonAndGS.JsonToGS;
 
+import org.graphstream.graph.Edge;
 import org.graphstream.graph.Element;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
+import org.graphstream.ui.graphicGraph.GraphicEdge;
 import org.graphstream.ui.graphicGraph.GraphicNode;
 import org.graphstream.ui.view.View;
 import org.graphstream.ui.view.Viewer;
@@ -42,7 +44,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 
 @SuppressWarnings("serial")
 public class Fenetre extends JFrame {
-	
+
 	public static final String NO_FILE_SELECTED = "Veuillez d'abord sélectionner un fichier à importer";
 
 	// Instanciation des différents Components
@@ -272,8 +274,6 @@ public class Fenetre extends JFrame {
 
 						isGraphAgLoaded = true;
 
-						// TODO
-						// http://forum.hardware.fr/hfr/Programmation/Java/jtextarea-couleur-texte-sujet_43087_1.htm
 					} catch (JsonParseException e1) {
 						textStatut
 								.appendErrorMessage(JsonToGS.FILE_FORMAT_ERROR);
@@ -288,8 +288,7 @@ public class Fenetre extends JFrame {
 						// e1.printStackTrace();
 					}
 				} else {
-					textStatut
-							.appendDoc(NO_FILE_SELECTED);
+					textStatut.appendDoc(NO_FILE_SELECTED);
 				}
 			}
 		});
@@ -534,10 +533,23 @@ public class Fenetre extends JFrame {
 							GraphicNode gNode = (GraphicNode) elem;
 							Node node = graph.getNode(gNode.getId());
 							for (String attKey : node.getAttributeKeySet()) {
-								s += attKey + " : " + node.getAttribute(attKey) + "<br/>";
+								s += attKey + " : " + node.getAttribute(attKey)
+										+ "<br/>";
 							}
 							s += "</html>";
 							viewer.getDefaultView().setToolTipText(s);
+							textStatut.appendDoc(s);
+						} else if (elem instanceof Edge) {
+							// TODO Gérer le survol pour une transition, izi
+							GraphicEdge gEdge = (GraphicEdge) elem;
+							Edge edge = graph.getEdge(gEdge.getId());
+							for (String attKey : edge.getAttributeKeySet()) {
+								s += attKey + " : " + edge.getAttribute(attKey)
+										+ "<br/>";
+							}
+							s += "</html>";
+							viewer.getDefaultView().setToolTipText(s);
+							textStatut.appendDoc(s);
 						} else {
 							viewer.getDefaultView().setToolTipText(null);
 						}
@@ -546,10 +558,38 @@ public class Fenetre extends JFrame {
 					public void mouseDragged(MouseEvent e) {
 						Element elem = view.findNodeOrSpriteAt(e.getX(),
 								e.getY());
+						double x = e.getX();
+						double y = e.getY();
 						if (elem == null) {
-							// TODO deplace la view plutot que la souris
+							viewer.getDefaultView().beginSelectionAt(x, y);
+							viewer.getDefaultView().setCursor(
+									new Cursor(Cursor.HAND_CURSOR));
+							double x2 = e.getX();
+							double y2 = e.getY();
+							double t;
+							if (x > x2) {
+								t = x;
+								x = x2;
+								x2 = t;
+							}
+							if (y > y2) {
+								t = y;
+								y = y2;
+								y2 = t;
+							}
+
+							viewer.getDefaultView().endSelectionAt(x2, y2);
+							viewer.getDefaultView().setCursor(
+									new Cursor(Cursor.DEFAULT_CURSOR));
+							double centreX = view.getCamera().getViewCenter().x + graphJSon.getWidth()  / 2;
+							double centreY = view.getCamera().getViewCenter().y + graphJSon.getHeight()  / 2;
+							view.getCamera().setViewCenter((centreX - x2), (centreY - y2), 0);
+							System.out.println("x: "+ centreX +" / y: "+ centreY +" / x2:"+ x2 +" / y2: "+ y2 +" / xF: "+ (centreX-x2) +" / yF: "+ (centreY - y2) +"\n");
+						} else {
+							// TODO
 						}
 					}
+
 				});
 
 		// Action lors de l'utilisation de la molette de la souris sur le graphe

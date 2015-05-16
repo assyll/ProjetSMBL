@@ -12,6 +12,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+//TODO Faire avec un FormDialog
+
 @SuppressWarnings("serial")
 public class NodeDialog extends JDialog implements ActionListener {
 

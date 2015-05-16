@@ -15,6 +15,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
+//TODO Faire avec un FormDialog
+
 @SuppressWarnings("serial")
 public class AttributDialog extends JDialog implements ActionListener {
 
