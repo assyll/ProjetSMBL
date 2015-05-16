@@ -17,14 +17,14 @@ public class JColorTextPane extends JTextPane {
 
 	private StringBuilder sb = new StringBuilder();
 	private Color defColor = Color.BLACK;
-	// private String defColorHTML = "black";
+	private String defColorHTML = "black";
 	private StyledDocument doc;
 	private Style style;
 
-	/*public void styleHTML() {
+	public void styleHTML() {
 		this.setContentType("text/HTML");
 		this.setEditorKit(new HTMLEditorKit());
-	}*/
+	}
 
 	public void styleDoc() {
 		doc = this.getStyledDocument();
@@ -39,7 +39,7 @@ public class JColorTextPane extends JTextPane {
 		return defColor;
 	}
 
-	/*public void setDefColorHTML(String colorHTML) {
+	public void setDefColorHTML(String colorHTML) {
 		defColorHTML = colorHTML;
 	}
 
@@ -72,7 +72,7 @@ public class JColorTextPane extends JTextPane {
 		sb.append(msg);
 		sb.append("</font>");
 		setText(sb.toString());
-	}*/
+	}
 
 	public void appendDoc(String msg) {
 		appendDoc(msg, defColor);
