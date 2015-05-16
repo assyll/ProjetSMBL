@@ -12,6 +12,7 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 
+import jsonAndGS.FileFormatException;
 import jsonAndGS.JsonToGS;
 import jsonAndGS.MyJsonGenerator;
 import junit.framework.TestCase;
@@ -48,6 +49,8 @@ public class JsonToGSTest extends TestCase {
 		} catch (JsonParseException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (FileFormatException e) {
 			e.printStackTrace();
 		}
 		
@@ -89,6 +92,8 @@ public class JsonToGSTest extends TestCase {
 		} catch (JsonParseException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (FileFormatException e) {
 			e.printStackTrace();
 		}
 		
@@ -145,6 +150,8 @@ public class JsonToGSTest extends TestCase {
 		} catch (JsonParseException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (FileFormatException e) {
 			e.printStackTrace();
 		}
 	}

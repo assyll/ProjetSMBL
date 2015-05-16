@@ -17,13 +17,13 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 
 public class JsonToGS {
 
-	static final String FILE_FORMAT_ERROR = "Le format du fichier sélectionné est invalide";
+	public static final String FILE_FORMAT_ERROR = "Le format du fichier sélectionné est invalide \n";
 
-	public void generateNodes(JsonParser jParser, Graph graph) {
+	public void generateNodes(JsonParser jParser, Graph graph) throws JsonParseException, IOException, FileFormatException {
 		String name, fieldname;
 		Node node;
 
-		try {
+		//try {
 			jParser.nextToken();
 			fieldname = jParser.getCurrentName();
 			if (MyJsonGenerator.FORMAT_NODE_NAME.equals(fieldname)) {
@@ -44,20 +44,20 @@ public class JsonToGS {
 				node.addAttribute(fieldname, jParser.getText());
 			}
 
-		} catch (JsonParseException e) {
+		/*} catch (JsonParseException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (FileFormatException e) {
 			e.printStackTrace();
-		}
+		}*/
 	}
 
-	public void generateEdges(JsonParser jParser, Graph graph) {
+	public void generateEdges(JsonParser jParser, Graph graph) throws JsonParseException, IOException, FileFormatException {
 		String label, nodeB, nodeE, action;
 		Edge edge;
 
-		try {
+		//try {
 			jParser.nextToken();
 			String fieldname = jParser.getCurrentName();
 			if (MyJsonGenerator.FORMAT_EDGE_LABEL.equals(fieldname)) {
@@ -111,19 +111,19 @@ public class JsonToGS {
 				edge.addAttribute(fieldname, jParser.getText());
 			}
 
-		} catch (JsonParseException e) {
+		/*} catch (JsonParseException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (FileFormatException e) {
 			e.printStackTrace();
-		}
+		}*/
 	}
 
-	public Graph generateGraph(String filePath) {
+	public Graph generateGraph(String filePath) throws JsonParseException, IOException, FileFormatException {
 		Graph graph = new MultiGraph("graph");
 
-		try {
+		//try {
 			
 			JsonFactory jfactory = new JsonFactory();
 
@@ -159,7 +159,7 @@ public class JsonToGS {
 			jParser.close();
 
 			// TODO APPEL FENETRE D'ALERTE QUAND EXCEPTION
-		} catch (JsonGenerationException e) {
+		/*} catch (JsonGenerationException e) {
 			e.printStackTrace();
 		} catch (JsonMappingException e) {
 			e.printStackTrace();
@@ -169,7 +169,7 @@ public class JsonToGS {
 			e.printStackTrace();
 		} catch (FileFormatException e) {
 			e.printStackTrace();
-		}
+		}*/
 
 		return graph;
 

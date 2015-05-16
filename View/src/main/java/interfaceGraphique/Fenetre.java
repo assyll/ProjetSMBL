@@ -4,13 +4,15 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.GraphicsEnvironment;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.io.File;
+import java.io.IOException;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -24,8 +26,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.text.AbstractDocument.AbstractElement;
 
+import jsonAndGS.FileFormatException;
 import jsonAndGS.JsonToGS;
 
 import org.graphstream.graph.Element;
@@ -34,6 +36,8 @@ import org.graphstream.graph.Node;
 import org.graphstream.ui.graphicGraph.GraphicNode;
 import org.graphstream.ui.view.View;
 import org.graphstream.ui.view.Viewer;
+
+import com.fasterxml.jackson.core.JsonParseException;
 
 @SuppressWarnings("serial")
 public class Fenetre extends JFrame {
@@ -224,42 +228,59 @@ public class Fenetre extends JFrame {
 
 				if (!directory.getText().equals("Directory")) {
 					JsonToGS jSTGS = new JsonToGS();
-					graph = jSTGS.generateGraph(directory.getText());
+					try {
+						graph = jSTGS.generateGraph(directory.getText());
 
-					GraphRendererPerso.setStyleGraph(graph);
-					GraphModifier.setNodeClass(graph);
+						GraphRendererPerso.setStyleGraph(graph);
+						GraphModifier.setNodeClass(graph);
 
-					viewer = new Viewer(graph,
-							Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
-					viewer.enableAutoLayout();
-					isAutoLayoutJson = true;
-					view = viewer.addDefaultView(false);
-					setListenerOnViewer();
+						viewer = new Viewer(graph,
+								Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
+						viewer.enableAutoLayout();
+						isAutoLayoutJson = true;
+						view = viewer.addDefaultView(false);
+						setListenerOnViewer(viewer);
 
-					graphJSon.removeAll();
-					graphJSon.setLayout(new BorderLayout());
-					graphJSon.add((Component) view, BorderLayout.CENTER);
-					scrollJSon.setViewportView(graphJSon);
+						graphJSon.removeAll();
+						graphJSon.setLayout(new BorderLayout());
+						graphJSon.add((Component) view, BorderLayout.CENTER);
+						scrollJSon.setViewportView(graphJSon);
 
-					isGraphJsonLoaded = true;
+						isGraphJsonLoaded = true;
 
-					Graph graph2 = GraphModifier.GraphToGraph(graph, "graph2");
+						Graph graph2 = GraphModifier.GraphToGraph(graph,
+								"graph2");
 
-					GraphRendererPerso.setStyleGraph(graph2);
-					GraphModifier.setNodeClass(graph2);
+						GraphRendererPerso.setStyleGraph(graph2);
+						GraphModifier.setNodeClass(graph2);
 
-					viewer2 = new Viewer(graph2,
-							Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
-					viewer2.enableAutoLayout();
-					isAutoLayoutAg = true;
-					view2 = viewer2.addDefaultView(false);
+						viewer2 = new Viewer(graph2,
+								Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
+						viewer2.enableAutoLayout();
+						isAutoLayoutAg = true;
+						view2 = viewer2.addDefaultView(false);
+						setListenerOnViewer(viewer2);
 
-					graphAgent.removeAll();
-					graphAgent.setLayout(new BorderLayout());
-					graphAgent.add((Component) view2, BorderLayout.CENTER);
-					scrollAgent.setViewportView(graphAgent);
+						graphAgent.removeAll();
+						graphAgent.setLayout(new BorderLayout());
+						graphAgent.add((Component) view2, BorderLayout.CENTER);
+						scrollAgent.setViewportView(graphAgent);
 
-					isGraphAgLoaded = true;
+						isGraphAgLoaded = true;
+
+						//TODO http://forum.hardware.fr/hfr/Programmation/Java/jtextarea-couleur-texte-sujet_43087_1.htm
+					} catch (JsonParseException e1) {
+						textStatut.append("<html><b><font color = 'ff0000'>" + JsonToGS.FILE_FORMAT_ERROR + "</font></b></html>");
+						// e1.printStackTrace();
+					} catch (IOException e1) {
+						int begin = textStatut.getText().length();
+						textStatut.append("<html><b><font color = 'ff0000'>" + JsonToGS.FILE_FORMAT_ERROR + "</font></b></html>");
+						// e1.printStackTrace();
+					} catch (FileFormatException e1) {
+						int begin = textStatut.getText().length();
+						textStatut.append("<html><b><font color = 'ff0000'>" + JsonToGS.FILE_FORMAT_ERROR + "</font></b></html>");
+						// e1.printStackTrace();
+					}
 				}
 			}
 		});
@@ -485,12 +506,14 @@ public class Fenetre extends JFrame {
 		frame.setBounds(xWindow, yWindow, widthWindow, heightWindow);
 		frame.setVisible(true);
 
+		// Centrage de la fenetre
 		pack();
 		frame.setLocationRelativeTo(null);
 	}
 
-	public void setListenerOnViewer() {
-		// Action lors du clic sur le graphe de la partie gauche
+	public void setListenerOnViewer(final Viewer viewer) {
+		// Action lors du déplacement de la souris sur le graphe de la partie
+		// gauche
 		viewer.getDefaultView().addMouseMotionListener(
 				new MouseMotionListener() {
 
@@ -502,25 +525,46 @@ public class Fenetre extends JFrame {
 							GraphicNode gNode = (GraphicNode) elem;
 							Node node = graph.getNode(gNode.getId());
 							for (String attKey : node.getAttributeKeySet()) {
-								s += attKey + " : " + node.getAttribute(attKey) + " - ";
+								s += attKey + " : " + node.getAttribute(attKey)
+										+ " - ";
 							}
 							viewer.getDefaultView().setToolTipText(s);
 						} else {
 							viewer.getDefaultView().setToolTipText(null);
 						}
-
 					}
 
 					public void mouseDragged(MouseEvent e) {
-						// TODO Auto-generated method stub
-
+						Element elem = view.findNodeOrSpriteAt(e.getX(),
+								e.getY());
+						if (elem == null) {
+							// TODO deplace la view plutot que la souris
+						}
 					}
 				});
+
+		// Action lors de l'utilisation de la molette de la souris sur le graphe
+		// de la partie gauche
+		viewer.getDefaultView().addMouseWheelListener(new MouseWheelListener() {
+
+			public void mouseWheelMoved(MouseWheelEvent e) {
+				double wheelValue = e.getPreciseWheelRotation();
+				if (wheelValue > 0) {
+					dezoom = view.getCamera().getViewPercent();
+					view = viewer.getDefaultView();
+					view.getCamera().setViewPercent(dezoom + 0.1);
+				} else if (wheelValue < 0) {
+					zoom = view.getCamera().getViewPercent();
+					view = viewer.getDefaultView();
+					view.getCamera().setViewPercent(zoom - 0.1);
+				}
+			}
+		});
 	}
 
 	public static void main(String[] args) {
 		GraphRendererPerso.SetRenderer();
 		new Fenetre();
 	}
-	
+
 }
