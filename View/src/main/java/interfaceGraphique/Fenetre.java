@@ -26,6 +26,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
 
 import jsonAndGS.FileFormatException;
 import jsonAndGS.JsonToGS;
@@ -41,6 +42,8 @@ import com.fasterxml.jackson.core.JsonParseException;
 
 @SuppressWarnings("serial")
 public class Fenetre extends JFrame {
+	
+	public static final String NO_FILE_SELECTED = "Veuillez d'abord sélectionner un fichier à importer";
 
 	// Instanciation des différents Components
 
@@ -55,7 +58,7 @@ public class Fenetre extends JFrame {
 
 	JTextField directory, textJSon, textAg;
 
-	JTextArea textStatut;
+	JColorTextPane textStatut;
 
 	JButton buttonGS, zoomAvantJSon, zoomArrJSon, zoomTextJSon, zoomAvantAg,
 			zoomArrAg, zoomTextAg, addNodeJSon, addEdgeJSon, addNodeAg,
@@ -160,7 +163,8 @@ public class Fenetre extends JFrame {
 		panelOptionAg.add(panelModifAg);
 
 		// Initialisation de la zone de texte de la barre de statut
-		textStatut = new JTextArea("");
+		textStatut = new JColorTextPane();
+		textStatut.styleDoc();
 		textStatut.setEditable(false);
 		textStatut.setBackground(new Color(238, 238, 238));
 
@@ -268,19 +272,24 @@ public class Fenetre extends JFrame {
 
 						isGraphAgLoaded = true;
 
-						//TODO http://forum.hardware.fr/hfr/Programmation/Java/jtextarea-couleur-texte-sujet_43087_1.htm
+						// TODO
+						// http://forum.hardware.fr/hfr/Programmation/Java/jtextarea-couleur-texte-sujet_43087_1.htm
 					} catch (JsonParseException e1) {
-						textStatut.append("<html><b><font color = 'ff0000'>" + JsonToGS.FILE_FORMAT_ERROR + "</font></b></html>");
+						textStatut
+								.appendErrorMessage(JsonToGS.FILE_FORMAT_ERROR);
 						// e1.printStackTrace();
 					} catch (IOException e1) {
-						int begin = textStatut.getText().length();
-						textStatut.append("<html><b><font color = 'ff0000'>" + JsonToGS.FILE_FORMAT_ERROR + "</font></b></html>");
+						textStatut
+								.appendErrorMessage(JsonToGS.FILE_FORMAT_ERROR);
 						// e1.printStackTrace();
 					} catch (FileFormatException e1) {
-						int begin = textStatut.getText().length();
-						textStatut.append("<html><b><font color = 'ff0000'>" + JsonToGS.FILE_FORMAT_ERROR + "</font></b></html>");
+						textStatut
+								.appendErrorMessage(JsonToGS.FILE_FORMAT_ERROR);
 						// e1.printStackTrace();
 					}
+				} else {
+					textStatut
+							.appendDoc(NO_FILE_SELECTED);
 				}
 			}
 		});
@@ -323,7 +332,7 @@ public class Fenetre extends JFrame {
 					}
 
 					if (!isNumber) {
-						textStatut.append("Ce n'est pas un entier \n");
+						textStatut.appendDoc("Ce n'est pas un entier \n");
 					} else {
 						pourcentage = Integer.parseInt(s);
 						view = viewer.getDefaultView();
@@ -331,13 +340,13 @@ public class Fenetre extends JFrame {
 							zoomAvant = pourcentage - 100;
 							total = 1 - (zoomAvant / 100);
 							view.getCamera().setViewPercent(total);
-							textStatut.append("Zoom avant: " + pourcentage
+							textStatut.appendDoc("Zoom avant: " + pourcentage
 									+ "% \n");
 						} else if (pourcentage < 100) {
 							zoomArr = 100 - pourcentage;
 							total = 1 + (zoomArr / 100);
 							view.getCamera().setViewPercent(total);
-							textStatut.append("Zoom arrière: " + pourcentage
+							textStatut.appendDoc("Zoom arrière: " + pourcentage
 									+ "% \n");
 						} else {
 							view.getCamera().resetView();
@@ -422,7 +431,7 @@ public class Fenetre extends JFrame {
 					}
 
 					if (!isNumber) {
-						textStatut.append("Ce n'est pas un entier \n");
+						textStatut.appendDoc("Ce n'est pas un entier \n");
 					} else {
 						pourcentage = Integer.parseInt(s);
 						view = viewer2.getDefaultView();
@@ -430,13 +439,13 @@ public class Fenetre extends JFrame {
 							zoomAvant = pourcentage - 100;
 							total = 1 - (zoomAvant / 100);
 							view.getCamera().setViewPercent(total);
-							textStatut.append("Zoom avant: " + pourcentage
+							textStatut.appendDoc("Zoom avant: " + pourcentage
 									+ "% \n");
 						} else if (pourcentage < 100) {
 							zoomArr = 100 - pourcentage;
 							total = 1 + (zoomArr / 100);
 							view.getCamera().setViewPercent(total);
-							textStatut.append("Zoom arrière: " + pourcentage
+							textStatut.appendDoc("Zoom arrière: " + pourcentage
 									+ "% \n");
 						} else {
 							view.getCamera().resetView();
@@ -518,16 +527,16 @@ public class Fenetre extends JFrame {
 				new MouseMotionListener() {
 
 					public void mouseMoved(MouseEvent e) {
-						String s = "";
+						String s = "<html>";
 						Element elem = view.findNodeOrSpriteAt(e.getX(),
 								e.getY());
 						if (elem instanceof Node) {
 							GraphicNode gNode = (GraphicNode) elem;
 							Node node = graph.getNode(gNode.getId());
 							for (String attKey : node.getAttributeKeySet()) {
-								s += attKey + " : " + node.getAttribute(attKey)
-										+ " - ";
+								s += attKey + " : " + node.getAttribute(attKey) + "<br/>";
 							}
+							s += "</html>";
 							viewer.getDefaultView().setToolTipText(s);
 						} else {
 							viewer.getDefaultView().setToolTipText(null);
