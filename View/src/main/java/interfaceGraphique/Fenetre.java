@@ -575,7 +575,7 @@ public class Fenetre extends JFrame {
 							double posZ = view.getCamera().getViewCenter().z;
 
 							view.getCamera().setViewCenter(
-									(posX + (1 - (x2 - x)) / 100),
+									(posX + ((x2 - x)*(-1)) / 100),
 									(posY + (y2 - y) / 100), posZ);
 						}
 					}
