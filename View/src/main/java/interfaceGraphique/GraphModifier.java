@@ -6,6 +6,8 @@ import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.MultiGraph;
+import org.graphstream.ui.spriteManager.Sprite;
+import org.graphstream.ui.spriteManager.SpriteManager;
 
 public class GraphModifier {
 
@@ -90,6 +92,14 @@ public class GraphModifier {
 			}
 
 			return g;
+		}
+	}
+	
+	public static void generateSprite(Graph graph, SpriteManager spriteManager){
+		for(Edge edge : graph.getEachEdge()){
+			Sprite sprite = spriteManager.addSprite(edge.getId());
+			sprite.attachToEdge(edge.getId());
+			sprite.setPosition(0.5, 0, 0);
 		}
 	}
 }
