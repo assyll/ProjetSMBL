@@ -360,11 +360,11 @@ public class Fenetre extends JFrame {
 		addNodeJSon.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				NodeDialog nodeLeft = new NodeDialog(frame, "Add Node");
-				
-				if (isGraphJsonLoaded) {
-					GraphModifier.addNode(nodeLeft, graph);
-					GraphModifier.setNodeClass(graph);
-				} else if(graph == null){
+				if (!nodeLeft.getFerme()) {
+					if (isGraphJsonLoaded) {
+						GraphModifier.addNode(nodeLeft, graph);
+						GraphModifier.setNodeClass(graph);
+					} else if (graph == null) {
 						graph = new MultiGraph("Graph");
 
 						GraphRendererPerso.setStyleGraph(graph);
@@ -384,6 +384,7 @@ public class Fenetre extends JFrame {
 						scrollJSon.setViewportView(graphJSon);
 
 						isGraphJsonLoaded = true;
+					}
 				}
 			}
 		});
@@ -393,10 +394,12 @@ public class Fenetre extends JFrame {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				if (isGraphJsonLoaded) {
 					EdgeDialog edgeLeft = new EdgeDialog(frame, "Add Edge");
-					try {
-						GraphModifier.addEdge(edgeLeft, graph);
-					} catch (NoSpecifiedNodeException e) {
-						textStatut.appendErrorMessage(e.getMessage());
+					if (!edgeLeft.getFerme()) {
+						try {
+							GraphModifier.addEdge(edgeLeft, graph);
+						} catch (NoSpecifiedNodeException e) {
+							textStatut.appendErrorMessage(e.getMessage());
+						}
 					}
 				}
 			}
@@ -547,7 +550,6 @@ public class Fenetre extends JFrame {
 							}
 							s += "</html>";
 							viewer.getDefaultView().setToolTipText(s);
-							textStatut.appendDoc(s);
 						} else if (elem instanceof Edge) {
 							// TODO Gérer le survol pour une transition, izi
 						} else {
@@ -575,7 +577,7 @@ public class Fenetre extends JFrame {
 							double posZ = view.getCamera().getViewCenter().z;
 
 							view.getCamera().setViewCenter(
-									(posX + ((x2 - x)*(-1)) / 100),
+									(posX + ((x2 - x) * (-1)) / 100),
 									(posY + (y2 - y) / 100), posZ);
 						}
 					}

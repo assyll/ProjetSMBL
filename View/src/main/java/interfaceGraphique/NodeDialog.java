@@ -22,7 +22,7 @@ public class NodeDialog extends JDialog implements ActionListener {
 	JButton ok, cancel;
 	JFrame frame;
 	String name;
-	boolean rootN, finalN;
+	boolean rootN, finalN, ferme;
 	int nbAtt;
 	AttributDialog attDialog;
 
@@ -102,6 +102,10 @@ public class NodeDialog extends JDialog implements ActionListener {
 	public JFrame getFrame() {
 		return frame;
 	}
+	
+	public boolean getFerme() {
+		return ferme;
+	}
 
 	public void actionPerformed(ActionEvent evt) {
 		if (evt.getSource() == ok) {
@@ -109,12 +113,14 @@ public class NodeDialog extends JDialog implements ActionListener {
 			this.rootN = getRoot();
 			this.finalN = getFinal();
 			this.nbAtt = this.getNbAtt();
+			this.ferme = false;
 			this.dispose();
 			if (nbAtt != 0) {
 				attDialog = new AttributDialog(getFrame(), "Attributs Node",
 						getNbAtt());
 			}
 		} else if (evt.getSource() == cancel) {
+			this.ferme = true;
 			this.dispose();
 		}
 	}

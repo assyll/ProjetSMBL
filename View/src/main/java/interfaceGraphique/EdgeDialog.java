@@ -23,6 +23,7 @@ public class EdgeDialog extends JDialog implements ActionListener {
 	JFrame frame;
 	String name, sourceE, endE, actionE;
 	int nbAtt;
+	boolean ferme;
 	AttributDialog attDialog;
 
 	public EdgeDialog(JFrame f, String s) {
@@ -104,6 +105,10 @@ public class EdgeDialog extends JDialog implements ActionListener {
 	public JFrame getFrame() {
 		return frame;
 	}
+	
+	public boolean getFerme() {
+		return ferme;
+	}
 
 	public void actionPerformed(ActionEvent evt) {
 		if (evt.getSource() == ok) {
@@ -112,12 +117,14 @@ public class EdgeDialog extends JDialog implements ActionListener {
 			this.endE = getEnd();
 			this.actionE = getAction();
 			this.nbAtt = getNbAtt();
+			ferme = false;
 			this.dispose();
 			if (nbAtt != 0) {
 				attDialog = new AttributDialog(getFrame(), "Attributs Node",
 						getNbAtt());
 			}
 		} else if (evt.getSource() == cancel) {
+			ferme = true;
 			this.dispose();
 		}
 	}
