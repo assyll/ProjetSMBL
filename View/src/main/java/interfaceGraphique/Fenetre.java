@@ -645,6 +645,7 @@ public class Fenetre extends JFrame {
 		// Action lors de l'utilisation de la molette de la souris sur le graphe
 		viewer.getDefaultView().addMouseWheelListener(new MouseWheelListener() {
 
+			//TODO ajouter une tolérance sur la détection d'élément
 			public void mouseWheelMoved(MouseWheelEvent e) {
 				double wheelValue = e.getPreciseWheelRotation();
 				if (wheelValue > 0) {

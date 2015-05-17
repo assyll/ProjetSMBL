@@ -15,8 +15,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
-//TODO Faire avec un FormDialog
-
 @SuppressWarnings("serial")
 public class AttributDialog extends JDialog implements ActionListener {
 
@@ -74,6 +72,7 @@ public class AttributDialog extends JDialog implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent evt) {
+		//TODO Manu t'es un clochard
 		String[] tmp;
 		if (evt.getSource() == ok) {
 			tmp = getAttributs();
