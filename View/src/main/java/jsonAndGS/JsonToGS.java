@@ -42,12 +42,6 @@ public class JsonToGS {
 			jParser.nextToken();
 			node.addAttribute(fieldname, jParser.getText());
 		}
-
-		/*
-		 * } catch (JsonParseException e) { e.printStackTrace(); } catch
-		 * (IOException e) { e.printStackTrace(); } catch (FileFormatException
-		 * e) { e.printStackTrace(); }
-		 */
 	}
 
 	public void generateEdges(JsonParser jParser, Graph graph)
@@ -108,12 +102,6 @@ public class JsonToGS {
 			jParser.nextToken();
 			edge.addAttribute(fieldname, jParser.getText());
 		}
-
-		/*
-		 * } catch (JsonParseException e) { e.printStackTrace(); } catch
-		 * (IOException e) { e.printStackTrace(); } catch (FileFormatException
-		 * e) { e.printStackTrace(); }
-		 */
 	}
 
 	public Graph generateGraph(String filePath) throws JsonParseException,
@@ -157,18 +145,6 @@ public class JsonToGS {
 
 		// TODO Verifier l'inutilité des erreurs JsonGenerationException et
 		// JsonMappingException
-		
-		/*} catch (JsonGenerationException e) {
-		e.printStackTrace();
-	} catch (JsonMappingException e) {
-		e.printStackTrace();
-	} catch (JsonParseException e) {
-		e.printStackTrace();
-	} catch (IOException e) {
-		e.printStackTrace();
-	} catch (FileFormatException e) {
-		e.printStackTrace();
-	}*/
 		
 		return graph;
 

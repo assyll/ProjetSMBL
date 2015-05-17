@@ -36,6 +36,9 @@ import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.MultiGraph;
 import org.graphstream.ui.graphicGraph.GraphicNode;
+import org.graphstream.ui.graphicGraph.GraphicSprite;
+import org.graphstream.ui.spriteManager.Sprite;
+import org.graphstream.ui.spriteManager.SpriteManager;
 import org.graphstream.ui.view.View;
 import org.graphstream.ui.view.Viewer;
 
@@ -84,7 +87,9 @@ public class Fenetre extends JFrame {
 			heightWindow = 700, sizeSeparator = 5;
 
 	boolean isAutoLayoutJson, isAutoLayoutAg, isGraphJsonLoaded = false,
-			isGraphAgLoaded = false;
+			isGraphAgLoaded = false, isSpriteUnder;
+
+	SpriteManager spriteManagerJson, spriteManagerAgent;
 
 	public Fenetre() {
 
@@ -239,6 +244,8 @@ public class Fenetre extends JFrame {
 
 						GraphRendererPerso.setStyleGraph(graph);
 						GraphModifier.setNodeClass(graph);
+						spriteManagerJson = new SpriteManager(graph);
+						GraphModifier.generateSprite(graph, spriteManagerJson);
 
 						viewer = new Viewer(graph,
 								Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
@@ -259,6 +266,8 @@ public class Fenetre extends JFrame {
 
 						GraphRendererPerso.setStyleGraph(graph2);
 						GraphModifier.setNodeClass(graph2);
+						spriteManagerAgent = new SpriteManager(graph2);
+						GraphModifier.generateSprite(graph2, spriteManagerAgent);
 
 						viewer2 = new Viewer(graph2,
 								Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
@@ -360,30 +369,32 @@ public class Fenetre extends JFrame {
 		addNodeJSon.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				NodeDialog nodeLeft = new NodeDialog(frame, "Add Node");
-				
+
 				if (isGraphJsonLoaded) {
 					GraphModifier.addNode(nodeLeft, graph);
 					GraphModifier.setNodeClass(graph);
-				} else if(graph == null){
-						graph = new MultiGraph("Graph");
+				} else if (graph == null) {
+					graph = new MultiGraph("Graph");
 
-						GraphRendererPerso.setStyleGraph(graph);
-						GraphModifier.addNode(nodeLeft, graph);
-						GraphModifier.setNodeClass(graph);
+					GraphRendererPerso.setStyleGraph(graph);
+					GraphModifier.addNode(nodeLeft, graph);
+					GraphModifier.setNodeClass(graph);
+					spriteManagerJson = new SpriteManager(graph);
+					GraphModifier.generateSprite(graph, spriteManagerJson);
 
-						viewer = new Viewer(graph,
-								Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
-						viewer.enableAutoLayout();
-						isAutoLayoutJson = true;
-						view = viewer.addDefaultView(false);
-						setListenerOnViewer(viewer);
+					viewer = new Viewer(graph,
+							Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
+					viewer.enableAutoLayout();
+					isAutoLayoutJson = true;
+					view = viewer.addDefaultView(false);
+					setListenerOnViewer(viewer);
 
-						graphJSon.removeAll();
-						graphJSon.setLayout(new BorderLayout());
-						graphJSon.add((Component) view, BorderLayout.CENTER);
-						scrollJSon.setViewportView(graphJSon);
+					graphJSon.removeAll();
+					graphJSon.setLayout(new BorderLayout());
+					graphJSon.add((Component) view, BorderLayout.CENTER);
+					scrollJSon.setViewportView(graphJSon);
 
-						isGraphJsonLoaded = true;
+					isGraphJsonLoaded = true;
 				}
 			}
 		});
@@ -395,6 +406,11 @@ public class Fenetre extends JFrame {
 					EdgeDialog edgeLeft = new EdgeDialog(frame, "Add Edge");
 					try {
 						GraphModifier.addEdge(edgeLeft, graph);
+						Edge edge = graph.getEdge(edgeLeft.getLabel());
+						System.out.println(edge.getId());
+						Sprite sprite = spriteManagerJson.addSprite(edge.getId());
+						sprite.attachToEdge(edgeLeft.getLabel());
+						sprite.setPosition(0.5, 0, 0);
 					} catch (NoSpecifiedNodeException e) {
 						textStatut.appendErrorMessage(e.getMessage());
 					}
@@ -526,8 +542,7 @@ public class Fenetre extends JFrame {
 	}
 
 	public void setListenerOnViewer(final Viewer viewer) {
-		// Action lors du déplacement de la souris sur le graphe de la partie
-		// gauche
+		// Action lors du déplacement de la souris sur le graphe
 
 		final View view = viewer.getDefaultView();
 
@@ -538,6 +553,8 @@ public class Fenetre extends JFrame {
 						String s = "<html>";
 						Element elem = view.findNodeOrSpriteAt(e.getX(),
 								e.getY());
+						if (elem != null) {
+						}
 						if (elem instanceof Node) {
 							GraphicNode gNode = (GraphicNode) elem;
 							Node node = graph.getNode(gNode.getId());
@@ -548,8 +565,18 @@ public class Fenetre extends JFrame {
 							s += "</html>";
 							viewer.getDefaultView().setToolTipText(s);
 							textStatut.appendDoc(s);
-						} else if (elem instanceof Edge) {
-							// TODO Gérer le survol pour une transition, izi
+						} else if (elem instanceof GraphicSprite) {
+							GraphicSprite gSprite = (GraphicSprite) elem;
+							Sprite sprite = spriteManagerJson.getSprite(gSprite
+									.getId());
+							Edge edge = (Edge) sprite.getAttachment();
+							for (String attKey : edge.getAttributeKeySet()) {
+								s += attKey + " : " + edge.getAttribute(attKey)
+										+ "<br/>";
+							}
+							s += "</html>";
+							viewer.getDefaultView().setToolTipText(s);
+							textStatut.appendDoc(s);
 						} else {
 							viewer.getDefaultView().setToolTipText(null);
 						}
@@ -558,25 +585,26 @@ public class Fenetre extends JFrame {
 					public void mouseDragged(MouseEvent e) {
 						Element elem = view.findNodeOrSpriteAt(e.getX(),
 								e.getY());
+						if (isSpriteUnder == false) {
+							if (elem == null) {
+								if (x == null && y == null) {
+									x = (double) e.getX();
+									y = (double) e.getY();
+								} else {
+									x = x2;
+									y = y2;
+								}
+								x2 = (double) e.getX();
+								y2 = (double) e.getY();
+								
+								double posX = view.getCamera().getViewCenter().x;
+								double posY = view.getCamera().getViewCenter().y;
+								double posZ = view.getCamera().getViewCenter().z;
 
-						if (x == null && y == null) {
-							x = (double) e.getX();
-							y = (double) e.getY();
-						} else {
-							x = x2;
-							y = y2;
-						}
-						if (elem == null) {
-							x2 = (double) e.getX();
-							y2 = (double) e.getY();
-
-							double posX = view.getCamera().getViewCenter().x;
-							double posY = view.getCamera().getViewCenter().y;
-							double posZ = view.getCamera().getViewCenter().z;
-
-							view.getCamera().setViewCenter(
-									(posX + ((x2 - x)*(-1)) / 100),
-									(posY + (y2 - y) / 100), posZ);
+								view.getCamera().setViewCenter(
+										(posX + ((x2 - x) * (-1)) / 100),
+										(posY + (y2 - y) / 100), posZ);
+							}
 						}
 					}
 				});
@@ -595,20 +623,23 @@ public class Fenetre extends JFrame {
 
 			}
 
-			public void mousePressed(MouseEvent arg0) {
-
+			public void mousePressed(MouseEvent e) {
+				Element elem = view.findNodeOrSpriteAt(e.getX(), e.getY());
+				if (elem instanceof GraphicSprite) {
+					isSpriteUnder = true;
+				} else {
+					isSpriteUnder = false;
+				}
 			}
 
 			public void mouseReleased(MouseEvent arg0) {
 				x = null;
 				y = null;
-
 			}
 
 		});
 
 		// Action lors de l'utilisation de la molette de la souris sur le graphe
-		// de la partie gauche
 		viewer.getDefaultView().addMouseWheelListener(new MouseWheelListener() {
 
 			public void mouseWheelMoved(MouseWheelEvent e) {
