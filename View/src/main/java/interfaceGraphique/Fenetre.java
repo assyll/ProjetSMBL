@@ -547,7 +547,7 @@ public class Fenetre extends JFrame {
 
 	public void setListenerOnViewer(final Viewer viewer) {
 		// Action lors du déplacement de la souris sur le graphe
-		// TODO comprendre pourquoi le setToolTip(null) créé des problèmes
+		// TODO comprendre pourquoi au bout de quelques findNodeOrSpriteAt l'element n'est plus visible
 
 		final View view = viewer.getDefaultView();
 
