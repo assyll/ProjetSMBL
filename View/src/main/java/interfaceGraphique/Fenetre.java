@@ -48,6 +48,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 public class Fenetre extends JFrame {
 
 	public static final String NO_FILE_SELECTED = "Veuillez d'abord sélectionner un fichier à importer";
+	public static double tolerance = 10;
 	Double x = null, y = null, x2 = null, y2 = null;
 
 	// Instanciation des différents Components
@@ -381,7 +382,6 @@ public class Fenetre extends JFrame {
 						GraphModifier.addNode(nodeLeft, graph);
 						GraphModifier.setNodeClass(graph);
 						spriteManagerJson = new SpriteManager(graph);
-						GraphModifier.generateSprite(graph, spriteManagerJson);
 
 						viewer = new Viewer(graph,
 								Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
@@ -410,7 +410,6 @@ public class Fenetre extends JFrame {
 						try {
 							GraphModifier.addEdge(edgeLeft, graph);
 							Edge edge = graph.getEdge(edgeLeft.getLabel());
-							System.out.println(edge.getId());
 							Sprite sprite = spriteManagerJson.addSprite(edge
 									.getId());
 							sprite.attachToEdge(edgeLeft.getLabel());
@@ -548,6 +547,7 @@ public class Fenetre extends JFrame {
 
 	public void setListenerOnViewer(final Viewer viewer) {
 		// Action lors du déplacement de la souris sur le graphe
+		// TODO comprendre pourquoi le setToolTip(null) créé des problèmes
 
 		final View view = viewer.getDefaultView();
 
@@ -556,13 +556,10 @@ public class Fenetre extends JFrame {
 
 					public void mouseMoved(MouseEvent e) {
 						String s = "<html>";
-						Element elem = view.findNodeOrSpriteAt(e.getX(),
-								e.getY());
-						if (elem != null) {
-						}
+						Element elem = findNodeOrSpriteAtWithTolerance(e, view);
 						if (elem instanceof Node) {
-							GraphicNode gNode = (GraphicNode) elem;
-							Node node = graph.getNode(gNode.getId());
+							String idNode = ((GraphicNode) elem).getId();
+							Node node = graph.getNode(idNode);
 							for (String attKey : node.getAttributeKeySet()) {
 								s += attKey + " : " + node.getAttribute(attKey)
 										+ "<br/>";
@@ -570,9 +567,9 @@ public class Fenetre extends JFrame {
 							s += "</html>";
 							viewer.getDefaultView().setToolTipText(s);
 						} else if (elem instanceof GraphicSprite) {
-							GraphicSprite gSprite = (GraphicSprite) elem;
-							Sprite sprite = spriteManagerJson.getSprite(gSprite
-									.getId());
+							String idSprite = ((GraphicSprite) elem).getId();
+							Sprite sprite = spriteManagerJson
+									.getSprite(idSprite);
 							Edge edge = (Edge) sprite.getAttachment();
 							for (String attKey : edge.getAttributeKeySet()) {
 								s += attKey + " : " + edge.getAttribute(attKey)
@@ -580,8 +577,6 @@ public class Fenetre extends JFrame {
 							}
 							s += "</html>";
 							viewer.getDefaultView().setToolTipText(s);
-						} else {
-							viewer.getDefaultView().setToolTipText(null);
 						}
 					}
 
@@ -645,7 +640,6 @@ public class Fenetre extends JFrame {
 		// Action lors de l'utilisation de la molette de la souris sur le graphe
 		viewer.getDefaultView().addMouseWheelListener(new MouseWheelListener() {
 
-			//TODO ajouter une tolérance sur la détection d'élément
 			public void mouseWheelMoved(MouseWheelEvent e) {
 				double wheelValue = e.getPreciseWheelRotation();
 				if (wheelValue > 0) {
@@ -657,6 +651,19 @@ public class Fenetre extends JFrame {
 				}
 			}
 		});
+	}
+
+	public Element findNodeOrSpriteAtWithTolerance(MouseEvent e, View view) {
+		Element elem = null;
+		for (double y = e.getY() - tolerance; y < e.getY() + tolerance; y += tolerance / 10) {
+			for (double x = e.getX() - tolerance; x < e.getX() + tolerance; x += tolerance / 10) {
+				elem = view.findNodeOrSpriteAt(x, y);
+				if (elem != null) {
+					return elem;
+				}
+			}
+		}
+		return null;
 	}
 
 	public static void main(String[] args) {

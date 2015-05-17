@@ -21,6 +21,7 @@ public class GraphRendererPerso {
 						+ "node." + MyJsonGenerator.FORMAT_NODE_SOURCE
 						+ "{ shape: triangle; }" + "node."
 						+ MyJsonGenerator.FORMAT_NODE_FINAL
-						+ "{ fill-color: red;  }");
+						+ "{ fill-color: red;  }"
+						+ "node." + MyJsonGenerator.FORMAT_NODE_SOURCE + MyJsonGenerator.FORMAT_NODE_FINAL + "{ fill-color: red; shape : triangle; }");
 	}
 }

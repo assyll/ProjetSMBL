@@ -12,16 +12,17 @@ import org.graphstream.ui.spriteManager.SpriteManager;
 public class GraphModifier {
 
 	public static void setNodeClass(Graph graph) {
+		//TODO modifer l'attribut boolean en string dans le addNode
 		Boolean isSource, isFinal;
 		for (Node node : graph.getEachNode()) {
 			isSource = node.getAttribute(MyJsonGenerator.FORMAT_NODE_SOURCE)
-					.equals("true");
+					.equals("true") || (node.getAttribute(MyJsonGenerator.FORMAT_NODE_SOURCE).equals(true));
 			isFinal = node.getAttribute(MyJsonGenerator.FORMAT_NODE_FINAL)
-					.equals("true");
+					.equals("true") || (node.getAttribute(MyJsonGenerator.FORMAT_NODE_FINAL).equals(true));
 			if (isSource && isFinal) {
 				node.setAttribute("ui.class",
-						MyJsonGenerator.FORMAT_NODE_SOURCE,
-						MyJsonGenerator.FORMAT_NODE_FINAL);
+						MyJsonGenerator.FORMAT_NODE_SOURCE
+								+ MyJsonGenerator.FORMAT_NODE_FINAL);
 			} else if (isSource) {
 				node.setAttribute("ui.class",
 						MyJsonGenerator.FORMAT_NODE_SOURCE);
@@ -94,9 +95,9 @@ public class GraphModifier {
 			return g;
 		}
 	}
-	
-	public static void generateSprite(Graph graph, SpriteManager spriteManager){
-		for(Edge edge : graph.getEachEdge()){
+
+	public static void generateSprite(Graph graph, SpriteManager spriteManager) {
+		for (Edge edge : graph.getEachEdge()) {
 			Sprite sprite = spriteManager.addSprite(edge.getId());
 			sprite.attachToEdge(edge.getId());
 			sprite.setPosition(0.5, 0, 0);
