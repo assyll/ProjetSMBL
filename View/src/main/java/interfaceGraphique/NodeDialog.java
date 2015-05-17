@@ -24,6 +24,7 @@ public class NodeDialog extends JDialog implements ActionListener {
 	String name;
 	boolean rootN, finalN;
 	int nbAtt;
+	AttributDialog attDialog;
 
 	public NodeDialog(JFrame f, String s) {
 		super(f, s, true);
@@ -79,7 +80,7 @@ public class NodeDialog extends JDialog implements ActionListener {
 	}
 
 	public boolean getFinal() {
-		if (finalNode.getText().toLowerCase().equals("n")) {
+		if (finalNode.getText().toLowerCase().equals("y")) {
 			return true;
 		}
 		return false;
@@ -88,6 +89,14 @@ public class NodeDialog extends JDialog implements ActionListener {
 	public int getNbAtt() {
 		int nbAtt = Integer.parseInt(nbAttributsNode.getText());
 		return nbAtt;
+	}
+
+	public String[] getAttributs() {
+		if (attDialog == null) {
+			return null;
+		} else {
+			return (attDialog.getAttributs());
+		}
 	}
 
 	public JFrame getFrame() {
@@ -101,8 +110,10 @@ public class NodeDialog extends JDialog implements ActionListener {
 			this.finalN = getFinal();
 			this.nbAtt = this.getNbAtt();
 			this.dispose();
-			AttributDialog attDialog = new AttributDialog(getFrame(),
-					"Attributs Node", getNbAtt());
+			if (nbAtt != 0) {
+				attDialog = new AttributDialog(getFrame(), "Attributs Node",
+						getNbAtt());
+			}
 		} else if (evt.getSource() == cancel) {
 			this.dispose();
 		}

@@ -3,7 +3,6 @@ package interfaceGraphique;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -35,7 +34,7 @@ import org.graphstream.graph.Edge;
 import org.graphstream.graph.Element;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
-import org.graphstream.ui.graphicGraph.GraphicEdge;
+import org.graphstream.graph.implementations.MultiGraph;
 import org.graphstream.ui.graphicGraph.GraphicNode;
 import org.graphstream.ui.view.View;
 import org.graphstream.ui.view.Viewer;
@@ -358,21 +357,47 @@ public class Fenetre extends JFrame {
 		});
 
 		// Action lors du clic sur l'item "Node +" de la partie gauche
-
 		addNodeJSon.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				NodeDialog nodeLeft = new NodeDialog(frame, "Add Node");
+				
 				if (isGraphJsonLoaded) {
-					NodeDialog nodeLeft = new NodeDialog(frame, "Add Node");
+					GraphModifier.addNode(nodeLeft, graph);
+					GraphModifier.setNodeClass(graph);
+				} else if(graph == null){
+						graph = new MultiGraph("Graph");
+
+						GraphRendererPerso.setStyleGraph(graph);
+						GraphModifier.addNode(nodeLeft, graph);
+						GraphModifier.setNodeClass(graph);
+
+						viewer = new Viewer(graph,
+								Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
+						viewer.enableAutoLayout();
+						isAutoLayoutJson = true;
+						view = viewer.addDefaultView(false);
+						setListenerOnViewer(viewer);
+
+						graphJSon.removeAll();
+						graphJSon.setLayout(new BorderLayout());
+						graphJSon.add((Component) view, BorderLayout.CENTER);
+						scrollJSon.setViewportView(graphJSon);
+
+						isGraphJsonLoaded = true;
 				}
 			}
 		});
 
 		// Action lors du clic sur l'item "Edge +" de la partie gauche
-
 		addEdgeJSon.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				if (isGraphJsonLoaded) {
 					EdgeDialog edgeLeft = new EdgeDialog(frame, "Add Edge");
+					try {
+						GraphModifier.addEdge(edgeLeft, graph);
+					} catch (NoSpecifiedNodeException e) {
+						textStatut.appendErrorMessage(e.getMessage());
+					}
 				}
 			}
 		});
@@ -455,26 +480,6 @@ public class Fenetre extends JFrame {
 			}
 		});
 
-		// Action lors du clic sur l'item "Node +" de la partie droite
-
-		addNodeAg.addActionListener(new ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				if (isGraphAgLoaded) {
-					NodeDialog nodeRight = new NodeDialog(frame, "Add Node");
-				}
-			}
-		});
-
-		// Action lors du clic sur l'item "Edge +" de la partie droite
-
-		addEdgeAg.addActionListener(new ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				if (isGraphAgLoaded) {
-					EdgeDialog edgeRight = new EdgeDialog(frame, "Add Edge");
-				}
-			}
-		});
-
 		// Action lors du clic sur l'item "Structurer / Déstructurer" de la
 		// partie droite
 		structGraphAg.addActionListener(new ActionListener() {
@@ -523,9 +528,9 @@ public class Fenetre extends JFrame {
 	public void setListenerOnViewer(final Viewer viewer) {
 		// Action lors du déplacement de la souris sur le graphe de la partie
 		// gauche
-		
+
 		final View view = viewer.getDefaultView();
-		
+
 		viewer.getDefaultView().addMouseMotionListener(
 				new MouseMotionListener() {
 

@@ -32,7 +32,7 @@ public class AttributDialog extends JDialog implements ActionListener {
 		nbAttribut = nbAtt;
 		boite = Box.createVerticalBox();
 		panelDialog = new JPanel();
-		panelDialog.setPreferredSize(new Dimension(300,400));
+		panelDialog.setPreferredSize(new Dimension(300, 400));
 		scrollAtt = new JScrollPane(panelDialog);
 		panelDialog.setLayout(new GridLayout(nbAtt + 1, 2, 20, 5));
 

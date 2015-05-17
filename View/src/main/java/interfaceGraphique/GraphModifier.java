@@ -47,7 +47,49 @@ public class GraphModifier {
 				edge.addAttribute(attributeKey, ed.getAttribute(attributeKey));
 			}
 		}
-		
+
 		return graphRes;
+	}
+
+	public static Graph addNode(NodeDialog n, Graph g) {
+		int cpt = 1;
+
+		Node node = g.addNode(n.getName());
+		node.addAttribute("ui.label", n.getName());
+		node.addAttribute(MyJsonGenerator.FORMAT_NODE_SOURCE, n.getRoot());
+		node.addAttribute(MyJsonGenerator.FORMAT_NODE_FINAL, n.getFinal());
+
+		if (n.getNbAtt() != 0) {
+			for (String attribut : n.getAttributs()) {
+				node.addAttribute(MyJsonGenerator.FORMAT_NODE_ATTRIBUT + cpt++,
+						attribut);
+			}
+		}
+
+		return g;
+	}
+
+	public static Graph addEdge(EdgeDialog e, Graph g)
+			throws NoSpecifiedNodeException {
+		int cpt = 1;
+
+		if ((g.getNode(e.getSource()) == null)
+				|| (g.getNode(e.getEnd()) == null)) {
+			throw new NoSpecifiedNodeException(
+					"La node source ou finale n'existe pas");
+		} else {
+			Edge edge = g
+					.addEdge(e.getLabel(), e.getSource(), e.getEnd(), true);
+			edge.addAttribute("ui.label", e.getAction());
+
+			if (e.getNbAtt() != 0) {
+				for (String attribut : e.getAttributs()) {
+					edge.addAttribute(MyJsonGenerator.FORMAT_EDGE_ATTRIBUT
+							+ cpt++, attribut);
+				}
+			}
+
+			return g;
+		}
 	}
 }
