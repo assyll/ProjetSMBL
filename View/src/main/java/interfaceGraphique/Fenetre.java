@@ -46,6 +46,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 public class Fenetre extends JFrame {
 
 	public static final String NO_FILE_SELECTED = "Veuillez d'abord sélectionner un fichier à importer";
+	Double x = null, y = null, x2 = null, y2 = null;
 
 	// Instanciation des différents Components
 
@@ -522,6 +523,9 @@ public class Fenetre extends JFrame {
 	public void setListenerOnViewer(final Viewer viewer) {
 		// Action lors du déplacement de la souris sur le graphe de la partie
 		// gauche
+		
+		final View view = viewer.getDefaultView();
+		
 		viewer.getDefaultView().addMouseMotionListener(
 				new MouseMotionListener() {
 
@@ -549,38 +553,54 @@ public class Fenetre extends JFrame {
 					public void mouseDragged(MouseEvent e) {
 						Element elem = view.findNodeOrSpriteAt(e.getX(),
 								e.getY());
-						double x = e.getX();
-						double y = e.getY();
-						if (elem == null) {
-							viewer.getDefaultView().beginSelectionAt(x, y);
-							viewer.getDefaultView().setCursor(
-									new Cursor(Cursor.HAND_CURSOR));
-							double x2 = e.getX();
-							double y2 = e.getY();
-							double t;
-							if (x > x2) {
-								t = x;
-								x = x2;
-								x2 = t;
-							}
-							if (y > y2) {
-								t = y;
-								y = y2;
-								y2 = t;
-							}
 
-							viewer.getDefaultView().endSelectionAt(x2, y2);
-							viewer.getDefaultView().setCursor(
-									new Cursor(Cursor.DEFAULT_CURSOR));
-							double centreX = view.getCamera().getViewCenter().x + graphJSon.getWidth()  / 2;
-							double centreY = view.getCamera().getViewCenter().y + graphJSon.getHeight()  / 2;
-							view.getCamera().setViewCenter((centreX - x2), (centreY - y2), 0);
-							System.out.println("x: "+ centreX +" / y: "+ centreY +" / x2:"+ x2 +" / y2: "+ y2 +" / xF: "+ (centreX-x2) +" / yF: "+ (centreY - y2) +"\n");
+						if (x == null && y == null) {
+							x = (double) e.getX();
+							y = (double) e.getY();
 						} else {
-							// TODO
+							x = x2;
+							y = y2;
+						}
+						if (elem == null) {
+							x2 = (double) e.getX();
+							y2 = (double) e.getY();
+
+							double posX = view.getCamera().getViewCenter().x;
+							double posY = view.getCamera().getViewCenter().y;
+							double posZ = view.getCamera().getViewCenter().z;
+
+							view.getCamera().setViewCenter(
+									(posX + (1 - (x2 - x)) / 100),
+									(posY + (y2 - y) / 100), posZ);
 						}
 					}
 				});
+
+		viewer.getDefaultView().addMouseListener(new MouseListener() {
+
+			public void mouseClicked(MouseEvent arg0) {
+
+			}
+
+			public void mouseEntered(MouseEvent arg0) {
+
+			}
+
+			public void mouseExited(MouseEvent arg0) {
+
+			}
+
+			public void mousePressed(MouseEvent arg0) {
+
+			}
+
+			public void mouseReleased(MouseEvent arg0) {
+				x = null;
+				y = null;
+
+			}
+
+		});
 
 		// Action lors de l'utilisation de la molette de la souris sur le graphe
 		// de la partie gauche
@@ -590,11 +610,9 @@ public class Fenetre extends JFrame {
 				double wheelValue = e.getPreciseWheelRotation();
 				if (wheelValue > 0) {
 					dezoom = view.getCamera().getViewPercent();
-					view = viewer.getDefaultView();
 					view.getCamera().setViewPercent(dezoom + 0.1);
 				} else if (wheelValue < 0) {
 					zoom = view.getCamera().getViewPercent();
-					view = viewer.getDefaultView();
 					view.getCamera().setViewPercent(zoom - 0.1);
 				}
 			}
