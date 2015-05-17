@@ -541,15 +541,6 @@ public class Fenetre extends JFrame {
 							textStatut.appendDoc(s);
 						} else if (elem instanceof Edge) {
 							// TODO Gérer le survol pour une transition, izi
-							GraphicEdge gEdge = (GraphicEdge) elem;
-							Edge edge = graph.getEdge(gEdge.getId());
-							for (String attKey : edge.getAttributeKeySet()) {
-								s += attKey + " : " + edge.getAttribute(attKey)
-										+ "<br/>";
-							}
-							s += "</html>";
-							viewer.getDefaultView().setToolTipText(s);
-							textStatut.appendDoc(s);
 						} else {
 							viewer.getDefaultView().setToolTipText(null);
 						}
@@ -589,7 +580,6 @@ public class Fenetre extends JFrame {
 							// TODO
 						}
 					}
-
 				});
 
 		// Action lors de l'utilisation de la molette de la souris sur le graphe
