@@ -59,7 +59,7 @@ public class GeneratorGraph {
 	
 	/**
 	 * Genere un graphe de maniere aleatoire.
-	 * Avec 1 chance sur 2 pour chaque noeud de continuer recursivement.
+	 * Avec 4 chance sur 5 pour chaque noeud de continuer recursivement.
 	 * Et 1 chance sur NB_CHANCE_CREER pour creer un nouveau noeud
 	 * ou une nouvelle transition a chaque fois.
 	 * 
