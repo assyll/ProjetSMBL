@@ -11,7 +11,7 @@ public class Main {
 		
 		System.out.println("Graphe: en cours de construction ...");
 		
-		generator.generateGrapheAleat(_path, 10, 5);
+		generator.generateGrapheAleat(_path, 1000, 10);
 		
 		System.out.println("Graphe: cree (" + _path + ")");
 	}

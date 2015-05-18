@@ -9,6 +9,7 @@ import org.neo4j.graphdb.DynamicLabel;
 import org.neo4j.graphdb.DynamicRelationshipType;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 
@@ -273,8 +274,11 @@ public class GeneratorGraph {
 					}
 					
 					// Creation de la transition
-					node.createRelationshipTo(nodeEnd, DynamicRelationshipType
-							.withName(e.getKey().getName()));
+					Relationship r = node.createRelationshipTo(
+							nodeEnd, DynamicRelationshipType
+							.withName("Transition"));
+					r.setProperty("name", e.getKey().getName());
+					
 				}
 				
 			}

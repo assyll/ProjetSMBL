@@ -53,15 +53,6 @@ public class State {
 		return actions.get(nbAleat);
 	}
 	
-	public Action getActionIntelligent(List<State> stateVisited) {
-		for (Entry<Action, State> e: _possiblesActions.entrySet()) {
-			if (!stateVisited.contains(e.getValue())) {
-				return e.getKey();
-			}
-		}
-		return null;
-	}
-	
 	public Iterator<Action> getActions() {
 		return _possiblesActions.keySet().iterator();
 	}
