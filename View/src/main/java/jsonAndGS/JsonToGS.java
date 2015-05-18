@@ -20,6 +20,7 @@ public class JsonToGS {
 	public void generateNodes(JsonParser jParser, Graph graph)
 			throws JsonParseException, IOException, FileFormatException {
 		String name, fieldname;
+		boolean source, fin;
 		Node node;
 
 		// try {
@@ -32,6 +33,30 @@ public class JsonToGS {
 			name = jParser.getText();
 			node = graph.addNode(name);
 			node.setAttribute("ui.label", name);
+		} else {
+			throw new FileFormatException(FILE_FORMAT_ERROR);
+		}
+		
+		jParser.nextToken();
+		fieldname = jParser.getCurrentName();
+		if (MyJsonGenerator.FORMAT_NODE_SOURCE.equals(fieldname)) {
+			// current token is "Source",
+			// move to next, which is "Source"'s value
+			jParser.nextToken();
+			source = jParser.getBooleanValue();
+			node.addAttribute(fieldname, source);
+		} else {
+			throw new FileFormatException(FILE_FORMAT_ERROR);
+		}
+		
+		jParser.nextToken();
+		fieldname = jParser.getCurrentName();
+		if (MyJsonGenerator.FORMAT_NODE_FINAL.equals(fieldname)) {
+			// current token is "Final",
+			// move to next, which is "Final"'s value
+			jParser.nextToken();
+			fin = jParser.getBooleanValue();
+			node.addAttribute(fieldname, fin);
 		} else {
 			throw new FileFormatException(FILE_FORMAT_ERROR);
 		}

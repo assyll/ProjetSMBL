@@ -35,7 +35,6 @@ import org.graphstream.graph.Element;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.MultiGraph;
-import org.graphstream.ui.graphicGraph.GraphicNode;
 import org.graphstream.ui.graphicGraph.GraphicSprite;
 import org.graphstream.ui.spriteManager.Sprite;
 import org.graphstream.ui.spriteManager.SpriteManager;
@@ -243,7 +242,7 @@ public class Fenetre extends JFrame {
 					try {
 						graph = jSTGS.generateGraph(directory.getText());
 
-						GraphRendererPerso.setStyleGraph(graph);
+						CustomGraphRenderer.setStyleGraph(graph);
 						GraphModifier.setNodeClass(graph);
 						spriteManagerJson = new SpriteManager(graph);
 						GraphModifier.generateSprite(graph, spriteManagerJson);
@@ -265,7 +264,7 @@ public class Fenetre extends JFrame {
 						Graph graph2 = GraphModifier.GraphToGraph(graph,
 								"graph2");
 
-						GraphRendererPerso.setStyleGraph(graph2);
+						CustomGraphRenderer.setStyleGraph(graph2);
 						GraphModifier.setNodeClass(graph2);
 						spriteManagerAgent = new SpriteManager(graph2);
 						GraphModifier
@@ -378,7 +377,7 @@ public class Fenetre extends JFrame {
 					} else if (graph == null) {
 						graph = new MultiGraph("Graph");
 
-						GraphRendererPerso.setStyleGraph(graph);
+						CustomGraphRenderer.setStyleGraph(graph);
 						GraphModifier.addNode(nodeLeft, graph);
 						GraphModifier.setNodeClass(graph);
 						spriteManagerJson = new SpriteManager(graph);
@@ -547,7 +546,9 @@ public class Fenetre extends JFrame {
 
 	public void setListenerOnViewer(final Viewer viewer) {
 		// Action lors du déplacement de la souris sur le graphe
-		// TODO comprendre pourquoi au bout de quelques findNodeOrSpriteAt l'element n'est plus visible
+		// TODO comprendre pourquoi le
+		// viewer.getDefaultView().setToolTipText(s); fait bugger la view
+		// (disparition d'elements)
 
 		final View view = viewer.getDefaultView();
 
@@ -557,8 +558,10 @@ public class Fenetre extends JFrame {
 					public void mouseMoved(MouseEvent e) {
 						String s = "<html>";
 						Element elem = findNodeOrSpriteAtWithTolerance(e, view);
+						if (elem != null)
+							System.out.println(elem);
 						if (elem instanceof Node) {
-							String idNode = ((GraphicNode) elem).getId();
+							String idNode = elem.getId();
 							Node node = graph.getNode(idNode);
 							for (String attKey : node.getAttributeKeySet()) {
 								s += attKey + " : " + node.getAttribute(attKey)
@@ -567,42 +570,40 @@ public class Fenetre extends JFrame {
 							s += "</html>";
 							viewer.getDefaultView().setToolTipText(s);
 						} else if (elem instanceof GraphicSprite) {
-							String idSprite = ((GraphicSprite) elem).getId();
-							Sprite sprite = spriteManagerJson
-									.getSprite(idSprite);
-							Edge edge = (Edge) sprite.getAttachment();
+							String idSprite = elem.getId();
+							Edge edge = graph.getEdge(idSprite);
 							for (String attKey : edge.getAttributeKeySet()) {
 								s += attKey + " : " + edge.getAttribute(attKey)
 										+ "<br/>";
 							}
 							s += "</html>";
 							viewer.getDefaultView().setToolTipText(s);
+						} else {
+							viewer.getDefaultView().setToolTipText(null);
 						}
 					}
 
 					public void mouseDragged(MouseEvent e) {
 						Element elem = view.findNodeOrSpriteAt(e.getX(),
 								e.getY());
-						if (isSpriteUnder == false) {
-							if (elem == null) {
-								if (x == null && y == null) {
-									x = (double) e.getX();
-									y = (double) e.getY();
-								} else {
-									x = x2;
-									y = y2;
-								}
-								x2 = (double) e.getX();
-								y2 = (double) e.getY();
-
-								double posX = view.getCamera().getViewCenter().x;
-								double posY = view.getCamera().getViewCenter().y;
-								double posZ = view.getCamera().getViewCenter().z;
-
-								view.getCamera().setViewCenter(
-										(posX + ((x2 - x) * (-1)) / 100),
-										(posY + (y2 - y) / 100), posZ);
+						if (elem == null) {
+							if (x == null && y == null) {
+								x = (double) e.getX();
+								y = (double) e.getY();
+							} else {
+								x = x2;
+								y = y2;
 							}
+							x2 = (double) e.getX();
+							y2 = (double) e.getY();
+
+							double posX = view.getCamera().getViewCenter().x;
+							double posY = view.getCamera().getViewCenter().y;
+							double posZ = view.getCamera().getViewCenter().z;
+
+							view.getCamera().setViewCenter(
+									(posX + ((x2 - x) * (-1)) / 100),
+									(posY + (y2 - y) / 100), posZ);
 						}
 					}
 				});
@@ -622,12 +623,7 @@ public class Fenetre extends JFrame {
 			}
 
 			public void mousePressed(MouseEvent e) {
-				Element elem = view.findNodeOrSpriteAt(e.getX(), e.getY());
-				if (elem instanceof GraphicSprite) {
-					isSpriteUnder = true;
-				} else {
-					isSpriteUnder = false;
-				}
+				
 			}
 
 			public void mouseReleased(MouseEvent arg0) {
@@ -655,9 +651,10 @@ public class Fenetre extends JFrame {
 
 	public Element findNodeOrSpriteAtWithTolerance(MouseEvent e, View view) {
 		Element elem = null;
-		for (double y = e.getY() - tolerance; y < e.getY() + tolerance; y += tolerance / 10) {
-			for (double x = e.getX() - tolerance; x < e.getX() + tolerance; x += tolerance / 10) {
-				elem = view.findNodeOrSpriteAt(x, y);
+		for (double yEvt = e.getY() - tolerance; yEvt < e.getY() + tolerance; yEvt += tolerance / 10) {
+			for (double xEvt = e.getX() - tolerance; xEvt < e.getX()
+					+ tolerance; xEvt += tolerance / 10) {
+				elem = view.findNodeOrSpriteAt(xEvt, yEvt);
 				if (elem != null) {
 					return elem;
 				}
@@ -667,7 +664,7 @@ public class Fenetre extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		GraphRendererPerso.SetRenderer();
+		CustomGraphRenderer.SetRenderer();
 		new Fenetre();
 	}
 

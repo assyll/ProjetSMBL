@@ -15,10 +15,8 @@ public class GraphModifier {
 		//TODO modifer l'attribut boolean en string dans le addNode
 		Boolean isSource, isFinal;
 		for (Node node : graph.getEachNode()) {
-			isSource = node.getAttribute(MyJsonGenerator.FORMAT_NODE_SOURCE)
-					.equals("true") || (node.getAttribute(MyJsonGenerator.FORMAT_NODE_SOURCE).equals(true));
-			isFinal = node.getAttribute(MyJsonGenerator.FORMAT_NODE_FINAL)
-					.equals("true") || (node.getAttribute(MyJsonGenerator.FORMAT_NODE_FINAL).equals(true));
+			isSource = (node.getAttribute(MyJsonGenerator.FORMAT_NODE_SOURCE).equals(true));
+			isFinal = (node.getAttribute(MyJsonGenerator.FORMAT_NODE_FINAL).equals(true));
 			if (isSource && isFinal) {
 				node.setAttribute("ui.class",
 						MyJsonGenerator.FORMAT_NODE_SOURCE
