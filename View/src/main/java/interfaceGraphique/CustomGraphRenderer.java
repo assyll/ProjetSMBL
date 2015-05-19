@@ -32,6 +32,9 @@ public class CustomGraphRenderer {
 						+ "node { z-index: 3; text-alignment: at-right; fill-color: rgb(50,150,100); }"
 						+ NODE_SOURCE
 						+ "{ size: 13px; shape: triangle; }"
+						/*+ "{ size: 13px; fill-image: url(\"./src/main/resources/croixNoire.png\"); fill-mode: image-scaled; }"
+						 * rendu test
+						 */
 						+ NODE_FINAL
 						+ "{ size: 13px; fill-color: rgb(150,50,50); }"
 						+ NODE_SOURCE_FINAL
