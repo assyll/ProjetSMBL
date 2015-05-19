@@ -12,7 +12,6 @@ import org.graphstream.ui.spriteManager.SpriteManager;
 public class GraphModifier {
 
 	public static void setNodeClass(Graph graph) {
-		//TODO modifer l'attribut boolean en string dans le addNode
 		Boolean isSource, isFinal;
 		for (Node node : graph.getEachNode()) {
 			isSource = (node.getAttribute(MyJsonGenerator.FORMAT_NODE_SOURCE).equals(true));

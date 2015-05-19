@@ -2,6 +2,25 @@ package jsonAndGS;
 
 import java.util.List;
 
+/**
+ * <b>MyJsonEdge est la classe représentant une edge</b>
+ * <p>
+ * Une edge est caractérisée par les informations suivantes :
+ * <ul>
+ * <li>Un label unique</li>
+ * <li>Une node de départ</li>
+ * <li>Une node d'arrivée</li>
+ * <li>Une action qui permettra d'identifier la edge dans le graphe</li>
+ * </ul>
+ * </p>
+ * <p>
+ * De plus une edge a une liste d'attributs il sera possible d'ajouter des
+ * attributs à cette liste
+ * </p>
+ * 
+ * @author hugo
+ * @version 1.0
+ */
 public class MyJsonEdge {
 	private String _label;
 	private String _nodeB;

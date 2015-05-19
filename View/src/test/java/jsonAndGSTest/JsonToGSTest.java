@@ -38,9 +38,9 @@ public class JsonToGSTest extends TestCase {
 			Node node = graph.getNode("node 1");
 			assertNotNull(node);
 			
-			assertEquals(node.getAttribute(MyJsonGenerator.FORMAT_NODE_SOURCE), "true");
+			assertEquals(node.getAttribute(MyJsonGenerator.FORMAT_NODE_SOURCE), true);
 			
-			assertEquals(node.getAttribute(MyJsonGenerator.FORMAT_NODE_FINAL), "false");
+			assertEquals(node.getAttribute(MyJsonGenerator.FORMAT_NODE_FINAL), false);
 			
 			assertEquals(node.getAttribute(MyJsonGenerator.FORMAT_NODE_ATTRIBUT + "1"), "att 1");
 			
@@ -130,18 +130,18 @@ public class JsonToGSTest extends TestCase {
 			Node node = graph.getNode("node 1");
 			assertNotNull(node);
 			
-			assertEquals(node.getAttribute(MyJsonGenerator.FORMAT_NODE_SOURCE), "true");
+			assertEquals(node.getAttribute(MyJsonGenerator.FORMAT_NODE_SOURCE), true);
 			
-			assertEquals(node.getAttribute(MyJsonGenerator.FORMAT_NODE_FINAL), "false");
+			assertEquals(node.getAttribute(MyJsonGenerator.FORMAT_NODE_FINAL), false);
 			
 			assertEquals(node.getAttribute(MyJsonGenerator.FORMAT_NODE_ATTRIBUT + "1"), "att 1");
 			
 			node = graph.getNode("node 2");
 			assertNotNull(node);
 			
-			assertEquals(node.getAttribute(MyJsonGenerator.FORMAT_NODE_SOURCE), "true");
+			assertEquals(node.getAttribute(MyJsonGenerator.FORMAT_NODE_SOURCE), true);
 			
-			assertEquals(node.getAttribute(MyJsonGenerator.FORMAT_NODE_FINAL), "false");
+			assertEquals(node.getAttribute(MyJsonGenerator.FORMAT_NODE_FINAL), false);
 			
 			assertEquals(node.getAttribute(MyJsonGenerator.FORMAT_NODE_ATTRIBUT + "1"), "att 1");
 			

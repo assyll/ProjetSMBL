@@ -31,11 +31,11 @@ public class CustomGraphRenderer {
 				"edge { z-index: 0; text-alignment: along; text-offset: 0,10; fill-color: grey; }"
 						+ "node { z-index: 3; text-alignment: at-right; fill-color: rgb(50,150,100); }"
 						+ NODE_SOURCE
-						+ "{ size: 15px; shape: triangle; }"
+						+ "{ size: 13px; shape: triangle; }"
 						+ NODE_FINAL
-						+ "{ fill-color: rgb(150,50,50); }"
+						+ "{ size: 13px; fill-color: rgb(150,50,50); }"
 						+ NODE_SOURCE_FINAL
-						+ "{ size: 10px; shape: triangle; fill-color: rgb(150,50,50); }"
-						+ "sprite { z-index: 2; shape: circle; fill-color: rgba(250,250,250,64); stroke-mode: plain; stroke-color: blue; }");
+						+ "{ size: 13px; shape: triangle; fill-color: rgb(150,50,50); }"
+						+ "sprite { z-index: 2; shape: circle; fill-color: rgba(250,250,250,64); stroke-mode: plain; stroke-color: lightblue; }");
 	}
 }

@@ -19,16 +19,16 @@ public class CreationJsonBoucle2 {
 
 		MyJsonNode n1 = new MyJsonNode("node 1", true, false,
 				new LinkedList<String>());
-		n1.get_attributs().add("att 1");
-		n1.get_attributs().add("att 2");
+		n1.addAttribut("att 1");
+		n1.addAttribut("att 2");
 		MyJsonNode n2 = new MyJsonNode("node 2", false, false,
 				new LinkedList<String>());
-		n2.get_attributs().add("att 1");
-		n2.get_attributs().add("att 2");
+		n2.addAttribut("att 1");
+		n2.addAttribut("att 2");
 		MyJsonNode n3 = new MyJsonNode("node 3", false, false,
 				new LinkedList<String>());
-		n3.get_attributs().add("att 1");
-		n3.get_attributs().add("att 2");
+		n3.addAttribut("att 1");
+		n3.addAttribut("att 2");
 		MyJsonNode n4 = new MyJsonNode("node 4", false, true,
 				new LinkedList<String>());
 
