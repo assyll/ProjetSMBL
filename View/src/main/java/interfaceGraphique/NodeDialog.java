@@ -101,9 +101,13 @@ public class NodeDialog extends JDialog implements ActionListener {
 	public JFrame getFrame() {
 		return frame;
 	}
-	
+
 	public boolean getFerme() {
-		return ferme;
+		if (this.isActive()) {
+			return ferme = true;
+		} else {
+			return ferme = false;
+		}
 	}
 
 	public void actionPerformed(ActionEvent evt) {

@@ -498,6 +498,62 @@ public class Fenetre extends JFrame {
 				}
 			}
 		});
+		
+		// Action lors du clic sur l'item "Node +" de la partie gauche
+		addNodeAg.addActionListener(new ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				NodeDialog nodeRight = new NodeDialog(frame, "Add Node");
+				if (!nodeRight.getFerme()) {
+					if (isGraphAgLoaded) {
+						GraphModifier.addNode(nodeRight, graph);
+						GraphModifier.setNodeClass(graph);
+					} else if (graph == null) {
+						graph = new MultiGraph("Graph");
+
+						CustomGraphRenderer.setStyleGraph(graph);
+						GraphModifier.addNode(nodeRight, graph);
+						GraphModifier.setNodeClass(graph);
+						spriteManagerAgent = new SpriteManager(graph);
+
+						viewer2 = new Viewer(graph,
+								Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
+						viewer2.enableAutoLayout();
+						isAutoLayoutAg = true;
+						view = viewer2.addDefaultView(false);
+						setListenerOnViewer(viewer2);
+
+						graphAgent.removeAll();
+						graphAgent.setLayout(new BorderLayout());
+						graphAgent.add((Component) view, BorderLayout.CENTER);
+						scrollAgent.setViewportView(graphAgent);
+
+						isGraphAgLoaded = true;
+					}
+				}
+			}
+		});
+
+		// Action lors du clic sur l'item "Edge +" de la partie gauche
+		addEdgeAg.addActionListener(new ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				if (isGraphAgLoaded) {
+					EdgeDialog edgeRight = new EdgeDialog(frame, "Add Edge");
+					if (!edgeRight.getFerme()) {
+						try {
+							GraphModifier.addEdge(edgeRight, graph);
+							Edge edge = graph.getEdge(edgeRight.getLabel());
+							Sprite sprite = spriteManagerAgent.addSprite(edge
+									.getId());
+							sprite.attachToEdge(edgeRight.getLabel());
+							sprite.setPosition(0.5, 0, 0);
+						} catch (NoSpecifiedNodeException e) {
+							textStatut.appendErrorMessage(e.getMessage());
+						}
+					}
+				}
+			}
+		});
+
 
 		// Action lors du clic sur l'item "Structurer / Déstructurer" de la
 		// partie droite
