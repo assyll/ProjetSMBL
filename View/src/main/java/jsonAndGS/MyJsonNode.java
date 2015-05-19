@@ -13,7 +13,7 @@ import java.util.List;
  * </ul>
  * </p>
  * <p>
- * De plus une node a une liste d'attributs il sera possible d'ajouter des
+ * De plus une node possède une liste d'attributs il sera possible d'ajouter des
  * attributs à cette liste
  * </p>
  * 

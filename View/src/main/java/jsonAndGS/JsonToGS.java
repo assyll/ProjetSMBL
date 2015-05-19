@@ -13,10 +13,43 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 
+/**
+ * <b>JsonToGS est la classe permettant de générer un graphe à partir d'un
+ * fichier Json</b>
+ * 
+ * @see MyJsonGenerator
+ * 
+ * @author hugo
+ * @version 1.0
+ */
 public class JsonToGS {
 
+	/**
+	 * Le message d'erreur affiché lors que le format du fichier Json
+	 * sélectionné n'est pas celui convenu
+	 */
 	public static final String FILE_FORMAT_ERROR = "Le format du fichier sélectionné est invalide";
 
+	/**
+	 * Génère les nodes dans le graphe
+	 * 
+	 * @param jParser
+	 *            Le parser permettant de recupérer les informations du fichier
+	 *            Json
+	 * @param graph
+	 *            Le graph dans lequel générer les nodes
+	 * @throws JsonParseException
+	 *             Si le format du fichier Json est incorrect
+	 * @throws IOException
+	 *             Si il y'a un probleme avec le fichier
+	 * @throws FileFormatException
+	 *             Si le format du fichier Json n'est pas celui convenu
+	 * 
+	 * @see JsonParser
+	 * @see Graph
+	 * 
+	 * @since 1.0
+	 */
 	public void generateNodes(JsonParser jParser, Graph graph)
 			throws JsonParseException, IOException, FileFormatException {
 		String name, fieldname;
@@ -36,7 +69,7 @@ public class JsonToGS {
 		} else {
 			throw new FileFormatException(FILE_FORMAT_ERROR);
 		}
-		
+
 		jParser.nextToken();
 		fieldname = jParser.getCurrentName();
 		if (MyJsonGenerator.FORMAT_NODE_SOURCE.equals(fieldname)) {
@@ -48,7 +81,7 @@ public class JsonToGS {
 		} else {
 			throw new FileFormatException(FILE_FORMAT_ERROR);
 		}
-		
+
 		jParser.nextToken();
 		fieldname = jParser.getCurrentName();
 		if (MyJsonGenerator.FORMAT_NODE_FINAL.equals(fieldname)) {
@@ -69,6 +102,26 @@ public class JsonToGS {
 		}
 	}
 
+	/**
+	 * Génère les edges dans le graphe
+	 * 
+	 * @param jParser
+	 *            Le parser permettant de recupérer les informations du fichier
+	 *            Json
+	 * @param graph
+	 *            Le graph dans lequel générer les edges
+	 * @throws JsonParseException
+	 *             Si le format du fichier Json est incorrect
+	 * @throws IOException
+	 *             Si il y'a un probleme avec le fichier
+	 * @throws FileFormatException
+	 *             Si le format du fichier Json n'est pas celui convenu
+	 * 
+	 * @see JsonParser
+	 * @see Graph
+	 * 
+	 * @since 1.0
+	 */
 	public void generateEdges(JsonParser jParser, Graph graph)
 			throws JsonParseException, IOException, FileFormatException {
 		String label, nodeB, nodeE, action;
@@ -129,6 +182,25 @@ public class JsonToGS {
 		}
 	}
 
+	/**
+	 * Génère le graphe à partir d'un fichier Json
+	 * 
+	 * @param filePath
+	 *            Le chemin d'accés au fichier Json
+	 * 
+	 * @return Le graphe généré
+	 * 
+	 * @throws JsonParseException
+	 *             Si le format du fichier Json est incorrect
+	 * @throws IOException
+	 *             Si il y'a un probleme avec le fichier
+	 * @throws FileFormatException
+	 *             Si le format du fichier Json n'est pas celui convenu
+	 *             
+	 * @see MyJsonGenerator
+	 * 
+	 * @since 1.0
+	 */
 	public Graph generateGraph(String filePath) throws JsonParseException,
 			IOException, FileFormatException {
 		Graph graph = new MultiGraph("graph");
@@ -170,7 +242,7 @@ public class JsonToGS {
 
 		// TODO Verifier l'inutilité des erreurs JsonGenerationException et
 		// JsonMappingException
-		
+
 		return graph;
 
 	}

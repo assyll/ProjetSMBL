@@ -84,8 +84,7 @@ public class MyJsonGenerator {
 	 * Génère les nodes dans le fichier Json
 	 * 
 	 * @param jGenerator
-	 *            L'instance du générateur de fichier Json utilisée
-	 * 
+	 *            Le générateur de fichier Json utilisée
 	 * @param mLN
 	 *            La liste des nodes à générer
 	 * 

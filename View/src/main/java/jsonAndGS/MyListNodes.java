@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * <b>MyListeNodes est la classe représentant une liste de nodes</b>
  * <p>
- * MyListNodes possède un attribut liste susceptible de contenir des nodes. Il
+ * MyListNodes possède un attribut liste pouvant contenir des nodes. Il
  * sera possible d'ajouter des nodes à cette liste
  * 
  * @see MyJsonNode
