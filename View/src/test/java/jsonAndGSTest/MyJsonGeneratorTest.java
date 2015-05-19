@@ -53,7 +53,7 @@ public class MyJsonGeneratorTest extends TestCase {
 			assertEquals(MyJsonGenerator.FORMAT_NODE_NAME, fieldname);
 			jParser.nextToken();
 			String name = jParser.getText();
-			assertEquals(name, "node 1");
+			assertEquals("node 1", name);
 
 			jParser.nextToken();
 			fieldname = jParser.getCurrentName();
@@ -74,9 +74,9 @@ public class MyJsonGeneratorTest extends TestCase {
 			assertEquals(MyJsonGenerator.FORMAT_NODE_ATTRIBUT + "1", fieldname);
 			jParser.nextToken();
 			String attribut = jParser.getText();
-			assertEquals(attribut, "att 1");
+			assertEquals("att 1", attribut);
 
-			assertEquals(jParser.nextToken(), JsonToken.END_OBJECT);
+			assertEquals(JsonToken.END_OBJECT, jParser.nextToken());
 
 			jParser.close();
 
@@ -119,37 +119,37 @@ public class MyJsonGeneratorTest extends TestCase {
 			assertEquals(MyJsonGenerator.FORMAT_EDGE_LABEL, fieldname);
 			jParser.nextToken();
 			String label = jParser.getText();
-			assertEquals(label, "edge 1");
+			assertEquals("edge 1", label);
 
 			jParser.nextToken();
 			fieldname = jParser.getCurrentName();
 			assertEquals(MyJsonGenerator.FORMAT_EDGE_BEGIN_NODE, fieldname);
 			jParser.nextToken();
 			String nodeB = jParser.getText();
-			assertEquals(nodeB, "node 1");
+			assertEquals("node 1", nodeB);
 
 			jParser.nextToken();
 			fieldname = jParser.getCurrentName();
 			assertEquals(MyJsonGenerator.FORMAT_EDGE_END_NODE, fieldname);
 			jParser.nextToken();
 			String nodeE = jParser.getText();
-			assertEquals(nodeE, "node 2");
+			assertEquals("node 2", nodeE);
 
 			jParser.nextToken();
 			fieldname = jParser.getCurrentName();
 			assertEquals(MyJsonGenerator.FORMAT_EDGE_ACTION, fieldname);
 			jParser.nextToken();
 			String attribut = jParser.getText();
-			assertEquals(attribut, "action !");
+			assertEquals("action !", attribut);
 
 			jParser.nextToken();
 			fieldname = jParser.getCurrentName();
 			assertEquals(MyJsonGenerator.FORMAT_EDGE_ATTRIBUT + "1", fieldname);
 			jParser.nextToken();
 			attribut = jParser.getText();
-			assertEquals(attribut, "att 1");
+			assertEquals("att 1", attribut);
 
-			assertEquals(jParser.nextToken(), JsonToken.END_OBJECT);
+			assertEquals(JsonToken.END_OBJECT, jParser.nextToken());
 
 			jParser.close();
 
@@ -196,7 +196,7 @@ public class MyJsonGeneratorTest extends TestCase {
 
 			String fieldname = jParser.getCurrentName();
 			assertEquals(MyJsonGenerator.FORMAT_NODES, fieldname);
-			assertEquals(jParser.nextToken(), JsonToken.START_ARRAY);
+			assertEquals(JsonToken.START_ARRAY, jParser.nextToken());
 
 			while (jParser.nextToken() != JsonToken.END_ARRAY) {
 			}
@@ -204,12 +204,12 @@ public class MyJsonGeneratorTest extends TestCase {
 			jParser.nextToken();
 			fieldname = jParser.getCurrentName();
 			assertEquals(MyJsonGenerator.FORMAT_EDGES, fieldname);
-			assertEquals(jParser.nextToken(), JsonToken.START_ARRAY);
+			assertEquals(JsonToken.START_ARRAY, jParser.nextToken());
 
 			while (jParser.nextToken() != JsonToken.END_ARRAY) {
 			}
 
-			assertEquals(jParser.nextToken(), JsonToken.END_OBJECT);
+			assertEquals(JsonToken.END_OBJECT, jParser.nextToken());
 
 			jParser.close();
 
