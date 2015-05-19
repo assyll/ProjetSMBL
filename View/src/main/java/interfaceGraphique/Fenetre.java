@@ -404,7 +404,7 @@ public class Fenetre extends JFrame {
 		addEdgeJSon.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				if (isGraphJsonLoaded) {
-					EdgeDialog edgeLeft = new EdgeDialog(frame, "Add Edge");
+					EdgeDialog edgeLeft = new EdgeDialog(frame, "Add Edge", graph);
 					if (!edgeLeft.getFerme()) {
 						try {
 							GraphModifier.addEdge(edgeLeft, graph);
@@ -493,6 +493,61 @@ public class Fenetre extends JFrame {
 									+ "% \n");
 						} else {
 							view.getCamera().resetView();
+						}
+					}
+				}
+			}
+		});
+
+		// Action lors du clic sur l'item "Node +" de la partie droite
+		addNodeAg.addActionListener(new ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				NodeDialog nodeRight = new NodeDialog(frame, "Add Node");
+				if (!nodeRight.getFerme()) {
+					if (isGraphAgLoaded) {
+						GraphModifier.addNode(nodeRight, graph);
+						GraphModifier.setNodeClass(graph);
+					} else if (graph == null) {
+						graph = new MultiGraph("Graph");
+
+						CustomGraphRenderer.setStyleGraph(graph);
+						GraphModifier.addNode(nodeRight, graph);
+						GraphModifier.setNodeClass(graph);
+						spriteManagerAgent = new SpriteManager(graph);
+
+						viewer2 = new Viewer(graph,
+								Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
+						viewer2.enableAutoLayout();
+						isAutoLayoutAg = true;
+						view = viewer2.addDefaultView(false);
+						setListenerOnViewer(viewer2);
+
+						graphAgent.removeAll();
+						graphAgent.setLayout(new BorderLayout());
+						graphAgent.add((Component) view, BorderLayout.CENTER);
+						scrollAgent.setViewportView(graphAgent);
+
+						isGraphAgLoaded = true;
+					}
+				}
+			}
+		});
+
+		// Action lors du clic sur l'item "Edge +" de la partie droite
+		addEdgeAg.addActionListener(new ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				if (isGraphAgLoaded) {
+					EdgeDialog edgeRight = new EdgeDialog(frame, "Add Edge", graph);
+					if (!edgeRight.getFerme()) {
+						try {
+							GraphModifier.addEdge(edgeRight, graph);
+							Edge edge = graph.getEdge(edgeRight.getLabel());
+							Sprite sprite = spriteManagerAgent.addSprite(edge
+									.getId());
+							sprite.attachToEdge(edgeRight.getLabel());
+							sprite.setPosition(0.5, 0, 0);
+						} catch (NoSpecifiedNodeException e) {
+							textStatut.appendErrorMessage(e.getMessage());
 						}
 					}
 				}
@@ -623,7 +678,7 @@ public class Fenetre extends JFrame {
 			}
 
 			public void mousePressed(MouseEvent e) {
-				
+
 			}
 
 			public void mouseReleased(MouseEvent arg0) {

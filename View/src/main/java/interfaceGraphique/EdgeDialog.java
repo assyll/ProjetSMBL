@@ -6,28 +6,38 @@ import java.awt.event.ActionListener;
 
 import javax.swing.Box;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import org.graphstream.graph.Graph;
+import org.graphstream.graph.Node;
+
 @SuppressWarnings("serial")
 public class EdgeDialog extends JDialog implements ActionListener {
 
-	JTextField nameEdge, sourceEdge, endEdge, actionEdge, nbAttributsEdge;
+	JTextField nameEdge, actionEdge, nbAttributsEdge;
 	JLabel labelName, labelSource, labelEnd, labelAction, labelNbAtt;
 	JButton ok, cancel;
 	JFrame frame;
+	JComboBox sourceEdge, endEdge;
 	String name, sourceE, endE, actionE;
+	String[] nodes;
 	int nbAtt;
 	boolean ferme;
 	AttributDialog attDialog;
+	Graph graph;
 
-	public EdgeDialog(JFrame f, String s) {
+	@SuppressWarnings({ "static-access", "unchecked", "rawtypes" })
+	public EdgeDialog(JFrame f, String s, Graph g) {
 		super(f, s, true);
 		this.setDefaultCloseOperation(this.DISPOSE_ON_CLOSE);
 		frame = f;
+		graph = g;
+		nodes = getNodes();
 		Box boite = Box.createVerticalBox();
 		JPanel panelDialog = new JPanel();
 		panelDialog.setLayout(new GridLayout(6, 2, 20, 5));
@@ -39,12 +49,12 @@ public class EdgeDialog extends JDialog implements ActionListener {
 
 		labelSource = new JLabel("What's the start Node?");
 		panelDialog.add(labelSource);
-		sourceEdge = new JTextField(10);
+		sourceEdge = new JComboBox(nodes);
 		panelDialog.add(sourceEdge);
 
 		labelEnd = new JLabel("What's the end Node?");
 		panelDialog.add(labelEnd);
-		endEdge = new JTextField(10);
+		endEdge = new JComboBox(nodes);
 		panelDialog.add(endEdge);
 
 		labelAction = new JLabel("What's the action?");
@@ -77,11 +87,11 @@ public class EdgeDialog extends JDialog implements ActionListener {
 	}
 
 	public String getSource() {
-		return (sourceEdge.getText());
+		return (sourceEdge.getSelectedItem().toString());
 	}
 
 	public String getEnd() {
-		return (endEdge.getText());
+		return (endEdge.getSelectedItem().toString());
 	}
 
 	public String getAction() {
@@ -101,10 +111,19 @@ public class EdgeDialog extends JDialog implements ActionListener {
 		}
 	}
 
+	public String[] getNodes() {
+		String[] tmp = new String[graph.getNodeCount()];
+		int cpt = 0;
+		for (Node node : graph.getEachNode()) {
+			tmp[cpt++] = node.toString();
+		}
+		return tmp;
+	}
+
 	public JFrame getFrame() {
 		return frame;
 	}
-	
+
 	public boolean getFerme() {
 		return ferme;
 	}
