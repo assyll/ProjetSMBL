@@ -13,6 +13,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import org.graphstream.graph.Graph;
+
 @SuppressWarnings("serial")
 public class NodeDialog extends JDialog implements ActionListener {
 
@@ -25,6 +27,7 @@ public class NodeDialog extends JDialog implements ActionListener {
 	boolean rootN, finalN, ferme, check;
 	int nbAtt;
 	AttributDialog attDialog;
+	Graph graph;
 
 	@SuppressWarnings("static-access")
 	public NodeDialog(JFrame f, String s) {
@@ -75,15 +78,15 @@ public class NodeDialog extends JDialog implements ActionListener {
 	}
 
 	public boolean getRoot() {
-		return(rootNode.isSelected());
+		return (rootNode.isSelected());
 	}
 
 	public boolean getFinal() {
-		return(finalNode.isSelected());
+		return (finalNode.isSelected());
 	}
 
 	public int getNbAtt() {
-		if(nbAttributsNode.getText().isEmpty()){
+		if (nbAttributsNode.getText().isEmpty()) {
 			return 0;
 		} else {
 			return Integer.parseInt(nbAttributsNode.getText());

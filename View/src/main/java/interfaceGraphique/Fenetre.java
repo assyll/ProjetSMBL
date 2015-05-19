@@ -22,6 +22,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -372,8 +373,16 @@ public class Fenetre extends JFrame {
 				NodeDialog nodeLeft = new NodeDialog(frame, "Add Node");
 				if (!nodeLeft.getFerme()) {
 					if (isGraphJsonLoaded) {
-						GraphModifier.addNode(nodeLeft, graph);
-						GraphModifier.setNodeClass(graph);
+						String s = nodeLeft.getName();
+						Node n = graph.getNode(s);
+						if (n == null) {
+							GraphModifier.addNode(nodeLeft, graph);
+							GraphModifier.setNodeClass(graph);
+						} else {
+							JOptionPane.showMessageDialog(frame,
+									"Nom déjà existant", "Name Error",
+									JOptionPane.ERROR_MESSAGE);
+						}
 					} else if (graph == null && nodeLeft.getCheck()) {
 						graph = new MultiGraph("Graph");
 
@@ -404,7 +413,8 @@ public class Fenetre extends JFrame {
 		addEdgeJSon.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				if (isGraphJsonLoaded) {
-					EdgeDialog edgeLeft = new EdgeDialog(frame, "Add Edge", graph);
+					EdgeDialog edgeLeft = new EdgeDialog(frame, "Add Edge",
+							graph);
 					if (!edgeLeft.getFerme() && edgeLeft.getCheck()) {
 						try {
 							GraphModifier.addEdge(edgeLeft, graph);
@@ -537,7 +547,8 @@ public class Fenetre extends JFrame {
 		addEdgeAg.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				if (isGraphAgLoaded) {
-					EdgeDialog edgeRight = new EdgeDialog(frame, "Add Edge", graph);
+					EdgeDialog edgeRight = new EdgeDialog(frame, "Add Edge",
+							graph);
 					if (!edgeRight.getFerme()) {
 						try {
 							GraphModifier.addEdge(edgeRight, graph);
