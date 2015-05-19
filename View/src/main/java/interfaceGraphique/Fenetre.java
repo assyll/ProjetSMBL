@@ -374,7 +374,7 @@ public class Fenetre extends JFrame {
 					if (isGraphJsonLoaded) {
 						GraphModifier.addNode(nodeLeft, graph);
 						GraphModifier.setNodeClass(graph);
-					} else if (graph == null) {
+					} else if (graph == null && nodeLeft.getCheck()) {
 						graph = new MultiGraph("Graph");
 
 						CustomGraphRenderer.setStyleGraph(graph);
@@ -405,7 +405,7 @@ public class Fenetre extends JFrame {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				if (isGraphJsonLoaded) {
 					EdgeDialog edgeLeft = new EdgeDialog(frame, "Add Edge", graph);
-					if (!edgeLeft.getFerme()) {
+					if (!edgeLeft.getFerme() && edgeLeft.getCheck()) {
 						try {
 							GraphModifier.addEdge(edgeLeft, graph);
 							Edge edge = graph.getEdge(edgeLeft.getLabel());

@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.Box;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -15,15 +16,17 @@ import javax.swing.JTextField;
 @SuppressWarnings("serial")
 public class NodeDialog extends JDialog implements ActionListener {
 
-	JTextField nameNode, rootNode, finalNode, nbAttributsNode;
+	JTextField nameNode, nbAttributsNode;
 	JLabel labelName, labelRoot, labelFinal, labelNbAtt;
 	JButton ok, cancel;
 	JFrame frame;
 	String name;
-	boolean rootN, finalN, ferme;
+	JCheckBox rootNode, finalNode;
+	boolean rootN, finalN, ferme, check;
 	int nbAtt;
 	AttributDialog attDialog;
 
+	@SuppressWarnings("static-access")
 	public NodeDialog(JFrame f, String s) {
 		super(f, s, true);
 		this.setDefaultCloseOperation(this.DISPOSE_ON_CLOSE);
@@ -39,12 +42,12 @@ public class NodeDialog extends JDialog implements ActionListener {
 
 		labelRoot = new JLabel("Is it a start Node? (y/n)");
 		panelDialog.add(labelRoot);
-		rootNode = new JTextField(10);
+		rootNode = new JCheckBox();
 		panelDialog.add(rootNode);
 
 		labelFinal = new JLabel("Is it an end Node? (y/n)");
 		panelDialog.add(labelFinal);
-		finalNode = new JTextField(10);
+		finalNode = new JCheckBox();
 		panelDialog.add(finalNode);
 
 		labelNbAtt = new JLabel("How many attributs?");
@@ -72,22 +75,19 @@ public class NodeDialog extends JDialog implements ActionListener {
 	}
 
 	public boolean getRoot() {
-		if (rootNode.getText().toLowerCase().equals("y")) {
-			return true;
-		}
-		return false;
+		return(rootNode.isSelected());
 	}
 
 	public boolean getFinal() {
-		if (finalNode.getText().toLowerCase().equals("y")) {
-			return true;
-		}
-		return false;
+		return(finalNode.isSelected());
 	}
 
 	public int getNbAtt() {
-		int nbAtt = Integer.parseInt(nbAttributsNode.getText());
-		return nbAtt;
+		if(nbAttributsNode.getText().isEmpty()){
+			return 0;
+		} else {
+			return Integer.parseInt(nbAttributsNode.getText());
+		}
 	}
 
 	public String[] getAttributs() {
@@ -103,28 +103,34 @@ public class NodeDialog extends JDialog implements ActionListener {
 	}
 
 	public boolean getFerme() {
-		if (this.isActive()) {
-			return ferme = true;
-		} else {
-			return ferme = false;
-		}
+		return ferme;
+	}
+
+	public boolean getCheck() {
+		return check;
 	}
 
 	public void actionPerformed(ActionEvent evt) {
 		if (evt.getSource() == ok) {
-			this.name = getName();
-			this.rootN = getRoot();
-			this.finalN = getFinal();
-			this.nbAtt = this.getNbAtt();
-			this.ferme = false;
-			this.dispose();
-			if (nbAtt != 0) {
-				attDialog = new AttributDialog(getFrame(), "Attributs Node",
-						getNbAtt());
+			ferme = false;
+			check = true;
+			if (!ferme) {
+				name = getName();
+				rootN = getRoot();
+				finalN = getFinal();
+				nbAtt = getNbAtt();
+
+				if (nbAtt != 0) {
+					attDialog = new AttributDialog(getFrame(),
+							"Attributs Node", nbAtt);
+				}
+
+				dispose();
 			}
 		} else if (evt.getSource() == cancel) {
-			this.ferme = true;
-			this.dispose();
+			ferme = true;
+			check = false;
+			dispose();
 		}
 	}
 }

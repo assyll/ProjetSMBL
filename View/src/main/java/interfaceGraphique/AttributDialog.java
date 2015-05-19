@@ -25,6 +25,7 @@ public class AttributDialog extends JDialog implements ActionListener {
 	Box boite;
 	String[] attributs;
 
+	@SuppressWarnings("static-access")
 	public AttributDialog(Frame f, String s, int nbAtt) {
 		super(f, s, true);
 		this.setDefaultCloseOperation(this.DISPOSE_ON_CLOSE);
@@ -73,10 +74,8 @@ public class AttributDialog extends JDialog implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent evt) {
-		//TODO Manu t'es un clochard
-		String[] tmp;
 		if (evt.getSource() == ok) {
-			tmp = getAttributs();
+			getAttributs();
 			this.dispose();
 		} else if (evt.getSource() == cancel) {
 			this.dispose();

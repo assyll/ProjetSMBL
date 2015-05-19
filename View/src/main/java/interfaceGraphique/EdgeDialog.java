@@ -23,11 +23,11 @@ public class EdgeDialog extends JDialog implements ActionListener {
 	JLabel labelName, labelSource, labelEnd, labelAction, labelNbAtt;
 	JButton ok, cancel;
 	JFrame frame;
-	JComboBox sourceEdge, endEdge;
+	JComboBox<String> sourceEdge, endEdge;
 	String name, sourceE, endE, actionE;
 	String[] nodes;
 	int nbAtt;
-	boolean ferme;
+	boolean ferme, check;
 	AttributDialog attDialog;
 	Graph graph;
 
@@ -99,8 +99,11 @@ public class EdgeDialog extends JDialog implements ActionListener {
 	}
 
 	public int getNbAtt() {
-		int nbAtt = Integer.parseInt(nbAttributsEdge.getText());
-		return nbAtt;
+		if(nbAttributsEdge.getText().isEmpty()){
+			return 0;
+		} else {
+			return Integer.parseInt(nbAttributsEdge.getText());
+		}
 	}
 
 	public String[] getAttributs() {
@@ -127,23 +130,34 @@ public class EdgeDialog extends JDialog implements ActionListener {
 	public boolean getFerme() {
 		return ferme;
 	}
+	
+	public boolean getCheck(){
+		return check;
+	}
 
 	public void actionPerformed(ActionEvent evt) {
 		if (evt.getSource() == ok) {
-			this.name = getLabel();
-			this.sourceE = getSource();
-			this.endE = getEnd();
-			this.actionE = getAction();
-			this.nbAtt = getNbAtt();
 			ferme = false;
-			this.dispose();
-			if (nbAtt != 0) {
-				attDialog = new AttributDialog(getFrame(), "Attributs Node",
-						getNbAtt());
+			check = true;
+
+			if (!ferme) {
+				name = getLabel();
+				sourceE = getSource();
+				endE = getEnd();
+				actionE = getAction();
+				nbAtt = getNbAtt();
+
+				if (nbAtt != 0) {
+					attDialog = new AttributDialog(getFrame(),
+							"Attributs Node", getNbAtt());
+				}
+
+				dispose();
 			}
 		} else if (evt.getSource() == cancel) {
 			ferme = true;
-			this.dispose();
+			check = false;
+			dispose();
 		}
 	}
 }
