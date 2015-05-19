@@ -1,7 +1,8 @@
 package generatorTracesTestAleat;
 import static org.junit.Assert.*;
-import generatorTracesTestAleat.Action;
-import generatorTracesTestAleat.Trace;
+import generatorTracesTest.Action;
+import generatorTracesTest.State;
+import generatorTracesTest.Trace;
 
 import org.junit.After;
 import org.junit.Before;

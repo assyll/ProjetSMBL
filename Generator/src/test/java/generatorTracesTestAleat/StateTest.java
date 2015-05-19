@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import generatorTracesTestAleat.Action;
-import generatorTracesTestAleat.State;
+import generatorTracesTest.Action;
+import generatorTracesTest.State;
 
 import org.junit.After;
 import org.junit.Before;

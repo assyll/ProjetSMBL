@@ -1,4 +1,4 @@
-package generatorTracesTestAleat;
+package generatorTracesTest;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -216,13 +216,14 @@ public class GeneratorTraces {
 		try (Transaction tx = _graphDB.beginTx()) {
 			
 			Node racine = _graphDB.findNode(
-					DynamicLabel.label("Racine"), "name", "Racine");
-			
+					DynamicLabel.label("Racine"),
+					_nameIdAttribut, _nameStartNode);
+						
 			for ( Path position : _graphDB.traversalDescription()
 			        .depthFirst()
 			        .relationships(
-			        		DynamicRelationshipType.withName("Transition")
-			        		, Direction.OUTGOING)
+			        		DynamicRelationshipType.withName("Transition"),
+			        		Direction.OUTGOING)
 			        .evaluator( Evaluators.toDepth( maxActions ) )
 			        .uniqueness(Uniqueness.NONE)
 			        .traverse(racine))  {
@@ -232,13 +233,15 @@ public class GeneratorTraces {
 				// Recuperation de la trace
 				Trace trace;
 				if (!endNode.hasRelationship(Direction.OUTGOING)) {
-					if (!traces.contains(trace = convertToTrace(position)))
-					traces.add(trace);
+					if (!traces.contains(trace = convertToTrace(position))) {
+						traces.add(trace);
+					}
 				}
 			}
 			
 			tx.success();
 		}
+		shutDown();
 		
 		return traces;
 	}

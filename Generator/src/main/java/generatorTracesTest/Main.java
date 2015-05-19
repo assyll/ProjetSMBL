@@ -1,4 +1,4 @@
-package generatorTracesTestAleat;
+package generatorTracesTest;
 
 import java.util.List;
 

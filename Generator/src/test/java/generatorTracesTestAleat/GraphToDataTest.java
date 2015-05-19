@@ -4,10 +4,10 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import generatorTracesTestAleat.Action;
-import generatorTracesTestAleat.GeneratorTraces;
-import generatorTracesTestAleat.State;
-import generatorTracesTestAleat.Trace;
+import generatorTracesTest.Action;
+import generatorTracesTest.GeneratorTraces;
+import generatorTracesTest.State;
+import generatorTracesTest.Trace;
 
 import org.junit.After;
 import org.junit.Before;
@@ -42,18 +42,18 @@ public class GraphToDataTest {
 		
 		_trace2.addAction(new Action("A1", state1, state2));
 		_trace2.addAction(new Action("A2", state2, state3));
-		_trace2.addAction(new Action("A2", state3, state4));
+		_trace2.addAction(new Action("A5", state3, state4));
 		
 		_trace3.addAction(new Action("A1", state1, state2));
 		_trace3.addAction(new Action("A2", state2, state3));
-		_trace3.addAction(new Action("A3", state3, state2));
+		_trace3.addAction(new Action("A4", state3, state2));
 		_trace3.addAction(new Action("A3", state2, state5));
 		
 		_trace4.addAction(new Action("A1", state1, state2));
 		_trace4.addAction(new Action("A2", state2, state3));
-		_trace4.addAction(new Action("A3", state3, state2));
+		_trace4.addAction(new Action("A4", state3, state2));
 		_trace4.addAction(new Action("A2", state2, state3));
-		_trace4.addAction(new Action("A2", state3, state4));
+		_trace4.addAction(new Action("A5", state3, state4));
 	}
 	
 	@After
@@ -158,6 +158,30 @@ public class GraphToDataTest {
 		for (Trace trace: traces) {
 			trace.equals(_trace1);
 		}
+	}
+	
+	@Test
+	public void testTraceGenerateCoverageAleat1() {
+		List<Trace> traces = _graph.traceGenerateCoverageAleat(0f);
+		assertEquals(traces, new ArrayList<Trace>());
+	}
+	
+	@Test
+	public void testTraceGenerateCoverageAleat2() {
+		List<Trace> traces = _graph.traceGenerateCoverageAleat(0.1f);
+		assertEquals(traces.size(), 1);
+	}
+	
+	@Test
+	public void testTraceGenerateCoverageAleat3() {
+		List<Trace> traces = _graph.traceGenerateCoverageAleat(1f);
+		assertTrue(traces.size() >= 2);
+	}
+	
+	@Test
+	public void testTraceGenerateCoverageIntelligent1() throws Exception {
+		List<Trace> traces = _graph.traceGenerateCoverageIntelligent(3);
+		assertEquals(traces.size(), 2);
 	}
 	
 }

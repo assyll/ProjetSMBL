@@ -5,7 +5,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import generatorTracesTestAleat.Action;
+import generatorTracesTest.Action;
+import generatorTracesTest.State;
 
 
 public class ActionTest {
