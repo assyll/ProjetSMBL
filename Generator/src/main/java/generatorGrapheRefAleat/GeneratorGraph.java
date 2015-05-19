@@ -16,10 +16,10 @@ import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 public class GeneratorGraph {
 
 	/**
-	 * Une chance sur NB_CHANCE_CREER de creer un nouveau noeud
+	 * 5 chances sur NB_CHANCE_CREER de creer un nouveau noeud
 	 * ou une nouvelle transition.
 	 */
-	private final int NB_CHANCE_CREER = 2;
+	private final int NB_CHANCE_CREER = 5;
 	
 	/**
 	 * Genere un graphe de reference aleatoire.
@@ -105,9 +105,9 @@ public class GeneratorGraph {
 			nodesCreated = newQuadruplet.nodesCreated;
 			transitionsCreated = newQuadruplet.transitionsCreated;
 			
-			// 1 chance sur NB_CHANCE_CREER de creer un nouveau noeud.
+			// 5 chances sur NB_CHANCE_CREER de creer un nouveau noeud.
 			boolean createNewNode =
-					(new Random().nextInt(NB_CHANCE_CREER) == 0);
+					(new Random().nextInt(NB_CHANCE_CREER) < 5);
 			
 			// Creer un nouveau noeud si pas le choix.
 			if (!createNewNode && nodesCreated.size() == 1) {
@@ -127,9 +127,9 @@ public class GeneratorGraph {
 				nodesCreated.add(nodeOut);
 			}
 			
-			// 1 chance sur NB_CHANCE_CREER de creer une nouvelle transition.
+			// 5 chances sur NB_CHANCE_CREER de creer une nouvelle transition.
 			boolean createNewTransition =
-					(new Random().nextInt(NB_CHANCE_CREER) == 0);
+					(new Random().nextInt(NB_CHANCE_CREER) < 5);
 			
 			// Creer une nouvelle transition si pas le choix.
 			if (!createNewTransition && transitionsCreated.size() == 0) {
@@ -146,12 +146,7 @@ public class GeneratorGraph {
 			
 			// Ajouter la transition au noeud pere
 			nodeFather.addTransition(transition, nodeOut);
-			
-			// 4 chance sur 5 de faire un appel recursif
-			boolean appelRecursif =
-					(new Random().nextInt(5) >= 1);
-			
-			
+					
 			// Generation de mon nouveau quadruplet
 			newQuadruplet = new Quadruplet();
 			newQuadruplet.numNoeud = numNoeud;
@@ -159,8 +154,8 @@ public class GeneratorGraph {
 			newQuadruplet.nodesCreated = nodesCreated;
 			newQuadruplet.transitionsCreated = transitionsCreated;
 			
-			// Appel recursif si les conditions nous le permettent
-			if (appelRecursif && numNoeud < maxNodes && createNewNode) {
+			// Appel recursif si nombre de noeuds non atteint
+			if (numNoeud < maxNodes && createNewNode) {
 				newQuadruplet = generateGraphAleat(newQuadruplet, nodeOut,
 						maxNodes, maxTrans);
 			}
