@@ -97,6 +97,7 @@ public class ConvertNeo4jToGS {
 			
 			tx.success();
 		}
+		_graphNeo4j.shutdown();
 		
 		return graphGS;	
 	}
