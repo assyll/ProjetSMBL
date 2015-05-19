@@ -208,7 +208,7 @@ public class Fenetre extends JFrame {
 				BorderFactory.createTitledBorder("Statut"),
 				BorderFactory.createEmptyBorder(1, 1, 1, 1)));
 		scrollStatut.setPreferredSize(new Dimension(panelGraph.getWidth(),
-				panelGraph.getHeight() + 100));
+				panelGraph.getHeight() + 60));
 		scrollStatut.setViewportView(textColorStatut);
 		panelGraphJSon = new JPanel();
 		panelGraphAgent = new JPanel();
