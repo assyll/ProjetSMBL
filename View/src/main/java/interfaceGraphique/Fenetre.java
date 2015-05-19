@@ -371,39 +371,47 @@ public class Fenetre extends JFrame {
 		addNodeJSon.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				NodeDialog nodeLeft = new NodeDialog(frame, "Add Node");
+				String s = nodeLeft.getName();
 				if (!nodeLeft.getFerme()) {
 					if (isGraphJsonLoaded) {
-						String s = nodeLeft.getName();
-						Node n = graph.getNode(s);
-						if (n == null) {
-							GraphModifier.addNode(nodeLeft, graph);
-							GraphModifier.setNodeClass(graph);
+						if (!s.equals("")) {
+							Node n = graph.getNode(s);
+							if (n == null) {
+								GraphModifier.addNode(nodeLeft, graph);
+								GraphModifier.setNodeClass(graph);
+							} else {
+								msgError("Nom déjà existant");
+							}
 						} else {
-							JOptionPane.showMessageDialog(frame,
-									"Nom déjà existant", "Name Error",
-									JOptionPane.ERROR_MESSAGE);
+							msgError("Nom invalide car vide");
 						}
 					} else if (graph == null && nodeLeft.getCheck()) {
-						graph = new MultiGraph("Graph");
+						if (!s.equals("")) {
+							graph = new MultiGraph("Graph");
 
-						CustomGraphRenderer.setStyleGraph(graph);
-						GraphModifier.addNode(nodeLeft, graph);
-						GraphModifier.setNodeClass(graph);
-						spriteManagerJson = new SpriteManager(graph);
+							CustomGraphRenderer.setStyleGraph(graph);
+							GraphModifier.addNode(nodeLeft, graph);
+							GraphModifier.setNodeClass(graph);
+							spriteManagerJson = new SpriteManager(graph);
 
-						viewer = new Viewer(graph,
-								Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
-						viewer.enableAutoLayout();
-						isAutoLayoutJson = true;
-						view = viewer.addDefaultView(false);
-						setListenerOnViewer(viewer);
+							viewer = new Viewer(
+									graph,
+									Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
+							viewer.enableAutoLayout();
+							isAutoLayoutJson = true;
+							view = viewer.addDefaultView(false);
+							setListenerOnViewer(viewer);
 
-						graphJSon.removeAll();
-						graphJSon.setLayout(new BorderLayout());
-						graphJSon.add((Component) view, BorderLayout.CENTER);
-						scrollJSon.setViewportView(graphJSon);
+							graphJSon.removeAll();
+							graphJSon.setLayout(new BorderLayout());
+							graphJSon
+									.add((Component) view, BorderLayout.CENTER);
+							scrollJSon.setViewportView(graphJSon);
 
-						isGraphJsonLoaded = true;
+							isGraphJsonLoaded = true;
+						} else {
+							msgError("Nom invalide car vide");
+						}
 					}
 				}
 			}
@@ -415,16 +423,27 @@ public class Fenetre extends JFrame {
 				if (isGraphJsonLoaded) {
 					EdgeDialog edgeLeft = new EdgeDialog(frame, "Add Edge",
 							graph);
+					String s = edgeLeft.getLabel();
 					if (!edgeLeft.getFerme() && edgeLeft.getCheck()) {
-						try {
-							GraphModifier.addEdge(edgeLeft, graph);
-							Edge edge = graph.getEdge(edgeLeft.getLabel());
-							Sprite sprite = spriteManagerJson.addSprite(edge
-									.getId());
-							sprite.attachToEdge(edgeLeft.getLabel());
-							sprite.setPosition(0.5, 0, 0);
-						} catch (NoSpecifiedNodeException e) {
-							textStatut.appendErrorMessage(e.getMessage());
+						if (!s.equals("")) {
+							Edge ed = graph.getEdge(s);
+							if (ed == null) {
+								try {
+									GraphModifier.addEdge(edgeLeft, graph);
+									Edge edge = graph.getEdge(s);
+									Sprite sprite = spriteManagerJson
+											.addSprite(edge.getId());
+									sprite.attachToEdge(s);
+									sprite.setPosition(0.5, 0, 0);
+								} catch (NoSpecifiedNodeException e) {
+									textStatut.appendErrorMessage(e
+											.getMessage());
+								}
+							} else {
+								msgError("Nom déjà existant");
+							}
+						} else {
+							msgError("Nom invalide car vide");
 						}
 					}
 				}
@@ -727,6 +746,11 @@ public class Fenetre extends JFrame {
 			}
 		}
 		return null;
+	}
+
+	private void msgError(String s) {
+		JOptionPane.showMessageDialog(this, s, "Error",
+				JOptionPane.ERROR_MESSAGE);
 	}
 
 	public static void main(String[] args) {
