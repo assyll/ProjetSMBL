@@ -21,11 +21,11 @@ public class StateTest {
 	public void start() {
 		state1 = new State("etat 1", false);
 		state2 = new State("etat 2", true);
-		action1 = new Action("action 1");
+		action1 = new Action("action 1", state1, state2);
 	}
 	
 	@After
-	public void finish() {
+	public void stop() {
 		state1 = null;
 		state2 = null;
 		action1 = null;
@@ -83,7 +83,7 @@ public class StateTest {
 		// Ajout de NB_ACTIONS actions dans state1 et state2.
 		Action[] actions = new Action[NB_ACTIONS];
 		for (int i = 0; i < NB_ACTIONS; i++) {
-			actions[i] = new Action("action " + i);
+			actions[i] = new Action("action " + i, null, null);
 			state1.addAction(actions[i], state2);
 			state2.addAction(actions[i], state1);
 		}

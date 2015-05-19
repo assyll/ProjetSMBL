@@ -155,10 +155,8 @@ public class GeneratorTraces {
 				trace.addAction(actionAleat);
 			}
 			
-			if ((state == null || !stopToFinal ||
-					(state.isFinal() /*&& stopToFinal*/))
-					&& (withRepetition ||
-							(!traces.contains(trace) /*&& !withRepetition*/))) {
+			if ((state == null || !stopToFinal || state.isFinal())
+					&& (withRepetition || !traces.contains(trace))) {
 				traces.add(trace);
 			}
 		}

@@ -16,8 +16,10 @@ public class TraceTest {
 	@Before
 	public void start() {
 		trace = new Trace();
-		action1 = new Action("action 1");
-		action2 = new Action("action 2");
+		action1 = new Action("action 1",
+				new State("etat1", false), new State("etat2", false));
+		action2 = new Action("action 2",
+				new State("etat2", false), new State("etat3", true));
 	}
 	
 	@After
