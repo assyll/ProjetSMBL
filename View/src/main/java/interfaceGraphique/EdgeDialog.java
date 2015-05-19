@@ -26,6 +26,7 @@ public class EdgeDialog extends JDialog implements ActionListener {
 
 	public EdgeDialog(JFrame f, String s) {
 		super(f, s, true);
+		this.setDefaultCloseOperation(this.DISPOSE_ON_CLOSE);
 		frame = f;
 		Box boite = Box.createVerticalBox();
 		JPanel panelDialog = new JPanel();

@@ -27,6 +27,7 @@ public class AttributDialog extends JDialog implements ActionListener {
 
 	public AttributDialog(Frame f, String s, int nbAtt) {
 		super(f, s, true);
+		this.setDefaultCloseOperation(this.DISPOSE_ON_CLOSE);
 		nbAttribut = nbAtt;
 		boite = Box.createVerticalBox();
 		panelDialog = new JPanel();
