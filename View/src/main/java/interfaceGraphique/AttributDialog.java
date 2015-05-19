@@ -25,10 +25,9 @@ public class AttributDialog extends JDialog implements ActionListener {
 	Box boite;
 	String[] attributs;
 
-	@SuppressWarnings("static-access")
 	public AttributDialog(Frame f, String s, int nbAtt) {
 		super(f, s, true);
-		this.setDefaultCloseOperation(this.DISPOSE_ON_CLOSE);
+		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		nbAttribut = nbAtt;
 		boite = Box.createVerticalBox();
 		panelDialog = new JPanel();

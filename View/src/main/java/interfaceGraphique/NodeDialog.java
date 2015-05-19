@@ -26,10 +26,9 @@ public class NodeDialog extends JDialog implements ActionListener {
 	int nbAtt;
 	AttributDialog attDialog;
 
-	@SuppressWarnings("static-access")
 	public NodeDialog(JFrame f, String s) {
 		super(f, s, true);
-		this.setDefaultCloseOperation(this.DISPOSE_ON_CLOSE);
+		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		frame = f;
 		Box boite = Box.createVerticalBox();
 		JPanel panelDialog = new JPanel();
