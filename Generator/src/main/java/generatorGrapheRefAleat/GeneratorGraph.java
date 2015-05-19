@@ -19,7 +19,7 @@ public class GeneratorGraph {
 	 * 5 chances sur NB_CHANCE_CREER de creer un nouveau noeud
 	 * ou une nouvelle transition.
 	 */
-	private final int NB_CHANCE_CREER = 5;
+	private final int NB_CHANCE_CREER = 8;
 	
 	/**
 	 * Genere un graphe de reference aleatoire.
@@ -52,15 +52,14 @@ public class GeneratorGraph {
 		quadruplet = generateGraphAleat(
 				quadruplet, node, nbNodes, maxTrans);
 		
-		// Desinner le graphe
+		// Desinne le graphe
 		drawGraph(path, quadruplet.nodesCreated);
 		
 	}
 	
 	/**
 	 * Genere un graphe de maniere aleatoire.
-	 * Avec 4 chance sur 5 pour chaque noeud de continuer recursivement.
-	 * Et 1 chance sur NB_CHANCE_CREER pour creer un nouveau noeud
+	 * Avec 5 chances sur NB_CHANCE_CREER pour creer un nouveau noeud
 	 * ou une nouvelle transition a chaque fois.
 	 * 
 	 * @param quadruplet Ensemble de quatres informations:
@@ -85,7 +84,7 @@ public class GeneratorGraph {
 				
 		// Determine le nombre de transitions sortants aleatoirement.
 		int nbTrans;
-		if (nodesCreated.size() == 1 || numNoeud < maxNodes) {
+		if (nodesCreated.size() == 1 /*|| numNoeud < maxNodes*/) {
 			nbTrans = new Random().nextInt(maxTrans) + 1;
 		} else {
 			nbTrans = new Random().nextInt(maxTrans + 1);
@@ -155,6 +154,7 @@ public class GeneratorGraph {
 			newQuadruplet.transitionsCreated = transitionsCreated;
 			
 			// Appel recursif si nombre de noeuds non atteint
+			// seulement si un nouveau noeud a ete cree
 			if (numNoeud < maxNodes && createNewNode) {
 				newQuadruplet = generateGraphAleat(newQuadruplet, nodeOut,
 						maxNodes, maxTrans);
@@ -272,6 +272,7 @@ public class GeneratorGraph {
 					Relationship r = node.createRelationshipTo(
 							nodeEnd, DynamicRelationshipType
 							.withName("Transition"));
+					
 					r.setProperty("name", e.getKey().getName());
 					
 				}

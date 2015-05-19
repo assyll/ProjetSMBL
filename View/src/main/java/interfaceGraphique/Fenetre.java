@@ -44,13 +44,11 @@ import org.graphstream.ui.view.Viewer;
 
 import com.fasterxml.jackson.core.JsonParseException;
 
-import convertGStoNeo4j.ConvertGStoNeo4j;
+import convertGraph.ConvertGStoNeo4j;
+import convertGraph.ConvertNeo4jToGS;
 
 @SuppressWarnings("serial")
 public class Fenetre extends JFrame {
-
-	public final static String _pathDestinationNeo4j =
-			"/home/quentin/Documents/Mes_graphes/graphToGS";
 	
 	public static final String NO_FILE_SELECTED = "Veuillez d'abord s�lectionner un fichier � importer";
 	public static double tolerance = 10;
@@ -247,9 +245,6 @@ public class Fenetre extends JFrame {
 					JsonToGS jSTGS = new JsonToGS();
 					try {
 						graph = jSTGS.generateGraph(directory.getText());
-						
-						new ConvertGStoNeo4j(graph).convertToNeo4j(
-								_pathDestinationNeo4j);
 
 						GraphRendererPerso.setStyleGraph(graph);
 						GraphModifier.setNodeClass(graph);
@@ -270,8 +265,7 @@ public class Fenetre extends JFrame {
 
 						isGraphJsonLoaded = true;
 
-						Graph graph2 = GraphModifier.GraphToGraph(graph,
-								"graph2");
+						Graph graph2 = GraphModifier.GraphToGraph(graph, "graph2");
 
 						GraphRendererPerso.setStyleGraph(graph2);
 						GraphModifier.setNodeClass(graph2);

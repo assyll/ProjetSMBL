@@ -13,7 +13,7 @@ public class VerifyGraphNeo4jAndGS {
 			GraphDatabaseService graphNeo4j, Graph graphGS) {
 		
 		try (Transaction tx = graphNeo4j.beginTx()) {
-			
+		    
 			Iterator<org.neo4j.graphdb.Node> itNodesNeo4j =
 					graphNeo4j.getAllNodes().iterator();
 			
@@ -51,7 +51,7 @@ public class VerifyGraphNeo4jAndGS {
 					}
 				}
 				
-				// Verifie legalie de toutes ses transitions sortantes
+				// Verifie legalite de toutes ses transitions sortantes
 				for (Relationship relationship: nodeNeo4j.getRelationships()) {
 					
 					if (grapheGS.getEdge((String)

@@ -7,7 +7,7 @@ public class GeneratorGraphTest {
 	private final String _path =
 			"/home/quentin/Documents/Mes_graphes/grapheAleat-db";
 	
-	private final int _nbNodes = 10;
+	private final int _nbNodes = 12;
 	private final int _maxTrans = 3;
 	
 	@Test
