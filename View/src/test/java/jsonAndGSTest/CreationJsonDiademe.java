@@ -36,16 +36,16 @@ public class CreationJsonDiademe {
 
 		MyJsonEdge e1 = new MyJsonEdge("edge 1", "node 1", "node 2",
 				"action !", new LinkedList<String>());
-		e1.get_attributs().add("att 1");
-		e1.get_attributs().add("att 2");
+		e1.addAttribut("att 1");
+		e1.addAttribut("att 2");
 		MyJsonEdge e2 = new MyJsonEdge("edge 2", "node 2", "node 4",
 				"action !", new LinkedList<String>());
-		e2.get_attributs().add("att 1");
-		e2.get_attributs().add("att 2");
+		e2.addAttribut("att 1");
+		e2.addAttribut("att 2");
 		MyJsonEdge e3 = new MyJsonEdge("edge 3", "node 1", "node 3",
 				"action !", new LinkedList<String>());
-		e3.get_attributs().add("att 1");
-		e3.get_attributs().add("att 2");
+		e3.addAttribut("att 1");
+		e3.addAttribut("att 2");
 		MyJsonEdge e4 = new MyJsonEdge("edge 4", "node 3", "node 4",
 				"action !", new LinkedList<String>());
 

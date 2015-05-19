@@ -6,14 +6,14 @@ import java.util.List;
  * <b>MyJsonNode est la classe représentant une node</b>
  * <p>
  * Une node est caractérisée par les informations suivantes :
+ * </p>
  * <ul>
  * <li>Un nom unique</li>
  * <li>Un booléen définissant si la node est source ou non</li>
  * <li>Un booléen définissant si la node est finale ou non</li>
  * </ul>
- * </p>
  * <p>
- * De plus une node a une liste d'attributs il sera possible d'ajouter des
+ * De plus une node possède une liste d'attributs il sera possible d'ajouter des
  * attributs à cette liste
  * </p>
  * 
@@ -43,7 +43,7 @@ public class MyJsonNode {
 	 * La liste contenant les attributs de la node
 	 * <p>
 	 * Il est possible d'ajouter des attributs à cette liste
-	 * <p>
+	 * </p>
 	 * 
 	 * @see MyJsonNode#MyJsonNode(String, boolean, boolean, List)
 	 * @see MyJsonNode#get_attributs()
