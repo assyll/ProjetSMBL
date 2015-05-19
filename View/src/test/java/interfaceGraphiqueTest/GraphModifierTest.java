@@ -16,19 +16,19 @@ public class GraphModifierTest extends TestCase {
 		Node nodeTest1 = graphTest.addNode("test1");
 		nodeTest1.addAttribute(MyJsonGenerator.FORMAT_NODE_SOURCE, true);
 		nodeTest1.addAttribute(MyJsonGenerator.FORMAT_NODE_FINAL, false);
-		GraphModifier.setNodeClass(graphTest);
+		GraphModifier.setNodeClass(graphTest, nodeTest1);
 		assertEquals(graphTest.getNode("test1").getAttribute("ui.class"), MyJsonGenerator.FORMAT_NODE_SOURCE);
 		
 		Node nodeTest2 = graphTest.addNode("test2");
 		nodeTest2.addAttribute(MyJsonGenerator.FORMAT_NODE_SOURCE, false);
 		nodeTest2.addAttribute(MyJsonGenerator.FORMAT_NODE_FINAL, true);
-		GraphModifier.setNodeClass(graphTest);
+		GraphModifier.setNodeClass(graphTest, nodeTest2);
 		assertEquals(graphTest.getNode("test2").getAttribute("ui.class"), MyJsonGenerator.FORMAT_NODE_FINAL);
 		
 		Node nodeTest3 = graphTest.addNode("test3");
 		nodeTest3.addAttribute(MyJsonGenerator.FORMAT_NODE_SOURCE, true);
 		nodeTest3.addAttribute(MyJsonGenerator.FORMAT_NODE_FINAL, true);
-		GraphModifier.setNodeClass(graphTest);
+		GraphModifier.setNodeClass(graphTest, nodeTest3);
 		assertEquals(graphTest.getNode("test3").getAttribute("ui.class"), MyJsonGenerator.FORMAT_NODE_SOURCE + MyJsonGenerator.FORMAT_NODE_FINAL);
 	}
 	

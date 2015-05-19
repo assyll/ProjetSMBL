@@ -11,11 +11,13 @@ import org.graphstream.ui.spriteManager.SpriteManager;
 
 public class GraphModifier {
 
-	public static void setNodeClass(Graph graph) {
+	public static void setNodesClass(Graph graph) {
 		Boolean isSource, isFinal;
 		for (Node node : graph.getEachNode()) {
-			isSource = (node.getAttribute(MyJsonGenerator.FORMAT_NODE_SOURCE).equals(true));
-			isFinal = (node.getAttribute(MyJsonGenerator.FORMAT_NODE_FINAL).equals(true));
+			isSource = (node.getAttribute(MyJsonGenerator.FORMAT_NODE_SOURCE)
+					.equals(true));
+			isFinal = (node.getAttribute(MyJsonGenerator.FORMAT_NODE_FINAL)
+					.equals(true));
 			if (isSource && isFinal) {
 				node.setAttribute("ui.class",
 						MyJsonGenerator.FORMAT_NODE_SOURCE
@@ -26,6 +28,22 @@ public class GraphModifier {
 			} else if (isFinal) {
 				node.addAttribute("ui.class", MyJsonGenerator.FORMAT_NODE_FINAL);
 			}
+		}
+	}
+
+	public static void setNodeClass(Graph graph, Node node) {
+		Boolean isSource, isFinal;
+		isSource = (node.getAttribute(MyJsonGenerator.FORMAT_NODE_SOURCE)
+				.equals(true));
+		isFinal = (node.getAttribute(MyJsonGenerator.FORMAT_NODE_FINAL)
+				.equals(true));
+		if (isSource && isFinal) {
+			node.setAttribute("ui.class", MyJsonGenerator.FORMAT_NODE_SOURCE
+					+ MyJsonGenerator.FORMAT_NODE_FINAL);
+		} else if (isSource) {
+			node.setAttribute("ui.class", MyJsonGenerator.FORMAT_NODE_SOURCE);
+		} else if (isFinal) {
+			node.addAttribute("ui.class", MyJsonGenerator.FORMAT_NODE_FINAL);
 		}
 	}
 
@@ -65,6 +83,8 @@ public class GraphModifier {
 						attribut);
 			}
 		}
+		
+		setNodeClass(g, node);
 
 		return g;
 	}

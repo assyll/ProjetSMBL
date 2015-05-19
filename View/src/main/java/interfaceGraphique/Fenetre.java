@@ -247,16 +247,8 @@ public class Fenetre extends JFrame {
 						graphJson = jSTGS.generateGraph(
 								textDirectory.getText(), GRAPH_JSON_NAME);
 
-						CustomGraphRenderer.setStyleGraph(graphJson);
-						GraphModifier.setNodeClass(graphJson);
-						spriteManagerJson = new SpriteManager(graphJson);
-						GraphModifier.generateSprite(graphJson,
-								spriteManagerJson);
-
-						viewerJson = new Viewer(graphJson,
-								Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
-						viewerJson.enableAutoLayout();
-						isAutoLayoutJson = true;
+						viewerJson = initGraphProperties(graphJson, spriteManagerJson);
+						
 						viewJson = viewerJson.addDefaultView(false);
 						setListenerOnViewer(viewerJson);
 
@@ -265,22 +257,15 @@ public class Fenetre extends JFrame {
 						panelGraphJSon.add((Component) viewJson,
 								BorderLayout.CENTER);
 						scrollJSon.setViewportView(panelGraphJSon);
-
+						
 						isGraphJsonLoaded = true;
-
+						isAutoLayoutJson = true;
+						
 						graphAgent = GraphModifier.GraphToGraph(graphJson,
 								GRAPH_AGENT_NAME);
-
-						CustomGraphRenderer.setStyleGraph(graphAgent);
-						GraphModifier.setNodeClass(graphAgent);
-						spriteManagerAgent = new SpriteManager(graphAgent);
-						GraphModifier.generateSprite(graphAgent,
-								spriteManagerAgent);
-
-						viewerAgent = new Viewer(graphAgent,
-								Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
-						viewerAgent.enableAutoLayout();
-						isAutoLayoutAg = true;
+						
+						viewerAgent = initGraphProperties(graphAgent, spriteManagerAgent);
+						
 						viewAgent = viewerAgent.addDefaultView(false);
 						setListenerOnViewer(viewerAgent);
 
@@ -289,8 +274,9 @@ public class Fenetre extends JFrame {
 						panelGraphAgent.add((Component) viewAgent,
 								BorderLayout.CENTER);
 						scrollAgent.setViewportView(panelGraphAgent);
-
+						
 						isGraphAgentLoaded = true;
+						isAutoLayoutAg = true;
 
 					} catch (JsonParseException e1) {
 						textColorStatut
@@ -379,7 +365,6 @@ public class Fenetre extends JFrame {
 							Node n = graphJson.getNode(s);
 							if (n == null) {
 								GraphModifier.addNode(nodeLeft, graphJson);
-								GraphModifier.setNodeClass(graphJson);
 							} else {
 								msgError("Nom déjà existant");
 							}
@@ -392,7 +377,6 @@ public class Fenetre extends JFrame {
 
 							CustomGraphRenderer.setStyleGraph(graphJson);
 							GraphModifier.addNode(nodeLeft, graphJson);
-							GraphModifier.setNodeClass(graphJson);
 							spriteManagerJson = new SpriteManager(graphJson);
 
 							viewerJson = new Viewer(
@@ -535,13 +519,12 @@ public class Fenetre extends JFrame {
 				if (!nodeRight.getFerme()) {
 					if (isGraphAgentLoaded) {
 						GraphModifier.addNode(nodeRight, graphAgent);
-						GraphModifier.setNodeClass(graphAgent);
 					} else if (graphJson == null) {
 						graphJson = new MultiGraph("GraphAgent");
 
 						CustomGraphRenderer.setStyleGraph(graphJson);
 						GraphModifier.addNode(nodeRight, graphJson);
-						GraphModifier.setNodeClass(graphJson);
+						GraphModifier.setNodesClass(graphJson);
 						spriteManagerAgent = new SpriteManager(graphJson);
 
 						viewerAgent = new Viewer(graphJson,
@@ -742,6 +725,19 @@ public class Fenetre extends JFrame {
 			}
 		}
 		return null;
+	}
+	
+	public Viewer initGraphProperties(Graph graph, SpriteManager spriteManager){
+		CustomGraphRenderer.setStyleGraph(graph);
+		GraphModifier.setNodesClass(graph);
+		spriteManager = new SpriteManager(graph);
+		GraphModifier.generateSprite(graph,
+				spriteManager);
+
+		Viewer viewer = new Viewer(graph,
+				Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
+		viewer.enableAutoLayout();
+		return viewer;
 	}
 
 	private void msgError(String s) {
