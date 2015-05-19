@@ -20,7 +20,7 @@ public class MyListEdges {
 	 * La liste contenant les edges
 	 * <p>
 	 * Il est possible d'ajouter des edges dans cette liste
-	 * <p>
+	 * </p>
 	 * 
 	 * @see MyListEdges#MyListEdges()
 	 * @see MyListEdges#addEdges(MyJsonEdge...)
@@ -33,7 +33,7 @@ public class MyListEdges {
 	 * <p>
 	 * A la construction d'un objet MyListEdges, la liste des edges est créée
 	 * vide
-	 * <p>
+	 * </p>
 	 * 
 	 * @see MyListEdges#_listEdges
 	 */

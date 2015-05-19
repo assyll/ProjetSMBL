@@ -6,13 +6,13 @@ import java.util.List;
  * <b>MyJsonEdge est la classe représentant une edge</b>
  * <p>
  * Une edge est caractérisée par les informations suivantes :
+ * </p>
  * <ul>
  * <li>Un label unique</li>
  * <li>Une node de départ</li>
  * <li>Une node d'arrivée</li>
  * <li>Une action qui permettra d'identifier la edge dans le graphe</li>
  * </ul>
- * </p>
  * <p>
  * De plus une edge possède une liste d'attributs il sera possible d'ajouter des
  * attributs à cette liste
@@ -59,7 +59,7 @@ public class MyJsonEdge {
 	 * La liste contenant les attributs de la edge
 	 * <p>
 	 * Il est possible d'ajouter des attributs à cette liste
-	 * <p>
+	 * </p>
 	 * 
 	 * @see MyJsonEdge#MyJsonEdge(String, String, String, String, List)
 	 * @see MyJsonEdge#get_attributs()
