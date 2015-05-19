@@ -404,7 +404,7 @@ public class Fenetre extends JFrame {
 		addEdgeJSon.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				if (isGraphJsonLoaded) {
-					EdgeDialog edgeLeft = new EdgeDialog(frame, "Add Edge");
+					EdgeDialog edgeLeft = new EdgeDialog(frame, "Add Edge", graph);
 					if (!edgeLeft.getFerme()) {
 						try {
 							GraphModifier.addEdge(edgeLeft, graph);
@@ -498,8 +498,8 @@ public class Fenetre extends JFrame {
 				}
 			}
 		});
-		
-		// Action lors du clic sur l'item "Node +" de la partie gauche
+
+		// Action lors du clic sur l'item "Node +" de la partie droite
 		addNodeAg.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				NodeDialog nodeRight = new NodeDialog(frame, "Add Node");
@@ -533,11 +533,11 @@ public class Fenetre extends JFrame {
 			}
 		});
 
-		// Action lors du clic sur l'item "Edge +" de la partie gauche
+		// Action lors du clic sur l'item "Edge +" de la partie droite
 		addEdgeAg.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				if (isGraphAgLoaded) {
-					EdgeDialog edgeRight = new EdgeDialog(frame, "Add Edge");
+					EdgeDialog edgeRight = new EdgeDialog(frame, "Add Edge", graph);
 					if (!edgeRight.getFerme()) {
 						try {
 							GraphModifier.addEdge(edgeRight, graph);
@@ -553,7 +553,6 @@ public class Fenetre extends JFrame {
 				}
 			}
 		});
-
 
 		// Action lors du clic sur l'item "Structurer / Déstructurer" de la
 		// partie droite
@@ -679,7 +678,7 @@ public class Fenetre extends JFrame {
 			}
 
 			public void mousePressed(MouseEvent e) {
-				
+
 			}
 
 			public void mouseReleased(MouseEvent arg0) {
