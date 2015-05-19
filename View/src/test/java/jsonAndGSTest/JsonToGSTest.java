@@ -110,7 +110,7 @@ public class JsonToGSTest extends TestCase {
 		try {
 			parser = jfactory.createParser(fileTest);
 			parser.nextToken();
-			Graph graph = jTGS.generateGraph(fileTest.getAbsolutePath());
+			Graph graph = jTGS.generateGraph(fileTest.getAbsolutePath(), "graphTest");
 			
 			assertEquals(graph.getEdgeCount(), 1);
 			

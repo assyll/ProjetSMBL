@@ -187,6 +187,8 @@ public class JsonToGS {
 	 * 
 	 * @param filePath
 	 *            Le chemin d'accés au fichier Json
+	 * @param graphName
+	 *            Le nom à donner au graphe généré
 	 * 
 	 * @return Le graphe généré
 	 * 
@@ -196,14 +198,14 @@ public class JsonToGS {
 	 *             Si il y'a un probleme avec le fichier
 	 * @throws FileFormatException
 	 *             Si le format du fichier Json n'est pas celui convenu
-	 *             
+	 * 
 	 * @see MyJsonGenerator
 	 * 
 	 * @since 1.0
 	 */
-	public Graph generateGraph(String filePath) throws JsonParseException,
-			IOException, FileFormatException {
-		Graph graph = new MultiGraph("graph");
+	public Graph generateGraph(String filePath, String graphName)
+			throws JsonParseException, IOException, FileFormatException {
+		Graph graph = new MultiGraph(graphName);
 
 		// try {
 

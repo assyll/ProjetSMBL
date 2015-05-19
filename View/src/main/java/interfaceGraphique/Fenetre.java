@@ -48,23 +48,23 @@ import com.fasterxml.jackson.core.JsonParseException;
 public class Fenetre extends JFrame {
 
 	public static final String NO_FILE_SELECTED = "Veuillez d'abord sélectionner un fichier à importer";
-	public static double tolerance = 10;
+	public static final double tolerance = 10;
 	Double x = null, y = null, x2 = null, y2 = null;
 
 	// Instanciation des différents Components
 
 	JFrame frame;
 
-	JPanel panelFile, panelGraph, graphJSon, graphAgent, zoomJSon, zoomAgent,
+	JPanel panelFile, panelGraph, panelGraphJSon, panelGraphAgent, panelZoomJSon, panelZoomAgent,
 			panelModifJSon, panelModifAg, panelOptionJSon, panelOptionAg;
 
 	JSplitPane splitPane, splitPane2;
 
 	JScrollPane scrollJSon, scrollAgent, scrollStatut;
 
-	JTextField directory, textJSon, textAg;
+	JTextField textDirectory, textJSon, textAg;
 
-	JColorTextPane textStatut;
+	JColorTextPane textColorStatut;
 
 	JButton buttonGS, zoomAvantJSon, zoomArrJSon, zoomTextJSon, zoomAvantAg,
 			zoomArrAg, zoomTextAg, addNodeJSon, addEdgeJSon, addNodeAg,
@@ -76,11 +76,11 @@ public class Fenetre extends JFrame {
 
 	JMenuItem importMenu, exitMenu;
 
-	Viewer viewer, viewer2;
+	Viewer viewerJson, viewerAgent;
 
-	View view, view2;
+	View viewJson, viewAgent;
 
-	Graph graph;
+	Graph graphJson, graphAgent;
 
 	double zoom = 1, dezoom = 1;
 
@@ -88,7 +88,7 @@ public class Fenetre extends JFrame {
 			heightWindow = 700, sizeSeparator = 5;
 
 	boolean isAutoLayoutJson, isAutoLayoutAg, isGraphJsonLoaded = false,
-			isGraphAgLoaded = false, isSpriteUnder;
+			isGraphAgentLoaded = false;
 
 	SpriteManager spriteManagerJson, spriteManagerAgent;
 
@@ -131,18 +131,18 @@ public class Fenetre extends JFrame {
 		textAg = new JTextField();
 
 		// Initialisation et définition du panneau pour zoomer le graphe Json
-		zoomJSon = new JPanel(new GridLayout(2, 2, 20, 50));
-		zoomJSon.add(zoomAvantJSon);
-		zoomJSon.add(zoomArrJSon);
-		zoomJSon.add(zoomTextJSon);
-		zoomJSon.add(textJSon);
+		panelZoomJSon = new JPanel(new GridLayout(2, 2, 20, 50));
+		panelZoomJSon.add(zoomAvantJSon);
+		panelZoomJSon.add(zoomArrJSon);
+		panelZoomJSon.add(zoomTextJSon);
+		panelZoomJSon.add(textJSon);
 
 		// Initialisation et définition du panneau pour zoomer le graphe Agent
-		zoomAgent = new JPanel(new GridLayout(2, 2, 20, 50));
-		zoomAgent.add(zoomAvantAg);
-		zoomAgent.add(zoomArrAg);
-		zoomAgent.add(zoomTextAg);
-		zoomAgent.add(textAg);
+		panelZoomAgent = new JPanel(new GridLayout(2, 2, 20, 50));
+		panelZoomAgent.add(zoomAvantAg);
+		panelZoomAgent.add(zoomArrAg);
+		panelZoomAgent.add(zoomTextAg);
+		panelZoomAgent.add(textAg);
 
 		// Initialisation des boutons d'option
 		addNodeJSon = new JButton("Node +");
@@ -162,26 +162,26 @@ public class Fenetre extends JFrame {
 
 		// Initialisation et définition panneau option gauche
 		panelOptionJSon = new JPanel(new GridLayout(2, 1, 20, 50));
-		panelOptionJSon.add(zoomJSon);
+		panelOptionJSon.add(panelZoomJSon);
 		panelOptionJSon.add(panelModifJSon);
 
 		// Initialisation et définition panneau option droit
 		panelOptionAg = new JPanel(new GridLayout(2, 1, 20, 50));
-		panelOptionAg.add(zoomAgent);
+		panelOptionAg.add(panelZoomAgent);
 		panelOptionAg.add(panelModifAg);
 
 		// Initialisation de la zone de texte de la barre de statut
-		textStatut = new JColorTextPane();
-		textStatut.styleDoc();
-		textStatut.setEditable(false);
-		textStatut.setBackground(new Color(238, 238, 238));
+		textColorStatut = new JColorTextPane();
+		textColorStatut.styleDoc();
+		textColorStatut.setEditable(false);
+		textColorStatut.setBackground(new Color(238, 238, 238));
 
 		// Ajout de Components au 1er panneau
 		buttonGS = new JButton("To GraphStream");
-		directory = new JTextField("Directory");
-		directory.setPreferredSize(new Dimension(250, 20));
-		directory.setEditable(false);
-		panelFile.add(directory);
+		textDirectory = new JTextField("Directory");
+		textDirectory.setPreferredSize(new Dimension(250, 20));
+		textDirectory.setEditable(false);
+		panelFile.add(textDirectory);
 		panelFile.add(buttonGS);
 
 		// Initialisation et définition de la barre de menu et ses composants
@@ -206,9 +206,9 @@ public class Fenetre extends JFrame {
 				BorderFactory.createEmptyBorder(1, 1, 1, 1)));
 		scrollStatut.setPreferredSize(new Dimension(panelGraph.getWidth(),
 				panelGraph.getHeight() + 100));
-		scrollStatut.setViewportView(textStatut);
-		graphJSon = new JPanel();
-		graphAgent = new JPanel();
+		scrollStatut.setViewportView(textColorStatut);
+		panelGraphJSon = new JPanel();
+		panelGraphAgent = new JPanel();
 
 		// Action lors du clic sur l'item "Import"
 		importMenu.addActionListener(new ActionListener() {
@@ -220,7 +220,7 @@ public class Fenetre extends JFrame {
 
 				if (dialogue.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 					fichier = dialogue.getSelectedFile();
-					directory.setText(fichier.toString());
+					textDirectory.setText(fichier.toString());
 				}
 			}
 		});
@@ -238,68 +238,65 @@ public class Fenetre extends JFrame {
 				// Visualisation du graph généré par le fichier importé au
 				// format .json
 
-				if (!directory.getText().equals("Directory")) {
+				if (!textDirectory.getText().equals("Directory")) {
 					JsonToGS jSTGS = new JsonToGS();
 					try {
-						graph = jSTGS.generateGraph(directory.getText());
+						graphJson = jSTGS.generateGraph(textDirectory.getText(), "graphJson");
 
-						CustomGraphRenderer.setStyleGraph(graph);
-						GraphModifier.setNodeClass(graph);
-						spriteManagerJson = new SpriteManager(graph);
-						GraphModifier.generateSprite(graph, spriteManagerJson);
+						CustomGraphRenderer.setStyleGraph(graphJson);
+						GraphModifier.setNodeClass(graphJson);
+						spriteManagerJson = new SpriteManager(graphJson);
+						GraphModifier.generateSprite(graphJson, spriteManagerJson);
 
-						viewer = new Viewer(graph,
+						viewerJson = new Viewer(graphJson,
 								Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
-						viewer.enableAutoLayout();
+						viewerJson.enableAutoLayout();
 						isAutoLayoutJson = true;
-						view = viewer.addDefaultView(false);
-						setListenerOnViewer(viewer);
+						viewJson = viewerJson.addDefaultView(false);
+						setListenerOnViewer(viewerJson);
 
-						graphJSon.removeAll();
-						graphJSon.setLayout(new BorderLayout());
-						graphJSon.add((Component) view, BorderLayout.CENTER);
-						scrollJSon.setViewportView(graphJSon);
+						panelGraphJSon.removeAll();
+						panelGraphJSon.setLayout(new BorderLayout());
+						panelGraphJSon.add((Component) viewJson, BorderLayout.CENTER);
+						scrollJSon.setViewportView(panelGraphJSon);
 
 						isGraphJsonLoaded = true;
 
-						Graph graph2 = GraphModifier.GraphToGraph(graph,
-								"graph2");
+						graphAgent = GraphModifier.GraphToGraph(graphJson,
+								"graphAgent");
 
-						CustomGraphRenderer.setStyleGraph(graph2);
-						GraphModifier.setNodeClass(graph2);
-						spriteManagerAgent = new SpriteManager(graph2);
+						CustomGraphRenderer.setStyleGraph(graphAgent);
+						GraphModifier.setNodeClass(graphAgent);
+						spriteManagerAgent = new SpriteManager(graphAgent);
 						GraphModifier
-								.generateSprite(graph2, spriteManagerAgent);
+								.generateSprite(graphAgent, spriteManagerAgent);
 
-						viewer2 = new Viewer(graph2,
+						viewerAgent = new Viewer(graphAgent,
 								Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
-						viewer2.enableAutoLayout();
+						viewerAgent.enableAutoLayout();
 						isAutoLayoutAg = true;
-						view2 = viewer2.addDefaultView(false);
-						setListenerOnViewer(viewer2);
+						viewAgent = viewerAgent.addDefaultView(false);
+						setListenerOnViewer(viewerAgent);
 
-						graphAgent.removeAll();
-						graphAgent.setLayout(new BorderLayout());
-						graphAgent.add((Component) view2, BorderLayout.CENTER);
-						scrollAgent.setViewportView(graphAgent);
+						panelGraphAgent.removeAll();
+						panelGraphAgent.setLayout(new BorderLayout());
+						panelGraphAgent.add((Component) viewAgent, BorderLayout.CENTER);
+						scrollAgent.setViewportView(panelGraphAgent);
 
-						isGraphAgLoaded = true;
+						isGraphAgentLoaded = true;
 
 					} catch (JsonParseException e1) {
-						textStatut
+						textColorStatut
 								.appendErrorMessage(JsonToGS.FILE_FORMAT_ERROR);
-						// e1.printStackTrace();
 					} catch (IOException e1) {
-						textStatut
+						textColorStatut
 								.appendErrorMessage(JsonToGS.FILE_FORMAT_ERROR);
-						// e1.printStackTrace();
 					} catch (FileFormatException e1) {
-						textStatut
+						textColorStatut
 								.appendErrorMessage(JsonToGS.FILE_FORMAT_ERROR);
-						// e1.printStackTrace();
 					}
 				} else {
-					textStatut.appendDoc(NO_FILE_SELECTED);
+					textColorStatut.appendDoc(NO_FILE_SELECTED);
 				}
 			}
 		});
@@ -308,9 +305,9 @@ public class Fenetre extends JFrame {
 		zoomAvantJSon.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (isGraphJsonLoaded) {
-					zoom = view.getCamera().getViewPercent();
-					view = viewer.getDefaultView();
-					view.getCamera().setViewPercent(zoom - 0.1);
+					zoom = viewJson.getCamera().getViewPercent();
+					viewJson = viewerJson.getDefaultView();
+					viewJson.getCamera().setViewPercent(zoom - 0.1);
 				}
 			}
 		});
@@ -319,9 +316,9 @@ public class Fenetre extends JFrame {
 		zoomArrJSon.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (isGraphJsonLoaded) {
-					dezoom = view.getCamera().getViewPercent();
-					view = viewer.getDefaultView();
-					view.getCamera().setViewPercent(dezoom + 0.1);
+					dezoom = viewJson.getCamera().getViewPercent();
+					viewJson = viewerJson.getDefaultView();
+					viewJson.getCamera().setViewPercent(dezoom + 0.1);
 				}
 			}
 		});
@@ -342,24 +339,24 @@ public class Fenetre extends JFrame {
 					}
 
 					if (!isNumber) {
-						textStatut.appendDoc("Ce n'est pas un entier \n");
+						textColorStatut.appendDoc("Ce n'est pas un entier \n");
 					} else {
 						pourcentage = Integer.parseInt(s);
-						view = viewer.getDefaultView();
+						viewJson = viewerJson.getDefaultView();
 						if (pourcentage > 100) {
 							zoomAvant = pourcentage - 100;
 							total = 1 - (zoomAvant / 100);
-							view.getCamera().setViewPercent(total);
-							textStatut.appendDoc("Zoom avant: " + pourcentage
+							viewJson.getCamera().setViewPercent(total);
+							textColorStatut.appendDoc("Zoom avant: " + pourcentage
 									+ "% \n");
 						} else if (pourcentage < 100) {
 							zoomArr = 100 - pourcentage;
 							total = 1 + (zoomArr / 100);
-							view.getCamera().setViewPercent(total);
-							textStatut.appendDoc("Zoom arrière: " + pourcentage
+							viewJson.getCamera().setViewPercent(total);
+							textColorStatut.appendDoc("Zoom arrière: " + pourcentage
 									+ "% \n");
 						} else {
-							view.getCamera().resetView();
+							viewJson.getCamera().resetView();
 						}
 					}
 				}
@@ -375,38 +372,39 @@ public class Fenetre extends JFrame {
 				if (!nodeLeft.getFerme()) {
 					if (isGraphJsonLoaded) {
 						if (!s.equals("")) {
-							Node n = graph.getNode(s);
+							Node n = graphJson.getNode(s);
 							if (n == null) {
-								GraphModifier.addNode(nodeLeft, graph);
-								GraphModifier.setNodeClass(graph);
+								GraphModifier.addNode(nodeLeft, graphJson);
+								GraphModifier.setNodeClass(graphJson);
 							} else {
 								msgError("Nom déjà existant");
 							}
 						} else {
 							msgError("Nom invalide car vide");
 						}
-					} else if (graph == null && nodeLeft.getCheck()) {
+					} else if (graphJson == null && nodeLeft.getCheck()) {
 						if (!s.equals("")) {
-							graph = new MultiGraph("Graph");
+							graphJson = new MultiGraph("Graph");
 
-							CustomGraphRenderer.setStyleGraph(graph);
-							GraphModifier.addNode(nodeLeft, graph);
-							GraphModifier.setNodeClass(graph);
-							spriteManagerJson = new SpriteManager(graph);
+							CustomGraphRenderer.setStyleGraph(graphJson);
+							GraphModifier.addNode(nodeLeft, graphJson);
+							GraphModifier.setNodeClass(graphJson);
+							spriteManagerJson = new SpriteManager(graphJson);
 
-							viewer = new Viewer(
-									graph,
+							viewerJson = new Viewer(
+									graphJson,
 									Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
-							viewer.enableAutoLayout();
+							viewerJson.enableAutoLayout();
 							isAutoLayoutJson = true;
-							view = viewer.addDefaultView(false);
-							setListenerOnViewer(viewer);
+							viewJson = viewerJson.addDefaultView(false);
+							viewJson.setMouseManager(new CustomMouseManager(graphJson, viewerJson));
+							setListenerOnViewer(viewerJson);
 
-							graphJSon.removeAll();
-							graphJSon.setLayout(new BorderLayout());
-							graphJSon
-									.add((Component) view, BorderLayout.CENTER);
-							scrollJSon.setViewportView(graphJSon);
+							panelGraphJSon.removeAll();
+							panelGraphJSon.setLayout(new BorderLayout());
+							panelGraphJSon
+									.add((Component) viewJson, BorderLayout.CENTER);
+							scrollJSon.setViewportView(panelGraphJSon);
 
 							isGraphJsonLoaded = true;
 						} else {
@@ -422,21 +420,21 @@ public class Fenetre extends JFrame {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				if (isGraphJsonLoaded) {
 					EdgeDialog edgeLeft = new EdgeDialog(frame, "Add Edge",
-							graph);
+							graphJson);
 					String s = edgeLeft.getLabel();
 					if (!edgeLeft.getFerme() && edgeLeft.getCheck()) {
 						if (!s.equals("")) {
-							Edge ed = graph.getEdge(s);
+							Edge ed = graphJson.getEdge(s);
 							if (ed == null) {
 								try {
-									GraphModifier.addEdge(edgeLeft, graph);
-									Edge edge = graph.getEdge(s);
+									GraphModifier.addEdge(edgeLeft, graphJson);
+									Edge edge = graphJson.getEdge(s);
 									Sprite sprite = spriteManagerJson
 											.addSprite(edge.getId());
 									sprite.attachToEdge(s);
 									sprite.setPosition(0.5, 0, 0);
 								} catch (NoSpecifiedNodeException e) {
-									textStatut.appendErrorMessage(e
+									textColorStatut.appendErrorMessage(e
 											.getMessage());
 								}
 							} else {
@@ -456,10 +454,10 @@ public class Fenetre extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				if (isGraphJsonLoaded) {
 					if (isAutoLayoutJson) {
-						viewer.disableAutoLayout();
+						viewerJson.disableAutoLayout();
 						isAutoLayoutJson = false;
 					} else {
-						viewer.enableAutoLayout();
+						viewerJson.enableAutoLayout();
 						isAutoLayoutJson = true;
 					}
 				}
@@ -469,10 +467,10 @@ public class Fenetre extends JFrame {
 		// Action lors du clic sur l'item "+" de la partie droite
 		zoomAvantAg.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if (isGraphAgLoaded) {
-					zoom = view.getCamera().getViewPercent();
-					view = viewer2.getDefaultView();
-					view.getCamera().setViewPercent(zoom - 0.1);
+				if (isGraphAgentLoaded) {
+					zoom = viewJson.getCamera().getViewPercent();
+					viewJson = viewerAgent.getDefaultView();
+					viewJson.getCamera().setViewPercent(zoom - 0.1);
 				}
 			}
 		});
@@ -480,10 +478,10 @@ public class Fenetre extends JFrame {
 		// Action lors du clic sur l'item "-" de la partie droite
 		zoomArrAg.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if (isGraphAgLoaded) {
-					dezoom = view.getCamera().getViewPercent();
-					view = viewer2.getDefaultView();
-					view.getCamera().setViewPercent(dezoom + 0.1);
+				if (isGraphAgentLoaded) {
+					dezoom = viewJson.getCamera().getViewPercent();
+					viewJson = viewerAgent.getDefaultView();
+					viewJson.getCamera().setViewPercent(dezoom + 0.1);
 				}
 			}
 		});
@@ -491,7 +489,7 @@ public class Fenetre extends JFrame {
 		// Action lors du clic sur l'item "%" de la partie droite
 		zoomTextAg.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if (isGraphAgLoaded) {
+				if (isGraphAgentLoaded) {
 					String s = textAg.getText();
 					double pourcentage = 0, zoomAvant = 0, zoomArr = 0, total = 0;
 					boolean isNumber = false;
@@ -504,24 +502,24 @@ public class Fenetre extends JFrame {
 					}
 
 					if (!isNumber) {
-						textStatut.appendDoc("Ce n'est pas un entier \n");
+						textColorStatut.appendDoc("Ce n'est pas un entier \n");
 					} else {
 						pourcentage = Integer.parseInt(s);
-						view = viewer2.getDefaultView();
+						viewJson = viewerAgent.getDefaultView();
 						if (pourcentage > 100) {
 							zoomAvant = pourcentage - 100;
 							total = 1 - (zoomAvant / 100);
-							view.getCamera().setViewPercent(total);
-							textStatut.appendDoc("Zoom avant: " + pourcentage
+							viewJson.getCamera().setViewPercent(total);
+							textColorStatut.appendDoc("Zoom avant: " + pourcentage
 									+ "% \n");
 						} else if (pourcentage < 100) {
 							zoomArr = 100 - pourcentage;
 							total = 1 + (zoomArr / 100);
-							view.getCamera().setViewPercent(total);
-							textStatut.appendDoc("Zoom arrière: " + pourcentage
+							viewJson.getCamera().setViewPercent(total);
+							textColorStatut.appendDoc("Zoom arrière: " + pourcentage
 									+ "% \n");
 						} else {
-							view.getCamera().resetView();
+							viewJson.getCamera().resetView();
 						}
 					}
 				}
@@ -533,30 +531,30 @@ public class Fenetre extends JFrame {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				NodeDialog nodeRight = new NodeDialog(frame, "Add Node");
 				if (!nodeRight.getFerme()) {
-					if (isGraphAgLoaded) {
-						GraphModifier.addNode(nodeRight, graph);
-						GraphModifier.setNodeClass(graph);
-					} else if (graph == null) {
-						graph = new MultiGraph("Graph");
+					if (isGraphAgentLoaded) {
+						GraphModifier.addNode(nodeRight, graphJson);
+						GraphModifier.setNodeClass(graphJson);
+					} else if (graphJson == null) {
+						graphJson = new MultiGraph("Graph");
 
-						CustomGraphRenderer.setStyleGraph(graph);
-						GraphModifier.addNode(nodeRight, graph);
-						GraphModifier.setNodeClass(graph);
-						spriteManagerAgent = new SpriteManager(graph);
+						CustomGraphRenderer.setStyleGraph(graphJson);
+						GraphModifier.addNode(nodeRight, graphJson);
+						GraphModifier.setNodeClass(graphJson);
+						spriteManagerAgent = new SpriteManager(graphJson);
 
-						viewer2 = new Viewer(graph,
+						viewerAgent = new Viewer(graphJson,
 								Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
-						viewer2.enableAutoLayout();
+						viewerAgent.enableAutoLayout();
 						isAutoLayoutAg = true;
-						view = viewer2.addDefaultView(false);
-						setListenerOnViewer(viewer2);
+						viewJson = viewerAgent.addDefaultView(false);
+						setListenerOnViewer(viewerAgent);
 
-						graphAgent.removeAll();
-						graphAgent.setLayout(new BorderLayout());
-						graphAgent.add((Component) view, BorderLayout.CENTER);
-						scrollAgent.setViewportView(graphAgent);
+						panelGraphAgent.removeAll();
+						panelGraphAgent.setLayout(new BorderLayout());
+						panelGraphAgent.add((Component) viewJson, BorderLayout.CENTER);
+						scrollAgent.setViewportView(panelGraphAgent);
 
-						isGraphAgLoaded = true;
+						isGraphAgentLoaded = true;
 					}
 				}
 			}
@@ -565,19 +563,19 @@ public class Fenetre extends JFrame {
 		// Action lors du clic sur l'item "Edge +" de la partie droite
 		addEdgeAg.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				if (isGraphAgLoaded) {
+				if (isGraphAgentLoaded) {
 					EdgeDialog edgeRight = new EdgeDialog(frame, "Add Edge",
-							graph);
+							graphJson);
 					if (!edgeRight.getFerme()) {
 						try {
-							GraphModifier.addEdge(edgeRight, graph);
-							Edge edge = graph.getEdge(edgeRight.getLabel());
+							GraphModifier.addEdge(edgeRight, graphJson);
+							Edge edge = graphJson.getEdge(edgeRight.getLabel());
 							Sprite sprite = spriteManagerAgent.addSprite(edge
 									.getId());
 							sprite.attachToEdge(edgeRight.getLabel());
 							sprite.setPosition(0.5, 0, 0);
 						} catch (NoSpecifiedNodeException e) {
-							textStatut.appendErrorMessage(e.getMessage());
+							textColorStatut.appendErrorMessage(e.getMessage());
 						}
 					}
 				}
@@ -588,12 +586,12 @@ public class Fenetre extends JFrame {
 		// partie droite
 		structGraphAg.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if (isGraphAgLoaded) {
+				if (isGraphAgentLoaded) {
 					if (isAutoLayoutAg) {
-						viewer2.disableAutoLayout();
+						viewerAgent.disableAutoLayout();
 						isAutoLayoutAg = false;
 					} else {
-						viewer2.enableAutoLayout();
+						viewerAgent.enableAutoLayout();
 						isAutoLayoutAg = true;
 					}
 				}
@@ -647,7 +645,7 @@ public class Fenetre extends JFrame {
 							System.out.println(elem);
 						if (elem instanceof Node) {
 							String idNode = elem.getId();
-							Node node = graph.getNode(idNode);
+							Node node = graphJson.getNode(idNode);
 							for (String attKey : node.getAttributeKeySet()) {
 								s += attKey + " : " + node.getAttribute(attKey)
 										+ "<br/>";
@@ -656,7 +654,7 @@ public class Fenetre extends JFrame {
 							viewer.getDefaultView().setToolTipText(s);
 						} else if (elem instanceof GraphicSprite) {
 							String idSprite = elem.getId();
-							Edge edge = graph.getEdge(idSprite);
+							Edge edge = graphJson.getEdge(idSprite);
 							for (String attKey : edge.getAttributeKeySet()) {
 								s += attKey + " : " + edge.getAttribute(attKey)
 										+ "<br/>";
@@ -666,6 +664,7 @@ public class Fenetre extends JFrame {
 						} else {
 							viewer.getDefaultView().setToolTipText(null);
 						}
+						view.display(viewer.getGraphicGraph(), true);
 					}
 
 					public void mouseDragged(MouseEvent e) {
