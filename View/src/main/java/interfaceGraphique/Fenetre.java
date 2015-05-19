@@ -535,7 +535,7 @@ public class Fenetre extends JFrame {
 		frame.add(splitPane);
 		frame.setJMenuBar(menu_bar1);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setResizable(false);
+		frame.setResizable(true);
 		frame.setBounds(xWindow, yWindow, widthWindow, heightWindow);
 		frame.setVisible(true);
 
