@@ -1,0 +1,21 @@
+
+
+import agents.interfaces.Tick
+import agents.interfaces.SpeedRegulation
+import agents.interfaces.AgentTrace
+
+namespace agents{
+	
+	component Clock {
+		provides tick : Tick
+	
+		provides speed : SpeedRegulation
+	}
+	
+	ecosystem EcoAgentsEtat{
+		provides agentCourant: AgentTrace
+		species AgentEtat{
+		}
+	}
+	
+}

@@ -1,0 +1,32 @@
+import trace.interfaces.IGetAction
+import trace.interfaces.TraceElement
+
+namespace trace{
+	component FET{
+		provides elementDeTrace: TraceElement
+	}
+	
+	component TraceElementEater{
+		requires traceElement: TraceElement
+		provides actionElement: IGetAction
+	}
+	
+	component BigComponent{
+		part fet: FET
+		part traceEater: TraceElementEater{
+			bind traceElement to fet.elementDeTrace
+		}
+	}
+	
+	ecosystem ActionParserEco {
+		
+		
+		requires traceElement: TraceElement 
+		
+		species ActionParser(userName: String){
+			provides actionGetter: IGetAction
+		}
+	}
+	
+	 
+}
