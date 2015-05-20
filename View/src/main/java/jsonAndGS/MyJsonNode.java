@@ -96,7 +96,7 @@ public class MyJsonNode {
 	public boolean is_source() {
 		return _source;
 	}
-	
+
 	/**
 	 * Retourne le booléen définissant si la node est finale
 	 * 
@@ -111,7 +111,8 @@ public class MyJsonNode {
 	/**
 	 * Ajoute un attribut à la liste des attributs
 	 * 
-	 * @param attribut Le nouvel attribut de la node
+	 * @param attribut
+	 *            Le nouvel attribut de la node
 	 * 
 	 * @see MyJsonNode#_attributs
 	 * 

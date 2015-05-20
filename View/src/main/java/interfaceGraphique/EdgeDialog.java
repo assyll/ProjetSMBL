@@ -99,7 +99,7 @@ public class EdgeDialog extends JDialog implements ActionListener {
 	}
 
 	public int getNbAtt() {
-		if(nbAttributsEdge.getText().isEmpty()){
+		if (nbAttributsEdge.getText().isEmpty()) {
 			return 0;
 		} else {
 			return Integer.parseInt(nbAttributsEdge.getText());
@@ -130,8 +130,8 @@ public class EdgeDialog extends JDialog implements ActionListener {
 	public boolean getFerme() {
 		return ferme;
 	}
-	
-	public boolean getCheck(){
+
+	public boolean getCheck() {
 		return check;
 	}
 

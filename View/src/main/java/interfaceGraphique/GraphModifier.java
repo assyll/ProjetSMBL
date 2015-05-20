@@ -69,14 +69,14 @@ public class GraphModifier {
 						attribut);
 			}
 		}
-		
+
 		setNodeClass(g, node);
 
 		return g;
 	}
 
-	public static Graph addEdge(EdgeDialog e, Graph g, SpriteManager spriteManager)
-			throws NoSpecifiedNodeException {
+	public static Graph addEdge(EdgeDialog e, Graph g,
+			SpriteManager spriteManager) throws NoSpecifiedNodeException {
 		int cpt = 1;
 
 		if ((g.getNode(e.getSource()) == null)
@@ -94,7 +94,7 @@ public class GraphModifier {
 							+ cpt++, attribut);
 				}
 			}
-			
+
 			generateSprite(spriteManager, edge);
 
 			return g;
@@ -106,8 +106,8 @@ public class GraphModifier {
 			generateSprite(spriteManager, edge);
 		}
 	}
-	
-	public static void generateSprite(SpriteManager spriteManager, Edge edge){
+
+	public static void generateSprite(SpriteManager spriteManager, Edge edge) {
 		Sprite sprite = spriteManager.addSprite(edge.getId());
 		sprite.attachToEdge(edge.getId());
 		sprite.setPosition(0.5, 0, 0);

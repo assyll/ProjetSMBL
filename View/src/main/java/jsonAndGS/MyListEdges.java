@@ -6,8 +6,8 @@ import java.util.List;
 /**
  * <b>MyListeEdges est la classe représentant une liste de edges</b>
  * <p>
- * MyListEdges possède un attribut liste pouvant contenir des edges. Il
- * sera possible d'ajouter des edges à cette liste
+ * MyListEdges possède un attribut liste pouvant contenir des edges. Il sera
+ * possible d'ajouter des edges à cette liste
  * 
  * @see MyJsonEdge
  * 

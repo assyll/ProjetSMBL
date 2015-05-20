@@ -48,82 +48,82 @@ public class CustomViewer extends javax.swing.text.View implements View {
 
 	public void display(GraphicGraph graph, boolean graphChanged) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void close(GraphicGraph graph) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void beginSelectionAt(double x1, double y1) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void selectionGrowsAt(double x, double y) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void endSelectionAt(double x2, double y2) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void freezeElement(GraphicElement element, boolean frozen) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void moveElementAtPx(GraphicElement element, double x, double y) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void setMouseManager(MouseManager manager) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void setShortcutManager(ShortcutManager manager) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void requestFocus() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void addKeyListener(KeyListener l) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void removeKeyListener(KeyListener l) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void addMouseListener(MouseListener l) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void removeMouseListener(MouseListener l) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void addMouseMotionListener(MouseMotionListener l) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void removeMouseMotionListener(MouseMotionListener l) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -142,7 +142,7 @@ public class CustomViewer extends javax.swing.text.View implements View {
 	@Override
 	public void paint(Graphics g, Shape allocation) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override

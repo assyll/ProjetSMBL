@@ -44,6 +44,8 @@ import org.graphstream.ui.view.Viewer;
 
 import com.fasterxml.jackson.core.JsonParseException;
 
+//TODO Penser à demander si on doit mettre les méthodes en static ou non (CustomGraphRender, GraphModifier, JsonToGS)
+
 @SuppressWarnings("serial")
 public class Fenetre extends JFrame {
 
@@ -373,7 +375,8 @@ public class Fenetre extends JFrame {
 							Edge ed = graphJson.getEdge(s);
 							if (ed == null) {
 								try {
-									GraphModifier.addEdge(edgeLeft, graphJson, spriteManagerJson);
+									GraphModifier.addEdge(edgeLeft, graphJson,
+											spriteManagerJson);
 								} catch (NoSpecifiedNodeException e) {
 									textColorStatut.appendErrorMessage(e
 											.getMessage());
@@ -492,8 +495,9 @@ public class Fenetre extends JFrame {
 							graphAgent);
 					if (!edgeRight.getFerme()) {
 						try {
-							GraphModifier.addEdge(edgeRight, graphAgent, spriteManagerAgent);
-							
+							GraphModifier.addEdge(edgeRight, graphAgent,
+									spriteManagerAgent);
+
 						} catch (NoSpecifiedNodeException e) {
 							textColorStatut.appendErrorMessage(e.getMessage());
 						}
