@@ -55,7 +55,7 @@ public class GraphModifier {
 		return graphRes;
 	}
 
-	public static Graph addNode(NodeDialog n, Graph g) {
+	public static Graph addNode(AddNodeDialog n, Graph g) {
 		int cpt = 1;
 
 		Node node = g.addNode(n.getName());
@@ -75,7 +75,7 @@ public class GraphModifier {
 		return g;
 	}
 
-	public static Graph addEdge(EdgeDialog e, Graph g,
+	public static Graph addEdge(AddEdgeDialog e, Graph g,
 			SpriteManager spriteManager) throws NoSpecifiedNodeException {
 		int cpt = 1;
 

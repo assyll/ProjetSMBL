@@ -17,7 +17,7 @@ import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 
 @SuppressWarnings("serial")
-public class EdgeDialog extends JDialog implements ActionListener {
+public class AddEdgeDialog extends JDialog implements ActionListener {
 
 	JTextField nameEdge, actionEdge, nbAttributsEdge;
 	JLabel labelName, labelSource, labelEnd, labelAction, labelNbAtt;
@@ -32,7 +32,7 @@ public class EdgeDialog extends JDialog implements ActionListener {
 	Graph graph;
 
 	@SuppressWarnings({ "static-access", "unchecked", "rawtypes" })
-	public EdgeDialog(JFrame f, String s, Graph g) {
+	public AddEdgeDialog(JFrame f, String s, Graph g) {
 		super(f, s, true);
 		this.setDefaultCloseOperation(this.DISPOSE_ON_CLOSE);
 		frame = f;

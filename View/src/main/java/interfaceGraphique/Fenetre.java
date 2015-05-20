@@ -350,26 +350,26 @@ public class Fenetre extends JFrame {
 		// Action lors du clic sur l'item "Node +" de la partie gauche
 		addNodeJSon.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				NodeDialog nodeLeft = new NodeDialog(frame, "Add Node");
-				String s = nodeLeft.getName();
-				if (!nodeLeft.getFerme()) {
+				AddNodeDialog addNodeLeft = new AddNodeDialog(frame, "Add Node");
+				String s = addNodeLeft.getName();
+				if (!addNodeLeft.getFerme()) {
 					if (isGraphJsonLoaded) {
 						if (!s.equals("")) {
 							Node n = graphJson.getNode(s);
 							if (n == null) {
-								GraphModifier.addNode(nodeLeft, graphJson);
+								GraphModifier.addNode(addNodeLeft, graphJson);
 							} else {
 								msgError("Nom déjà existant");
 							}
 						} else {
 							msgError("Nom invalide car vide");
 						}
-					} else if (graphJson == null && nodeLeft.getCheck()) {
+					} else if (graphJson == null && addNodeLeft.getCheck()) {
 						if (!s.equals("")) {
 							graphJson = new MultiGraph(GRAPH_JSON_NAME);
 							initGraphPropertiesJson();
 							initPanelGraphJson();
-							GraphModifier.addNode(nodeLeft, graphJson);
+							GraphModifier.addNode(addNodeLeft, graphJson);
 						} else {
 							msgError("Nom invalide car vide");
 						}
@@ -378,12 +378,34 @@ public class Fenetre extends JFrame {
 			}
 		});
 
+		// Action lors du clic sur l'item "Node -" de la
+		// partie gauche
+		suppNodeJSon.addActionListener(new ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				if (isGraphJsonLoaded) {
+					SuppNodeDialog suppNodeLeft = new SuppNodeDialog(frame,
+							"Suppr Node", graphJson);
+					if (!suppNodeLeft.getFerme()) {
+						String s = suppNodeLeft.getName();
+						textColorStatut.appendDoc(s);
+						Node n = graphJson.removeNode(s);
+						if (n != null) {
+							msgAlert("Le noeud " + s + " a été supprimé.");
+						}
+					}
+				} else {
+					textColorStatut
+							.appendDoc("Générez un graphe ou ajoutez un noeud avant tout");
+				}
+			}
+		});
+
 		// Action lors du clic sur l'item "Edge +" de la partie gauche
 		addEdgeJSon.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				if (isGraphJsonLoaded) {
-					EdgeDialog edgeLeft = new EdgeDialog(frame, "Add Edge",
-							graphJson);
+					AddEdgeDialog edgeLeft = new AddEdgeDialog(frame,
+							"Add Edge", graphJson);
 					String s = edgeLeft.getLabel();
 					if (!edgeLeft.getFerme() && edgeLeft.getCheck()) {
 						if (!s.equals("")) {
@@ -406,6 +428,28 @@ public class Fenetre extends JFrame {
 				} else {
 					textColorStatut
 							.appendDoc("Il faut d'abord créer le graphe avec des nodes");
+				}
+			}
+		});
+
+		// Action lors du clic sur l'item "Edge -" de la
+		// partie gauche
+		suppEdgeJSon.addActionListener(new ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				if (isGraphJsonLoaded) {
+					SuppEdgeDialog suppEdgeLeft = new SuppEdgeDialog(frame,
+							"Suppr Edge", graphJson);
+					if (!suppEdgeLeft.getFerme()) {
+						String s = suppEdgeLeft.getName();
+						textColorStatut.appendDoc(s);
+						Edge e = graphJson.removeEdge(s);
+						if (e != null) {
+							msgAlert("La transition " + s + " a été supprimé.");
+						}
+					}
+				} else {
+					textColorStatut
+							.appendDoc("Générez un graphe ou ajoutez une transition avant tout");
 				}
 			}
 		});
@@ -493,7 +537,7 @@ public class Fenetre extends JFrame {
 		// Action lors du clic sur l'item "Node +" de la partie droite
 		addNodeAgent.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				NodeDialog nodeRight = new NodeDialog(frame, "Add Node");
+				AddNodeDialog nodeRight = new AddNodeDialog(frame, "Add Node");
 				if (!nodeRight.getFerme()) {
 					if (isGraphAgentLoaded) {
 						GraphModifier.addNode(nodeRight, graphAgent);
@@ -507,12 +551,34 @@ public class Fenetre extends JFrame {
 			}
 		});
 
+		// Action lors du clic sur l'item "Node -" de la
+		// partie droite
+		suppNodeAgent.addActionListener(new ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				if (isGraphAgentLoaded) {
+					SuppNodeDialog suppNodeRight = new SuppNodeDialog(frame,
+							"Suppr Node", graphAgent);
+					if (!suppNodeRight.getFerme()) {
+						String s = suppNodeRight.getName();
+						textColorStatut.appendDoc(s);
+						Node n = graphAgent.removeNode(s);
+						if (n != null) {
+							msgAlert("Le noeud " + s + " a été supprimé.");
+						}
+					}
+				} else {
+					textColorStatut
+							.appendDoc("Générez un graphe ou ajoutez un noeud avant tout");
+				}
+			}
+		});
+
 		// Action lors du clic sur l'item "Edge +" de la partie droite
 		addEdgeAgent.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				if (isGraphAgentLoaded) {
-					EdgeDialog edgeRight = new EdgeDialog(frame, "Add Edge",
-							graphAgent);
+					AddEdgeDialog edgeRight = new AddEdgeDialog(frame,
+							"Add Edge", graphAgent);
 					if (!edgeRight.getFerme()) {
 						try {
 							GraphModifier.addEdge(edgeRight, graphAgent,
@@ -525,6 +591,28 @@ public class Fenetre extends JFrame {
 				} else {
 					textColorStatut
 							.appendDoc("Il faut d'abord créer le graphe avec des nodes");
+				}
+			}
+		});
+
+		// Action lors du clic sur l'item "Edge -" de la
+		// partie droite
+		suppEdgeAgent.addActionListener(new ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				if (isGraphAgentLoaded) {
+					SuppEdgeDialog suppEdgeRight = new SuppEdgeDialog(frame,
+							"Suppr Edge", graphAgent);
+					if (!suppEdgeRight.getFerme()) {
+						String s = suppEdgeRight.getName();
+						textColorStatut.appendDoc(s);
+						Edge e = graphAgent.removeEdge(s);
+						if (e != null) {
+							msgAlert("La transition " + s + " a été supprimé.");
+						}
+					}
+				} else {
+					textColorStatut
+							.appendDoc("Générez un graphe ou ajoutez une transition avant tout");
 				}
 			}
 		});
@@ -739,6 +827,11 @@ public class Fenetre extends JFrame {
 	private void msgError(String s) {
 		JOptionPane.showMessageDialog(this, s, "Error",
 				JOptionPane.ERROR_MESSAGE);
+	}
+
+	private void msgAlert(String s) {
+		JOptionPane.showMessageDialog(this, s, "Alert",
+				JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	public static void main(String[] args) {
