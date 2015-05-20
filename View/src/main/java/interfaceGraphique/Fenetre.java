@@ -117,11 +117,11 @@ public class Fenetre extends JFrame {
 
 		// Initialisation et définition du panneau d'ajout de noeuds et de
 		// transition gauche
-		panelModifJSon = new JPanel(new GridLayout(2, 2, 50, 50));
+		panelModifJSon = new JPanel(new GridLayout(5, 1, 0, 25));
 
 		// Initialisation et définition du panneau d'ajout de noeuds et de
 		// transition droit
-		panelModifAgent = new JPanel(new GridLayout(2, 2, 15, 50));
+		panelModifAgent = new JPanel(new GridLayout(5, 1, 0, 25));
 
 		// Initialisation des bouttons de zoom
 		zoomAvantJSon = new JButton("<html><b>Zoom +</b></html>");
@@ -167,24 +167,24 @@ public class Fenetre extends JFrame {
 		panelModifJSon.add(suppNodeJSon);
 		panelModifJSon.add(addEdgeJSon);
 		panelModifJSon.add(suppEdgeJSon);
+		panelModifJSon.add(structGraphJson);
 		panelModifAgent.add(addNodeAgent);
 		panelModifAgent.add(suppNodeAgent);
 		panelModifAgent.add(addEdgeAgent);
 		panelModifAgent.add(suppEdgeAgent);
+		panelModifAgent.add(structGraphAgent);
 
 		// Initialisation et définition panneau option gauche
-		panelOptionJSon = new JPanel(new GridLayout(3, 1, 0, 100));
+		panelOptionJSon = new JPanel(new GridLayout(2, 1, 0, 100));
 		panelOptionJSon.setPreferredSize(new Dimension(200, 200));
 		panelOptionJSon.add(panelZoomJSon);
 		panelOptionJSon.add(panelModifJSon);
-		panelOptionJSon.add(structGraphJson);
 
 		// Initialisation et définition panneau option droit
-		panelOptionAgent = new JPanel(new GridLayout(3, 1, 0, 100));
+		panelOptionAgent = new JPanel(new GridLayout(2, 1, 0, 100));
 		panelOptionAgent.setPreferredSize(new Dimension(200, 200));
 		panelOptionAgent.add(panelZoomAgent);
 		panelOptionAgent.add(panelModifAgent);
-		panelOptionAgent.add(structGraphAgent);
 
 		// Initialisation de la zone de texte de la barre de statut
 		textColorStatut = new JColorTextPane();
@@ -350,26 +350,26 @@ public class Fenetre extends JFrame {
 		// Action lors du clic sur l'item "Node +" de la partie gauche
 		addNodeJSon.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				AddNodeDialog addNodeLeft = new AddNodeDialog(frame, "Add Node");
-				String s = addNodeLeft.getName();
-				if (!addNodeLeft.getFerme()) {
+				AddNodeDialog addNodeJSon = new AddNodeDialog(frame, "Add Node");
+				String s = addNodeJSon.getName();
+				if (!addNodeJSon.getFerme()) {
 					if (isGraphJsonLoaded) {
 						if (!s.equals("")) {
 							Node n = graphJson.getNode(s);
 							if (n == null) {
-								GraphModifier.addNode(addNodeLeft, graphJson);
+								GraphModifier.addNode(addNodeJSon, graphJson);
 							} else {
 								msgError("Nom déjà existant");
 							}
 						} else {
 							msgError("Nom invalide car vide");
 						}
-					} else if (graphJson == null && addNodeLeft.getCheck()) {
+					} else if (graphJson == null && addNodeJSon.getCheck()) {
 						if (!s.equals("")) {
 							graphJson = new MultiGraph(GRAPH_JSON_NAME);
 							initGraphPropertiesJson();
 							initPanelGraphJson();
-							GraphModifier.addNode(addNodeLeft, graphJson);
+							GraphModifier.addNode(addNodeJSon, graphJson);
 						} else {
 							msgError("Nom invalide car vide");
 						}
@@ -383,12 +383,17 @@ public class Fenetre extends JFrame {
 		suppNodeJSon.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				if (isGraphJsonLoaded) {
-					SuppNodeDialog suppNodeLeft = new SuppNodeDialog(frame,
+					SuppNodeDialog suppNodeJSon = new SuppNodeDialog(frame,
 							"Suppr Node", graphJson);
-					if (!suppNodeLeft.getFerme()) {
-						String s = suppNodeLeft.getName();
+					if (!suppNodeJSon.getFerme()) {
+						String s = suppNodeJSon.getName();
 						textColorStatut.appendDoc(s);
-						Node n = graphJson.removeNode(s);
+						Node n = graphJson.getNode(s);
+						for (Edge edge : n.getEachEdge()) {
+							System.out.println(edge.getId());
+							spriteManagerJson.removeSprite(edge.getId());	
+						}
+						n = graphJson.removeNode(s);
 						if (n != null) {
 							msgAlert("Le noeud " + s + " a été supprimé.");
 						}
@@ -404,16 +409,16 @@ public class Fenetre extends JFrame {
 		addEdgeJSon.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				if (isGraphJsonLoaded) {
-					AddEdgeDialog edgeLeft = new AddEdgeDialog(frame,
+					AddEdgeDialog addEdgeJSon = new AddEdgeDialog(frame,
 							"Add Edge", graphJson);
-					String s = edgeLeft.getLabel();
-					if (!edgeLeft.getFerme() && edgeLeft.getCheck()) {
+					String s = addEdgeJSon.getLabel();
+					if (!addEdgeJSon.getFerme() && addEdgeJSon.getCheck()) {
 						if (!s.equals("")) {
 							Edge ed = graphJson.getEdge(s);
 							if (ed == null) {
 								try {
-									GraphModifier.addEdge(edgeLeft, graphJson,
-											spriteManagerJson);
+									GraphModifier.addEdge(addEdgeJSon,
+											graphJson, spriteManagerJson);
 								} catch (NoSpecifiedNodeException e) {
 									textColorStatut.appendErrorMessage(e
 											.getMessage());
@@ -437,12 +442,13 @@ public class Fenetre extends JFrame {
 		suppEdgeJSon.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				if (isGraphJsonLoaded) {
-					SuppEdgeDialog suppEdgeLeft = new SuppEdgeDialog(frame,
+					SuppEdgeDialog suppEdgeJSon = new SuppEdgeDialog(frame,
 							"Suppr Edge", graphJson);
-					if (!suppEdgeLeft.getFerme()) {
-						String s = suppEdgeLeft.getName();
+					if (!suppEdgeJSon.getFerme()) {
+						String s = suppEdgeJSon.getName();
 						textColorStatut.appendDoc(s);
 						Edge e = graphJson.removeEdge(s);
+						spriteManagerJson.removeSprite(e.getId());
 						if (e != null) {
 							msgAlert("La transition " + s + " a été supprimé.");
 						}
@@ -537,15 +543,16 @@ public class Fenetre extends JFrame {
 		// Action lors du clic sur l'item "Node +" de la partie droite
 		addNodeAgent.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				AddNodeDialog nodeRight = new AddNodeDialog(frame, "Add Node");
-				if (!nodeRight.getFerme()) {
+				AddNodeDialog addNodeAgent = new AddNodeDialog(frame,
+						"Add Node");
+				if (!addNodeAgent.getFerme()) {
 					if (isGraphAgentLoaded) {
-						GraphModifier.addNode(nodeRight, graphAgent);
+						GraphModifier.addNode(addNodeAgent, graphAgent);
 					} else if (graphAgent == null) {
 						graphAgent = new MultiGraph(GRAPH_AGENT_NAME);
 						initGraphPropertiesAgent();
 						initPanelGraphAgent();
-						GraphModifier.addNode(nodeRight, graphAgent);
+						GraphModifier.addNode(addNodeAgent, graphAgent);
 					}
 				}
 			}
@@ -556,12 +563,17 @@ public class Fenetre extends JFrame {
 		suppNodeAgent.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				if (isGraphAgentLoaded) {
-					SuppNodeDialog suppNodeRight = new SuppNodeDialog(frame,
+					SuppNodeDialog suppNodeAgent = new SuppNodeDialog(frame,
 							"Suppr Node", graphAgent);
-					if (!suppNodeRight.getFerme()) {
-						String s = suppNodeRight.getName();
+					if (!suppNodeAgent.getFerme()) {
+						String s = suppNodeAgent.getName();
 						textColorStatut.appendDoc(s);
-						Node n = graphAgent.removeNode(s);
+						Node n = graphAgent.getNode(s);
+						for (Edge edge : n.getEachEdge()) {
+							System.out.println(edge.getId());
+							spriteManagerAgent.removeSprite(edge.getId());	
+						}
+						n = graphAgent.removeNode(s);
 						if (n != null) {
 							msgAlert("Le noeud " + s + " a été supprimé.");
 						}
@@ -577,11 +589,11 @@ public class Fenetre extends JFrame {
 		addEdgeAgent.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				if (isGraphAgentLoaded) {
-					AddEdgeDialog edgeRight = new AddEdgeDialog(frame,
+					AddEdgeDialog addEdgeAgent = new AddEdgeDialog(frame,
 							"Add Edge", graphAgent);
-					if (!edgeRight.getFerme()) {
+					if (!addEdgeAgent.getFerme()) {
 						try {
-							GraphModifier.addEdge(edgeRight, graphAgent,
+							GraphModifier.addEdge(addEdgeAgent, graphAgent,
 									spriteManagerAgent);
 
 						} catch (NoSpecifiedNodeException e) {
@@ -600,12 +612,13 @@ public class Fenetre extends JFrame {
 		suppEdgeAgent.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				if (isGraphAgentLoaded) {
-					SuppEdgeDialog suppEdgeRight = new SuppEdgeDialog(frame,
+					SuppEdgeDialog suppEdgeAgent = new SuppEdgeDialog(frame,
 							"Suppr Edge", graphAgent);
-					if (!suppEdgeRight.getFerme()) {
-						String s = suppEdgeRight.getName();
+					if (!suppEdgeAgent.getFerme()) {
+						String s = suppEdgeAgent.getName();
 						textColorStatut.appendDoc(s);
 						Edge e = graphAgent.removeEdge(s);
+						spriteManagerAgent.removeSprite(e.getId());
 						if (e != null) {
 							msgAlert("La transition " + s + " a été supprimé.");
 						}
