@@ -17,6 +17,7 @@ import java.io.IOException;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -37,7 +38,6 @@ import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.MultiGraph;
 import org.graphstream.ui.graphicGraph.GraphicSprite;
-import org.graphstream.ui.spriteManager.Sprite;
 import org.graphstream.ui.spriteManager.SpriteManager;
 import org.graphstream.ui.view.View;
 import org.graphstream.ui.view.Viewer;
@@ -70,8 +70,8 @@ public class Fenetre extends JFrame {
 	JColorTextPane textColorStatut;
 
 	JButton buttonGS, zoomAvantJSon, zoomArrJSon, zoomTextJSon, zoomAvantAgent,
-			zoomArrAgent, zoomTextAgent, addNodeJSon, addEdgeJSon, addNodeAgent,
-			addEdgeAgent, structGraphJson, structGraphAgent;
+			zoomArrAgent, zoomTextAgent, addNodeJSon, addEdgeJSon,
+			addNodeAgent, addEdgeAgent, structGraphJson, structGraphAgent;
 
 	JMenuBar menu_bar1;
 
@@ -248,20 +248,21 @@ public class Fenetre extends JFrame {
 								textDirectory.getText(), GRAPH_JSON_NAME);
 						initGraphPropertiesJson();
 						initPanelGraphJson();
-						
-						graphAgent = GraphModifier.GraphToGraph(graphJson, GRAPH_AGENT_NAME);
+
+						graphAgent = GraphModifier.GraphToGraph(graphJson,
+								GRAPH_AGENT_NAME);
 						initGraphPropertiesAgent();
 						initPanelGraphAgent();
 
 					} catch (JsonParseException exception) {
-						textColorStatut
-								.appendErrorMessage(exception.getMessage());
+						textColorStatut.appendErrorMessage(exception
+								.getMessage());
 					} catch (IOException exception) {
-						textColorStatut
-								.appendErrorMessage(exception.getMessage());
+						textColorStatut.appendErrorMessage(exception
+								.getMessage());
 					} catch (FileFormatException exception) {
-						textColorStatut
-								.appendErrorMessage(exception.getMessage());
+						textColorStatut.appendErrorMessage(exception
+								.getMessage());
 					}
 				} else {
 					textColorStatut.appendDoc(NO_FILE_SELECTED);
@@ -372,12 +373,7 @@ public class Fenetre extends JFrame {
 							Edge ed = graphJson.getEdge(s);
 							if (ed == null) {
 								try {
-									GraphModifier.addEdge(edgeLeft, graphJson);
-									Edge edge = graphJson.getEdge(s);
-									Sprite sprite = spriteManagerJson
-											.addSprite(edge.getId());
-									sprite.attachToEdge(s);
-									sprite.setPosition(0.5, 0, 0);
+									GraphModifier.addEdge(edgeLeft, graphJson, spriteManagerJson);
 								} catch (NoSpecifiedNodeException e) {
 									textColorStatut.appendErrorMessage(e
 											.getMessage());
@@ -390,7 +386,8 @@ public class Fenetre extends JFrame {
 						}
 					}
 				} else {
-					textColorStatut.appendDoc("Il faut d'abord créer le graphe avec des nodes");
+					textColorStatut
+							.appendDoc("Il faut d'abord créer le graphe avec des nodes");
 				}
 			}
 		});
@@ -425,7 +422,7 @@ public class Fenetre extends JFrame {
 		zoomArrAgent.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (isGraphAgentLoaded) {
-					dezoom = viewJson.getCamera().getViewPercent();
+					dezoom = viewAgent.getCamera().getViewPercent();
 					viewAgent.getCamera().setViewPercent(dezoom + 0.1);
 				}
 			}
@@ -495,18 +492,15 @@ public class Fenetre extends JFrame {
 							graphAgent);
 					if (!edgeRight.getFerme()) {
 						try {
-							GraphModifier.addEdge(edgeRight, graphAgent);
-							Edge edge = graphAgent.getEdge(edgeRight.getLabel());
-							Sprite sprite = spriteManagerAgent.addSprite(edge
-									.getId());
-							sprite.attachToEdge(edgeRight.getLabel());
-							sprite.setPosition(0.5, 0, 0);
+							GraphModifier.addEdge(edgeRight, graphAgent, spriteManagerAgent);
+							
 						} catch (NoSpecifiedNodeException e) {
 							textColorStatut.appendErrorMessage(e.getMessage());
 						}
 					}
 				} else {
-					textColorStatut.appendDoc("Il faut d'abord créer le graphe avec des nodes");
+					textColorStatut
+							.appendDoc("Il faut d'abord créer le graphe avec des nodes");
 				}
 			}
 		});
@@ -528,15 +522,16 @@ public class Fenetre extends JFrame {
 		});
 
 		// Création et définition du splitPane de la fenêtre principale
-		splitPaneHorizontale = new JSplitPane(JSplitPane.VERTICAL_SPLIT, panelFile,
-				panelGraph);
+		splitPaneHorizontale = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
+				panelFile, panelGraph);
 		splitPaneHorizontale.setDividerLocation(50);
 
 		// Création et définition du splitPane qui sera dans le 2nd panneau
-		splitPaneVerticale = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, scrollJSon,
-				scrollAgent);
+		splitPaneVerticale = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
+				scrollJSon, scrollAgent);
 		splitPaneVerticale.setDividerSize(5);
-		splitPaneVerticale.setDividerLocation((widthWindow - sizeSeparator + 75) / 3);
+		splitPaneVerticale
+				.setDividerLocation((widthWindow - sizeSeparator + 75) / 3);
 
 		panelGraph.add(panelOptionAgent, BorderLayout.EAST);
 		panelGraph.add(panelOptionJSon, BorderLayout.WEST);
@@ -559,6 +554,7 @@ public class Fenetre extends JFrame {
 	public void setListenerOnViewer(final Viewer viewer, final Graph graph) {
 		// Action lors du déplacement de la souris sur le graphe
 		final View view = viewer.getDefaultView();
+		final JComponent jCompView = (JComponent) view;
 
 		viewer.getDefaultView().addMouseMotionListener(
 				new MouseMotionListener() {
@@ -574,7 +570,7 @@ public class Fenetre extends JFrame {
 										+ "<br/>";
 							}
 							s += "</html>";
-							viewer.getDefaultView().setToolTipText(s);
+							jCompView.setToolTipText(s);
 						} else if (elem instanceof GraphicSprite) {
 							String idSprite = elem.getId();
 							Edge edge = graph.getEdge(idSprite);
@@ -583,9 +579,9 @@ public class Fenetre extends JFrame {
 										+ "<br/>";
 							}
 							s += "</html>";
-							viewer.getDefaultView().setToolTipText(s);
+							jCompView.setToolTipText(s);
 						} else {
-							viewer.getDefaultView().setToolTipText(null);
+							jCompView.setToolTipText(null);
 						}
 						view.display(viewer.getGraphicGraph(), true);
 					}
@@ -669,54 +665,50 @@ public class Fenetre extends JFrame {
 		}
 		return null;
 	}
-	
-	public void initGraphPropertiesJson(){
+
+	public void initGraphPropertiesJson() {
 		CustomGraphRenderer.setStyleGraph(graphJson);
 		GraphModifier.setNodesClass(graphJson);
 		spriteManagerJson = new SpriteManager(graphJson);
-		GraphModifier.generateSprite(graphJson,
-				spriteManagerJson);
+		GraphModifier.generateSprites(graphJson, spriteManagerJson);
 
 		viewerJson = new Viewer(graphJson,
 				Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
 		viewerJson.enableAutoLayout();
 		viewJson = viewerJson.addDefaultView(false);
 		setListenerOnViewer(viewerJson, graphJson);
-		
+
 		isGraphJsonLoaded = true;
 		isAutoLayoutJson = true;
 	}
-	
-	public void initGraphPropertiesAgent(){
+
+	public void initGraphPropertiesAgent() {
 		CustomGraphRenderer.setStyleGraph(graphAgent);
 		GraphModifier.setNodesClass(graphAgent);
 		spriteManagerAgent = new SpriteManager(graphAgent);
-		GraphModifier.generateSprite(graphAgent,
-				spriteManagerAgent);
+		GraphModifier.generateSprites(graphAgent, spriteManagerAgent);
 
 		viewerAgent = new Viewer(graphAgent,
 				Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
 		viewerAgent.enableAutoLayout();
 		viewAgent = viewerAgent.addDefaultView(false);
 		setListenerOnViewer(viewerAgent, graphAgent);
-		
+
 		isGraphAgentLoaded = true;
 		isAutoLayoutAgent = true;
 	}
-	
-	public void initPanelGraphJson(){
+
+	public void initPanelGraphJson() {
 		panelGraphJSon.removeAll();
 		panelGraphJSon.setLayout(new BorderLayout());
-		panelGraphJSon.add((Component) viewJson,
-				BorderLayout.CENTER);
+		panelGraphJSon.add((Component) viewJson, BorderLayout.CENTER);
 		scrollJSon.setViewportView(panelGraphJSon);
 	}
-	
-	public void initPanelGraphAgent(){
+
+	public void initPanelGraphAgent() {
 		panelGraphAgent.removeAll();
 		panelGraphAgent.setLayout(new BorderLayout());
-		panelGraphAgent.add((Component) viewAgent,
-				BorderLayout.CENTER);
+		panelGraphAgent.add((Component) viewAgent, BorderLayout.CENTER);
 		scrollAgent.setViewportView(panelGraphAgent);
 	}
 

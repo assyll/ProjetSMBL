@@ -62,7 +62,7 @@ public class GraphModifierTest extends TestCase {
 		Node nodeTest1 = graphTest.addNode("test1");
 		Node nodeTest2 = graphTest.addNode("test2");
 		Edge edgeTest3 = graphTest.addEdge("test3", nodeTest1, nodeTest2);
-		GraphModifier.generateSprite(graphTest, spriteManager);
+		GraphModifier.generateSprites(graphTest, spriteManager);
 		Sprite spriteTest1 = spriteManager.getSprite(edgeTest3.getId());
 		assertEquals(edgeTest3, spriteTest1.getAttachment());
 	}
