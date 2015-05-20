@@ -5,7 +5,7 @@ import org.junit.Test;
 public class GeneratorGraphTest {
 
 	private final String _path =
-			"/home/quentin/Documents/Mes_graphes/grapheAleat-db";
+			"/home/quentin/git/ProjetSMBL/View/src/test/resources/grapheAleat1";
 	
 	private final int _nbNodes = 12;
 	private final int _maxTrans = 3;

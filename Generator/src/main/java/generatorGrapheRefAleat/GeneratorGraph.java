@@ -19,7 +19,7 @@ public class GeneratorGraph {
 	 * 5 chances sur NB_CHANCE_CREER de creer un nouveau noeud
 	 * ou une nouvelle transition.
 	 */
-	private final int NB_CHANCE_CREER = 8;
+	private final int NB_CHANCE_CREER = 5;
 	
 	/**
 	 * Genere un graphe de reference aleatoire.
@@ -51,6 +51,9 @@ public class GeneratorGraph {
 		
 		quadruplet = generateGraphAleat(
 				quadruplet, node, nbNodes, maxTrans);
+		
+		// Ajout des attributs source et final
+		addAttributs(quadruplet.nodesCreated);
 		
 		// Desinne le graphe
 		drawGraph(path, quadruplet.nodesCreated);
@@ -232,6 +235,12 @@ public class GeneratorGraph {
 					node = retrieveNode(nodesCreated, nodeToCreate);
 				}
 				
+				// Ajout de ses proprietes
+				for (Entry<String, String> e:
+					nodeToCreate.getAttributs().entrySet()) {
+					node.setProperty(e.getKey(), e.getValue());
+				}
+				
 				// Ajout du label
 				if (nodeToCreate.getName().equals("Racine")) {
 					node.addLabel(DynamicLabel.label("Racine"));
@@ -283,6 +292,19 @@ public class GeneratorGraph {
 		
 		// Fermer le graphe.
 		graphDB.shutdown();
+	}
+	
+	/**
+	 * Ajoute aux noeuds leur attribut "Source" et "Final".
+	 * @param nodes Noeuds dont leur attribut sont a mettre a jour
+	 */
+	private void addAttributs(List<NodeToCreate> nodes) {
+		for (NodeToCreate node: nodes) {
+			node.addAttribut("Source",
+					node.getName().equals("Racine") ? "true" : "false");
+			node.addAttribut("Final",
+					node.getTransitions().size() == 0 ? "true" : "false");
+		}
 	}
 	
 	/**

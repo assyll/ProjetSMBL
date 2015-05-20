@@ -82,9 +82,10 @@ public class Fenetre extends JFrame {
 
 	JMenuBar menu_bar1;
 
-	JMenu menu1;
+	JMenu menu1, menu2;
 
-	JMenuItem importMenu, exitMenu;
+	JMenuItem importMenuGauche, importMenuDroite, exitMenu,
+	          jMenuItemGenererGraphe, jMenuItemGenererTraces;
 
 	Viewer viewerJson, viewerAgent;
 
@@ -98,7 +99,7 @@ public class Fenetre extends JFrame {
 			heightWindow = 700, sizeSeparator = 5;
 
 	boolean isAutoLayoutJson, isAutoLayoutAgent, isGraphJsonLoaded = false,
-			isGraphAgentLoaded = false, isDirectoryNeo4j;
+			isGraphAgentLoaded = false, isDirectoryNeo4j, wantToGenerateToLeft;
 
 	SpriteManager spriteManagerJson, spriteManagerAgent;
 
@@ -203,14 +204,23 @@ public class Fenetre extends JFrame {
 		menu_bar1 = new JMenuBar();
 
 		menu1 = new JMenu("File");
+		menu2 = new JMenu("Tools");
 
-		importMenu = new JMenuItem("Import");
+		importMenuGauche = new JMenuItem("Import to left");
+		importMenuDroite = new JMenuItem("Import to right");
 		exitMenu = new JMenuItem("Exit");
 
-		menu1.add(importMenu);
+		menu1.add(importMenuGauche);
+		menu1.add(importMenuDroite);
 		menu1.add(exitMenu);
+		
+		jMenuItemGenererGraphe = new JMenuItem("Generate graph");
+		
+		menu2.add(jMenuItemGenererGraphe);
 
 		menu_bar1.add(menu1);
+		menu_bar1.add(menu2);
+		
 
 		// Initialisation des param�tres que va contenir le 2nd splitPane
 		scrollJSon = new JScrollPane();
@@ -224,43 +234,18 @@ public class Fenetre extends JFrame {
 		scrollStatut.setViewportView(textColorStatut);
 		panelGraphJSon = new JPanel();
 		panelGraphAgent = new JPanel();
-
-		// Action lors du clic sur l'item "Import"
-		importMenu.addActionListener(new ActionListener() {
+		
+		// Action lors du clic sur l'item "Import to left"
+		importMenuGauche.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// TODO changer le chemin d'acces lors de la release
-				JFileChooser dialogue = new JFileChooser(new File(
-						"./src/test/resources"));
-				dialogue.setFileSelectionMode(
-						JFileChooser.FILES_AND_DIRECTORIES);
-				File fichier;
-
-				isDirectoryNeo4j = false;
-				if (dialogue.showOpenDialog(null)
-						== JFileChooser.APPROVE_OPTION) {
-					
-					// Recupere le fichier a importer
-					fichier = dialogue.getSelectedFile();
-					textDirectory.setText(fichier.toString());
-
-					isDirectoryNeo4j =
-							Fichier.isFolderNeo4j(fichier.toString());
-					
-					// Si cest un dossier et que cest pas un neo4j
-					if (fichier.isDirectory() && !isDirectoryNeo4j) {
-						JOptionPane.showConfirmDialog(null,
-								"Ce n'est pas un dossier Neo4J",
-								"Import Problem",
-								JOptionPane.CLOSED_OPTION);
-						
-						textDirectory.setText("Directory");
-					} else {
-						// sinon IMPORTER NEO4J
-						graphJson = new ConvertNeo4jToGS(
-								fichier.toString()).convertToGS();
-						graphAgent = graphJson;
-					}
-				}
+				clickToImport(true);
+			}
+		});
+		
+		// Action lors du clic sur l'item "Import to right"
+		importMenuDroite.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				clickToImport(false);
 			}
 		});
 
@@ -268,6 +253,35 @@ public class Fenetre extends JFrame {
 		exitMenu.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.exit(1);
+			}
+		});
+		
+		// Action lors du clic sur l'item "Generate graph"
+		jMenuItemGenererGraphe.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// Ouverture d'une fenetre de dialogue proposant:
+				// chemin de sauvegarde, nombre de noeuds,
+				// nombre de transition maximum par noeud
+				GraphGenerateDialog dialog =
+						new GraphGenerateDialog(Fenetre.this);
+				dialog.show();
+				
+				// Graphe genere avec succes
+				if (dialog.getPath() != null) {
+					// Met a jour les a valeurs afin quon puisse appuyer sur
+					// "To GraphStream"
+					isDirectoryNeo4j = true;
+					wantToGenerateToLeft = true;
+					
+					File file = new File("./src/test/resources/"
+							+ dialog.getPath());
+					graphJson = new ConvertNeo4jToGS(
+							file.toString()).convertToGS();
+					textDirectory.setText(file.toString());
+				} else {
+					textDirectory.setText("Directory");
+				}
 			}
 		});
 
@@ -280,19 +294,23 @@ public class Fenetre extends JFrame {
 				if (!textDirectory.getText().equals("Directory")) {
 					JsonToGS jSTGS = new JsonToGS();
 					try {
-						if (!isDirectoryNeo4j) {
-							graphJson = jSTGS.generateGraph(
-									textDirectory.getText(), GRAPH_JSON_NAME);
+						if (wantToGenerateToLeft) {
+							if (!isDirectoryNeo4j) {
+								graphJson = jSTGS.generateGraph(
+										textDirectory.getText(),
+										GRAPH_JSON_NAME);
+							}
+							initGraphPropertiesJson();
+							initPanelGraphJson();
+						} else {
+							if (!isDirectoryNeo4j) {
+								graphAgent = jSTGS.generateGraph(
+										textDirectory.getText(),
+										GRAPH_JSON_NAME);
+							}
+							initGraphPropertiesAgent();
+							initPanelGraphAgent();
 						}
-						initGraphPropertiesJson();
-						initPanelGraphJson();
-
-						if (!isDirectoryNeo4j) {
-							graphAgent = GraphModifier.GraphToGraph(
-									graphJson, GRAPH_AGENT_NAME);
-						}
-						initGraphPropertiesAgent();
-						initPanelGraphAgent();
 					} catch (JsonParseException exception) {
 						textColorStatut.appendErrorMessage(exception
 								.getMessage());
@@ -303,8 +321,9 @@ public class Fenetre extends JFrame {
 						textColorStatut.appendErrorMessage(exception
 								.getMessage());
 					} catch (NullPointerException exception) {
-						textColorStatut.appendErrorMessage(
-								"Graphe Neo4j deja ouvert quelque part!");
+						/*textColorStatut.appendErrorMessage(
+								"Graphe Neo4j deja ouvert quelque part!");*/
+						exception.printStackTrace();
 					}
 				} else {
 					textColorStatut.appendDoc(NO_FILE_SELECTED);
@@ -646,6 +665,49 @@ public class Fenetre extends JFrame {
 		// Centrage de la fenetre
 		pack();
 		frame.setLocationRelativeTo(null);
+	}
+	
+	// clique sur le bouton "import" nimporte lequel
+	public void clickToImport(boolean importToLeft) {
+		wantToGenerateToLeft = importToLeft;
+		
+		// TODO changer le chemin d'acces lors de la release
+		JFileChooser dialogue = new JFileChooser(new File(
+				"./src/test/resources"));
+		dialogue.setFileSelectionMode(
+				JFileChooser.FILES_AND_DIRECTORIES);
+		File fichier;
+
+		isDirectoryNeo4j = false;
+		if (dialogue.showOpenDialog(null)
+				== JFileChooser.APPROVE_OPTION) {
+			
+			// Recupere le fichier a importer
+			fichier = dialogue.getSelectedFile();
+			textDirectory.setText(fichier.toString());
+
+			isDirectoryNeo4j =
+					Fichier.isFolderNeo4j(fichier.toString());
+			
+			// Si cest un dossier et que cest pas un neo4j
+			if (fichier.isDirectory() && !isDirectoryNeo4j) {
+				JOptionPane.showConfirmDialog(null,
+						"Ce n'est pas un dossier Neo4J",
+						"Import Problem",
+						JOptionPane.CLOSED_OPTION);
+				
+				textDirectory.setText("Directory");
+			} else {
+				// sinon IMPORTER NEO4J
+				if (wantToGenerateToLeft) {
+					graphJson = new ConvertNeo4jToGS(
+							fichier.toString()).convertToGS();
+				} else {
+					graphAgent = new ConvertNeo4jToGS(
+							fichier.toString()).convertToGS();
+				}
+			}
+		}
 	}
 
 	public void setListenerOnViewer(final Viewer viewer, final Graph graph) {
