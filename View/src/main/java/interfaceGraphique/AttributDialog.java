@@ -27,6 +27,7 @@ public class AttributDialog extends JDialog implements ActionListener {
 
 	public AttributDialog(Frame f, String s, int nbAtt) {
 		super(f, s, true);
+		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		nbAttribut = nbAtt;
 		boite = Box.createVerticalBox();
 		panelDialog = new JPanel();
@@ -72,10 +73,8 @@ public class AttributDialog extends JDialog implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent evt) {
-		//TODO Manu t'es un clochard
-		String[] tmp;
 		if (evt.getSource() == ok) {
-			tmp = getAttributs();
+			getAttributs();
 			this.dispose();
 		} else if (evt.getSource() == cancel) {
 			this.dispose();

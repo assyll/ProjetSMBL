@@ -11,24 +11,25 @@ import org.graphstream.ui.spriteManager.SpriteManager;
 
 public class GraphModifier {
 
-	public static void setNodeClass(Graph graph) {
-		//TODO modifer l'attribut boolean en string dans le addNode
-		Boolean isSource, isFinal;
+	public static void setNodesClass(Graph graph) {
 		for (Node node : graph.getEachNode()) {
-			isSource = node.getAttribute(MyJsonGenerator.FORMAT_NODE_SOURCE)
-					.equals("true") || (node.getAttribute(MyJsonGenerator.FORMAT_NODE_SOURCE).equals(true));
-			isFinal = node.getAttribute(MyJsonGenerator.FORMAT_NODE_FINAL)
-					.equals("true") || (node.getAttribute(MyJsonGenerator.FORMAT_NODE_FINAL).equals(true));
-			if (isSource && isFinal) {
-				node.setAttribute("ui.class",
-						MyJsonGenerator.FORMAT_NODE_SOURCE
-								+ MyJsonGenerator.FORMAT_NODE_FINAL);
-			} else if (isSource) {
-				node.setAttribute("ui.class",
-						MyJsonGenerator.FORMAT_NODE_SOURCE);
-			} else if (isFinal) {
-				node.addAttribute("ui.class", MyJsonGenerator.FORMAT_NODE_FINAL);
-			}
+			setNodeClass(graph, node);
+		}
+	}
+
+	public static void setNodeClass(Graph graph, Node node) {
+		Boolean isSource, isFinal;
+		isSource = (node.getAttribute(MyJsonGenerator.FORMAT_NODE_SOURCE)
+				.equals(true));
+		isFinal = (node.getAttribute(MyJsonGenerator.FORMAT_NODE_FINAL)
+				.equals(true));
+		if (isSource && isFinal) {
+			node.setAttribute("ui.class", MyJsonGenerator.FORMAT_NODE_SOURCE
+					+ MyJsonGenerator.FORMAT_NODE_FINAL);
+		} else if (isSource) {
+			node.setAttribute("ui.class", MyJsonGenerator.FORMAT_NODE_SOURCE);
+		} else if (isFinal) {
+			node.addAttribute("ui.class", MyJsonGenerator.FORMAT_NODE_FINAL);
 		}
 	}
 
@@ -69,11 +70,13 @@ public class GraphModifier {
 			}
 		}
 
+		setNodeClass(g, node);
+
 		return g;
 	}
 
-	public static Graph addEdge(EdgeDialog e, Graph g)
-			throws NoSpecifiedNodeException {
+	public static Graph addEdge(EdgeDialog e, Graph g,
+			SpriteManager spriteManager) throws NoSpecifiedNodeException {
 		int cpt = 1;
 
 		if ((g.getNode(e.getSource()) == null)
@@ -92,15 +95,21 @@ public class GraphModifier {
 				}
 			}
 
+			generateSprite(spriteManager, edge);
+
 			return g;
 		}
 	}
 
-	public static void generateSprite(Graph graph, SpriteManager spriteManager) {
+	public static void generateSprites(Graph graph, SpriteManager spriteManager) {
 		for (Edge edge : graph.getEachEdge()) {
-			Sprite sprite = spriteManager.addSprite(edge.getId());
-			sprite.attachToEdge(edge.getId());
-			sprite.setPosition(0.5, 0, 0);
+			generateSprite(spriteManager, edge);
 		}
+	}
+
+	public static void generateSprite(SpriteManager spriteManager, Edge edge) {
+		Sprite sprite = spriteManager.addSprite(edge.getId());
+		sprite.attachToEdge(edge.getId());
+		sprite.setPosition(0.5, 0, 0);
 	}
 }

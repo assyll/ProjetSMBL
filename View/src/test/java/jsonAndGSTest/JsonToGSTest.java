@@ -21,7 +21,7 @@ public class JsonToGSTest extends TestCase {
 	
 	public void testGenerateNode(){
 		JsonToGS jTGS = new JsonToGS();
-		Graph graph = new MultiGraph("graph");
+		Graph graph = new MultiGraph("graphTest");
 		
 		File fileTest = new File("./src/test/resources/TestNode");
 		
@@ -38,11 +38,11 @@ public class JsonToGSTest extends TestCase {
 			Node node = graph.getNode("node 1");
 			assertNotNull(node);
 			
-			assertEquals(node.getAttribute(MyJsonGenerator.FORMAT_NODE_SOURCE), "true");
+			assertEquals(true, node.getAttribute(MyJsonGenerator.FORMAT_NODE_SOURCE));
 			
-			assertEquals(node.getAttribute(MyJsonGenerator.FORMAT_NODE_FINAL), "false");
+			assertEquals(false, node.getAttribute(MyJsonGenerator.FORMAT_NODE_FINAL));
 			
-			assertEquals(node.getAttribute(MyJsonGenerator.FORMAT_NODE_ATTRIBUT + "1"), "att 1");
+			assertEquals("att 1", node.getAttribute(MyJsonGenerator.FORMAT_NODE_ATTRIBUT + "1"));
 			
 			parser.close();
 			
@@ -79,13 +79,13 @@ public class JsonToGSTest extends TestCase {
 			Edge edge = graph.getEdge("edge 1");
 			assertNotNull(edge);
 			
-			assertEquals(edge.getSourceNode().getId(), "node 1");
+			assertEquals("node 1", edge.getSourceNode().getId());
 			
-			assertEquals(edge.getTargetNode().getId(), "node 2");
+			assertEquals("node 2", edge.getTargetNode().getId());
 			
-			assertEquals(edge.getAttribute("ui.label"), "action !");
+			assertEquals("action !", edge.getAttribute("ui.label"));
 			
-			assertEquals(edge.getAttribute(MyJsonGenerator.FORMAT_EDGE_ATTRIBUT + "1"), "att 1");
+			assertEquals("att 1", edge.getAttribute(MyJsonGenerator.FORMAT_EDGE_ATTRIBUT + "1"));
 			
 			parser.close();
 			
@@ -110,40 +110,40 @@ public class JsonToGSTest extends TestCase {
 		try {
 			parser = jfactory.createParser(fileTest);
 			parser.nextToken();
-			Graph graph = jTGS.generateGraph(fileTest.getAbsolutePath());
+			Graph graph = jTGS.generateGraph(fileTest.getAbsolutePath(), "graphTest");
 			
 			assertEquals(graph.getEdgeCount(), 1);
 			
 			Edge edge = graph.getEdge("edge 1");
 			assertNotNull(edge);
 			
-			assertEquals(edge.getSourceNode().getId(), "node 1");
+			assertEquals("node 1", edge.getSourceNode().getId());
 			
-			assertEquals(edge.getTargetNode().getId(), "node 2");
+			assertEquals("node 2", edge.getTargetNode().getId());
 			
-			assertEquals(edge.getAttribute("ui.label"), "action !");
+			assertEquals("action !", edge.getAttribute("ui.label"));
 			
-			assertEquals(edge.getAttribute(MyJsonGenerator.FORMAT_EDGE_ATTRIBUT + "1"), "att 1");
+			assertEquals("att 1", edge.getAttribute(MyJsonGenerator.FORMAT_EDGE_ATTRIBUT + "1"));
 			
-			assertEquals(graph.getNodeCount(), 2);
+			assertEquals(2, graph.getNodeCount());
 			
 			Node node = graph.getNode("node 1");
 			assertNotNull(node);
 			
-			assertEquals(node.getAttribute(MyJsonGenerator.FORMAT_NODE_SOURCE), "true");
+			assertEquals(true, node.getAttribute(MyJsonGenerator.FORMAT_NODE_SOURCE));
 			
-			assertEquals(node.getAttribute(MyJsonGenerator.FORMAT_NODE_FINAL), "false");
+			assertEquals(false, node.getAttribute(MyJsonGenerator.FORMAT_NODE_FINAL));
 			
-			assertEquals(node.getAttribute(MyJsonGenerator.FORMAT_NODE_ATTRIBUT + "1"), "att 1");
+			assertEquals("att 1", node.getAttribute(MyJsonGenerator.FORMAT_NODE_ATTRIBUT + "1"));
 			
 			node = graph.getNode("node 2");
 			assertNotNull(node);
 			
-			assertEquals(node.getAttribute(MyJsonGenerator.FORMAT_NODE_SOURCE), "true");
+			assertEquals(true, node.getAttribute(MyJsonGenerator.FORMAT_NODE_SOURCE));
 			
-			assertEquals(node.getAttribute(MyJsonGenerator.FORMAT_NODE_FINAL), "false");
+			assertEquals(false, node.getAttribute(MyJsonGenerator.FORMAT_NODE_FINAL));
 			
-			assertEquals(node.getAttribute(MyJsonGenerator.FORMAT_NODE_ATTRIBUT + "1"), "att 1");
+			assertEquals("att 1", node.getAttribute(MyJsonGenerator.FORMAT_NODE_ATTRIBUT + "1"));
 			
 			parser.close();
 			

@@ -1,5 +1,6 @@
 package convertGraph;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,7 +31,13 @@ public class ConvertGStoNeo4j {
 		Map<org.graphstream.graph.Node, Node> mapNodes = 
 				new HashMap<org.graphstream.graph.Node, Node>();
 		
-		// Creer (ou ouvre) le graphe grace au path.
+		// Supprimer le graphe s'il existe deja
+		File dir = new File(pathDestination);
+		if (dir.isDirectory()) {
+			Fichier.deleteFileOrDirectory(dir);
+		}
+		
+		// Creer le graphe grace au path.
 		GraphDatabaseService graphNeo4j = new GraphDatabaseFactory().
 				newEmbeddedDatabase(pathDestination);
 		registerShutdownHook(graphNeo4j);
@@ -44,10 +51,13 @@ public class ConvertGStoNeo4j {
 				Node nodeNeo4j = graphNeo4j.createNode();
 				
 				// Ajout du label
+				Object labelNodeGS = nodeGS.getAttribute("Source");
+				boolean isRoot = (boolean) (labelNodeGS instanceof Boolean
+						? nodeGS.getAttribute("Source")
+								: Boolean.parseBoolean((String) labelNodeGS));
+				
 				nodeNeo4j.addLabel(DynamicLabel.label(
-						(Boolean.parseBoolean((String)
-								nodeGS.getAttribute("Source")))
-								? "Racine" : "Noeud"));
+						isRoot ? "Racine" : "Noeud"));
 				
 				// Ajout des proprietes
 				nodeNeo4j.setProperty("name", nodeGS.getId());

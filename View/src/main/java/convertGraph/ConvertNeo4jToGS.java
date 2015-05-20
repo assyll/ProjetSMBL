@@ -16,11 +16,15 @@ import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 
 public class ConvertNeo4jToGS {
 	
-	private final GraphDatabaseService _graphNeo4j;
+	private GraphDatabaseService _graphNeo4j;
 	
 	public ConvertNeo4jToGS(String pathGraphNeo4j) {
-		_graphNeo4j = new GraphDatabaseFactory().
-				newEmbeddedDatabase(pathGraphNeo4j);
+		try {
+			_graphNeo4j = new GraphDatabaseFactory().
+					newEmbeddedDatabase(pathGraphNeo4j);
+		} catch (Exception e) {
+			_graphNeo4j = null;
+		}
 	}
 	
 	public Graph convertToGS() {
@@ -96,7 +100,11 @@ public class ConvertNeo4jToGS {
 			}
 			
 			tx.success();
+			
+		} catch (Exception e) {
+			return null;
 		}
+		
 		_graphNeo4j.shutdown();
 		
 		return graphGS;	
