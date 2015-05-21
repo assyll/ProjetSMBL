@@ -54,9 +54,8 @@ public class Fenetre extends JFrame {
 	public static final String NO_FILE_SELECTED = "Veuillez d'abord sélectionner un fichier à importer";
 	public static final String GRAPH_JSON_NAME = "graphJson";
 	public static final String GRAPH_AGENT_NAME = "graphAgent";
-	
+
 	public static final double tolerance = 10;
-	
 
 	// Instanciation des différents Components
 
@@ -92,7 +91,7 @@ public class Fenetre extends JFrame {
 	Graph graphJson, graphAgent;
 
 	double zoom = 1, dezoom = 1;
-	
+
 	Double x = null, y = null, x2 = null, y2 = null;
 
 	final int xWindow = 50, yWindow = 0, widthWindow = 1280,
@@ -102,9 +101,9 @@ public class Fenetre extends JFrame {
 			isGraphAgentLoaded = false;
 
 	SpriteManager spriteManagerJson, spriteManagerAgent;
-	
+
 	GraphicElement gElement = null;
-	
+
 	public Fenetre() {
 
 		// Initialisation de la fenêtre principale
@@ -398,7 +397,7 @@ public class Fenetre extends JFrame {
 						Node n = graphJson.getNode(s);
 						for (Edge edge : n.getEachEdge()) {
 							System.out.println(edge.getId());
-							spriteManagerJson.removeSprite(edge.getId());	
+							spriteManagerJson.removeSprite(edge.getId());
 						}
 						n = graphJson.removeNode(s);
 						if (n != null) {
@@ -578,7 +577,7 @@ public class Fenetre extends JFrame {
 						Node n = graphAgent.getNode(s);
 						for (Edge edge : n.getEachEdge()) {
 							System.out.println(edge.getId());
-							spriteManagerAgent.removeSprite(edge.getId());	
+							spriteManagerAgent.removeSprite(edge.getId());
 						}
 						n = graphAgent.removeNode(s);
 						if (n != null) {
@@ -693,7 +692,8 @@ public class Fenetre extends JFrame {
 
 					public void mouseMoved(MouseEvent e) {
 						String s = "<html>";
-						GraphicElement elem = findNodeOrSpriteAtWithTolerance(e, view);
+						GraphicElement elem = findNodeOrSpriteAtWithTolerance(
+								e, view);
 						if (elem instanceof GraphicNode) {
 							String idNode = elem.getId();
 							Node node = graph.getNode(idNode);
@@ -737,8 +737,9 @@ public class Fenetre extends JFrame {
 							view.getCamera().setViewCenter(
 									(posX + ((x2 - x) * (-1)) / 100),
 									(posY + (y2 - y) / 100), posZ);
-						} else if(gElement instanceof GraphicNode){
+						} else if (gElement instanceof GraphicNode) {
 							view.moveElementAtPx(gElement, e.getX(), e.getY());
+							view.getCamera().resetView();
 						}
 					}
 				});
@@ -759,6 +760,10 @@ public class Fenetre extends JFrame {
 
 			public void mousePressed(MouseEvent e) {
 				gElement = findNodeOrSpriteAtWithTolerance(e, view);
+				if (gElement instanceof GraphicNode) {
+					view.moveElementAtPx(gElement, e.getX(), e.getY());
+					view.getCamera().resetView();
+				}
 			}
 
 			public void mouseReleased(MouseEvent arg0) {
@@ -785,7 +790,8 @@ public class Fenetre extends JFrame {
 		});
 	}
 
-	public GraphicElement findNodeOrSpriteAtWithTolerance(MouseEvent e, View view) {
+	public GraphicElement findNodeOrSpriteAtWithTolerance(MouseEvent e,
+			View view) {
 		GraphicElement elem = null;
 		for (double yEvt = e.getY() - tolerance; yEvt < e.getY() + tolerance; yEvt += tolerance / 10) {
 			for (double xEvt = e.getX() - tolerance; xEvt < e.getX()
@@ -809,10 +815,10 @@ public class Fenetre extends JFrame {
 				Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
 		viewerJson.enableAutoLayout();
 		viewJson = viewerJson.addDefaultView(false);
-		
+
 		// suppression du comportement par defaut du MouseListener de la view
 		viewJson.setMouseManager(new CustomMouseManager());
-		
+
 		setListenerOnViewer(viewerJson, graphJson);
 
 		isGraphJsonLoaded = true;
@@ -829,6 +835,10 @@ public class Fenetre extends JFrame {
 				Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
 		viewerAgent.enableAutoLayout();
 		viewAgent = viewerAgent.addDefaultView(false);
+
+		// suppression du comportement par defaut du MouseListener de la view
+		viewAgent.setMouseManager(new CustomMouseManager());
+
 		setListenerOnViewer(viewerAgent, graphAgent);
 
 		isGraphAgentLoaded = true;
