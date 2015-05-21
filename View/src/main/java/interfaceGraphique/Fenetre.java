@@ -37,6 +37,8 @@ import org.graphstream.graph.Element;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.MultiGraph;
+import org.graphstream.ui.graphicGraph.GraphicElement;
+import org.graphstream.ui.graphicGraph.GraphicNode;
 import org.graphstream.ui.graphicGraph.GraphicSprite;
 import org.graphstream.ui.spriteManager.SpriteManager;
 import org.graphstream.ui.view.View;
@@ -52,8 +54,9 @@ public class Fenetre extends JFrame {
 	public static final String NO_FILE_SELECTED = "Veuillez d'abord sélectionner un fichier à importer";
 	public static final String GRAPH_JSON_NAME = "graphJson";
 	public static final String GRAPH_AGENT_NAME = "graphAgent";
+	
 	public static final double tolerance = 10;
-	Double x = null, y = null, x2 = null, y2 = null;
+	
 
 	// Instanciation des différents Components
 
@@ -89,6 +92,8 @@ public class Fenetre extends JFrame {
 	Graph graphJson, graphAgent;
 
 	double zoom = 1, dezoom = 1;
+	
+	Double x = null, y = null, x2 = null, y2 = null;
 
 	final int xWindow = 50, yWindow = 0, widthWindow = 1280,
 			heightWindow = 700, sizeSeparator = 5;
@@ -97,7 +102,9 @@ public class Fenetre extends JFrame {
 			isGraphAgentLoaded = false;
 
 	SpriteManager spriteManagerJson, spriteManagerAgent;
-
+	
+	GraphicElement gElement = null;
+	
 	public Fenetre() {
 
 		// Initialisation de la fenêtre principale
@@ -686,8 +693,8 @@ public class Fenetre extends JFrame {
 
 					public void mouseMoved(MouseEvent e) {
 						String s = "<html>";
-						Element elem = findNodeOrSpriteAtWithTolerance(e, view);
-						if (elem instanceof Node) {
+						GraphicElement elem = findNodeOrSpriteAtWithTolerance(e, view);
+						if (elem instanceof GraphicNode) {
 							String idNode = elem.getId();
 							Node node = graph.getNode(idNode);
 							for (String attKey : node.getAttributeKeySet()) {
@@ -712,9 +719,7 @@ public class Fenetre extends JFrame {
 					}
 
 					public void mouseDragged(MouseEvent e) {
-						Element elem = view.findNodeOrSpriteAt(e.getX(),
-								e.getY());
-						if (elem == null) {
+						if (gElement == null) {
 							if (x == null && y == null) {
 								x = (double) e.getX();
 								y = (double) e.getY();
@@ -732,11 +737,13 @@ public class Fenetre extends JFrame {
 							view.getCamera().setViewCenter(
 									(posX + ((x2 - x) * (-1)) / 100),
 									(posY + (y2 - y) / 100), posZ);
+						} else if(gElement instanceof GraphicNode){
+							view.moveElementAtPx(gElement, e.getX(), e.getY());
 						}
 					}
 				});
 
-		viewer.getDefaultView().addMouseListener(new MouseListener() {
+		jCompView.addMouseListener(new MouseListener() {
 
 			public void mouseClicked(MouseEvent arg0) {
 
@@ -751,12 +758,13 @@ public class Fenetre extends JFrame {
 			}
 
 			public void mousePressed(MouseEvent e) {
-
+				gElement = findNodeOrSpriteAtWithTolerance(e, view);
 			}
 
 			public void mouseReleased(MouseEvent arg0) {
 				x = null;
 				y = null;
+				gElement = null;
 			}
 
 		});
@@ -777,8 +785,8 @@ public class Fenetre extends JFrame {
 		});
 	}
 
-	public Element findNodeOrSpriteAtWithTolerance(MouseEvent e, View view) {
-		Element elem = null;
+	public GraphicElement findNodeOrSpriteAtWithTolerance(MouseEvent e, View view) {
+		GraphicElement elem = null;
 		for (double yEvt = e.getY() - tolerance; yEvt < e.getY() + tolerance; yEvt += tolerance / 10) {
 			for (double xEvt = e.getX() - tolerance; xEvt < e.getX()
 					+ tolerance; xEvt += tolerance / 10) {
@@ -801,6 +809,10 @@ public class Fenetre extends JFrame {
 				Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
 		viewerJson.enableAutoLayout();
 		viewJson = viewerJson.addDefaultView(false);
+		
+		// suppression du comportement par defaut du MouseListener de la view
+		viewJson.setMouseManager(new CustomMouseManager());
+		
 		setListenerOnViewer(viewerJson, graphJson);
 
 		isGraphJsonLoaded = true;
