@@ -7,6 +7,8 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -14,6 +16,7 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.io.File;
 import java.io.IOException;
+import java.text.DecimalFormat;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -33,7 +36,6 @@ import jsonAndGS.FileFormatException;
 import jsonAndGS.JsonToGS;
 
 import org.graphstream.graph.Edge;
-import org.graphstream.graph.Element;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.MultiGraph;
@@ -63,7 +65,8 @@ public class Fenetre extends JFrame {
 
 	JPanel panelFile, panelGraph, panelGraphJSon, panelGraphAgent,
 			panelZoomJSon, panelZoomAgent, panelModifJSon, panelModifAgent,
-			panelOptionJSon, panelOptionAgent;
+			panelOptionJSon, panelOptionAgent, panelZoomTextJSon,
+			panelZoomTextAgent;
 
 	JSplitPane splitPaneHorizontale, splitPaneVerticale;
 
@@ -76,7 +79,8 @@ public class Fenetre extends JFrame {
 	JButton buttonGS, zoomAvantJSon, zoomArrJSon, zoomTextJSon, zoomAvantAgent,
 			zoomArrAgent, zoomTextAgent, addNodeJSon, addEdgeJSon,
 			suppNodeJSon, suppEdgeJSon, suppNodeAgent, suppEdgeAgent,
-			addNodeAgent, addEdgeAgent, structGraphJson, structGraphAgent;
+			addNodeAgent, addEdgeAgent, structGraphJson, structGraphAgent,
+			zoomCenterJSon, zoomCenterAgent, cleanGraph;
 
 	JMenuBar menu_bar1;
 
@@ -93,6 +97,10 @@ public class Fenetre extends JFrame {
 	double zoom = 1, dezoom = 1;
 
 	Double x = null, y = null, x2 = null, y2 = null;
+
+	Double valZoom;
+	
+	DecimalFormat df = new DecimalFormat("###.00");
 
 	final int xWindow = 50, yWindow = 0, widthWindow = 1280,
 			heightWindow = 700, sizeSeparator = 5;
@@ -129,32 +137,155 @@ public class Fenetre extends JFrame {
 		// transition droit
 		panelModifAgent = new JPanel(new GridLayout(5, 1, 0, 25));
 
+		// Initialisation et définition du panneau de modification du zoom de la
+		// partie gauche
+		panelZoomTextJSon = new JPanel(new GridLayout(1, 2, 20, 5));
+
+		// Initialisation et définition du panneau de modification du zoom de la
+		// partie droite
+		panelZoomTextAgent = new JPanel(new GridLayout(1, 2, 20, 5));
+
+		// Initialisation du bouton de clean des graphes
+		cleanGraph = new JButton("<html><b>Clean</b></html>");
+
 		// Initialisation des bouttons de zoom
 		zoomAvantJSon = new JButton("<html><b>Zoom +</b></html>");
 		zoomArrJSon = new JButton("<html><b>Zoom -</b></html>");
 		zoomTextJSon = new JButton("<html><b>%</b></html>");
+		zoomCenterJSon = new JButton("<html><b>Center</b></html>");
 		zoomAvantAgent = new JButton("<html><b>Zoom +</b></html>");
 		zoomArrAgent = new JButton("<html><b>Zoom -</b></html>");
 		zoomTextAgent = new JButton("<html><b>%</b></html>");
+		zoomCenterAgent = new JButton("<html><b>Center</b></html>");
 
 		// initialisation de la zone de texte pour le pourcentage de zoom
 		textJSon = new JTextField();
-		textJSon.setPreferredSize(new Dimension(40, 30));
+		textJSon.setText(valZoom+" %");
+		textJSon.addKeyListener(new KeyListener() {
+			public void keyPressed(KeyEvent evt) {
+				if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+					if (isGraphJsonLoaded) {
+						String s = textJSon.getText();
+						double pourcentage = 0, zoomAvant = 0, zoomArr = 0, total = 0;
+						boolean isNumber = false;
+						for (int i = 0; i < s.length(); i++) {
+							if (!Character.isDigit(s.charAt(i))) {
+								isNumber = false;
+							} else {
+								isNumber = true;
+							}
+						}
+
+						if (!isNumber) {
+							textColorStatut
+									.appendDoc("Ce n'est pas un entier \n");
+						} else {
+							pourcentage = Integer.parseInt(s);
+							if (pourcentage > 100) {
+								zoomAvant = pourcentage - 100;
+								total = 1 - (zoomAvant / 100);
+								viewJson.getCamera().setViewPercent(total);
+								valZoom = viewJson.getCamera()
+										.getViewPercent()*100;
+								textJSon.setText(df.format(valZoom) + " %");
+							} else if (pourcentage < 100) {
+								zoomArr = 100 - pourcentage;
+								total = 1 + (zoomArr / 100);
+								viewJson.getCamera().setViewPercent(total);
+								valZoom = viewJson.getCamera()
+										.getViewPercent()*100;
+								textJSon.setText(df.format(valZoom) + " %");
+							} else {
+								viewJson.getCamera().resetView();
+							}
+						}
+					} else {
+						viewJson.getCamera().resetView();
+					}
+				}
+			}
+
+			public void keyReleased(KeyEvent evt) {
+			}
+
+			public void keyTyped(KeyEvent evt) {
+			}
+
+		});
+		
 		textAgent = new JTextField();
+		textAgent.setText(valZoom+" %");
+		textAgent.addKeyListener(new KeyListener() {
+			public void keyPressed(KeyEvent evt) {
+				if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+					if (isGraphAgentLoaded) {
+						String s = textAgent.getText();
+						double pourcentage = 0, zoomAvant = 0, zoomArr = 0, total = 0;
+						boolean isNumber = false;
+						for (int i = 0; i < s.length(); i++) {
+							if (!Character.isDigit(s.charAt(i))) {
+								isNumber = false;
+							} else {
+								isNumber = true;
+							}
+						}
+
+						if (!isNumber) {
+							textColorStatut
+									.appendDoc("Ce n'est pas un entier \n");
+						} else {
+							pourcentage = Integer.parseInt(s);
+							if (pourcentage > 100) {
+								zoomAvant = pourcentage - 100;
+								total = 1 - (zoomAvant / 100);
+								viewAgent.getCamera().setViewPercent(total);
+								valZoom = viewAgent.getCamera()
+										.getViewPercent()*100;
+								textAgent.setText(df.format(valZoom) + " %");
+							} else if (pourcentage < 100) {
+								zoomArr = 100 - pourcentage;
+								total = 1 + (zoomArr / 100);
+								viewJson.getCamera().setViewPercent(total);
+								valZoom = viewAgent.getCamera()
+										.getViewPercent()*100;
+								textAgent.setText(df.format(valZoom) + " %");
+							} else {
+								viewAgent.getCamera().resetView();
+							}
+						}
+					} else {
+						viewAgent.getCamera().resetView();
+					}
+				}
+			}
+
+			public void keyReleased(KeyEvent evt) {
+			}
+
+			public void keyTyped(KeyEvent evt) {
+			}
+
+		});
+
+		// Ajout des boutons de zoom et pourcent dans leur panel respectif
+		panelZoomTextJSon.add(textJSon);
+		panelZoomTextJSon.add(zoomTextJSon);
+		panelZoomTextAgent.add(textAgent);
+		panelZoomTextAgent.add(zoomTextAgent);
 
 		// Initialisation et définition du panneau pour zoomer le graphe Json
-		panelZoomJSon = new JPanel(new GridLayout(2, 2, 20, 50));
+		panelZoomJSon = new JPanel(new GridLayout(4, 1, 20, 50));
 		panelZoomJSon.add(zoomAvantJSon);
 		panelZoomJSon.add(zoomArrJSon);
-		panelZoomJSon.add(zoomTextJSon);
-		panelZoomJSon.add(textJSon);
+		panelZoomJSon.add(panelZoomTextJSon);
+		panelZoomJSon.add(zoomCenterJSon);
 
 		// Initialisation et définition du panneau pour zoomer le graphe Agent
-		panelZoomAgent = new JPanel(new GridLayout(2, 2, 20, 50));
+		panelZoomAgent = new JPanel(new GridLayout(4, 1, 20, 50));
 		panelZoomAgent.add(zoomAvantAgent);
 		panelZoomAgent.add(zoomArrAgent);
-		panelZoomAgent.add(zoomTextAgent);
-		panelZoomAgent.add(textAgent);
+		panelZoomAgent.add(panelZoomTextAgent);
+		panelZoomAgent.add(zoomCenterAgent);
 
 		// Initialisation des boutons d'option
 		addNodeJSon = new JButton("Node +");
@@ -181,13 +312,13 @@ public class Fenetre extends JFrame {
 		panelModifAgent.add(structGraphAgent);
 
 		// Initialisation et définition panneau option gauche
-		panelOptionJSon = new JPanel(new GridLayout(2, 1, 0, 100));
+		panelOptionJSon = new JPanel(new GridLayout(2, 1, 0, 50));
 		panelOptionJSon.setPreferredSize(new Dimension(200, 200));
 		panelOptionJSon.add(panelZoomJSon);
 		panelOptionJSon.add(panelModifJSon);
 
 		// Initialisation et définition panneau option droit
-		panelOptionAgent = new JPanel(new GridLayout(2, 1, 0, 100));
+		panelOptionAgent = new JPanel(new GridLayout(2, 1, 0, 50));
 		panelOptionAgent.setPreferredSize(new Dimension(200, 200));
 		panelOptionAgent.add(panelZoomAgent);
 		panelOptionAgent.add(panelModifAgent);
@@ -267,6 +398,8 @@ public class Fenetre extends JFrame {
 								textDirectory.getText(), GRAPH_JSON_NAME);
 						initGraphPropertiesJson();
 						initPanelGraphJson();
+						textJSon.setText("100 %");
+						textAgent.setText("100 %");
 
 						graphAgent = GraphModifier.GraphToGraph(graphJson,
 								GRAPH_AGENT_NAME);
@@ -295,6 +428,9 @@ public class Fenetre extends JFrame {
 				if (isGraphJsonLoaded) {
 					zoom = viewJson.getCamera().getViewPercent();
 					viewJson.getCamera().setViewPercent(zoom - 0.1);
+					valZoom = viewJson.getCamera()
+							.getViewPercent() * 100;
+					textJSon.setText(df.format(valZoom) + " %");
 				}
 			}
 		});
@@ -305,6 +441,9 @@ public class Fenetre extends JFrame {
 				if (isGraphJsonLoaded) {
 					dezoom = viewJson.getCamera().getViewPercent();
 					viewJson.getCamera().setViewPercent(dezoom + 0.1);
+					valZoom = viewJson.getCamera()
+							.getViewPercent() * 100;
+					textJSon.setText(df.format(valZoom) + " %");
 				}
 			}
 		});
@@ -312,42 +451,43 @@ public class Fenetre extends JFrame {
 		// Action lors du clic sur l'item "%" de la partie gauche
 		zoomTextJSon.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				// TODO faire une fonction pour traiter les données de la
+				// zone de texte car elle apparait 4 fois (textJSon,
+				// textAgent, zoomTextJSon, zoomTextAgent
+
 				if (isGraphJsonLoaded) {
 					String s = textJSon.getText();
-					if (!s.equals("")) {
-						double pourcentage = 0, zoomAvant = 0, zoomArr = 0, total = 0;
-						boolean isNumber = false;
-						for (int i = 0; i < s.length(); i++) {
-							if (!Character.isDigit(s.charAt(i))) {
-								isNumber = false;
-							} else {
-								isNumber = true;
-							}
-						}
-
-						if (!isNumber) {
-							textColorStatut
-									.appendDoc("Ce n'est pas un entier \n");
+					double pourcentage = 0, zoomAvant = 0, zoomArr = 0, total = 0;
+					boolean isNumber = false;
+					for (int i = 0; i < s.length(); i++) {
+						if (!Character.isDigit(s.charAt(i))) {
+							isNumber = false;
 						} else {
-							pourcentage = Integer.parseInt(s);
-							if (pourcentage > 100) {
-								zoomAvant = pourcentage - 100;
-								total = 1 - (zoomAvant / 100);
-								viewJson.getCamera().setViewPercent(total);
-								textColorStatut.appendDoc("Zoom avant: "
-										+ pourcentage + "% \n");
-							} else if (pourcentage < 100) {
-								zoomArr = 100 - pourcentage;
-								total = 1 + (zoomArr / 100);
-								viewJson.getCamera().setViewPercent(total);
-								textColorStatut.appendDoc("Zoom arrière: "
-										+ pourcentage + "% \n");
-							} else {
-								viewJson.getCamera().resetView();
-							}
+							isNumber = true;
 						}
+					}
+
+					if (!isNumber) {
+						textColorStatut.appendDoc("Ce n'est pas un entier \n");
 					} else {
-						viewJson.getCamera().resetView();
+						pourcentage = Integer.parseInt(s);
+						if (pourcentage > 100) {
+							zoomAvant = pourcentage - 100;
+							total = 1 - (zoomAvant / 100);
+							viewJson.getCamera().setViewPercent(total);
+							valZoom = viewJson.getCamera()
+									.getViewPercent() * 100;
+							textJSon.setText(df.format(valZoom) + " %");
+						} else if (pourcentage < 100) {
+							zoomArr = 100 - pourcentage;
+							total = 1 + (zoomArr / 100);
+							viewJson.getCamera().setViewPercent(total);
+							valZoom = viewJson.getCamera()
+									.getViewPercent() * 100;
+							textJSon.setText(df.format(valZoom) + " %");
+						} else {
+							viewJson.getCamera().resetView();
+						}
 					}
 				}
 			}
@@ -482,12 +622,24 @@ public class Fenetre extends JFrame {
 			}
 		});
 
+		// Action lors du clic sur l'item "Center" de la partie gauche
+		zoomCenterJSon.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				viewJson.getCamera().resetView();
+				valZoom = viewJson.getCamera().getViewPercent() * 100;
+				textJSon.setText(df.format(valZoom) + " %");
+			}
+		});
+
 		// Action lors du clic sur l'item "+" de la partie droite
 		zoomAvantAgent.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (isGraphAgentLoaded) {
 					zoom = viewAgent.getCamera().getViewPercent();
 					viewAgent.getCamera().setViewPercent(zoom - 0.1);
+					valZoom = viewAgent.getCamera()
+							.getViewPercent() * 100;
+					textAgent.setText(df.format(valZoom) + " %");
 				}
 			}
 		});
@@ -498,6 +650,9 @@ public class Fenetre extends JFrame {
 				if (isGraphAgentLoaded) {
 					dezoom = viewAgent.getCamera().getViewPercent();
 					viewAgent.getCamera().setViewPercent(dezoom + 0.1);
+					valZoom = viewAgent.getCamera()
+							.getViewPercent() * 100;
+					textAgent.setText(df.format(valZoom) + " %");
 				}
 			}
 		});
@@ -507,40 +662,38 @@ public class Fenetre extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				if (isGraphAgentLoaded) {
 					String s = textAgent.getText();
-					if (!s.equals("")) {
-						double pourcentage = 0, zoomAvant = 0, zoomArr = 0, total = 0;
-						boolean isNumber = false;
-						for (int i = 0; i < s.length(); i++) {
-							if (!Character.isDigit(s.charAt(i))) {
-								isNumber = false;
-							} else {
-								isNumber = true;
-							}
-						}
-
-						if (!isNumber) {
-							textColorStatut
-									.appendDoc("Ce n'est pas un entier \n");
+					double pourcentage = 0, zoomAvant = 0, zoomArr = 0, total = 0;
+					boolean isNumber = false;
+					for (int i = 0; i < s.length(); i++) {
+						if (!Character.isDigit(s.charAt(i))) {
+							isNumber = false;
 						} else {
-							pourcentage = Integer.parseInt(s);
-							if (pourcentage > 100) {
-								zoomAvant = pourcentage - 100;
-								total = 1 - (zoomAvant / 100);
-								viewAgent.getCamera().setViewPercent(total);
-								textColorStatut.appendDoc("Zoom avant: "
-										+ pourcentage + "% \n");
-							} else if (pourcentage < 100) {
-								zoomArr = 100 - pourcentage;
-								total = 1 + (zoomArr / 100);
-								viewAgent.getCamera().setViewPercent(total);
-								textColorStatut.appendDoc("Zoom arrière: "
-										+ pourcentage + "% \n");
-							} else {
-								viewAgent.getCamera().resetView();
-							}
+							isNumber = true;
 						}
+					}
+
+					if (!isNumber) {
+						textColorStatut.appendDoc("Ce n'est pas un entier \n");
 					} else {
-						viewAgent.getCamera().resetView();
+						pourcentage = Integer.parseInt(s);
+						if (pourcentage > 100) {
+							zoomAvant = pourcentage - 100;
+							total = 1 - (zoomAvant / 100);
+							viewAgent.getCamera().setViewPercent(total);
+							valZoom = viewAgent.getCamera()
+									.getViewPercent() * 100;
+							textAgent.setText(df.format(valZoom) + " %");
+						} else if (pourcentage < 100) {
+							zoomArr = 100 - pourcentage;
+							total = 1 + (zoomArr / 100);
+							viewAgent.getCamera().setViewPercent(total);
+							valZoom = viewAgent.getCamera()
+									.getViewPercent() * 100;
+
+						} else {
+							viewAgent.getCamera().resetView();
+							textAgent.setText(df.format(valZoom) + " %");
+						}
 					}
 				}
 			}
@@ -652,6 +805,15 @@ public class Fenetre extends JFrame {
 			}
 		});
 
+		// Action lors du clic sur l'item "Center" de la partie gauche
+		zoomCenterAgent.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				viewAgent.getCamera().resetView();
+				valZoom = viewAgent.getCamera().getViewPercent() * 100;
+				textAgent.setText(df.format(valZoom) + " %");
+			}
+		});
+
 		// Création et définition du splitPane de la fenêtre principale
 		splitPaneHorizontale = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
 				panelFile, panelGraph);
@@ -740,6 +902,7 @@ public class Fenetre extends JFrame {
 						} else if (gElement instanceof GraphicNode) {
 							view.moveElementAtPx(gElement, e.getX(), e.getY());
 							view.getCamera().resetView();
+
 						}
 					}
 				});
@@ -782,9 +945,17 @@ public class Fenetre extends JFrame {
 				if (wheelValue > 0) {
 					dezoom = view.getCamera().getViewPercent();
 					view.getCamera().setViewPercent(dezoom + 0.1);
+					valZoom = view.getCamera().getViewPercent() * 100;
+					// TODO Savoir sur quel view est la souris
+					textAgent.setText(valZoom + " %");
+					textJSon.setText(valZoom + " %");
 				} else if (wheelValue < 0) {
 					zoom = view.getCamera().getViewPercent();
 					view.getCamera().setViewPercent(zoom - 0.1);
+					valZoom = view.getCamera().getViewPercent() * 100;
+					// TODO Savoir sur quel view est la souris
+					textAgent.setText(valZoom + " %");
+					textJSon.setText(valZoom + " %");
 				}
 			}
 		});
