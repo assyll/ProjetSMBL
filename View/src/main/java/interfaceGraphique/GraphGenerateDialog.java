@@ -27,7 +27,7 @@ public class GraphGenerateDialog extends JDialog{
 	
 	public GraphGenerateDialog (JFrame jFrame) {
 		super(jFrame, "Generate Graph", true);
-		setSize(600, 300);
+		setSize(600, 320);
 		setLocationRelativeTo(null);
 		setResizable(false);
 		initComponent();
@@ -128,6 +128,7 @@ public class GraphGenerateDialog extends JDialog{
 		
 		buttonPanel.add(okButton);
 		buttonPanel.add(cancelButton);
+		buttonPanel.setBackground(Color.WHITE);
 		
 		getContentPane().add(mainPanel, BorderLayout.CENTER);
 		getContentPane().add(buttonPanel, BorderLayout.SOUTH);

@@ -1,5 +1,7 @@
 package generatorGrapheRefAleat;
 
+import generatorTracesTest.GeneratorTraces;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
@@ -87,7 +89,7 @@ public class GeneratorGraph {
 				
 		// Determine le nombre de transitions sortants aleatoirement.
 		int nbTrans;
-		if (nodesCreated.size() == 1 /*|| numNoeud < maxNodes*/) {
+		if (nodesCreated.size() == 1 || numNoeud < maxNodes) {
 			nbTrans = new Random().nextInt(maxTrans) + 1;
 		} else {
 			nbTrans = new Random().nextInt(maxTrans + 1);
@@ -142,7 +144,11 @@ public class GeneratorGraph {
 			if (!createNewTransition) {
 				transition = transitionAleat(transitionsCreated);
 			} else {
-				transition = new Transition("T " + (numTransition++));
+				transition = new Transition("Action " + (numTransition++));
+				transition.addProprietes("event",
+						("event " + (numTransition - 1)));
+				transition.addProprietes("action",
+						("action " + (numTransition - 1)));
 				transitionsCreated.add(transition);
 			}
 			
@@ -236,7 +242,7 @@ public class GeneratorGraph {
 				}
 				
 				// Ajout de ses proprietes
-				for (Entry<String, String> e:
+				for (Entry<String, Object> e:
 					nodeToCreate.getAttributs().entrySet()) {
 					node.setProperty(e.getKey(), e.getValue());
 				}
@@ -283,6 +289,13 @@ public class GeneratorGraph {
 							.withName("Transition"));
 					
 					r.setProperty("name", e.getKey().getName());
+					r.setProperty(GeneratorTraces._nameIdAttribut,
+							e.getKey().getName());
+					
+					for (Entry<String, String> entry:
+						e.getKey().getProprietes().entrySet()) {
+						r.setProperty(entry.getKey(), entry.getValue());
+					}
 					
 				}
 				
@@ -301,9 +314,12 @@ public class GeneratorGraph {
 	private void addAttributs(List<NodeToCreate> nodes) {
 		for (NodeToCreate node: nodes) {
 			node.addAttribut("Source",
-					node.getName().equals("Racine") ? "true" : "false");
+					node.getName().equals("Racine") ? true : false);
 			node.addAttribut("Final",
-					node.getTransitions().size() == 0 ? "true" : "false");
+					node.getTransitions().size() == 0 ? true : false);
+			node.addAttribut("ui.label", node.getName());
+			node.addAttribut("ui.class",
+					node.getName().equals("Racine") ? "Source" : "Node");
 		}
 	}
 	

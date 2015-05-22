@@ -82,10 +82,11 @@ public class Fenetre extends JFrame {
 
 	JMenuBar menu_bar1;
 
-	JMenu menu1, menu2;
+	JMenu menu1, menu2, menu21;
 
 	JMenuItem importMenuGauche, importMenuDroite, exitMenu,
-	          jMenuItemGenererGraphe, jMenuItemGenererTraces;
+	          jMenuItemGenererGraphe, jMenuItemGenererTraces1,
+	          jMenuItemGenererTraces2;
 
 	Viewer viewerJson, viewerAgent;
 
@@ -165,7 +166,7 @@ public class Fenetre extends JFrame {
 		addEdgeAgent = new JButton("Edge +");
 		structGraphAgent = new JButton("Structurer / D�structurer");
 		
-		buttonSave = new JButton("Sauvegarder");
+		buttonSave = new JButton("Save");
 
 		// Ajout des boutons dans les panneaux respectifs
 		panelModifJSon.add(addNodeJSon);
@@ -205,7 +206,8 @@ public class Fenetre extends JFrame {
 
 		menu1 = new JMenu("File");
 		menu2 = new JMenu("Tools");
-
+		menu21 = new JMenu("Generate traces");
+		
 		importMenuGauche = new JMenuItem("Import to left");
 		importMenuDroite = new JMenuItem("Import to right");
 		exitMenu = new JMenuItem("Exit");
@@ -215,8 +217,15 @@ public class Fenetre extends JFrame {
 		menu1.add(exitMenu);
 		
 		jMenuItemGenererGraphe = new JMenuItem("Generate graph");
+		jMenuItemGenererTraces1 = new JMenuItem(
+				"Generate one trace by file");
+		jMenuItemGenererTraces2 = new JMenuItem(
+				"Generate multiple trace into one file");
 		
+		menu21.add(jMenuItemGenererTraces1);
+		menu21.add(jMenuItemGenererTraces2);
 		menu2.add(jMenuItemGenererGraphe);
+		menu2.add(menu21);
 
 		menu_bar1.add(menu1);
 		menu_bar1.add(menu2);
@@ -284,6 +293,22 @@ public class Fenetre extends JFrame {
 				}
 			}
 		});
+		
+		// Action lors du clic sur jMenuItemGenererTraces1
+		jMenuItemGenererTraces1.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				generateTraces(true);
+			}
+		});
+		
+		// Action lors du clic sur jMenuItemGenererTraces2
+		jMenuItemGenererTraces2.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				generateTraces(false);
+			}
+		});
 
 		// Action lors du clic sur l'item "To GraphStream"
 		buttonGS.addActionListener(new ActionListener() {
@@ -321,9 +346,8 @@ public class Fenetre extends JFrame {
 						textColorStatut.appendErrorMessage(exception
 								.getMessage());
 					} catch (NullPointerException exception) {
-						/*textColorStatut.appendErrorMessage(
-								"Graphe Neo4j deja ouvert quelque part!");*/
-						exception.printStackTrace();
+						textColorStatut.appendErrorMessage(
+								"Graphe Neo4j deja ouvert quelque part!");
 					}
 				} else {
 					textColorStatut.appendDoc(NO_FILE_SELECTED);
@@ -692,7 +716,7 @@ public class Fenetre extends JFrame {
 			// Si cest un dossier et que cest pas un neo4j
 			if (fichier.isDirectory() && !isDirectoryNeo4j) {
 				JOptionPane.showConfirmDialog(null,
-						"Ce n'est pas un dossier Neo4J",
+						"It's not a Neo4J folder",
 						"Import Problem",
 						JOptionPane.CLOSED_OPTION);
 				
@@ -708,6 +732,14 @@ public class Fenetre extends JFrame {
 				}
 			}
 		}
+	}
+	
+	// clique sur generate Traces (nimporte lequel)
+	public void generateTraces(boolean oneByFile) {
+		TracesGenerateDialog dialog =
+				new TracesGenerateDialog(this, oneByFile,
+						graphJson, isGraphJsonLoaded);
+		dialog.show();
 	}
 
 	public void setListenerOnViewer(final Viewer viewer, final Graph graph) {
