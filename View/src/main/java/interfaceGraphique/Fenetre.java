@@ -3,8 +3,12 @@ package interfaceGraphique;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -394,6 +398,7 @@ public class Fenetre extends JFrame {
 				if (!textDirectory.getText().equals("Directory")) {
 					JsonToGS jSTGS = new JsonToGS();
 					try {
+						frame.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 						graphJson = jSTGS.generateGraph(
 								textDirectory.getText(), GRAPH_JSON_NAME);
 						initGraphPropertiesJson();
@@ -405,6 +410,7 @@ public class Fenetre extends JFrame {
 								GRAPH_AGENT_NAME);
 						initGraphPropertiesAgent();
 						initPanelGraphAgent();
+						frame.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 
 					} catch (JsonParseException exception) {
 						textColorStatut.appendErrorMessage(exception
@@ -848,6 +854,11 @@ public class Fenetre extends JFrame {
 		// Action lors du déplacement de la souris sur le graphe
 		final View view = viewer.getDefaultView();
 		final JComponent jCompView = (JComponent) view;
+		final CustomJToolTip cJTT = new CustomJToolTip();
+		Toolkit toolkit = Toolkit.getDefaultToolkit();
+		Image image = toolkit.getImage("./src/main/resources/Sans titre-4.png");
+		Point hotSpot = new Point(0, 0);
+		final Cursor cursor = toolkit.createCustomCursor(image, hotSpot, "drag_hand");
 
 		viewer.getDefaultView().addMouseMotionListener(
 				new MouseMotionListener() {
@@ -881,7 +892,8 @@ public class Fenetre extends JFrame {
 					}
 
 					public void mouseDragged(MouseEvent e) {
-						if (gElement == null) {
+						jCompView.setCursor(cursor);
+						if (!(gElement instanceof GraphicNode)) {
 							if (x == null && y == null) {
 								x = (double) e.getX();
 								y = (double) e.getY();
@@ -914,18 +926,17 @@ public class Fenetre extends JFrame {
 			}
 
 			public void mouseEntered(MouseEvent arg0) {
-
+				jCompView.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 			}
 
 			public void mouseExited(MouseEvent arg0) {
-
+				jCompView.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 			}
 
 			public void mousePressed(MouseEvent e) {
 				gElement = findNodeOrSpriteAtWithTolerance(e, view);
 				if (gElement instanceof GraphicNode) {
 					view.moveElementAtPx(gElement, e.getX(), e.getY());
-					view.getCamera().resetView();
 				}
 			}
 
@@ -933,6 +944,7 @@ public class Fenetre extends JFrame {
 				x = null;
 				y = null;
 				gElement = null;
+				jCompView.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 			}
 
 		});
