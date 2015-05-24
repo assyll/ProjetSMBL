@@ -62,6 +62,8 @@ public class Fenetre extends JFrame {
 	public static final String GRAPH_AGENT_NAME = "graphAgent";
 
 	public static final double tolerance = 10;
+	public static final double ZOOM = -0.1;
+	public static final double DEZOOM = 0.1;
 
 	// Instanciation des différents Components
 
@@ -431,26 +433,14 @@ public class Fenetre extends JFrame {
 		// Action lors du clic sur l'item "+" de la partie gauche
 		zoomAvantJSon.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if (isGraphJsonLoaded) {
-					zoom = viewJson.getCamera().getViewPercent();
-					viewJson.getCamera().setViewPercent(zoom - 0.1);
-					valZoom = viewJson.getCamera()
-							.getViewPercent() * 100;
-					textJSon.setText(df.format(valZoom) + " %");
-				}
+				modifZoom(viewJson, textJSon, isGraphJsonLoaded, ZOOM);
 			}
 		});
 
 		// Action lors du clic sur l'item "-" de la partie gauche
 		zoomArrJSon.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if (isGraphJsonLoaded) {
-					dezoom = viewJson.getCamera().getViewPercent();
-					viewJson.getCamera().setViewPercent(dezoom + 0.1);
-					valZoom = viewJson.getCamera()
-							.getViewPercent() * 100;
-					textJSon.setText(df.format(valZoom) + " %");
-				}
+				modifZoom(viewJson, textJSon, isGraphJsonLoaded, DEZOOM);
 			}
 		});
 
@@ -640,26 +630,14 @@ public class Fenetre extends JFrame {
 		// Action lors du clic sur l'item "+" de la partie droite
 		zoomAvantAgent.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if (isGraphAgentLoaded) {
-					zoom = viewAgent.getCamera().getViewPercent();
-					viewAgent.getCamera().setViewPercent(zoom - 0.1);
-					valZoom = viewAgent.getCamera()
-							.getViewPercent() * 100;
-					textAgent.setText(df.format(valZoom) + " %");
-				}
+				modifZoom(viewAgent, textAgent, isGraphAgentLoaded, ZOOM);
 			}
 		});
 
 		// Action lors du clic sur l'item "-" de la partie droite
 		zoomArrAgent.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if (isGraphAgentLoaded) {
-					dezoom = viewAgent.getCamera().getViewPercent();
-					viewAgent.getCamera().setViewPercent(dezoom + 0.1);
-					valZoom = viewAgent.getCamera()
-							.getViewPercent() * 100;
-					textAgent.setText(df.format(valZoom) + " %");
-				}
+				modifZoom(viewAgent, textAgent, isGraphAgentLoaded, DEZOOM);
 			}
 		});
 
@@ -850,11 +828,10 @@ public class Fenetre extends JFrame {
 		frame.setLocationRelativeTo(null);
 	}
 
-	public void setListenerOnViewer(final Viewer viewer, final Graph graph) {
+	public void setListenerOnViewer(final Viewer viewer, final Graph graph, final JTextField jTextField, final boolean isGraphLoaded) {
 		// Action lors du déplacement de la souris sur le graphe
 		final View view = viewer.getDefaultView();
 		final JComponent jCompView = (JComponent) view;
-		final CustomJToolTip cJTT = new CustomJToolTip();
 		Toolkit toolkit = Toolkit.getDefaultToolkit();
 		Image image = toolkit.getImage("./src/main/resources/Sans titre-4.png");
 		Point hotSpot = new Point(0, 0);
@@ -955,19 +932,9 @@ public class Fenetre extends JFrame {
 			public void mouseWheelMoved(MouseWheelEvent e) {
 				double wheelValue = e.getPreciseWheelRotation();
 				if (wheelValue > 0) {
-					dezoom = view.getCamera().getViewPercent();
-					view.getCamera().setViewPercent(dezoom + 0.1);
-					valZoom = view.getCamera().getViewPercent() * 100;
-					// TODO Savoir sur quel view est la souris
-					textAgent.setText(valZoom + " %");
-					textJSon.setText(valZoom + " %");
+					modifZoom(view, jTextField, isGraphLoaded, DEZOOM);
 				} else if (wheelValue < 0) {
-					zoom = view.getCamera().getViewPercent();
-					view.getCamera().setViewPercent(zoom - 0.1);
-					valZoom = view.getCamera().getViewPercent() * 100;
-					// TODO Savoir sur quel view est la souris
-					textAgent.setText(valZoom + " %");
-					textJSon.setText(valZoom + " %");
+					modifZoom(view, jTextField, isGraphLoaded, ZOOM);
 				}
 			}
 		});
@@ -996,16 +963,17 @@ public class Fenetre extends JFrame {
 
 		viewerJson = new Viewer(graphJson,
 				Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
+		isGraphJsonLoaded = true;
+		
 		viewerJson.enableAutoLayout();
+		isAutoLayoutJson = true;
+		
 		viewJson = viewerJson.addDefaultView(false);
 
 		// suppression du comportement par defaut du MouseListener de la view
 		viewJson.setMouseManager(new CustomMouseManager());
 
-		setListenerOnViewer(viewerJson, graphJson);
-
-		isGraphJsonLoaded = true;
-		isAutoLayoutJson = true;
+		setListenerOnViewer(viewerJson, graphJson, textJSon, isGraphJsonLoaded);
 	}
 
 	public void initGraphPropertiesAgent() {
@@ -1016,16 +984,16 @@ public class Fenetre extends JFrame {
 
 		viewerAgent = new Viewer(graphAgent,
 				Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
+		isGraphAgentLoaded = true;
+		
 		viewerAgent.enableAutoLayout();
+		isAutoLayoutAgent = true;
 		viewAgent = viewerAgent.addDefaultView(false);
 
 		// suppression du comportement par defaut du MouseListener de la view
 		viewAgent.setMouseManager(new CustomMouseManager());
 
-		setListenerOnViewer(viewerAgent, graphAgent);
-
-		isGraphAgentLoaded = true;
-		isAutoLayoutAgent = true;
+		setListenerOnViewer(viewerAgent, graphAgent, textAgent, isGraphAgentLoaded);	
 	}
 
 	public void initPanelGraphJson() {
@@ -1040,6 +1008,16 @@ public class Fenetre extends JFrame {
 		panelGraphAgent.setLayout(new BorderLayout());
 		panelGraphAgent.add((Component) viewAgent, BorderLayout.CENTER);
 		scrollAgent.setViewportView(panelGraphAgent);
+	}
+	
+	public void modifZoom(View view, JTextField jTextField, boolean isGraphLoaded, double modif) {
+		double zoom, valZoom;
+		if (isGraphLoaded) {
+			zoom = view.getCamera().getViewPercent();
+			view.getCamera().setViewPercent(zoom + modif);
+			valZoom = view.getCamera().getViewPercent() * 100;
+			jTextField.setText(df.format(valZoom) + " %");
+		}
 	}
 
 	private void msgError(String s) {
