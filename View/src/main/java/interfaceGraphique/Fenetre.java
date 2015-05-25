@@ -833,7 +833,7 @@ public class Fenetre extends JFrame {
 		final View view = viewer.getDefaultView();
 		final JComponent jCompView = (JComponent) view;
 		Toolkit toolkit = Toolkit.getDefaultToolkit();
-		Image image = toolkit.getImage("./src/main/resources/Sans titre-4.png");
+		Image image = toolkit.getImage("./src/main/resources/Drag_Hand.png");
 		Point hotSpot = new Point(0, 0);
 		final Cursor cursor = toolkit.createCustomCursor(image, hotSpot, "drag_hand");
 
@@ -890,8 +890,6 @@ public class Fenetre extends JFrame {
 									(posY + (y2 - y) / 100), posZ);
 						} else if (gElement instanceof GraphicNode) {
 							view.moveElementAtPx(gElement, e.getX(), e.getY());
-							view.getCamera().resetView();
-
 						}
 					}
 				});
