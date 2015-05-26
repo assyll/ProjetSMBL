@@ -25,6 +25,7 @@ public class CustomGraphRenderer {
 
 	public static void setStyleGraphDoubleCircle(Graph... graphics) {
 		for (Graph graph : graphics) {
+			graph.removeAttribute("ui.stylesheet");
 			graph.addAttribute("ui.quality");
 			graph.addAttribute("ui.antialias");
 			graph.addAttribute(
@@ -43,6 +44,7 @@ public class CustomGraphRenderer {
 
 	public static void setStyleGraphRobot(Graph... graphics) {
 		for (Graph graph : graphics) {
+			graph.removeAttribute("ui.stylesheet");
 			graph.addAttribute("ui.quality");
 			graph.addAttribute("ui.antialias");
 			graph.addAttribute(
@@ -61,6 +63,7 @@ public class CustomGraphRenderer {
 
 	public static void setStyleGraphBasic(Graph... graphics) {
 		for (Graph graph : graphics) {
+			graph.removeAttribute("ui.stylesheet");
 			graph.addAttribute("ui.quality");
 			graph.addAttribute("ui.antialias");
 			graph.addAttribute(
