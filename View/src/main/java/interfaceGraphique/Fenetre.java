@@ -306,7 +306,6 @@ public class Fenetre extends JFrame {
 		structGraphAgent = new JButton("Structurer / Déstructurer");
 
 		// Ajout des boutons dans les panneaux respectifs
-		panelModifJSon.add(cleanGraphJson);
 		panelModifJSon.add(addNodeJSon);
 		panelModifJSon.add(suppNodeJSon);
 		panelModifJSon.add(addEdgeJSon);
@@ -492,18 +491,6 @@ public class Fenetre extends JFrame {
 							viewJson.getCamera().resetView();
 						}
 					}
-				}
-			}
-		});
-
-		cleanGraphJson.addActionListener(new ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				if (isGraphJsonLoaded) {
-					graphJson.clear();
-					isGraphJsonLoaded = false;
-				} else {
-					textColorStatut
-							.appendDoc("Générez un graphe ou ajoutez un noeud avant tout");
 				}
 			}
 		});
@@ -710,18 +697,6 @@ public class Fenetre extends JFrame {
 			}
 		});
 
-		cleanGraphJson.addActionListener(new ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				if (isGraphAgentLoaded) {
-					graphAgent.clear();
-					isGraphAgentLoaded = false;
-				} else {
-					textColorStatut
-							.appendDoc("Générez un graphe ou ajoutez un noeud avant tout");
-				}
-			}
-		});
-
 		// Action lors du clic sur l'item "Node +" de la partie droite
 		addNodeAgent.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -837,7 +812,7 @@ public class Fenetre extends JFrame {
 			}
 		});
 
-		// Action lors du clic sur l'item "Clean" de la partie gauche
+		// Action lors du clic sur l'item "Clean" de la partie droite
 		cleanGraphAgent.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
