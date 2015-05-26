@@ -886,7 +886,9 @@ public class Fenetre extends JFrame {
 										+ "<br/>";
 							}
 							s += "</html>";
-							jCompView.setToolTipText(s);
+							if ((jCompView.getToolTipText() == null || !jCompView.getToolTipText().equals(s))) {
+								jCompView.setToolTipText(s);
+							}
 						} else if (elem instanceof GraphicSprite) {
 							String idSprite = elem.getId();
 							Edge edge = graph.getEdge(idSprite);
@@ -895,8 +897,10 @@ public class Fenetre extends JFrame {
 										+ "<br/>";
 							}
 							s += "</html>";
-							jCompView.setToolTipText(s);
-						} else {
+							if ((jCompView.getToolTipText() == null || !jCompView.getToolTipText().equals(s))) {
+								jCompView.setToolTipText(s);
+							}
+						} else if (jCompView.getToolTipText() != null) {
 							jCompView.setToolTipText(null);
 							view.display(viewer.getGraphicGraph(), true);
 						}
