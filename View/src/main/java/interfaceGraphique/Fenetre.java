@@ -86,7 +86,7 @@ public class Fenetre extends JFrame {
 			zoomArrAgent, zoomTextAgent, addNodeJSon, addEdgeJSon,
 			suppNodeJSon, suppEdgeJSon, suppNodeAgent, suppEdgeAgent,
 			addNodeAgent, addEdgeAgent, structGraphJson, structGraphAgent,
-			zoomCenterJSon, zoomCenterAgent, cleanGraph;
+			zoomCenterJSon, zoomCenterAgent, cleanGraphJSon, cleanGraphAgent;
 
 	JMenuBar menu_bar1;
 
@@ -137,11 +137,11 @@ public class Fenetre extends JFrame {
 
 		// Initialisation et définition du panneau d'ajout de noeuds et de
 		// transition gauche
-		panelModifJSon = new JPanel(new GridLayout(5, 1, 0, 25));
+		panelModifJSon = new JPanel(new GridLayout(6, 1, 0, 25));
 
 		// Initialisation et définition du panneau d'ajout de noeuds et de
 		// transition droit
-		panelModifAgent = new JPanel(new GridLayout(5, 1, 0, 25));
+		panelModifAgent = new JPanel(new GridLayout(6, 1, 0, 25));
 
 		// Initialisation et définition du panneau de modification du zoom de la
 		// partie gauche
@@ -152,7 +152,8 @@ public class Fenetre extends JFrame {
 		panelZoomTextAgent = new JPanel(new GridLayout(1, 2, 20, 5));
 
 		// Initialisation du bouton de clean des graphes
-		cleanGraph = new JButton("<html><b>Clean</b></html>");
+		cleanGraphJSon = new JButton("<html><b>Clean</b></html>");
+		cleanGraphAgent = new JButton("<html><b>Clean</b></html>");
 
 		// Initialisation des bouttons de zoom
 		zoomAvantJSon = new JButton("<html><b>Zoom +</b></html>");
@@ -306,11 +307,13 @@ public class Fenetre extends JFrame {
 		structGraphAgent = new JButton("Structurer / Déstructurer");
 
 		// Ajout des boutons dans les panneaux respectifs
+		panelModifJSon.add(cleanGraphJSon);
 		panelModifJSon.add(addNodeJSon);
 		panelModifJSon.add(suppNodeJSon);
 		panelModifJSon.add(addEdgeJSon);
 		panelModifJSon.add(suppEdgeJSon);
 		panelModifJSon.add(structGraphJson);
+		panelModifAgent.add(cleanGraphAgent);
 		panelModifAgent.add(addNodeAgent);
 		panelModifAgent.add(suppNodeAgent);
 		panelModifAgent.add(addEdgeAgent);
@@ -489,6 +492,12 @@ public class Fenetre extends JFrame {
 			}
 		});
 
+		cleanGraphJSon.addActionListener(new ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				//TODO bouton clean
+			}
+		});
+		
 		// Action lors du clic sur l'item "Node +" de la partie gauche
 		addNodeJSon.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -680,6 +689,12 @@ public class Fenetre extends JFrame {
 						}
 					}
 				}
+			}
+		});
+		
+		cleanGraphJSon.addActionListener(new ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				//TODO bouton clean
 			}
 		});
 
