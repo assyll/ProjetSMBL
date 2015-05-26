@@ -71,8 +71,7 @@ public class Fenetre extends JFrame {
 
 	JPanel panelFile, panelGraph, panelGraphJSon, panelGraphAgent,
 			panelZoomJSon, panelZoomAgent, panelModifJSon, panelModifAgent,
-			panelOptionJSon, panelOptionAgent, panelZoomTextJSon,
-			panelZoomTextAgent;
+			panelOptionJSon, panelOptionAgent;
 
 	JSplitPane splitPaneHorizontale, splitPaneVerticale;
 
@@ -86,13 +85,15 @@ public class Fenetre extends JFrame {
 			zoomArrAgent, zoomTextAgent, addNodeJSon, addEdgeJSon,
 			suppNodeJSon, suppEdgeJSon, suppNodeAgent, suppEdgeAgent,
 			addNodeAgent, addEdgeAgent, structGraphJson, structGraphAgent,
-			zoomCenterJSon, zoomCenterAgent, cleanGraphJson, cleanGraphAgent;
+			zoomCenterJSon, zoomCenterAgent, cleanGraphJson, cleanGraphAgent,
+			displayJson, displayAgent;
 
 	JMenuBar menu_bar1;
 
-	JMenu menu1;
+	JMenu menuFile, menuDisplay;
 
-	JMenuItem importMenu, exitMenu;
+	JMenuItem importMenu, exitMenu, displayDoubleCircle, displayRobot,
+			displayBasic;
 
 	Viewer viewerJson, viewerAgent;
 
@@ -104,7 +105,7 @@ public class Fenetre extends JFrame {
 
 	Double x = null, y = null, x2 = null, y2 = null;
 
-	Double valZoom;
+	Double valZoom = 100.00;
 
 	DecimalFormat df = new DecimalFormat("###.00");
 
@@ -137,20 +138,11 @@ public class Fenetre extends JFrame {
 
 		// Initialisation et définition du panneau d'ajout de noeuds et de
 		// transition gauche
-
 		panelModifJSon = new JPanel(new GridLayout(6, 1, 0, 15));
 
 		// Initialisation et définition du panneau d'ajout de noeuds et de
 		// transition droit
 		panelModifAgent = new JPanel(new GridLayout(6, 1, 0, 15));
-
-		// Initialisation et définition du panneau de modification du zoom de la
-		// partie gauche
-		panelZoomTextJSon = new JPanel(new GridLayout(1, 2, 20, 0));
-
-		// Initialisation et définition du panneau de modification du zoom de la
-		// partie droite
-		panelZoomTextAgent = new JPanel(new GridLayout(1, 2, 20, 0));
 
 		// Initialisation des boutons de clean des graphes
 		cleanGraphJson = new JButton("<html><b>Clean</b></html>");
@@ -161,10 +153,12 @@ public class Fenetre extends JFrame {
 		zoomArrJSon = new JButton("<html><b>Zoom -</b></html>");
 		zoomTextJSon = new JButton("<html><b>%</b></html>");
 		zoomCenterJSon = new JButton("<html><b>Center</b></html>");
+		displayJson = new JButton("<html><b>Display</b></html>");
 		zoomAvantAgent = new JButton("<html><b>Zoom +</b></html>");
 		zoomArrAgent = new JButton("<html><b>Zoom -</b></html>");
 		zoomTextAgent = new JButton("<html><b>%</b></html>");
 		zoomCenterAgent = new JButton("<html><b>Center</b></html>");
+		displayAgent = new JButton("<html><b>Display</b></html>");
 
 		// initialisation de la zone de texte pour le pourcentage de zoom
 		textJSon = new JTextField();
@@ -273,37 +267,33 @@ public class Fenetre extends JFrame {
 
 		});
 
-		// Ajout des boutons de zoom et pourcent dans leur panel respectif
-		panelZoomTextJSon.add(textJSon);
-		panelZoomTextJSon.add(zoomTextJSon);
-		panelZoomTextAgent.add(textAgent);
-		panelZoomTextAgent.add(zoomTextAgent);
-
 		// Initialisation et définition du panneau pour zoomer le graphe Json
-		panelZoomJSon = new JPanel(new GridLayout(4, 1, 20, 35));
+		panelZoomJSon = new JPanel(new GridLayout(5, 1, 0, 20));
 		panelZoomJSon.add(zoomAvantJSon);
 		panelZoomJSon.add(zoomArrJSon);
-		panelZoomJSon.add(panelZoomTextJSon);
+		panelZoomJSon.add(textJSon);
 		panelZoomJSon.add(zoomCenterJSon);
+		panelZoomJSon.add(displayJson);
 
 		// Initialisation et définition du panneau pour zoomer le graphe Agent
-		panelZoomAgent = new JPanel(new GridLayout(4, 1, 20, 35));
+		panelZoomAgent = new JPanel(new GridLayout(5, 1, 0, 20));
 		panelZoomAgent.add(zoomAvantAgent);
 		panelZoomAgent.add(zoomArrAgent);
-		panelZoomAgent.add(panelZoomTextAgent);
+		panelZoomAgent.add(textAgent);
 		panelZoomAgent.add(zoomCenterAgent);
+		panelZoomAgent.add(displayAgent);
 
 		// Initialisation des boutons d'option
 		addNodeJSon = new JButton("Node +");
 		suppNodeJSon = new JButton("Node -");
 		addEdgeJSon = new JButton("Edge +");
 		suppEdgeJSon = new JButton("Edge -");
-		structGraphJson = new JButton("Structurer / Déstructurer");
+		structGraphJson = new JButton("Manual");
 		addNodeAgent = new JButton("Node +");
 		suppNodeAgent = new JButton("Node -");
 		addEdgeAgent = new JButton("Edge +");
 		suppEdgeAgent = new JButton("Edge -");
-		structGraphAgent = new JButton("Structurer / Déstructurer");
+		structGraphAgent = new JButton("Manual");
 
 		// Ajout des boutons dans les panneaux respectifs
 		panelModifJSon.add(addNodeJSon);
@@ -321,13 +311,13 @@ public class Fenetre extends JFrame {
 
 		// Initialisation et définition panneau option gauche
 		panelOptionJSon = new JPanel(new GridLayout(2, 1, 0, 50));
-		panelOptionJSon.setPreferredSize(new Dimension(175, 200));
+		panelOptionJSon.setPreferredSize(new Dimension(80, 200));
 		panelOptionJSon.add(panelZoomJSon);
 		panelOptionJSon.add(panelModifJSon);
 
 		// Initialisation et définition panneau option droit
 		panelOptionAgent = new JPanel(new GridLayout(2, 1, 0, 50));
-		panelOptionAgent.setPreferredSize(new Dimension(175, 200));
+		panelOptionAgent.setPreferredSize(new Dimension(80, 200));
 		panelOptionAgent.add(panelZoomAgent);
 		panelOptionAgent.add(panelModifAgent);
 
@@ -348,15 +338,24 @@ public class Fenetre extends JFrame {
 		// Initialisation et définition de la barre de menu et ses composants
 		menu_bar1 = new JMenuBar();
 
-		menu1 = new JMenu("File");
+		menuFile = new JMenu("File");
+		menuDisplay = new JMenu("Display");
 
 		importMenu = new JMenuItem("Import");
 		exitMenu = new JMenuItem("Exit");
 
-		menu1.add(importMenu);
-		menu1.add(exitMenu);
+		displayDoubleCircle = new JMenuItem("Double Circle");
+		displayRobot = new JMenuItem("Robot");
+		displayBasic = new JMenuItem("Basic");
 
-		menu_bar1.add(menu1);
+		menuFile.add(importMenu);
+		menuFile.add(exitMenu);
+		menuDisplay.add(displayDoubleCircle);
+		menuDisplay.add(displayRobot);
+		menuDisplay.add(displayBasic);
+
+		menu_bar1.add(menuFile);
+		menu_bar1.add(menuDisplay);
 
 		// Initialisation des paramètres que va contenir le 2nd splitPane
 		scrollJSon = new JScrollPane();
@@ -393,6 +392,28 @@ public class Fenetre extends JFrame {
 			}
 		});
 
+		// Action lors du clic sur l'item "Double Circle"
+		displayDoubleCircle.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				CustomGraphRenderer.setStyleGraphDoubleCircle(graphJson,
+						graphAgent);
+			}
+		});
+
+		// Action lors du clic sur l'item "Robot"
+		displayRobot.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				CustomGraphRenderer.setStyleGraphRobot(graphJson, graphAgent);
+			}
+		});
+
+		// Action lors du clic sur l'item "Basic"
+		displayBasic.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				CustomGraphRenderer.setStyleGraphBasic(graphJson, graphAgent);
+			}
+		});
+
 		// Action lors du clic sur l'item "To GraphStream"
 		buttonGS.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -410,6 +431,8 @@ public class Fenetre extends JFrame {
 						initPanelGraphJson();
 						textJSon.setText("100 %");
 						textAgent.setText("100 %");
+						structGraphAgent.setText("Manual");
+						structGraphJson.setText("Manual");
 
 						graphAgent = GraphModifier.GraphToGraph(graphJson,
 								GRAPH_AGENT_NAME);
@@ -614,9 +637,11 @@ public class Fenetre extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				if (isGraphJsonLoaded) {
 					if (isAutoLayoutJson) {
+						structGraphJson.setText("Auto");
 						viewerJson.disableAutoLayout();
 						isAutoLayoutJson = false;
 					} else {
+						structGraphJson.setText("Manual");
 						viewerJson.enableAutoLayout();
 						isAutoLayoutJson = true;
 					}
@@ -635,12 +660,23 @@ public class Fenetre extends JFrame {
 
 		// Action lors du clic sur l'item "Clean" de la partie gauche
 		cleanGraphJson.addActionListener(new ActionListener() {
-
 			public void actionPerformed(ActionEvent e) {
 				if (isGraphJsonLoaded) {
 					panelGraphJSon.removeAll();
 					isGraphJsonLoaded = false;
 					panelGraphJSon.updateUI();
+				} else {
+					textColorStatut.appendDoc("Générez un graphe au préalable");
+				}
+			}
+		});
+
+		// Action lors du clic sur l'item "Display" de la partie gauche
+		// TODO Gérez la view sur le nouvel affichage du graphe
+		displayJson.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (isGraphJsonLoaded) {
+					graphJson.display();
 				} else {
 					textColorStatut.appendDoc("Générez un graphe au préalable");
 				}
@@ -797,9 +833,11 @@ public class Fenetre extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				if (isGraphAgentLoaded) {
 					if (isAutoLayoutAgent) {
+						structGraphJson.setText("Auto");
 						viewerAgent.disableAutoLayout();
 						isAutoLayoutAgent = false;
 					} else {
+						structGraphJson.setText("Manual");
 						viewerAgent.enableAutoLayout();
 						isAutoLayoutAgent = true;
 					}
@@ -830,6 +868,18 @@ public class Fenetre extends JFrame {
 			}
 		});
 
+		// Action lors du clic sur l'item "Display" de la partie droite
+		// TODO Gérez la view sur le nouvel affichage du graphe
+		displayAgent.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (isGraphAgentLoaded) {
+					graphAgent.display();
+				} else {
+					textColorStatut.appendDoc("Générez un graphe au préalable");
+				}
+			}
+		});
+
 		// Création et définition du splitPane de la fenêtre principale
 		splitPaneHorizontale = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
 				panelFile, panelGraph);
@@ -840,7 +890,7 @@ public class Fenetre extends JFrame {
 				scrollJSon, scrollAgent);
 		splitPaneVerticale.setDividerSize(5);
 		splitPaneVerticale
-				.setDividerLocation((widthWindow - sizeSeparator + 75) / 3);
+				.setDividerLocation((widthWindow - sizeSeparator + 350) / 3);
 
 		panelGraph.add(panelOptionAgent, BorderLayout.EAST);
 		panelGraph.add(panelOptionJSon, BorderLayout.WEST);
@@ -886,8 +936,10 @@ public class Fenetre extends JFrame {
 										+ "<br/>";
 							}
 							s += "</html>";
-							if ((jCompView.getToolTipText() == null || !jCompView.getToolTipText().equals(s))) {
+							if ((jCompView.getToolTipText() == null || !jCompView
+									.getToolTipText().equals(s))) {
 								jCompView.setToolTipText(s);
+								view.display(viewer.getGraphicGraph(), true);
 							}
 						} else if (elem instanceof GraphicSprite) {
 							String idSprite = elem.getId();
@@ -897,8 +949,10 @@ public class Fenetre extends JFrame {
 										+ "<br/>";
 							}
 							s += "</html>";
-							if ((jCompView.getToolTipText() == null || !jCompView.getToolTipText().equals(s))) {
+							if ((jCompView.getToolTipText() == null || !jCompView
+									.getToolTipText().equals(s))) {
 								jCompView.setToolTipText(s);
+								view.display(viewer.getGraphicGraph(), true);
 							}
 						} else if (jCompView.getToolTipText() != null) {
 							jCompView.setToolTipText(null);
@@ -995,7 +1049,7 @@ public class Fenetre extends JFrame {
 	}
 
 	public void initGraphPropertiesJson() {
-		CustomGraphRenderer.setStyleGraph(graphJson);
+		CustomGraphRenderer.setStyleGraphBasic(graphJson);
 		GraphModifier.setNodesClass(graphJson);
 		spriteManagerJson = new SpriteManager(graphJson);
 		GraphModifier.generateSprites(graphJson, spriteManagerJson);
@@ -1016,7 +1070,7 @@ public class Fenetre extends JFrame {
 	}
 
 	public void initGraphPropertiesAgent() {
-		CustomGraphRenderer.setStyleGraph(graphAgent);
+		CustomGraphRenderer.setStyleGraphBasic(graphAgent);
 		GraphModifier.setNodesClass(graphAgent);
 		spriteManagerAgent = new SpriteManager(graphAgent);
 		GraphModifier.generateSprites(graphAgent, spriteManagerAgent);
