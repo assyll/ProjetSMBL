@@ -637,9 +637,13 @@ public class Fenetre extends JFrame {
 		cleanGraphJson.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-				panelGraphJSon.removeAll();
-				isGraphJsonLoaded = false;
-				panelGraphJSon.updateUI();
+				if (isGraphJsonLoaded) {
+					panelGraphJSon.removeAll();
+					isGraphJsonLoaded = false;
+					panelGraphJSon.updateUI();
+				} else {
+					textColorStatut.appendDoc("Générez un graphe au préalable");
+				}
 			}
 		});
 
@@ -816,9 +820,13 @@ public class Fenetre extends JFrame {
 		cleanGraphAgent.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-				panelGraphAgent.removeAll();
-				isGraphAgentLoaded = false;
-				panelGraphAgent.updateUI();
+				if (isGraphAgentLoaded) {
+					panelGraphAgent.removeAll();
+					isGraphAgentLoaded = false;
+					panelGraphAgent.updateUI();
+				} else {
+					textColorStatut.appendDoc("Générez un graphe au préalable");
+				}
 			}
 		});
 
