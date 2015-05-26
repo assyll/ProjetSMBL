@@ -890,8 +890,8 @@ public class Fenetre extends JFrame {
 							jCompView.setToolTipText(s);
 						} else {
 							jCompView.setToolTipText(null);
+							view.display(viewer.getGraphicGraph(), true);
 						}
-						view.display(viewer.getGraphicGraph(), true);
 					}
 
 					public void mouseDragged(MouseEvent e) {
