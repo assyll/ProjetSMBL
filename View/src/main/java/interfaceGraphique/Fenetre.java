@@ -12,6 +12,8 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 
@@ -52,6 +54,9 @@ import convertGraph.Fichier;
 
 @SuppressWarnings("serial")
 public class Fenetre extends JFrame {
+	
+	public final static String pathGraphTemp =
+			"./src/test/resources/grapheTemporaire";
 	
 	public static final String NO_FILE_SELECTED = "Veuillez d'abord s�lectionner un fichier � importer";
 	public static final String GRAPH_JSON_NAME = "graphJson";
@@ -277,17 +282,15 @@ public class Fenetre extends JFrame {
 				dialog.show();
 				
 				// Graphe genere avec succes
-				if (dialog.getPath() != null) {
+				if (dialog.isGeneratedWithSuccess()) {
 					// Met a jour les a valeurs afin quon puisse appuyer sur
 					// "To GraphStream"
 					isDirectoryNeo4j = true;
 					wantToGenerateToLeft = true;
 					
-					File file = new File("./src/test/resources/"
-							+ dialog.getPath());
-					graphJson = new ConvertNeo4jToGS(
-							file.toString()).convertToGS();
-					textDirectory.setText(file.toString());
+					graphJson = new ConvertNeo4jToGS(pathGraphTemp).
+							convertToGS();
+					textDirectory.setText(pathGraphTemp);
 				} else {
 					textDirectory.setText("Directory");
 				}
@@ -685,6 +688,15 @@ public class Fenetre extends JFrame {
 		frame.setResizable(true);
 		frame.setBounds(xWindow, yWindow, widthWindow, heightWindow);
 		frame.setVisible(true);
+		
+		// Redefinition de la fermeture de la fenetre
+		frame.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				Fichier.deleteFileOrDirectory(pathGraphTemp);
+				super.windowClosing(e);
+			}
+		});
 
 		// Centrage de la fenetre
 		pack();

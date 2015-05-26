@@ -8,6 +8,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -18,35 +19,30 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import convertGraph.Fichier;
+
 @SuppressWarnings("serial")
 public class GraphGenerateDialog extends JDialog{
 
-	private String path;
-	private JLabel pathLabel, nodeLabel, transLabel;
-	private JTextField pathField, nodeField, transField;
+	private static String nodeOld = "", transOld = "";
+	
+	private boolean generatedWithSuccess;
+	private JLabel nodeLabel, transLabel;
+	private JTextField nodeField, transField;
 	
 	public GraphGenerateDialog (JFrame jFrame) {
 		super(jFrame, "Generate Graph", true);
-		setSize(600, 320);
+		
+		this.generatedWithSuccess = false;
+		
+		setSize(600, 250);
 		setLocationRelativeTo(null);
 		setResizable(false);
 		initComponent();
+		putValuesOld();
 	}
 	
 	private void initComponent() {
-		// path
-		JPanel pathPanel = new JPanel();
-		pathPanel.setBackground(Color.WHITE);
-		pathPanel.setPreferredSize(new Dimension(550, 75));
-		pathField = new JTextField();
-		pathField.setFont(new Font(" TimesRoman ",Font.PLAIN,20));
-		pathField.setPreferredSize(new Dimension(350, 40));
-		pathPanel.setBorder(BorderFactory.
-				createTitledBorder("Save path"));
-		pathLabel = new JLabel("Enter a name   :");
-		pathPanel.add(pathLabel);
-		pathPanel.add(pathField);
-		
 		// node
 		JPanel nodePanel = new JPanel();
 		nodePanel.setBackground(Color.WHITE);
@@ -76,7 +72,6 @@ public class GraphGenerateDialog extends JDialog{
 		// panel principal
 		JPanel mainPanel = new JPanel();
 		mainPanel.setBackground(Color.WHITE);
-		mainPanel.add(pathPanel);
 		mainPanel.add(nodePanel);
 		mainPanel.add(transPanel);
 		
@@ -87,9 +82,9 @@ public class GraphGenerateDialog extends JDialog{
 		okButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				int nbNodes, nbTrans;
-				path = pathField.getText();
+				registerValuesOld();
 				
+				int nbNodes, nbTrans;
 				try {
 					nbNodes = Integer.parseInt(nodeField.getText());
 				} catch (Exception e) {
@@ -108,9 +103,16 @@ public class GraphGenerateDialog extends JDialog{
 					return;
 				}
 				
+				JOptionPane jOptionPane = new JOptionPane();
+				jOptionPane.showMessageDialog(
+						GraphGenerateDialog.this.getContentPane(),
+						"Graph is building ...");
+				
 				setVisible(false);
 				String success = genererLeGraphe(nbNodes, nbTrans)
 						? "success" : "failure";
+				
+				jOptionPane.setVisible(false);
 				JOptionPane.showMessageDialog(
 						GraphGenerateDialog.this.getContentPane(),
 						"Graph generated with " + success + " !");
@@ -121,6 +123,7 @@ public class GraphGenerateDialog extends JDialog{
 		cancelButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				registerValuesOld();
 				setVisible(false);
 			}
 			
@@ -134,21 +137,31 @@ public class GraphGenerateDialog extends JDialog{
 		getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 	}
 	
+	private void putValuesOld() {
+		nodeField.setText(nodeOld);
+		transField.setText(transOld);
+	}
+	
+	private void registerValuesOld() {
+		nodeOld = nodeField.getText();
+		transOld = transField.getText();
+	}
+	
 	private boolean genererLeGraphe(int nbNodes, int nbTrans) {
 		GeneratorGraph generator = new GeneratorGraph();
 		
 		try {
-			generator.generateGrapheAleat("./src/test/resources/" + path,
+			generator.generateGrapheAleat(Fenetre.pathGraphTemp,
 					nbNodes, nbTrans);
+			generatedWithSuccess = true;
 		} catch (Exception e) {
-			path = null;
 			return false;
 		}
 		return true;
 	}
 	
-	public String getPath() {
-		return path;
+	public boolean isGeneratedWithSuccess() {
+		return generatedWithSuccess;
 	}
 	
 }

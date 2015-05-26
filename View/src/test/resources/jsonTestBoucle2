@@ -1,1 +1,6 @@
-{"Nodes":[{"Name":"node 1","Source":true,"Final":false,"Attribut 1":"att 1","Attribut 2":"att 2"},{"Name":"node 2","Source":false,"Final":false,"Attribut 1":"att 1","Attribut 2":"att 2"},{"Name":"node 3","Source":false,"Final":false,"Attribut 1":"att 1","Attribut 2":"att 2"},{"Name":"node 4","Source":false,"Final":true}],"Edges":[{"Label":"edge 1","NodeB":"node 1","NodeE":"node 2","Action":"action !","Attribut 1":"att 1","Attribut 2":"att 2"},{"Label":"edge 2","NodeB":"node 2","NodeE":"node 4","Action":"action !","Attribut 1":"att 1","Attribut 2":"att 2"},{"Label":"edge 3","NodeB":"node 1","NodeE":"node 3","Action":"action !","Attribut 1":"att 1","Attribut 2":"att 2"},{"Label":"edge 4","NodeB":"node 3","NodeE":"node 4","Action":"action !"},{"Label":"edge 5","NodeB":"node 4","NodeE":"node 3","Action":"action !"},{"Label":"edge 6","NodeB":"node 4","NodeE":"node 3","Action":"action !"},{"Label":"edge 7","NodeB":"node 3","NodeE":"node 4","Action":"action !"}]}
+{"timeStamp":"2015-05-26 13:42:13 PM","userName":"user0"}
+{"timeStamp":"2015-05-26 13:42:37 PM","userName":"user0"}
+{"timeStamp":"2015-05-26 13:42:58 PM","userName":"user1"}
+{"timeStamp":"2015-05-26 13:43:35 PM","userName":"user1"}
+{"timeStamp":"2015-05-26 13:44:28 PM","userName":"user1"}
+{"timeStamp":"2015-05-26 13:45:23 PM","userName":"user1"}

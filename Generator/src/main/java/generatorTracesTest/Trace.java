@@ -30,7 +30,6 @@ public class Trace {
 		return _actions;
 	}
 	
-	//TODO regler date
 	public void addProprietes() {
 		String username = chooseUsernameAleat();
 		Date date = usernames.get(username);

@@ -11,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.io.File;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -19,6 +20,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -35,18 +37,25 @@ import convertGraph.Fichier;
 
 @SuppressWarnings("serial")
 public class TracesGenerateDialog extends JDialog {
-
+	
+	private static String tracesNumberOld = "", maxActionOld = "",
+			percentOld = "", pathOld = "";
+	private static boolean stopToFinalOld = true, withRepetitionOld = false;
+	
 	private String path;
 	private boolean possible;
 	private boolean oneByFile;
 	private int methodEnabled;
 	private JPanel methodPanel, tracesPanel, maxActionsPanel, stopToFinalPanel,
-	               withRepetitionPanel, percentToCoverPanel;
+	               withRepetitionPanel, percentToCoverPanel, pathSavePanel;
 	private JLabel methodLabel, nbTracesLabel, maxActionsLabel,
-	               stopToFinalLabel, withRepetitionLabel, percentToCoverLabel;
-	private JTextField nbTracesField, maxActionsField, percentToCoverField;
+	               stopToFinalLabel, withRepetitionLabel, percentToCoverLabel,
+	               pathSaveLabel;
+	private JTextField nbTracesField, maxActionsField, percentToCoverField,
+	                   pathSaveField;
 	private JRadioButton methodRButton1, methodRButton2, methodRButton3;
 	private JComboBox stopToFinalComboBox, withRepetitionComboBox;
+	private JButton pathSaveButton;
 	
 	private GeneratorTraces generatorTraces;
 	
@@ -54,14 +63,14 @@ public class TracesGenerateDialog extends JDialog {
 			boolean oneByFile, Graph graphGS, boolean isLoaded) {
 		
 		super(jFrame, "Traces Generate", true);
-		this.path = "./src/test/resources";
 		this.oneByFile = oneByFile;
 		
-		setSize(700, 320);
+		setSize(700, 400);
 		setLocationRelativeTo(null);
 		setResizable(false);
 		
 		initComponent();
+		putOldValues();
 		activer(1);
 		
 		if (isLoaded) {
@@ -88,6 +97,7 @@ public class TracesGenerateDialog extends JDialog {
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void initComponent() {
+		
 		// method
 		methodPanel = new JPanel();
 		methodPanel.setBackground(Color.WHITE);
@@ -223,6 +233,40 @@ public class TracesGenerateDialog extends JDialog {
  				createTitledBorder("Percent to cover (0 to 100)"));
  		percentToCoverPanel.add(percentToCoverLabel);
  		percentToCoverPanel.add(percentToCoverField);
+ 		
+ 		// chemin de sauvegarde
+ 		pathSavePanel = new JPanel();
+ 		pathSavePanel.setBackground(Color.WHITE);
+ 		pathSavePanel.setPreferredSize(new Dimension(650, 75));
+ 		
+ 		pathSaveButton = new JButton(">");
+ 		pathSaveButton.setFont(new Font("TimesRoman", Font.PLAIN, 20));
+ 		pathSaveButton.setPreferredSize(new Dimension(100, 40));
+ 		pathSaveButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				JFileChooser jFileChooser = new JFileChooser(
+						new File("./src/test/resources"));
+				
+				if (jFileChooser.showSaveDialog(null) ==
+						JFileChooser.APPROVE_OPTION) {
+					path = jFileChooser.getSelectedFile().toString();
+					pathSaveField.setText(path);
+				}
+			}
+ 		});
+ 		
+ 		pathSaveField = new JTextField();
+ 		pathSaveField.setFont(new Font("TimesRoman", Font.BOLD, 14));
+ 		pathSaveField.setPreferredSize(new Dimension(400, 40));
+ 		
+ 		pathSaveLabel = new JLabel("Enter a path :");
+ 		
+ 		pathSavePanel.setBorder(BorderFactory.
+ 				createTitledBorder("Save path"));
+ 		pathSavePanel.add(pathSaveLabel);
+ 		pathSavePanel.add(pathSaveField);
+ 		pathSavePanel.add(pathSaveButton);
 		
 		// panel principal
 		JPanel mainPanel = new JPanel();
@@ -232,6 +276,7 @@ public class TracesGenerateDialog extends JDialog {
 		mainPanel.add(stopToFinalPanel);
 		mainPanel.add(withRepetitionPanel);
 		mainPanel.add(percentToCoverPanel);
+		mainPanel.add(pathSavePanel);
 		mainPanel.setBackground(Color.WHITE);
 		
 		// panel des boutons
@@ -241,6 +286,7 @@ public class TracesGenerateDialog extends JDialog {
 		okButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				registerOldValues();
 				actionClickToGenerate();
 			}
 		});
@@ -249,6 +295,7 @@ public class TracesGenerateDialog extends JDialog {
 		cancelButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				registerOldValues();
 				TracesGenerateDialog.this.close();
 			}
 			
@@ -291,6 +338,26 @@ public class TracesGenerateDialog extends JDialog {
 		percentToCoverPanel.setEnabled(isMethod2);
 		percentToCoverLabel.setEnabled(isMethod2);
 		percentToCoverField.setEnabled(isMethod2);
+	}
+	
+	private void putOldValues() {
+		nbTracesField.setText(tracesNumberOld);
+		maxActionsField.setText(maxActionOld);
+		stopToFinalComboBox.setSelectedItem("" + stopToFinalOld);
+		withRepetitionComboBox.setSelectedItem("" + withRepetitionOld);
+		percentToCoverField.setText(percentOld);
+		pathSaveField.setText(pathOld);
+	}
+	
+	private void registerOldValues() {
+		tracesNumberOld = nbTracesField.getText();
+		maxActionOld = maxActionsField.getText();
+		stopToFinalOld = Boolean.parseBoolean(
+				(String) stopToFinalComboBox.getSelectedItem());
+		withRepetitionOld = Boolean.parseBoolean(
+				(String) withRepetitionComboBox.getSelectedItem());
+		percentOld = percentToCoverField.getText();
+		pathOld = pathSaveField.getText();
 	}
 	
 	private void actionClickToGenerate() {
@@ -373,12 +440,12 @@ public class TracesGenerateDialog extends JDialog {
 	
 	private void initGeneratorTraces(Graph graphGS) {
 		
-		String pathInter = "graphInterQuiVaEtreSupp";
-		Fichier.deleteFileOrDirectory(pathInter);
+		String pathGraphTemp = Fenetre.pathGraphTemp;
+		Fichier.deleteFileOrDirectory(pathGraphTemp);
 		
 		try {
-			new ConvertGStoNeo4j(graphGS).convertToNeo4j(pathInter);
-			generatorTraces = new GeneratorTraces(pathInter);
+			new ConvertGStoNeo4j(graphGS).convertToNeo4j(pathGraphTemp);
+			generatorTraces = new GeneratorTraces(pathGraphTemp);
 		} catch (Exception e) {
 			errorGraph();
 		}
@@ -391,7 +458,6 @@ public class TracesGenerateDialog extends JDialog {
 	private void writeTracesInFichier(List<Trace> traces) {
 		boolean isWrited = true;
 		
-		path += "/testTrace";
 		if (oneByFile) {
 			for (int i = 0; i < traces.size(); i++) {
 				isWrited = isWrited &&
