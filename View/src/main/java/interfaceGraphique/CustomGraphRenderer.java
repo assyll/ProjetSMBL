@@ -69,7 +69,7 @@ public class CustomGraphRenderer {
 			graph.addAttribute(
 					"ui.stylesheet",
 					"edge { z-index: 0; text-alignment: along; text-offset: 0,10; fill-color: grey; }"
-							+ "node { z-index: 3; text-alignment: at-right; fill-color: rgb(50,150,100); }"
+							+ "node { z-index: 3; text-alignment: at-right;}"
 							+ NODE_SOURCE
 							+ "{ size: 13px; shape: triangle; }"
 							+ NODE_FINAL
