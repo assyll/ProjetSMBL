@@ -38,6 +38,7 @@ import javax.swing.JTextField;
 
 import jsonAndGS.FileFormatException;
 import jsonAndGS.JsonToGS;
+import jsonAndGS.MyJsonGenerator;
 
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
@@ -81,8 +82,8 @@ public class Window extends JFrame {
 
 	JColorTextPane textColorStatut;
 
-	JButton buttonGS, zoomAvantJSon, zoomArrJSon, zoomAvantAgent,
-			zoomArrAgent, addNodeJSon, addEdgeJSon,
+	JButton buttonGS, zoomAvantJSon, zoomArrJSon, zoomTextJSon, zoomAvantAgent,
+			zoomArrAgent, zoomTextAgent, addNodeJSon, addEdgeJSon,
 			suppNodeJSon, suppEdgeJSon, suppNodeAgent, suppEdgeAgent,
 			addNodeAgent, addEdgeAgent, structGraphJson, structGraphAgent,
 			zoomCenterJSon, zoomCenterAgent, cleanGraphJson, cleanGraphAgent,
@@ -151,10 +152,12 @@ public class Window extends JFrame {
 		// Initialisation des bouttons de zoom
 		zoomAvantJSon = new JButton("<html><b>Zoom +</b></html>");
 		zoomArrJSon = new JButton("<html><b>Zoom -</b></html>");
+		zoomTextJSon = new JButton("<html><b>%</b></html>");
 		zoomCenterJSon = new JButton("<html><b>Center</b></html>");
 		displayJson = new JButton("<html><b>Display</b></html>");
 		zoomAvantAgent = new JButton("<html><b>Zoom +</b></html>");
 		zoomArrAgent = new JButton("<html><b>Zoom -</b></html>");
+		zoomTextAgent = new JButton("<html><b>%</b></html>");
 		zoomCenterAgent = new JButton("<html><b>Center</b></html>");
 		displayAgent = new JButton("<html><b>Display</b></html>");
 
@@ -473,6 +476,49 @@ public class Window extends JFrame {
 			}
 		});
 
+		// Action lors du clic sur l'item "%" de la partie gauche
+		zoomTextJSon.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO faire une fonction pour traiter les données de la
+				// zone de texte car elle apparait 4 fois (textJSon,
+				// textAgent, zoomTextJSon, zoomTextAgent
+
+				if (isGraphJsonLoaded) {
+					String s = textJSon.getText();
+					double pourcentage = 0, zoomAvant = 0, zoomArr = 0, total = 0;
+					boolean isNumber = false;
+					for (int i = 0; i < s.length(); i++) {
+						if (!Character.isDigit(s.charAt(i))) {
+							isNumber = false;
+						} else {
+							isNumber = true;
+						}
+					}
+
+					if (!isNumber) {
+						textColorStatut.appendDoc("Ce n'est pas un entier \n");
+					} else {
+						pourcentage = Integer.parseInt(s);
+						if (pourcentage > 100) {
+							zoomAvant = pourcentage - 100;
+							total = 1 - (zoomAvant / 100);
+							viewJson.getCamera().setViewPercent(total);
+							valZoom = viewJson.getCamera().getViewPercent() * 100;
+							textJSon.setText(df.format(valZoom) + " %");
+						} else if (pourcentage < 100) {
+							zoomArr = 100 - pourcentage;
+							total = 1 + (zoomArr / 100);
+							viewJson.getCamera().setViewPercent(total);
+							valZoom = viewJson.getCamera().getViewPercent() * 100;
+							textJSon.setText(df.format(valZoom) + " %");
+						} else {
+							viewJson.getCamera().resetView();
+						}
+					}
+				}
+			}
+		});
+
 		// Action lors du clic sur l'item "Node +" de la partie gauche
 		addNodeJSon.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -649,6 +695,46 @@ public class Window extends JFrame {
 		zoomArrAgent.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				modifZoom(viewAgent, textAgent, isGraphAgentLoaded, DEZOOM);
+			}
+		});
+
+		// Action lors du clic sur l'item "%" de la partie droite
+		zoomTextAgent.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if (isGraphAgentLoaded) {
+					String s = textAgent.getText();
+					double pourcentage = 0, zoomAvant = 0, zoomArr = 0, total = 0;
+					boolean isNumber = false;
+					for (int i = 0; i < s.length(); i++) {
+						if (!Character.isDigit(s.charAt(i))) {
+							isNumber = false;
+						} else {
+							isNumber = true;
+						}
+					}
+
+					if (!isNumber) {
+						textColorStatut.appendDoc("Ce n'est pas un entier \n");
+					} else {
+						pourcentage = Integer.parseInt(s);
+						if (pourcentage > 100) {
+							zoomAvant = pourcentage - 100;
+							total = 1 - (zoomAvant / 100);
+							viewAgent.getCamera().setViewPercent(total);
+							valZoom = viewAgent.getCamera().getViewPercent() * 100;
+							textAgent.setText(df.format(valZoom) + " %");
+						} else if (pourcentage < 100) {
+							zoomArr = 100 - pourcentage;
+							total = 1 + (zoomArr / 100);
+							viewAgent.getCamera().setViewPercent(total);
+							valZoom = viewAgent.getCamera().getViewPercent() * 100;
+
+						} else {
+							viewAgent.getCamera().resetView();
+							textAgent.setText(df.format(valZoom) + " %");
+						}
+					}
+				}
 			}
 		});
 
@@ -840,30 +926,18 @@ public class Window extends JFrame {
 				new MouseMotionListener() {
 
 					public void mouseMoved(MouseEvent e) {
-						String s = "<html>";
-						GraphicElement elem = findNodeOrSpriteAtWithTolerance(
+						String s;
+						GraphicElement gElem = findNodeOrSpriteAtWithTolerance(
 								e, view);
-						if (elem instanceof GraphicNode) {
-							String idNode = elem.getId();
-							Node node = graph.getNode(idNode);
-							for (String attKey : node.getAttributeKeySet()) {
-								s += attKey + " : " + node.getAttribute(attKey)
-										+ "<br/>";
-							}
-							s += "</html>";
+						if (gElem instanceof GraphicNode) {
+							s = getNodeInformations(gElem, graph);
 							if ((jCompView.getToolTipText() == null || !jCompView
 									.getToolTipText().equals(s))) {
 								jCompView.setToolTipText(s);
 								view.display(viewer.getGraphicGraph(), true);
 							}
-						} else if (elem instanceof GraphicSprite) {
-							String idSprite = elem.getId();
-							Edge edge = graph.getEdge(idSprite);
-							for (String attKey : edge.getAttributeKeySet()) {
-								s += attKey + " : " + edge.getAttribute(attKey)
-										+ "<br/>";
-							}
-							s += "</html>";
+						} else if (gElem instanceof GraphicSprite) {
+							s = getEdgeInformations(gElem, graph);
 							if ((jCompView.getToolTipText() == null || !jCompView
 									.getToolTipText().equals(s))) {
 								jCompView.setToolTipText(s);
@@ -1028,6 +1102,54 @@ public class Window extends JFrame {
 			valZoom = view.getCamera().getViewPercent() * 100;
 			jTextField.setText(df.format(valZoom) + " %");
 		}
+	}
+
+	public String getNodeInformations(GraphicElement gElem, Graph graph) {
+		String s = "<html>", fieldName, res = "";
+		String idNode = gElem.getId();
+		int cpt = 1;
+		Node node = graph.getNode(idNode);
+
+		fieldName = MyJsonGenerator.FORMAT_NODE_NAME;
+		s += fieldName + " : " + node.getId() + "<br/>";
+		fieldName = MyJsonGenerator.FORMAT_NODE_SOURCE;
+		s += fieldName + " : " + node.getAttribute(fieldName) + "<br/>";
+		fieldName = MyJsonGenerator.FORMAT_NODE_FINAL;
+		s += fieldName + " : " + node.getAttribute(fieldName) + "<br/>";
+		while (res != null) {
+			fieldName = MyJsonGenerator.FORMAT_NODE_ATTRIBUT + cpt++;
+			res = node.getAttribute(fieldName);
+			if (res != null) {
+				s += fieldName + " : " + res + "<br/>";
+			}
+		}
+		s += "</html>";
+		return s;
+	}
+
+	public String getEdgeInformations(GraphicElement gElem, Graph graph) {
+		String s = "<html>", fieldName, res = "";
+		String idSprite = gElem.getId();
+		Edge edge = graph.getEdge(idSprite);
+		int cpt = 1;
+
+		fieldName = MyJsonGenerator.FORMAT_EDGE_LABEL;
+		s += fieldName + " : " + edge.getId() + "<br/>";
+		fieldName = MyJsonGenerator.FORMAT_EDGE_ACTION;
+		s += fieldName + " : " + edge.getAttribute("ui.label") + "<br/>";
+		fieldName = MyJsonGenerator.FORMAT_EDGE_BEGIN_NODE;
+		s += fieldName + " : " + edge.getSourceNode() + "<br/>";
+		fieldName = MyJsonGenerator.FORMAT_EDGE_END_NODE;
+		s += fieldName + " : " + edge.getTargetNode() + "<br/>";
+		while (res != null) {
+			fieldName = MyJsonGenerator.FORMAT_EDGE_ATTRIBUT + cpt++;
+			res = edge.getAttribute(fieldName);
+			if (res != null) {
+				s += fieldName + " : " + res + "<br/>";
+			}
+		}
+		s += "</html>";
+		return s;
 	}
 
 	private void msgError(String s) {
