@@ -105,7 +105,7 @@ public class Fenetre extends JFrame {
 	Double x = null, y = null, x2 = null, y2 = null;
 
 	Double valZoom;
-	
+
 	DecimalFormat df = new DecimalFormat("###.00");
 
 	final int xWindow = 50, yWindow = 0, widthWindow = 1280,
@@ -167,7 +167,7 @@ public class Fenetre extends JFrame {
 
 		// initialisation de la zone de texte pour le pourcentage de zoom
 		textJSon = new JTextField();
-		textJSon.setText(valZoom+" %");
+		textJSon.setText(valZoom + " %");
 		textJSon.addKeyListener(new KeyListener() {
 			public void keyPressed(KeyEvent evt) {
 				if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
@@ -192,15 +192,13 @@ public class Fenetre extends JFrame {
 								zoomAvant = pourcentage - 100;
 								total = 1 - (zoomAvant / 100);
 								viewJson.getCamera().setViewPercent(total);
-								valZoom = viewJson.getCamera()
-										.getViewPercent()*100;
+								valZoom = viewJson.getCamera().getViewPercent() * 100;
 								textJSon.setText(df.format(valZoom) + " %");
 							} else if (pourcentage < 100) {
 								zoomArr = 100 - pourcentage;
 								total = 1 + (zoomArr / 100);
 								viewJson.getCamera().setViewPercent(total);
-								valZoom = viewJson.getCamera()
-										.getViewPercent()*100;
+								valZoom = viewJson.getCamera().getViewPercent() * 100;
 								textJSon.setText(df.format(valZoom) + " %");
 							} else {
 								viewJson.getCamera().resetView();
@@ -219,9 +217,9 @@ public class Fenetre extends JFrame {
 			}
 
 		});
-		
+
 		textAgent = new JTextField();
-		textAgent.setText(valZoom+" %");
+		textAgent.setText(valZoom + " %");
 		textAgent.addKeyListener(new KeyListener() {
 			public void keyPressed(KeyEvent evt) {
 				if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
@@ -247,14 +245,14 @@ public class Fenetre extends JFrame {
 								total = 1 - (zoomAvant / 100);
 								viewAgent.getCamera().setViewPercent(total);
 								valZoom = viewAgent.getCamera()
-										.getViewPercent()*100;
+										.getViewPercent() * 100;
 								textAgent.setText(df.format(valZoom) + " %");
 							} else if (pourcentage < 100) {
 								zoomArr = 100 - pourcentage;
 								total = 1 + (zoomArr / 100);
 								viewJson.getCamera().setViewPercent(total);
 								valZoom = viewAgent.getCamera()
-										.getViewPercent()*100;
+										.getViewPercent() * 100;
 								textAgent.setText(df.format(valZoom) + " %");
 							} else {
 								viewAgent.getCamera().resetView();
@@ -403,7 +401,8 @@ public class Fenetre extends JFrame {
 				if (!textDirectory.getText().equals("Directory")) {
 					JsonToGS jSTGS = new JsonToGS();
 					try {
-						frame.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+						frame.setCursor(Cursor
+								.getPredefinedCursor(Cursor.WAIT_CURSOR));
 						graphJson = jSTGS.generateGraph(
 								textDirectory.getText(), GRAPH_JSON_NAME);
 						initGraphPropertiesJson();
@@ -415,7 +414,8 @@ public class Fenetre extends JFrame {
 								GRAPH_AGENT_NAME);
 						initGraphPropertiesAgent();
 						initPanelGraphAgent();
-						frame.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+						frame.setCursor(Cursor
+								.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 
 					} catch (JsonParseException exception) {
 						textColorStatut.appendErrorMessage(exception
@@ -474,15 +474,13 @@ public class Fenetre extends JFrame {
 							zoomAvant = pourcentage - 100;
 							total = 1 - (zoomAvant / 100);
 							viewJson.getCamera().setViewPercent(total);
-							valZoom = viewJson.getCamera()
-									.getViewPercent() * 100;
+							valZoom = viewJson.getCamera().getViewPercent() * 100;
 							textJSon.setText(df.format(valZoom) + " %");
 						} else if (pourcentage < 100) {
 							zoomArr = 100 - pourcentage;
 							total = 1 + (zoomArr / 100);
 							viewJson.getCamera().setViewPercent(total);
-							valZoom = viewJson.getCamera()
-									.getViewPercent() * 100;
+							valZoom = viewJson.getCamera().getViewPercent() * 100;
 							textJSon.setText(df.format(valZoom) + " %");
 						} else {
 							viewJson.getCamera().resetView();
@@ -494,10 +492,16 @@ public class Fenetre extends JFrame {
 
 		cleanGraphJSon.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				//TODO bouton clean
+				if (isGraphJsonLoaded) {
+					graphJson.clear();
+					isGraphJsonLoaded = false;
+				} else {
+					textColorStatut
+							.appendDoc("Générez un graphe ou ajoutez un noeud avant tout");
+				}
 			}
 		});
-		
+
 		// Action lors du clic sur l'item "Node +" de la partie gauche
 		addNodeJSon.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -673,15 +677,13 @@ public class Fenetre extends JFrame {
 							zoomAvant = pourcentage - 100;
 							total = 1 - (zoomAvant / 100);
 							viewAgent.getCamera().setViewPercent(total);
-							valZoom = viewAgent.getCamera()
-									.getViewPercent() * 100;
+							valZoom = viewAgent.getCamera().getViewPercent() * 100;
 							textAgent.setText(df.format(valZoom) + " %");
 						} else if (pourcentage < 100) {
 							zoomArr = 100 - pourcentage;
 							total = 1 + (zoomArr / 100);
 							viewAgent.getCamera().setViewPercent(total);
-							valZoom = viewAgent.getCamera()
-									.getViewPercent() * 100;
+							valZoom = viewAgent.getCamera().getViewPercent() * 100;
 
 						} else {
 							viewAgent.getCamera().resetView();
@@ -691,10 +693,16 @@ public class Fenetre extends JFrame {
 				}
 			}
 		});
-		
+
 		cleanGraphJSon.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				//TODO bouton clean
+				if (isGraphAgentLoaded) {
+					graphAgent.clear();
+					isGraphAgentLoaded = false;
+				} else {
+					textColorStatut
+							.appendDoc("Générez un graphe ou ajoutez un noeud avant tout");
+				}
 			}
 		});
 
@@ -843,14 +851,16 @@ public class Fenetre extends JFrame {
 		frame.setLocationRelativeTo(null);
 	}
 
-	public void setListenerOnViewer(final Viewer viewer, final Graph graph, final JTextField jTextField, final boolean isGraphLoaded) {
+	public void setListenerOnViewer(final Viewer viewer, final Graph graph,
+			final JTextField jTextField, final boolean isGraphLoaded) {
 		// Action lors du déplacement de la souris sur le graphe
 		final View view = viewer.getDefaultView();
 		final JComponent jCompView = (JComponent) view;
 		Toolkit toolkit = Toolkit.getDefaultToolkit();
 		Image image = toolkit.getImage("./src/main/resources/Drag_Hand.png");
 		Point hotSpot = new Point(0, 0);
-		final Cursor cursor = toolkit.createCustomCursor(image, hotSpot, "drag_hand");
+		final Cursor cursor = toolkit.createCustomCursor(image, hotSpot,
+				"drag_hand");
 
 		viewer.getDefaultView().addMouseMotionListener(
 				new MouseMotionListener() {
@@ -916,11 +926,13 @@ public class Fenetre extends JFrame {
 			}
 
 			public void mouseEntered(MouseEvent arg0) {
-				jCompView.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+				jCompView.setCursor(Cursor
+						.getPredefinedCursor(Cursor.HAND_CURSOR));
 			}
 
 			public void mouseExited(MouseEvent arg0) {
-				jCompView.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+				jCompView.setCursor(Cursor
+						.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 			}
 
 			public void mousePressed(MouseEvent e) {
@@ -934,7 +946,8 @@ public class Fenetre extends JFrame {
 				x = null;
 				y = null;
 				gElement = null;
-				jCompView.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+				jCompView.setCursor(Cursor
+						.getPredefinedCursor(Cursor.HAND_CURSOR));
 			}
 
 		});
@@ -977,10 +990,10 @@ public class Fenetre extends JFrame {
 		viewerJson = new Viewer(graphJson,
 				Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
 		isGraphJsonLoaded = true;
-		
+
 		viewerJson.enableAutoLayout();
 		isAutoLayoutJson = true;
-		
+
 		viewJson = viewerJson.addDefaultView(false);
 
 		// suppression du comportement par defaut du MouseListener de la view
@@ -998,7 +1011,7 @@ public class Fenetre extends JFrame {
 		viewerAgent = new Viewer(graphAgent,
 				Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
 		isGraphAgentLoaded = true;
-		
+
 		viewerAgent.enableAutoLayout();
 		isAutoLayoutAgent = true;
 		viewAgent = viewerAgent.addDefaultView(false);
@@ -1006,7 +1019,8 @@ public class Fenetre extends JFrame {
 		// suppression du comportement par defaut du MouseListener de la view
 		viewAgent.setMouseManager(new CustomMouseManager());
 
-		setListenerOnViewer(viewerAgent, graphAgent, textAgent, isGraphAgentLoaded);	
+		setListenerOnViewer(viewerAgent, graphAgent, textAgent,
+				isGraphAgentLoaded);
 	}
 
 	public void initPanelGraphJson() {
@@ -1022,8 +1036,9 @@ public class Fenetre extends JFrame {
 		panelGraphAgent.add((Component) viewAgent, BorderLayout.CENTER);
 		scrollAgent.setViewportView(panelGraphAgent);
 	}
-	
-	public void modifZoom(View view, JTextField jTextField, boolean isGraphLoaded, double modif) {
+
+	public void modifZoom(View view, JTextField jTextField,
+			boolean isGraphLoaded, double modif) {
 		double zoom, valZoom;
 		if (isGraphLoaded) {
 			zoom = view.getCamera().getViewPercent();
