@@ -81,8 +81,8 @@ public class Window extends JFrame {
 
 	JColorTextPane textColorStatut;
 
-	JButton buttonGS, zoomAvantJSon, zoomArrJSon, zoomTextJSon, zoomAvantAgent,
-			zoomArrAgent, zoomTextAgent, addNodeJSon, addEdgeJSon,
+	JButton buttonGS, zoomAvantJSon, zoomArrJSon, zoomAvantAgent,
+			zoomArrAgent, addNodeJSon, addEdgeJSon,
 			suppNodeJSon, suppEdgeJSon, suppNodeAgent, suppEdgeAgent,
 			addNodeAgent, addEdgeAgent, structGraphJson, structGraphAgent,
 			zoomCenterJSon, zoomCenterAgent, cleanGraphJson, cleanGraphAgent,
@@ -151,12 +151,10 @@ public class Window extends JFrame {
 		// Initialisation des bouttons de zoom
 		zoomAvantJSon = new JButton("<html><b>Zoom +</b></html>");
 		zoomArrJSon = new JButton("<html><b>Zoom -</b></html>");
-		zoomTextJSon = new JButton("<html><b>%</b></html>");
 		zoomCenterJSon = new JButton("<html><b>Center</b></html>");
 		displayJson = new JButton("<html><b>Display</b></html>");
 		zoomAvantAgent = new JButton("<html><b>Zoom +</b></html>");
 		zoomArrAgent = new JButton("<html><b>Zoom -</b></html>");
-		zoomTextAgent = new JButton("<html><b>%</b></html>");
 		zoomCenterAgent = new JButton("<html><b>Center</b></html>");
 		displayAgent = new JButton("<html><b>Display</b></html>");
 
@@ -475,49 +473,6 @@ public class Window extends JFrame {
 			}
 		});
 
-		// Action lors du clic sur l'item "%" de la partie gauche
-		zoomTextJSon.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				// TODO faire une fonction pour traiter les données de la
-				// zone de texte car elle apparait 4 fois (textJSon,
-				// textAgent, zoomTextJSon, zoomTextAgent
-
-				if (isGraphJsonLoaded) {
-					String s = textJSon.getText();
-					double pourcentage = 0, zoomAvant = 0, zoomArr = 0, total = 0;
-					boolean isNumber = false;
-					for (int i = 0; i < s.length(); i++) {
-						if (!Character.isDigit(s.charAt(i))) {
-							isNumber = false;
-						} else {
-							isNumber = true;
-						}
-					}
-
-					if (!isNumber) {
-						textColorStatut.appendDoc("Ce n'est pas un entier \n");
-					} else {
-						pourcentage = Integer.parseInt(s);
-						if (pourcentage > 100) {
-							zoomAvant = pourcentage - 100;
-							total = 1 - (zoomAvant / 100);
-							viewJson.getCamera().setViewPercent(total);
-							valZoom = viewJson.getCamera().getViewPercent() * 100;
-							textJSon.setText(df.format(valZoom) + " %");
-						} else if (pourcentage < 100) {
-							zoomArr = 100 - pourcentage;
-							total = 1 + (zoomArr / 100);
-							viewJson.getCamera().setViewPercent(total);
-							valZoom = viewJson.getCamera().getViewPercent() * 100;
-							textJSon.setText(df.format(valZoom) + " %");
-						} else {
-							viewJson.getCamera().resetView();
-						}
-					}
-				}
-			}
-		});
-
 		// Action lors du clic sur l'item "Node +" de la partie gauche
 		addNodeJSon.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -694,46 +649,6 @@ public class Window extends JFrame {
 		zoomArrAgent.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				modifZoom(viewAgent, textAgent, isGraphAgentLoaded, DEZOOM);
-			}
-		});
-
-		// Action lors du clic sur l'item "%" de la partie droite
-		zoomTextAgent.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				if (isGraphAgentLoaded) {
-					String s = textAgent.getText();
-					double pourcentage = 0, zoomAvant = 0, zoomArr = 0, total = 0;
-					boolean isNumber = false;
-					for (int i = 0; i < s.length(); i++) {
-						if (!Character.isDigit(s.charAt(i))) {
-							isNumber = false;
-						} else {
-							isNumber = true;
-						}
-					}
-
-					if (!isNumber) {
-						textColorStatut.appendDoc("Ce n'est pas un entier \n");
-					} else {
-						pourcentage = Integer.parseInt(s);
-						if (pourcentage > 100) {
-							zoomAvant = pourcentage - 100;
-							total = 1 - (zoomAvant / 100);
-							viewAgent.getCamera().setViewPercent(total);
-							valZoom = viewAgent.getCamera().getViewPercent() * 100;
-							textAgent.setText(df.format(valZoom) + " %");
-						} else if (pourcentage < 100) {
-							zoomArr = 100 - pourcentage;
-							total = 1 + (zoomArr / 100);
-							viewAgent.getCamera().setViewPercent(total);
-							valZoom = viewAgent.getCamera().getViewPercent() * 100;
-
-						} else {
-							viewAgent.getCamera().resetView();
-							textAgent.setText(df.format(valZoom) + " %");
-						}
-					}
-				}
 			}
 		});
 
