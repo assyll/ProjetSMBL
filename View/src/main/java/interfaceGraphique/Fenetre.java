@@ -412,7 +412,6 @@ public class Fenetre extends JFrame {
 								GRAPH_AGENT_NAME);
 						initGraphPropertiesAgent();
 						initPanelGraphAgent();
-						frame.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 
 					} catch (JsonParseException exception) {
 						textColorStatut.appendErrorMessage(exception
@@ -423,6 +422,8 @@ public class Fenetre extends JFrame {
 					} catch (FileFormatException exception) {
 						textColorStatut.appendErrorMessage(exception
 								.getMessage());
+					} finally {
+						frame.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 					}
 				} else {
 					textColorStatut.appendDoc(NO_FILE_SELECTED);

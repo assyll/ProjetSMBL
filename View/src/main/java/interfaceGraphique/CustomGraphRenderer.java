@@ -29,17 +29,32 @@ public class CustomGraphRenderer {
 		graph.addAttribute(
 				"ui.stylesheet",
 				"edge { z-index: 0; text-alignment: along; text-offset: 0,10; fill-color: grey; }"
-						+ "node { z-index: 3; text-alignment: at-right; size: 20px; fill-image: url(\"./src/main/resources/Node_Light-blue.png\"); fill-mode: image-scaled; }"
+						+ "node { z-index: 3; text-alignment: at-right; size: 20px; fill-image: url(\"./src/main/resources/Node_Basic.png\"); fill-mode: image-scaled; }"
 						+ NODE_SOURCE
-						+ "{ size: 30px; fill-image: url(\"./src/main/resources/Node_Source_Light-blue.png\"); fill-mode: image-scaled; }"
+						+ "{ size: 20px; fill-image: url(\"./src/main/resources/Node_Source.png\"); fill-mode: image-scaled; }"
 						+ NODE_FINAL
-						+ "{ size: 30px; fill-image: url(\"./src/main/resources/Node_Final_Red.png\"); fill-mode: image-scaled; }"
+						+ "{ size: 20px; fill-image: url(\"./src/main/resources/Node_Final.png\"); fill-mode: image-scaled; }"
 						+ NODE_SOURCE_FINAL
-						+ "{ size: 30px; fill-image: url(\"./src/main/resources/Node_Source_Final_Red.png\"); fill-mode: image-scaled; }"
+						+ "{ size: 20px; fill-image: url(\"./src/main/resources/Node_Source_Final.png\"); fill-mode: image-scaled; }"
 						+ "sprite { z-index: 2; shape: circle; fill-color: rgba(250,250,250,64); stroke-mode: plain; stroke-color: lightblue; }");
 
 		/*
-		 * z-index: 0; text-alignment: along; text-offset: 0,10; fill-color:
+		 * "edge { z-index: 0; text-alignment: along; text-offset: 0,10; fill-color: grey; }"
+		 * +
+		 * "node { z-index: 3; text-alignment: at-right; size: 20px; fill-image: url(\"./src/main/resources/Node_Light-blue.png\"); fill-mode: image-scaled; }"
+		 * + NODE_SOURCE +
+		 * "{ size: 30px; fill-image: url(\"./src/main/resources/Node_Source_Light-blue.png\"); fill-mode: image-scaled; }"
+		 * + NODE_FINAL +
+		 * "{ size: 30px; fill-image: url(\"./src/main/resources/Node_Final_Red.png\"); fill-mode: image-scaled; }"
+		 * + NODE_SOURCE_FINAL +
+		 * "{ size: 30px; fill-image: url(\"./src/main/resources/Node_Source_Final_Red.png\"); fill-mode: image-scaled; }"
+		 * +
+		 * "sprite { z-index: 2; shape: circle; fill-color: rgba(250,250,250,64); stroke-mode: plain; stroke-color: lightblue; }"
+		 * );
+		 */
+		
+		/*
+		 * "edge { z-index: 0; text-alignment: along; text-offset: 0,10; fill-color:
 		 * grey; }" +
 		 * "node { z-index: 3; text-alignment: at-right; fill-color: rgb(50,150,100); }"
 		 * + NODE_SOURCE + "{ size: 13px; shape: triangle; }" + NODE_FINAL +
