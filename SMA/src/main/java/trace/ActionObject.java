@@ -2,15 +2,15 @@ package trace;
 
 import java.util.Map;
 
-public class Action {
+public class ActionObject {
 	private String _userName ;
 	private Map<String,String> _actionMap;
 	
-	public Action(String userName){
+	public ActionObject(String userName){
 		_userName = userName;
 	}
 	
-	public Action(String userName, Map<String,String> actionMap) {
+	public ActionObject(String userName, Map<String,String> actionMap) {
 		_userName = userName;
 		_actionMap = actionMap;
 	}
