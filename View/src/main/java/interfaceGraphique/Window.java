@@ -480,7 +480,7 @@ public class Window extends JFrame {
 		// Action lors du clic sur l'item "Robot"
 		displayRobot.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				cGraphRenderer.setStyleGraphRobot(graphJson, graphAgent);
+				cGraphRenderer.setStyleGraphAutomaton(graphJson, graphAgent);
 			}
 		});
 
