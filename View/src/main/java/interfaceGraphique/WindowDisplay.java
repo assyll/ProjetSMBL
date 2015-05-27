@@ -60,9 +60,11 @@ public class WindowDisplay extends JFrame {
 
 	final int xWindow = 50, yWindow = 0, widthWindow = 1280,
 			heightWindow = 700;
+	
+	CustomGraphRenderer cGraphRenderer;
 
 	public WindowDisplay(String name, View viewGraph, Viewer viewerGraph, Graph oldGraph) {
-
+		cGraphRenderer = new CustomGraphRenderer();
 		view = viewGraph;
 		viewer = viewerGraph;
 		graph = oldGraph;
@@ -375,7 +377,7 @@ public class WindowDisplay extends JFrame {
 	}
 	
 	public void initGraphPropertiesJson() {
-		CustomGraphRenderer.setStyleGraphBasic(graph);
+		cGraphRenderer.setStyleGraphBasic(graph);
 		GraphModifier.setNodesClass(graph);
 		spriteManager = new SpriteManager(graph);
 		GraphModifier.generateSprites(graph, spriteManager);
