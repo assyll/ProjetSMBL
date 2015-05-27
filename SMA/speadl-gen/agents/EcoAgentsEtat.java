@@ -1,6 +1,7 @@
 package agents;
 
 import agents.interfaces.AgentTrace;
+import trace.interfaces.IGetAction;
 
 @SuppressWarnings("all")
 public abstract class EcoAgentsEtat {
@@ -15,7 +16,7 @@ public abstract class EcoAgentsEtat {
      * This can be called to access the provided port.
      * 
      */
-    public AgentTrace agentCourant();
+    public AgentTrace currentAgents();
   }
   
   public interface Parts {
@@ -35,16 +36,16 @@ public abstract class EcoAgentsEtat {
       
     }
     
-    private void init_agentCourant() {
-      assert this.agentCourant == null: "This is a bug.";
-      this.agentCourant = this.implementation.make_agentCourant();
-      if (this.agentCourant == null) {
-      	throw new RuntimeException("make_agentCourant() in agents.EcoAgentsEtat should not return null.");
+    private void init_currentAgents() {
+      assert this.currentAgents == null: "This is a bug.";
+      this.currentAgents = this.implementation.make_currentAgents();
+      if (this.currentAgents == null) {
+      	throw new RuntimeException("make_currentAgents() in agents.EcoAgentsEtat should not return null.");
       }
     }
     
     protected void initProvidedPorts() {
-      init_agentCourant();
+      init_currentAgents();
     }
     
     public ComponentImpl(final EcoAgentsEtat implem, final EcoAgentsEtat.Requires b, final boolean doInits) {
@@ -63,21 +64,31 @@ public abstract class EcoAgentsEtat {
       }
     }
     
-    private AgentTrace agentCourant;
+    private AgentTrace currentAgents;
     
-    public AgentTrace agentCourant() {
-      return this.agentCourant;
+    public AgentTrace currentAgents() {
+      return this.currentAgents;
     }
   }
   
-  public static class AgentEtat {
+  public static abstract class AgentEtat {
     public interface Requires {
+      /**
+       * This can be called by the implementation to access this required port.
+       * 
+       */
+      public IGetAction getTraceElement();
     }
     
     public interface Component extends EcoAgentsEtat.AgentEtat.Provides {
     }
     
     public interface Provides {
+      /**
+       * This can be called to access the provided port.
+       * 
+       */
+      public String qlqChose();
     }
     
     public interface Parts {
@@ -97,8 +108,16 @@ public abstract class EcoAgentsEtat {
         
       }
       
+      private void init_qlqChose() {
+        assert this.qlqChose == null: "This is a bug.";
+        this.qlqChose = this.implementation.make_qlqChose();
+        if (this.qlqChose == null) {
+        	throw new RuntimeException("make_qlqChose() in agents.EcoAgentsEtat$AgentEtat should not return null.");
+        }
+      }
+      
       protected void initProvidedPorts() {
-        
+        init_qlqChose();
       }
       
       public ComponentImpl(final EcoAgentsEtat.AgentEtat implem, final EcoAgentsEtat.AgentEtat.Requires b, final boolean doInits) {
@@ -115,6 +134,12 @@ public abstract class EcoAgentsEtat {
         	initParts();
         	initProvidedPorts();
         }
+      }
+      
+      private String qlqChose;
+      
+      public String qlqChose() {
+        return this.qlqChose;
       }
     }
     
@@ -156,6 +181,13 @@ public abstract class EcoAgentsEtat {
       }
       return this.selfComponent;
     }
+    
+    /**
+     * This should be overridden by the implementation to define the provided port.
+     * This will be called once during the construction of the component to initialize the port.
+     * 
+     */
+    protected abstract String make_qlqChose();
     
     /**
      * This can be called by the implementation to access the required ports.
@@ -271,7 +303,7 @@ public abstract class EcoAgentsEtat {
    * This will be called once during the construction of the component to initialize the port.
    * 
    */
-  protected abstract AgentTrace make_agentCourant();
+  protected abstract AgentTrace make_currentAgents();
   
   /**
    * This can be called by the implementation to access the required ports.
@@ -317,16 +349,14 @@ public abstract class EcoAgentsEtat {
    * This should be overridden by the implementation to instantiate the implementation of the species.
    * 
    */
-  protected EcoAgentsEtat.AgentEtat make_AgentEtat() {
-    return new EcoAgentsEtat.AgentEtat();
-  }
+  protected abstract EcoAgentsEtat.AgentEtat make_AgentEtat(final String id);
   
   /**
    * Do not call, used by generated code.
    * 
    */
-  public EcoAgentsEtat.AgentEtat _createImplementationOfAgentEtat() {
-    EcoAgentsEtat.AgentEtat implem = make_AgentEtat();
+  public EcoAgentsEtat.AgentEtat _createImplementationOfAgentEtat(final String id) {
+    EcoAgentsEtat.AgentEtat implem = make_AgentEtat(id);
     if (implem == null) {
     	throw new RuntimeException("make_AgentEtat() in agents.EcoAgentsEtat should not return null.");
     }
@@ -334,15 +364,6 @@ public abstract class EcoAgentsEtat {
     assert this.selfComponent != null: "This is a bug.";
     implem.ecosystemComponent = this.selfComponent;
     return implem;
-  }
-  
-  /**
-   * This can be called to create an instance of the species from inside the implementation of the ecosystem.
-   * 
-   */
-  protected EcoAgentsEtat.AgentEtat.Component newAgentEtat() {
-    EcoAgentsEtat.AgentEtat _implem = _createImplementationOfAgentEtat();
-    return _implem._newComponent(new EcoAgentsEtat.AgentEtat.Requires() {},true);
   }
   
   /**

@@ -23,7 +23,7 @@ namespace trace{
 		
 		requires traceElement: TraceElement 
 		
-		species ActionParser(userName: String){
+		species ActionParser(id: String){
 			provides actionGetter: IGetAction
 		}
 	}

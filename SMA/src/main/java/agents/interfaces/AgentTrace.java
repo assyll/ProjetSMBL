@@ -1,5 +1,10 @@
 package agents.interfaces;
 
-public interface AgentTrace {
+import java.util.Map;
 
+public interface AgentTrace {
+	
+	public Map<String,String> getAllCurrentAgentsMap();
+	
+	public String getCurrentAgent(String user);
 }

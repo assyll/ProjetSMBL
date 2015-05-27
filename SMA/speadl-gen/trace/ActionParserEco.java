@@ -323,14 +323,14 @@ public abstract class ActionParserEco {
    * This should be overridden by the implementation to instantiate the implementation of the species.
    * 
    */
-  protected abstract ActionParserEco.ActionParser make_ActionParser(final String userName);
+  protected abstract ActionParserEco.ActionParser make_ActionParser(final String id);
   
   /**
    * Do not call, used by generated code.
    * 
    */
-  public ActionParserEco.ActionParser _createImplementationOfActionParser(final String userName) {
-    ActionParserEco.ActionParser implem = make_ActionParser(userName);
+  public ActionParserEco.ActionParser _createImplementationOfActionParser(final String id) {
+    ActionParserEco.ActionParser implem = make_ActionParser(id);
     if (implem == null) {
     	throw new RuntimeException("make_ActionParser() in trace.ActionParserEco should not return null.");
     }
@@ -344,8 +344,8 @@ public abstract class ActionParserEco {
    * This can be called to create an instance of the species from inside the implementation of the ecosystem.
    * 
    */
-  protected ActionParserEco.ActionParser.Component newActionParser(final String userName) {
-    ActionParserEco.ActionParser _implem = _createImplementationOfActionParser(userName);
+  protected ActionParserEco.ActionParser.Component newActionParser(final String id) {
+    ActionParserEco.ActionParser _implem = _createImplementationOfActionParser(id);
     return _implem._newComponent(new ActionParserEco.ActionParser.Requires() {},true);
   }
 }
