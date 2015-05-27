@@ -6,7 +6,10 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
 
-import trace.Action;
+
+
+
+import trace.ActionObject;
 import trace.TraceElementEater;
 import trace.interfaces.IGetAction;
 
@@ -16,7 +19,7 @@ import com.fasterxml.jackson.core.JsonToken;
 
 public class TraceElementEaterImpl extends TraceElementEater implements Runnable, IGetAction{
 
-	Queue<Action> actionList = new LinkedList<Action>();
+	Queue<ActionObject> actionList = new LinkedList<ActionObject>();
 	
 	@Override
 	public void run() {
@@ -27,7 +30,7 @@ public class TraceElementEaterImpl extends TraceElementEater implements Runnable
 		while(!traceElement.isEmpty())
 		{
 			try {
-				Action action = getActionFromTraceElement(traceElement);
+				ActionObject action = getActionFromTraceElement(traceElement);
 				if(action != null){
 					actionList.add(action);
 				}
@@ -54,7 +57,7 @@ public class TraceElementEaterImpl extends TraceElementEater implements Runnable
 	}
 
 	@Override
-	public Action getNextAction() {
+	public ActionObject getNextAction() {
 		return actionList.poll();
 	}
 
@@ -64,13 +67,13 @@ public class TraceElementEaterImpl extends TraceElementEater implements Runnable
 		return actionList.peek().getUserName();
 	}
 	
-	public Action getActionFromTraceElement(String traceElement) throws IOException
+	public ActionObject getActionFromTraceElement(String traceElement) throws IOException
 	{
 		JsonParser parser = (new JsonFactory()).createParser(traceElement);
 		JsonToken token = null;
 		Map<String,String> actionFields = new HashMap<String,String>();
 		String userName = "";
-		Action action = null;
+		ActionObject action = null;
 		
 		while (!parser.isClosed()) {
 			token = parser.nextToken();
@@ -93,7 +96,7 @@ public class TraceElementEaterImpl extends TraceElementEater implements Runnable
 		}
 		
 		if(!actionFields.isEmpty()){
-			action = new Action(userName, actionFields);
+			action = new ActionObject(userName, actionFields);
 		}
 		
 		return action;
