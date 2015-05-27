@@ -15,12 +15,12 @@ import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.neo4j.graphdb.traversal.Evaluators;
 import org.neo4j.graphdb.traversal.Uniqueness;
-import org.neo4j.graphdb.traversal.UniquenessFactory;
 
 public class GeneratorTraces {
 	
-	public final static String _nameIdAttribut = "name";
-	public final static String _nameStartNode = "Racine";
+	public final static String _nameIdAttribut = "ui.label";
+	public final static String _sourceAttribut = "Source";
+	public final static String _finalAttribut = "Final";
 
 	private String _DB_PATH;
 	private State _initState;
@@ -71,8 +71,12 @@ public class GeneratorTraces {
 				
 				node = nodeIterator.next();
 				
-				isFinal = ! node.getRelationships(Direction.OUTGOING).
-						iterator().hasNext();
+				if (node.getProperty(_finalAttribut) instanceof Boolean) {
+					isFinal = (Boolean) node.getProperty(_finalAttribut);
+				} else {
+					isFinal = Boolean.parseBoolean(
+							(String) node.getProperty(_finalAttribut));
+				}
 				
 				state = new State ((String) node.
 						getProperty(_nameIdAttribut), isFinal);
@@ -108,6 +112,13 @@ public class GeneratorTraces {
 							getProperty(_nameIdAttribut),
 							state, stateAfterAction);
 					
+					for (String proprieteKey: relationShip.getPropertyKeys()) {
+						if (Trace.isKeyAttributBL(proprieteKey)) {
+							action.addProprietes(proprieteKey,
+									relationShip.getProperty(proprieteKey));
+						}
+					}
+					
 					if (!_actions.contains(action)) {
 						_actions.add(action);
 					}
@@ -115,8 +126,16 @@ public class GeneratorTraces {
 					state.addAction(action, stateAfterAction);
 					
 				}
-										
-				if (state.getName().equals(_nameStartNode)) {
+				
+				boolean isSource;
+				if (node.getProperty(_sourceAttribut) instanceof Boolean) {
+					isSource = (Boolean) node.getProperty(_sourceAttribut);
+				} else {
+					isSource = Boolean.parseBoolean(
+							(String) node.getProperty(_sourceAttribut));
+				}
+				
+				if (isSource) {
 					_initState = state;
 				}
 			}
@@ -152,7 +171,9 @@ public class GeneratorTraces {
 			for (int j = 0; j < maxActions && state != null; j++) {
 				Action actionAleat = state.getActionAleat();
 				state = state.executeAction(actionAleat);
-				trace.addAction(actionAleat);
+				if (actionAleat != null) {
+					trace.addAction(actionAleat);
+				}
 			}
 			
 			if ((state == null || !stopToFinal || state.isFinal())
@@ -177,7 +198,7 @@ public class GeneratorTraces {
 		float percent = 0.0f;
 		List<Trace> traces = new ArrayList<Trace>();
 		
-		while (percent < percentToCover) {
+		while (percent < (percentToCover / 100)) {
 			
 			State state = _initState;
 			Trace trace = new Trace();
@@ -212,13 +233,17 @@ public class GeneratorTraces {
 		
 		List<Trace> traces = new ArrayList<Trace>();
 		createDb();
-		
+
 		try (Transaction tx = _graphDB.beginTx()) {
-			
+
 			Node racine = _graphDB.findNode(
-					DynamicLabel.label("Racine"),
-					_nameIdAttribut, _nameStartNode);
-						
+					DynamicLabel.label("Racine"), _sourceAttribut, "true");
+			
+			if (racine == null) {
+				racine = _graphDB.findNode(
+						DynamicLabel.label("Racine"), _sourceAttribut, true);
+			}
+												
 			for ( Path position : _graphDB.traversalDescription()
 			        .depthFirst()
 			        .relationships(
@@ -232,7 +257,10 @@ public class GeneratorTraces {
 				
 				// Recuperation de la trace
 				Trace trace;
-				if (!endNode.hasRelationship(Direction.OUTGOING)) {
+				boolean isFinal =
+						endNode.getProperty(_finalAttribut).equals("true")
+						|| endNode.getProperty(_finalAttribut).equals(true);
+				if (isFinal) {
 					if (!traces.contains(trace = convertToTrace(position))) {
 						traces.add(trace);
 					}
@@ -257,8 +285,17 @@ public class GeneratorTraces {
 			State stateEnd = new State((String) relationship.
 					getEndNode().getProperty(_nameIdAttribut), !relationship.
 					getEndNode().hasRelationship(Direction.OUTGOING));
-			trace.addAction(new Action((String) relationship.
-					getProperty(_nameIdAttribut), stateStart, stateEnd));
+			
+			Action action = new Action((String) relationship.
+					getProperty(_nameIdAttribut), stateStart, stateEnd);
+			for (String keyAttribute: relationship.getPropertyKeys()) {
+				if (Trace.isKeyAttributBL(keyAttribute)) {
+					action.addProprietes(keyAttribute,
+							relationship.getProperty(keyAttribute));
+				}
+			}
+			
+			trace.addAction(action);
 		}
 		
 		return trace;
