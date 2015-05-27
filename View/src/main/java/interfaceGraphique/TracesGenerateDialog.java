@@ -457,7 +457,6 @@ public class TracesGenerateDialog extends JDialog {
 	
 	private void writeTracesInFichier(List<Trace> traces) {
 		boolean isWrited = true;
-		
 		if (oneByFile) {
 			for (int i = 0; i < traces.size(); i++) {
 				isWrited = isWrited &&

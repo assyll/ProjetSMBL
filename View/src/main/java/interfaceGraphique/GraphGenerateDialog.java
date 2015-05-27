@@ -151,6 +151,7 @@ public class GraphGenerateDialog extends JDialog{
 		GeneratorGraph generator = new GeneratorGraph();
 		
 		try {
+			Fichier.deleteFileOrDirectory(Fenetre.pathGraphTemp);
 			generator.generateGrapheAleat(Fenetre.pathGraphTemp,
 					nbNodes, nbTrans);
 			generatedWithSuccess = true;

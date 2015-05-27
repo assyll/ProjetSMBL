@@ -290,7 +290,8 @@ public class Fenetre extends JFrame {
 					
 					graphJson = new ConvertNeo4jToGS(pathGraphTemp).
 							convertToGS();
-					textDirectory.setText(pathGraphTemp);
+					textDirectory.setText("ready to load");
+					Fichier.deleteFileOrDirectory(pathGraphTemp);
 				} else {
 					textDirectory.setText("Directory");
 				}

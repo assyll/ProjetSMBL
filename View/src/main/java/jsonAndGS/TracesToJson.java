@@ -36,7 +36,7 @@ public class TracesToJson {
 	}
 	
 	private static String stringListToString(List<String> actionsListJson) {
-		List<String> actionsTriees = trierSelonTimeStamp(actionsListJson);
+		Queue<String> actionsTriees = trierSelonTimeStamp(actionsListJson);
 		String contenu = "";
 		for (String actionString: actionsTriees) {
 			contenu += actionString + "\n";
@@ -44,51 +44,63 @@ public class TracesToJson {
 		return contenu;
 	}
 	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private static List<String> trierSelonTimeStamp(List<String> actionsJson) {
-		Queue<String> actionsTriees = new PriorityQueue<String>(
-				10, new Comparator() {
+	private static Queue<String> trierSelonTimeStamp(List<String> actionsJson) {
+		PriorityQueue<String> actionsTriees = new PriorityQueue<String>(
+				actionsJson.size(), new Comparator<String>() {
+					
 					@Override
-					public int compare(Object arg0, Object arg1) {
-						Date date1 = extraireTimeStamp((String) arg0);
-						Date date2 = extraireTimeStamp((String) arg1);
+					public int compare(String arg0, String arg1) {
+						Date date1 = extraireTimeStamp(arg0);
+						Date date2 = extraireTimeStamp(arg1);
+						System.out.print(date1+" ? "+date2+":");
 						if (date1.equals(date2)) {
+							System.out.println("egales!!");
 							return 0;
 						} else if (date1.before(date2)) {
+							System.out.println("INF");
 							return -1;
 						} else {
-							return +1;
+							System.out.println("SUP");
+							return 1;
+						}
+					}
+					
+					private Date extraireTimeStamp(String actionJson) {
+						JsonFactory jfactory = new JsonFactory();
+						try {
+							JsonParser jParser = jfactory.createParser(actionJson);
+							jParser.nextToken();
+							String jToken = "";
+							
+							while (!jToken.equals("timeStamp")) {
+								jParser.nextToken();
+								jToken = jParser.getText();
+							}
+							
+							jParser.nextToken();
+							jToken = jParser.getText();
+							Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss a").
+									parse(jToken);
+							
+							return date;
+							
+						} catch (Exception e) {
+							return null;
 						}
 					}
 				});
 		
 		for (String actionJson: actionsJson) {
-			actionsTriees.offer(actionJson);
+			actionsTriees.add(actionJson);
+			if (actionsTriees.size() < 10) {
+				System.out.println("----------------------");
+				for (String string: new ArrayList<String>(actionsTriees)) {
+					System.out.println(string);
+				}
+			}
 		}
 		
-		return new ArrayList<String>(actionsTriees);
-	}
-	
-	private static Date extraireTimeStamp(String actionJson) {
-		JsonFactory jfactory = new JsonFactory();
-		try {
-			JsonParser jParser = jfactory.createParser(actionJson);
-			jParser.nextToken();
-			String jToken = "";
-			while (!jToken.equals("timeStamp")) {
-				jParser.nextToken();
-				jToken = jParser.getText();
-			}
-			jParser.nextToken();
-			jToken = jParser.getText();
-			Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss a").
-					parse(jToken);
-			
-			return date;
-			
-		} catch (Exception e) {
-			return null;
-		}
+		return actionsTriees;
 	}
 	
 	public static List<String> traceToJson(Trace trace) {
