@@ -129,8 +129,12 @@ public class Window extends JFrame {
 	SpriteManager spriteManagerJson, spriteManagerAgent;
 
 	GraphicElement gElement = null;
+	
+	CustomGraphRenderer cGraphRenderer;
 
 	public Window() {
+		cGraphRenderer = new CustomGraphRenderer();
+		cGraphRenderer.SetRenderer();
 
 		// Initialisation de la fen�tre principale
 		frame = new JFrame("Projet SMBL");
@@ -468,7 +472,7 @@ public class Window extends JFrame {
 		// Action lors du clic sur l'item "Double Circle"
 		displayDoubleCircle.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				CustomGraphRenderer.setStyleGraphDoubleCircle(graphJson,
+				cGraphRenderer.setStyleGraphDoubleCircle(graphJson,
 						graphAgent);
 			}
 		});
@@ -476,14 +480,14 @@ public class Window extends JFrame {
 		// Action lors du clic sur l'item "Robot"
 		displayRobot.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				CustomGraphRenderer.setStyleGraphRobot(graphJson, graphAgent);
+				cGraphRenderer.setStyleGraphRobot(graphJson, graphAgent);
 			}
 		});
 
 		// Action lors du clic sur l'item "Basic"
 		displayBasic.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				CustomGraphRenderer.setStyleGraphBasic(graphJson, graphAgent);
+				cGraphRenderer.setStyleGraphBasic(graphJson, graphAgent);
 			}
 		});
 
@@ -726,7 +730,7 @@ public class Window extends JFrame {
 						isAutoLayoutJson = false;
 					} else {
 						structGraphJson.setText("Manual");
-						viewerJson.enableAutoLayout();
+						cGraphRenderer.setTreeLayout(viewerJson.getGraphicGraph(), graphJson, viewerJson);
 						isAutoLayoutJson = true;
 					}
 				}
@@ -1234,7 +1238,7 @@ public class Window extends JFrame {
 	}
 
 	public void initGraphPropertiesJson() {
-		CustomGraphRenderer.setStyleGraphBasic(graphJson);
+		cGraphRenderer.setStyleGraphBasic(graphJson);
 		GraphModifier.setNodesClass(graphJson);
 		spriteManagerJson = new SpriteManager(graphJson);
 		GraphModifier.generateSprites(graphJson, spriteManagerJson);
@@ -1255,7 +1259,7 @@ public class Window extends JFrame {
 	}
 
 	public void initGraphPropertiesAgent() {
-		CustomGraphRenderer.setStyleGraphBasic(graphAgent);
+		cGraphRenderer.setStyleGraphBasic(graphAgent);
 		GraphModifier.setNodesClass(graphAgent);
 		spriteManagerAgent = new SpriteManager(graphAgent);
 		GraphModifier.generateSprites(graphAgent, spriteManagerAgent);
@@ -1359,7 +1363,6 @@ public class Window extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		CustomGraphRenderer.SetRenderer();
 		new Window();
 	}
 

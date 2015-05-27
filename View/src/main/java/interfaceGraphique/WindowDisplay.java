@@ -55,6 +55,8 @@ public class WindowDisplay extends JFrame {
 	DecimalFormat df;
 	
 	SpriteManager spriteManager;
+	
+	CustomGraphRenderer cGraphRenderer;
 
 	boolean isGraphLoaded, isAutoLayout;
 
@@ -62,6 +64,7 @@ public class WindowDisplay extends JFrame {
 			heightWindow = 700;
 
 	public WindowDisplay(String name, View viewGraph, Viewer viewerGraph, Graph oldGraph) {
+		cGraphRenderer = new CustomGraphRenderer();
 
 		view = viewGraph;
 		viewer = viewerGraph;
@@ -375,7 +378,7 @@ public class WindowDisplay extends JFrame {
 	}
 	
 	public void initGraphPropertiesJson() {
-		CustomGraphRenderer.setStyleGraphBasic(graph);
+		cGraphRenderer.setStyleGraphBasic(graph);
 		GraphModifier.setNodesClass(graph);
 		spriteManager = new SpriteManager(graph);
 		GraphModifier.generateSprites(graph, spriteManager);
