@@ -36,7 +36,7 @@ public class TracesToJson {
 	}
 	
 	private static String stringListToString(List<String> actionsListJson) {
-		Queue<String> actionsTriees = trierSelonTimeStamp(actionsListJson);
+		List<String> actionsTriees = trierSelonTimeStamp(actionsListJson);
 		String contenu = "";
 		for (String actionString: actionsTriees) {
 			contenu += actionString + "\n";
@@ -44,25 +44,15 @@ public class TracesToJson {
 		return contenu;
 	}
 	
-	private static Queue<String> trierSelonTimeStamp(List<String> actionsJson) {
-		PriorityQueue<String> actionsTriees = new PriorityQueue<String>(
+	private static List<String> trierSelonTimeStamp(List<String> actionsJson) {
+		PriorityQueue<String> actionsTrieesQueue = new PriorityQueue<String>(
 				actionsJson.size(), new Comparator<String>() {
 					
 					@Override
 					public int compare(String arg0, String arg1) {
 						Date date1 = extraireTimeStamp(arg0);
 						Date date2 = extraireTimeStamp(arg1);
-						System.out.print(date1+" ? "+date2+":");
-						if (date1.equals(date2)) {
-							System.out.println("egales!!");
-							return 0;
-						} else if (date1.before(date2)) {
-							System.out.println("INF");
-							return -1;
-						} else {
-							System.out.println("SUP");
-							return 1;
-						}
+						return date1.compareTo(date2);
 					}
 					
 					private Date extraireTimeStamp(String actionJson) {
@@ -90,14 +80,11 @@ public class TracesToJson {
 					}
 				});
 		
-		for (String actionJson: actionsJson) {
-			actionsTriees.add(actionJson);
-			if (actionsTriees.size() < 10) {
-				System.out.println("----------------------");
-				for (String string: new ArrayList<String>(actionsTriees)) {
-					System.out.println(string);
-				}
-			}
+		actionsTrieesQueue.addAll(actionsJson);
+		
+		List<String> actionsTriees = new ArrayList<String>();
+		for (; actionsTrieesQueue.size() > 0; ) {
+			actionsTriees.add(actionsTrieesQueue.remove());
 		}
 		
 		return actionsTriees;
