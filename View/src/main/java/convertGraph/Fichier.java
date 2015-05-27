@@ -36,7 +36,8 @@ public class Fichier {
 			File file = new File(path);
 			if (file.exists() && file.isDirectory()) {
 				for (File child: file.listFiles()) {
-					if (child.toString().equals(path + "/neostore")) {
+					if (child.toString().equals(path +
+							File.pathSeparator + "neostore")) {
 						return true;
 					}
 				}
