@@ -32,10 +32,7 @@ public class ConvertGStoNeo4j {
 				new HashMap<org.graphstream.graph.Node, Node>();
 		
 		// Supprimer le graphe s'il existe deja
-		File dir = new File(pathDestination);
-		if (dir.isDirectory()) {
-			Fichier.deleteFileOrDirectory(dir);
-		}
+		Fichier.deleteFileOrDirectory(pathDestination);
 		
 		// Creer le graphe grace au path.
 		GraphDatabaseService graphNeo4j = new GraphDatabaseFactory().

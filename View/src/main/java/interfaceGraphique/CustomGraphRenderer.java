@@ -17,7 +17,7 @@ public class CustomGraphRenderer {
 			+ MyJsonGenerator.FORMAT_NODE_FINAL;
 
 	public static void SetRenderer() {
-		// remplacement du renderer par défaut
+		// remplacement du renderer par dï¿½faut
 		System.setProperty("org.graphstream.ui.renderer",
 				"org.graphstream.ui.j2dviewer.J2DGraphRenderer");
 		ToolTipManager.sharedInstance().setInitialDelay(0);

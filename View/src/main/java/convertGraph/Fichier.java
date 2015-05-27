@@ -4,14 +4,30 @@ import java.io.File;
 
 public class Fichier {
 
-	public static void deleteFileOrDirectory(File file) {
-		if (file.exists()) {
+	public static void deleteFileOrDirectory(String path) {
+		File file;
+		try {
+			file = new File(path);
+		} catch (Exception e) {
+			file = null;
+		}
+		
+		if (file != null && file.exists()) {
 			if (file.isDirectory()) {
 				for (File child: file.listFiles()) {
-					deleteFileOrDirectory(child);
+					deleteFileOrDirectory(child.toString());
 				}
 			}
 			file.delete();
+		}
+	}
+	
+	public static boolean isJSonFile(String path) {
+		try {
+			File file = new File(path);
+			return file.exists() && file.isFile();
+		} catch (Exception exception) {
+			return false;
 		}
 	}
 
