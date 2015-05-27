@@ -56,6 +56,7 @@ public class CustomJToolTip extends JToolTip {
 				RenderingHints.VALUE_ANTIALIAS_DEFAULT);
 
 		// draw the text
+		System.out.println(this.getComponent());
 		String text = this.getComponent().getToolTipText();
 		if (text != null) {
 			FontMetrics fm = g2.getFontMetrics();

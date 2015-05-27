@@ -14,7 +14,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 @SuppressWarnings("serial")
-public class NodeDialog extends JDialog implements ActionListener {
+public class AddNodeDialog extends JDialog implements ActionListener {
 
 	JTextField nameNode, nbAttributsNode;
 	JLabel labelName, labelRoot, labelFinal, labelNbAtt;
@@ -26,7 +26,7 @@ public class NodeDialog extends JDialog implements ActionListener {
 	int nbAtt;
 	AttributDialog attDialog;
 
-	public NodeDialog(JFrame f, String s) {
+	public AddNodeDialog(JFrame f, String s) {
 		super(f, s, true);
 		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		frame = f;

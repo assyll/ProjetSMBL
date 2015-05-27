@@ -440,7 +440,7 @@ public class TracesGenerateDialog extends JDialog {
 	
 	private void initGeneratorTraces(Graph graphGS) {
 		
-		String pathGraphTemp = Fenetre.pathGraphTemp;
+		String pathGraphTemp = Window.pathGraphTemp;
 		Fichier.deleteFileOrDirectory(pathGraphTemp);
 		
 		try {

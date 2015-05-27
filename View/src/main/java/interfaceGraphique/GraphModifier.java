@@ -35,7 +35,7 @@ public class GraphModifier {
 
 	public static Graph GraphToGraph(Graph graph, String graphName) {
 		Graph graphRes = new MultiGraph(graphName);
-		// Génération du graphe par rapport au 1er graphe
+		// Gï¿½nï¿½ration du graphe par rapport au 1er graphe
 		for (Node n : graph.getEachNode()) {
 			Node node = graphRes.addNode(n.getId());
 			for (String attributeKey : n.getAttributeKeySet()) {
@@ -55,7 +55,7 @@ public class GraphModifier {
 		return graphRes;
 	}
 
-	public static Graph addNode(NodeDialog n, Graph g) {
+	public static Graph addNode(AddNodeDialog n, Graph g) {
 		int cpt = 1;
 
 		Node node = g.addNode(n.getName());
@@ -75,7 +75,7 @@ public class GraphModifier {
 		return g;
 	}
 
-	public static Graph addEdge(EdgeDialog e, Graph g,
+	public static Graph addEdge(AddEdgeDialog e, Graph g,
 			SpriteManager spriteManager) throws NoSpecifiedNodeException {
 		int cpt = 1;
 

@@ -84,7 +84,7 @@ public class GraphToDataTest {
 		
 		// teste l'etat initial
 		assertEquals(_graph.getInitState(),
-				new State(GeneratorTraces._nameStartNode, false));
+				new State(GeneratorTraces._sourceAttribut, false));
 		
 		// teste si les etats sont bien tous enregistres
 		assertTrue(_graph.getStates().contains(new State("Noeud1", false)));

@@ -1,0 +1,868 @@
+2015-05-27 14:09:49.119+0000 INFO  [org.neo4j]: No locking implementation specified, defaulting to 'community'
+2015-05-27 14:09:49.120+0000 INFO  [org.neo4j]: --- INITIALIZED diagnostics START ---
+2015-05-27 14:09:49.120+0000 INFO  [org.neo4j]: Neo4j Kernel properties:
+    store_dir=./src/test/resources/grapheTemporaire
+    ephemeral=false
+2015-05-27 14:09:49.120+0000 INFO  [org.neo4j]: Diagnostics providers:
+    org.neo4j.kernel.configuration.Config
+    org.neo4j.kernel.info.DiagnosticsManager
+    SYSTEM_MEMORY
+    JAVA_MEMORY
+    OPERATING_SYSTEM
+    JAVA_VIRTUAL_MACHINE
+    CLASSPATH
+    LIBRARY_PATH
+    SYSTEM_PROPERTIES
+    LINUX_SCHEDULERS
+    NETWORK
+2015-05-27 14:09:49.120+0000 INFO  [org.neo4j]: System memory information:
+    Total Physical memory: 3,76 GB
+    Free Physical memory: 468,55 MB
+    Committed virtual memory: 2,96 GB
+    Total swap space: 3,90 GB
+    Free swap space: 3,90 GB
+2015-05-27 14:09:49.121+0000 INFO  [org.neo4j]: JVM memory information:
+    Free  memory: 119,37 MB
+    Total memory: 300,50 MB
+    Max   memory: 857,00 MB
+    Garbage Collector: PS Scavenge: [PS Eden Space, PS Survivor Space]
+    Garbage Collector: PS MarkSweep: [PS Eden Space, PS Survivor Space, PS Old Gen, PS Perm Gen]
+    Memory Pool: Code Cache (Non-heap memory): committed=2,44 MB, used=2,25 MB, max=48,00 MB, threshold=0,00 B
+    Memory Pool: PS Eden Space (Heap memory): committed=180,50 MB, used=125,61 MB, max=276,50 MB, threshold=?
+    Memory Pool: PS Survivor Space (Heap memory): committed=23,00 MB, used=0,00 B, max=23,00 MB, threshold=?
+    Memory Pool: PS Old Gen (Heap memory): committed=97,00 MB, used=55,52 MB, max=642,50 MB, threshold=0,00 B
+    Memory Pool: PS Perm Gen (Non-heap memory): committed=64,50 MB, used=38,43 MB, max=166,00 MB, threshold=0,00 B
+2015-05-27 14:09:49.123+0000 INFO  [org.neo4j]: Operating system information:
+    Operating System: Linux; version: 3.13.0-45-generic; arch: amd64; cpus: 4
+    Max number of file descriptors: 4096
+    Number of open file descriptors: 83
+    Process id: 12545@quentin-W251ESQ-W270ESQ
+    Byte order: LITTLE_ENDIAN
+    Local timezone: Europe/Paris
+2015-05-27 14:09:49.123+0000 INFO  [org.neo4j]: JVM information:
+    VM Name: OpenJDK 64-Bit Server VM
+    VM Vendor: Oracle Corporation
+    VM Version: 24.75-b04
+    JIT compiler: HotSpot 64-Bit Tiered Compilers
+    VM Arguments: [-Dfile.encoding=UTF-8]
+2015-05-27 14:09:49.123+0000 INFO  [org.neo4j]: Java classpath:
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/graphstream/pherd/1.0/pherd-1.0.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/graphstream/gs-ui/1.3/gs-ui-1.3.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/neo4j/neo4j-cypher-compiler-2.1/2.1.7/neo4j-cypher-compiler-2.1-2.1.7.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.3.3/jackson-databind-2.3.3.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/neo4j/neo4j-graph-algo/2.2.1/neo4j-graph-algo-2.2.1.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/apache/commons/commons-math3/3.4.1/commons-math3-3.4.1.jar
+     [bootstrap] /usr/lib/jvm/java-7-openjdk-amd64/jre/lib/charsets.jar
+     [bootstrap] /usr/lib/jvm/java-7-openjdk-amd64/jre/lib/sunrsasign.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/neo4j/neo4j-consistency-check/2.2.1/neo4j-consistency-check-2.2.1.jar
+     [bootstrap] /usr/lib/jvm/java-7-openjdk-amd64/jre/lib/rhino.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/junit/junit/3.8.1/junit-3.8.1.jar
+     [loader.1] file:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/ext/zipfs.jar
+     [loader.1] file:/usr/lib/x86_64-linux-gnu/jni/libatk-wrapper.so.0.0.18
+     [classpath + loader.0] file:/home/quentin/.m2/repository/xml-apis/xml-apis/1.3.04/xml-apis-1.3.04.jar
+     [loader.1] file:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/ext/sunpkcs11.jar
+     [classpath + loader.0] file:/home/quentin/git/ProjetSMBL/Generator/target/classes/
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/neo4j/neo4j-graph-matching/2.2.1/neo4j-graph-matching-2.2.1.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/neo4j/neo4j-lucene-index/2.2.1/neo4j-lucene-index-2.2.1.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/neo4j/neo4j-kernel/2.2.1/neo4j-kernel-2.2.1.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/net/sf/opencsv/opencsv/2.3/opencsv-2.3.jar
+     [classpath + loader.0] file:/home/quentin/git/ProjetSMBL/Generator/target/test-classes/
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/neo4j/neo4j-jmx/2.2.1/neo4j-jmx-2.2.1.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/scala-lang/scala-reflect/2.10.5/scala-reflect-2.10.5.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/jfree/jfreechart/1.0.14/jfreechart-1.0.14.jar
+     [bootstrap] /usr/lib/jvm/java-7-openjdk-amd64/jre/lib/resources.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/jfree/jcommon/1.0.17/jcommon-1.0.17.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/graphstream/gs-core/1.3/gs-core-1.3.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/neo4j/neo4j-cypher-compiler-2.2/2.2.1/neo4j-cypher-compiler-2.2-2.2.1.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/neo4j/neo4j-cypher-compiler-1.9/2.0.4/neo4j-cypher-compiler-1.9-2.0.4.jar
+     [classpath + loader.0] file:/home/quentin/git/ProjetSMBL/View/target/classes/
+     [loader.1] file:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/ext/icedtea-sound.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/neo4j/neo4j-cypher/2.2.1/neo4j-cypher-2.2.1.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/neo4j/neo4j-primitive-collections/2.2.1/neo4j-primitive-collections-2.2.1.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/apache/commons/commons-math/2.1/commons-math-2.1.jar
+     [loader.1] file:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/ext/sunjce_provider.jar
+     [classpath + loader.0] file:/home/quentin/Program_Files/eclipse-luna/plugins/org.hamcrest.core_1.3.0.v201303031735.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/neo4j/neo4j-csv/2.2.1/neo4j-csv-2.2.1.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/neo4j/neo4j-udc/2.2.1/neo4j-udc-2.2.1.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/parboiled/parboiled-scala_2.10/1.1.7/parboiled-scala_2.10-1.1.7.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/parboiled/parboiled-core/1.1.7/parboiled-core-1.1.7.jar
+     [bootstrap] /usr/lib/jvm/java-7-openjdk-amd64/jre/lib/jce.jar
+     [loader.1] file:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/ext/dnsns.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/bouncycastle/bcprov-jdk14/138/bcprov-jdk14-138.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/neo4j/neo4j/2.2.1/neo4j-2.2.1.jar
+     [classpath + loader.0] file:/home/quentin/Program_Files/eclipse-luna/plugins/org.junit_4.11.0.v201303080030/junit.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/apache/lucene/lucene-core/3.6.2/lucene-core-3.6.2.jar
+     [bootstrap] /usr/lib/jvm/java-7-openjdk-amd64/jre/lib/jsse.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/neo4j/neo4j-cypher-compiler-2.0/2.0.4/neo4j-cypher-compiler-2.0-2.0.4.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/neo4j/neo4j-io/2.2.1/neo4j-io-2.2.1.jar
+     [loader.1] file:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/ext/java-atk-wrapper.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/graphstream/mbox2/1.0/mbox2-1.0.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.3.1/jackson-core-2.3.1.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.3.0/jackson-annotations-2.3.0.jar
+     [bootstrap] /usr/lib/jvm/java-7-openjdk-amd64/jre/classes
+     [bootstrap] /usr/lib/jvm/java-7-openjdk-amd64/jre/lib/jfr.jar
+     [bootstrap] /usr/lib/jvm/java-7-openjdk-amd64/jre/lib/rt.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/graphstream/gs-algo/1.3/gs-algo-1.3.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/com/googlecode/concurrentlinkedhashmap/concurrentlinkedhashmap-lru/1.4/concurrentlinkedhashmap-lru-1.4.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/bouncycastle/bcmail-jdk14/138/bcmail-jdk14-138.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/com/lowagie/itext/2.1.5/itext-2.1.5.jar
+     [loader.1] file:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/ext/localedata.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/neo4j/neo4j-unsafe/2.2.1/neo4j-unsafe-2.2.1.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/scala-lang/scala-library/2.10.1/scala-library-2.10.1.jar
+2015-05-27 14:09:49.126+0000 INFO  [org.neo4j]: Library path:
+    /usr/java/packages/lib/amd64
+    /usr/lib/x86_64-linux-gnu/jni
+    /lib/x86_64-linux-gnu
+    /usr/lib/x86_64-linux-gnu
+    /usr/lib/jni
+    /lib
+    /usr/lib
+2015-05-27 14:09:49.126+0000 INFO  [org.neo4j]: System.properties:
+    sun.boot.library.path = /usr/lib/jvm/java-7-openjdk-amd64/jre/lib/amd64
+    path.separator = :
+    file.encoding.pkg = sun.io
+    user.country = FR
+    sun.java.launcher = SUN_STANDARD
+    sun.os.patch.level = unknown
+    user.dir = /home/quentin/git/ProjetSMBL/View
+    sun.jnu.encoding = UTF-8
+    sun.awt.enableExtraMouseButtons = true
+    sun.management.compiler = HotSpot 64-Bit Tiered Compilers
+    user.home = /home/quentin
+    user.timezone = Europe/Paris
+    file.encoding = UTF-8
+    org.graphstream.ui.renderer = org.graphstream.ui.j2dviewer.J2DGraphRenderer
+    user.name = quentin
+    sun.java.command = interfaceGraphique.Window
+    sun.arch.data.model = 64
+    user.language = fr
+    awt.toolkit = sun.awt.X11.XToolkit
+    file.separator = /
+    sun.font.fontmanager = sun.awt.X11FontManager
+    sun.io.unicode.encoding = UnicodeLittle
+    sun.cpu.endian = little
+    sun.desktop = gnome
+    sun.cpu.isalist = 
+2015-05-27 14:09:49.126+0000 INFO  [org.neo4j]: Linux scheduler information:
+    noop [deadline] cfq 
+    noop [deadline] cfq 
+    none
+    none
+    none
+    none
+    none
+    none
+    none
+    none
+    none
+    none
+    none
+    none
+    none
+    none
+    none
+    none
+    none
+    none
+    none
+    none
+    none
+    none
+    none
+    none
+2015-05-27 14:09:49.128+0000 INFO  [org.neo4j]: Network information:
+    Interface wlan0:
+        address: fe80:0:0:0:6a5d:43ff:febf:3934%3
+        address: 130.120.210.240
+    Interface lo:
+        address: 0:0:0:0:0:0:0:1%1
+        address: 127.0.0.1
+2015-05-27 14:09:49.128+0000 INFO  [org.neo4j]: --- INITIALIZED diagnostics END ---
+2015-05-27 14:09:49.132+0000 INFO  [org.neo4j]: Creating new db @ ./src/test/resources/grapheTemporaire/neostore
+2015-05-27 14:09:51.829+0000 INFO  [org.neo4j]: No lucene scan store index found, this might just be first use. Preparing to rebuild.
+2015-05-27 14:09:51.830+0000 INFO  [org.neo4j]: No lucene scan store index found, this might just be first use. Preparing to rebuild.
+2015-05-27 14:09:51.858+0000 INFO  [org.neo4j]: Opened logical log [./src/test/resources/grapheTemporaire/neostore.transaction.db.0] version=0, lastTxId=1 (clean)
+2015-05-27 14:09:51.859+0000 INFO  [org.neo4j]: Missing counts store, rebuilding it.
+2015-05-27 14:09:51.923+0000 INFO  [org.neo4j]: Rebuilding lucene scan store, this may take a while
+2015-05-27 14:09:51.923+0000 INFO  [org.neo4j]: Lucene scan store rebuilt (roughly -1 nodes)
+2015-05-27 14:09:51.923+0000 INFO  [org.neo4j]: Kernel health set to OK
+2015-05-27 14:09:51.934+0000 INFO  [org.neo4j]: --- STARTED diagnostics for KernelDiagnostics:Versions START ---
+2015-05-27 14:09:51.934+0000 INFO  [org.neo4j]: Graph Database: org.neo4j.kernel.EmbeddedGraphDatabase StoreId{creationTime=1432735789132, randomId=5552187868672819771, storeVersion=14969031248344582, upgradeTime=1432735789132, upgradeId=1}
+2015-05-27 14:09:51.934+0000 INFO  [org.neo4j]: Kernel version: Neo4j - Graph Database Kernel (neo4j-kernel), version: 2.2.1
+2015-05-27 14:09:51.934+0000 INFO  [org.neo4j]: Neo4j component versions:
+2015-05-27 14:09:51.940+0000 INFO  [org.neo4j]:   Neo4j - Lucene Index (neo4j-lucene-index), version: 2.2.1; revision: 2.2.1:2.2:904/c23258e99edbfff137bea0d83af56c79a46bca31
+2015-05-27 14:09:51.940+0000 INFO  [org.neo4j]:   Neo4j - Cypher Compiler 2.1 (neo4j-cypher-compiler-2.1), version: 2.1.7; revision: 2.1.7:2.1-maint:649/ed233fc1087f4549d1956b8ec4a504fe2f13a446
+2015-05-27 14:09:51.940+0000 INFO  [org.neo4j]:   Neo4j - Consistency Checker (neo4j-consistency-check), version: 2.2.1; revision: 2.2.1:2.2:904/c23258e99edbfff137bea0d83af56c79a46bca31
+2015-05-27 14:09:51.940+0000 INFO  [org.neo4j]:   Neo4j - Graph Algorithms (neo4j-graph-algo), version: 2.2.1; revision: 2.2.1:2.2:904/c23258e99edbfff137bea0d83af56c79a46bca31
+2015-05-27 14:09:51.940+0000 INFO  [org.neo4j]:   Neo4j - Cypher Compiler 2.0 (neo4j-cypher-compiler-2.0), version: 2.0.4; revision: 2.0.4:2.0-maint:130/4a7d10bc274a5d26a180bbe9df25100e8a694748
+2015-05-27 14:09:51.940+0000 INFO  [org.neo4j]:   Neo4j - Cypher Compiler 2.2 (neo4j-cypher-compiler-2.2), version: 2.2.1; revision: 2.2.1:2.2:904/c23258e99edbfff137bea0d83af56c79a46bca31
+2015-05-27 14:09:51.940+0000 INFO  [org.neo4j]:   Neo4j - Cypher Compiler 1.9 (neo4j-cypher-compiler-1.9), version: 2.0.4; revision: 2.0.4:2.0-maint:130/4a7d10bc274a5d26a180bbe9df25100e8a694748
+2015-05-27 14:09:51.940+0000 INFO  [org.neo4j]:   neo4j-udc, version: 2.2.1; revision: 2.2.1:2.2:904/c23258e99edbfff137bea0d83af56c79a46bca31
+2015-05-27 14:09:51.940+0000 INFO  [org.neo4j]:   Neo4j - JMX support (neo4j-jmx), version: 2.2.1; revision: 2.2.1:2.2:904/c23258e99edbfff137bea0d83af56c79a46bca31
+2015-05-27 14:09:51.940+0000 INFO  [org.neo4j]:   Neo4j - Graph Matching (neo4j-graph-matching), version: 2.2.1; revision: 2.2.1:2.2:904/c23258e99edbfff137bea0d83af56c79a46bca31
+2015-05-27 14:09:51.940+0000 INFO  [org.neo4j]:   Neo4j - Graph Database Kernel (neo4j-kernel), version: 2.2.1; revision: 2.2.1:2.2:904/c23258e99edbfff137bea0d83af56c79a46bca31
+2015-05-27 14:09:51.941+0000 INFO  [org.neo4j]:   Neo4j - Cypher (neo4j-cypher), version: 2.2.1; revision: 2.2.1:2.2:904/c23258e99edbfff137bea0d83af56c79a46bca31
+2015-05-27 14:09:51.941+0000 INFO  [org.neo4j]:   Neo4j - Community (neo4j), version: 2.2.1; revision: 2.2.1:2.2:904/c23258e99edbfff137bea0d83af56c79a46bca31
+2015-05-27 14:09:51.941+0000 INFO  [org.neo4j]: --- STARTED diagnostics for KernelDiagnostics:Versions END ---
+2015-05-27 14:09:51.941+0000 INFO  [org.neo4j]: --- STARTED diagnostics for NEO_STORE_VERSIONS START ---
+2015-05-27 14:09:51.941+0000 INFO  [org.neo4j]: Store versions:
+    Store versions:
+      NeoStore v0.A.5
+      SchemaStore v0.A.5
+      NodeStore v0.A.5
+      RelationshipStore v0.A.5
+      RelationshipTypeStore v0.A.5
+      LabelTokenStore v0.A.5
+      PropertyStore v0.A.5
+      PropertyIndexStore v0.A.5
+      StringPropertyStore v0.A.5
+      ArrayPropertyStore v0.A.5
+      RelationshipGroupStore v0.A.5
+2015-05-27 14:09:51.941+0000 INFO  [org.neo4j]: --- STARTED diagnostics for NEO_STORE_VERSIONS END ---
+2015-05-27 14:09:51.941+0000 INFO  [org.neo4j]: --- STARTED diagnostics for NEO_STORE_ID_USAGE START ---
+2015-05-27 14:09:51.941+0000 INFO  [org.neo4j]: Id usage:
+    Id usage:
+      SchemaStore: used=1 high=0
+      NodeStore: used=0 high=-1
+      RelationshipStore: used=0 high=-1
+      RelationshipTypeStore: used=0 high=-1
+      LabelTokenStore: used=0 high=-1
+      PropertyStore: used=0 high=-1
+      PropertyIndexStore: used=0 high=-1
+      StringPropertyStore: used=1 high=0
+      ArrayPropertyStore: used=1 high=0
+      RelationshipGroupStore: used=1 high=0
+2015-05-27 14:09:51.942+0000 INFO  [org.neo4j]: --- STARTED diagnostics for NEO_STORE_ID_USAGE END ---
+2015-05-27 14:09:51.942+0000 INFO  [org.neo4j]: --- STARTED diagnostics for KernelDiagnostics:StoreFiles START ---
+2015-05-27 14:09:51.942+0000 INFO  [org.neo4j]: Disk space on partition (Total / Free / Free %): 625834442752 / 542429913088 / 86
+Storage files: (filename : modification date - size)
+      index:
+      - Total: 2015-05-27T16:09:49+0200 - 0,00 B
+      lock: 2015-05-27T16:09:51+0200 - 0,00 B
+      messages.log: 2015-05-27T16:09:51+0200 - 15,70 kB
+      neostore: 2015-05-27T16:09:51+0200 - 99,00 B
+      neostore.counts.db.a: 2015-05-27T16:09:51+0200 - 114,00 B
+      neostore.id: 2015-05-27T16:09:51+0200 - 9,00 B
+      neostore.labeltokenstore.db: 2015-05-27T16:09:51+0200 - 0,00 B
+      neostore.labeltokenstore.db.id: 2015-05-27T16:09:51+0200 - 9,00 B
+      neostore.labeltokenstore.db.names: 2015-05-27T16:09:51+0200 - 38,00 B
+      neostore.labeltokenstore.db.names.id: 2015-05-27T16:09:51+0200 - 9,00 B
+      neostore.nodestore.db: 2015-05-27T16:09:51+0200 - 0,00 B
+      neostore.nodestore.db.id: 2015-05-27T16:09:51+0200 - 9,00 B
+      neostore.nodestore.db.labels: 2015-05-27T16:09:51+0200 - 68,00 B
+      neostore.nodestore.db.labels.id: 2015-05-27T16:09:51+0200 - 9,00 B
+      neostore.propertystore.db: 2015-05-27T16:09:51+0200 - 0,00 B
+      neostore.propertystore.db.arrays: 2015-05-27T16:09:51+0200 - 128,00 B
+      neostore.propertystore.db.arrays.id: 2015-05-27T16:09:51+0200 - 9,00 B
+      neostore.propertystore.db.id: 2015-05-27T16:09:51+0200 - 9,00 B
+      neostore.propertystore.db.index: 2015-05-27T16:09:51+0200 - 0,00 B
+      neostore.propertystore.db.index.id: 2015-05-27T16:09:51+0200 - 9,00 B
+      neostore.propertystore.db.index.keys: 2015-05-27T16:09:51+0200 - 38,00 B
+      neostore.propertystore.db.index.keys.id: 2015-05-27T16:09:51+0200 - 9,00 B
+      neostore.propertystore.db.strings: 2015-05-27T16:09:51+0200 - 128,00 B
+      neostore.propertystore.db.strings.id: 2015-05-27T16:09:51+0200 - 9,00 B
+      neostore.relationshipgroupstore.db: 2015-05-27T16:09:51+0200 - 25,00 B
+      neostore.relationshipgroupstore.db.id: 2015-05-27T16:09:51+0200 - 9,00 B
+      neostore.relationshipstore.db: 2015-05-27T16:09:51+0200 - 0,00 B
+      neostore.relationshipstore.db.id: 2015-05-27T16:09:51+0200 - 9,00 B
+      neostore.relationshiptypestore.db: 2015-05-27T16:09:51+0200 - 0,00 B
+      neostore.relationshiptypestore.db.id: 2015-05-27T16:09:51+0200 - 9,00 B
+      neostore.relationshiptypestore.db.names: 2015-05-27T16:09:51+0200 - 38,00 B
+      neostore.relationshiptypestore.db.names.id: 2015-05-27T16:09:51+0200 - 9,00 B
+      neostore.schemastore.db: 2015-05-27T16:09:51+0200 - 64,00 B
+      neostore.schemastore.db.id: 2015-05-27T16:09:51+0200 - 9,00 B
+      neostore.transaction.db.0: 2015-05-27T16:09:51+0200 - 16,00 B
+      schema:
+        label:
+          lucene:
+            write.lock: 2015-05-27T16:09:51+0200 - 0,00 B
+          - Total: 2015-05-27T16:09:51+0200 - 0,00 B
+        - Total: 2015-05-27T16:09:51+0200 - 0,00 B
+      - Total: 2015-05-27T16:09:51+0200 - 0,00 B
+      store_lock: 2015-05-27T16:09:49+0200 - 0,00 B
+2015-05-27 14:09:51.949+0000 INFO  [org.neo4j]: --- STARTED diagnostics for KernelDiagnostics:StoreFiles END ---
+2015-05-27 14:09:51.949+0000 INFO  [org.neo4j]: Database is now ready
+2015-05-27 14:09:53.367+0000 INFO  [org.neo4j]: Shutdown started
+2015-05-27 14:09:53.368+0000 INFO  [org.neo4j]: Database is now unavailable
+2015-05-27 14:09:53.467+0000 INFO  [org.neo4j]: About to rotate counts store at transaction 35 to [./src/test/resources/grapheTemporaire/neostore.counts.db.b], from [./src/test/resources/grapheTemporaire/neostore.counts.db.a].
+2015-05-27 14:09:53.469+0000 INFO  [org.neo4j]: Successfully rotated counts store at transaction 35 to [./src/test/resources/grapheTemporaire/neostore.counts.db.b], from [./src/test/resources/grapheTemporaire/neostore.counts.db.a].
+2015-05-27 14:09:54.994+0000 INFO  [org.neo4j]: NeoStore closed
+2015-05-27 14:09:54.994+0000 INFO  [org.neo4j]: --- STOPPING diagnostics START ---
+2015-05-27 14:09:54.994+0000 INFO  [org.neo4j]: --- STOPPING diagnostics END ---
+2015-05-27 14:09:55.025+0000 INFO  [org.neo4j]: No locking implementation specified, defaulting to 'community'
+2015-05-27 14:09:55.026+0000 INFO  [org.neo4j]: --- INITIALIZED diagnostics START ---
+2015-05-27 14:09:55.026+0000 INFO  [org.neo4j]: Neo4j Kernel properties:
+    store_dir=./src/test/resources/grapheTemporaire
+    ephemeral=false
+2015-05-27 14:09:55.026+0000 INFO  [org.neo4j]: Diagnostics providers:
+    org.neo4j.kernel.configuration.Config
+    org.neo4j.kernel.info.DiagnosticsManager
+    SYSTEM_MEMORY
+    JAVA_MEMORY
+    OPERATING_SYSTEM
+    JAVA_VIRTUAL_MACHINE
+    CLASSPATH
+    LIBRARY_PATH
+    SYSTEM_PROPERTIES
+    LINUX_SCHEDULERS
+    NETWORK
+2015-05-27 14:09:55.026+0000 INFO  [org.neo4j]: System memory information:
+    Total Physical memory: 3,76 GB
+    Free Physical memory: 467,04 MB
+    Committed virtual memory: 3,02 GB
+    Total swap space: 3,90 GB
+    Free swap space: 3,90 GB
+2015-05-27 14:09:55.027+0000 INFO  [org.neo4j]: JVM memory information:
+    Free  memory: 81,27 MB
+    Total memory: 300,50 MB
+    Max   memory: 857,00 MB
+    Garbage Collector: PS Scavenge: [PS Eden Space, PS Survivor Space]
+    Garbage Collector: PS MarkSweep: [PS Eden Space, PS Survivor Space, PS Old Gen, PS Perm Gen]
+    Memory Pool: Code Cache (Non-heap memory): committed=2,44 MB, used=2,26 MB, max=48,00 MB, threshold=0,00 B
+    Memory Pool: PS Eden Space (Heap memory): committed=180,50 MB, used=163,71 MB, max=276,50 MB, threshold=?
+    Memory Pool: PS Survivor Space (Heap memory): committed=23,00 MB, used=0,00 B, max=23,00 MB, threshold=?
+    Memory Pool: PS Old Gen (Heap memory): committed=97,00 MB, used=55,52 MB, max=642,50 MB, threshold=0,00 B
+    Memory Pool: PS Perm Gen (Non-heap memory): committed=64,50 MB, used=38,46 MB, max=166,00 MB, threshold=0,00 B
+2015-05-27 14:09:55.029+0000 INFO  [org.neo4j]: Operating system information:
+    Operating System: Linux; version: 3.13.0-45-generic; arch: amd64; cpus: 4
+    Max number of file descriptors: 4096
+    Number of open file descriptors: 83
+    Process id: 12545@quentin-W251ESQ-W270ESQ
+    Byte order: LITTLE_ENDIAN
+    Local timezone: Europe/Paris
+2015-05-27 14:09:55.029+0000 INFO  [org.neo4j]: JVM information:
+    VM Name: OpenJDK 64-Bit Server VM
+    VM Vendor: Oracle Corporation
+    VM Version: 24.75-b04
+    JIT compiler: HotSpot 64-Bit Tiered Compilers
+    VM Arguments: [-Dfile.encoding=UTF-8]
+2015-05-27 14:09:55.029+0000 INFO  [org.neo4j]: Java classpath:
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/graphstream/pherd/1.0/pherd-1.0.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/graphstream/gs-ui/1.3/gs-ui-1.3.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/neo4j/neo4j-cypher-compiler-2.1/2.1.7/neo4j-cypher-compiler-2.1-2.1.7.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.3.3/jackson-databind-2.3.3.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/neo4j/neo4j-graph-algo/2.2.1/neo4j-graph-algo-2.2.1.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/apache/commons/commons-math3/3.4.1/commons-math3-3.4.1.jar
+     [bootstrap] /usr/lib/jvm/java-7-openjdk-amd64/jre/lib/charsets.jar
+     [bootstrap] /usr/lib/jvm/java-7-openjdk-amd64/jre/lib/sunrsasign.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/neo4j/neo4j-consistency-check/2.2.1/neo4j-consistency-check-2.2.1.jar
+     [bootstrap] /usr/lib/jvm/java-7-openjdk-amd64/jre/lib/rhino.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/junit/junit/3.8.1/junit-3.8.1.jar
+     [loader.1] file:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/ext/zipfs.jar
+     [loader.1] file:/usr/lib/x86_64-linux-gnu/jni/libatk-wrapper.so.0.0.18
+     [classpath + loader.0] file:/home/quentin/.m2/repository/xml-apis/xml-apis/1.3.04/xml-apis-1.3.04.jar
+     [loader.1] file:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/ext/sunpkcs11.jar
+     [classpath + loader.0] file:/home/quentin/git/ProjetSMBL/Generator/target/classes/
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/neo4j/neo4j-graph-matching/2.2.1/neo4j-graph-matching-2.2.1.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/neo4j/neo4j-lucene-index/2.2.1/neo4j-lucene-index-2.2.1.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/neo4j/neo4j-kernel/2.2.1/neo4j-kernel-2.2.1.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/net/sf/opencsv/opencsv/2.3/opencsv-2.3.jar
+     [classpath + loader.0] file:/home/quentin/git/ProjetSMBL/Generator/target/test-classes/
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/neo4j/neo4j-jmx/2.2.1/neo4j-jmx-2.2.1.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/scala-lang/scala-reflect/2.10.5/scala-reflect-2.10.5.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/jfree/jfreechart/1.0.14/jfreechart-1.0.14.jar
+     [bootstrap] /usr/lib/jvm/java-7-openjdk-amd64/jre/lib/resources.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/jfree/jcommon/1.0.17/jcommon-1.0.17.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/graphstream/gs-core/1.3/gs-core-1.3.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/neo4j/neo4j-cypher-compiler-2.2/2.2.1/neo4j-cypher-compiler-2.2-2.2.1.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/neo4j/neo4j-cypher-compiler-1.9/2.0.4/neo4j-cypher-compiler-1.9-2.0.4.jar
+     [classpath + loader.0] file:/home/quentin/git/ProjetSMBL/View/target/classes/
+     [loader.1] file:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/ext/icedtea-sound.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/neo4j/neo4j-cypher/2.2.1/neo4j-cypher-2.2.1.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/neo4j/neo4j-primitive-collections/2.2.1/neo4j-primitive-collections-2.2.1.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/apache/commons/commons-math/2.1/commons-math-2.1.jar
+     [loader.1] file:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/ext/sunjce_provider.jar
+     [classpath + loader.0] file:/home/quentin/Program_Files/eclipse-luna/plugins/org.hamcrest.core_1.3.0.v201303031735.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/neo4j/neo4j-csv/2.2.1/neo4j-csv-2.2.1.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/neo4j/neo4j-udc/2.2.1/neo4j-udc-2.2.1.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/parboiled/parboiled-scala_2.10/1.1.7/parboiled-scala_2.10-1.1.7.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/parboiled/parboiled-core/1.1.7/parboiled-core-1.1.7.jar
+     [bootstrap] /usr/lib/jvm/java-7-openjdk-amd64/jre/lib/jce.jar
+     [loader.1] file:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/ext/dnsns.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/bouncycastle/bcprov-jdk14/138/bcprov-jdk14-138.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/neo4j/neo4j/2.2.1/neo4j-2.2.1.jar
+     [classpath + loader.0] file:/home/quentin/Program_Files/eclipse-luna/plugins/org.junit_4.11.0.v201303080030/junit.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/apache/lucene/lucene-core/3.6.2/lucene-core-3.6.2.jar
+     [bootstrap] /usr/lib/jvm/java-7-openjdk-amd64/jre/lib/jsse.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/neo4j/neo4j-cypher-compiler-2.0/2.0.4/neo4j-cypher-compiler-2.0-2.0.4.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/neo4j/neo4j-io/2.2.1/neo4j-io-2.2.1.jar
+     [loader.1] file:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/ext/java-atk-wrapper.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/graphstream/mbox2/1.0/mbox2-1.0.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.3.1/jackson-core-2.3.1.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.3.0/jackson-annotations-2.3.0.jar
+     [bootstrap] /usr/lib/jvm/java-7-openjdk-amd64/jre/classes
+     [bootstrap] /usr/lib/jvm/java-7-openjdk-amd64/jre/lib/jfr.jar
+     [bootstrap] /usr/lib/jvm/java-7-openjdk-amd64/jre/lib/rt.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/graphstream/gs-algo/1.3/gs-algo-1.3.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/com/googlecode/concurrentlinkedhashmap/concurrentlinkedhashmap-lru/1.4/concurrentlinkedhashmap-lru-1.4.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/bouncycastle/bcmail-jdk14/138/bcmail-jdk14-138.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/com/lowagie/itext/2.1.5/itext-2.1.5.jar
+     [loader.1] file:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/ext/localedata.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/neo4j/neo4j-unsafe/2.2.1/neo4j-unsafe-2.2.1.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/scala-lang/scala-library/2.10.1/scala-library-2.10.1.jar
+2015-05-27 14:09:55.031+0000 INFO  [org.neo4j]: Library path:
+    /usr/java/packages/lib/amd64
+    /usr/lib/x86_64-linux-gnu/jni
+    /lib/x86_64-linux-gnu
+    /usr/lib/x86_64-linux-gnu
+    /usr/lib/jni
+    /lib
+    /usr/lib
+2015-05-27 14:09:55.032+0000 INFO  [org.neo4j]: System.properties:
+    sun.boot.library.path = /usr/lib/jvm/java-7-openjdk-amd64/jre/lib/amd64
+    path.separator = :
+    file.encoding.pkg = sun.io
+    user.country = FR
+    sun.java.launcher = SUN_STANDARD
+    sun.os.patch.level = unknown
+    user.dir = /home/quentin/git/ProjetSMBL/View
+    sun.jnu.encoding = UTF-8
+    sun.awt.enableExtraMouseButtons = true
+    sun.management.compiler = HotSpot 64-Bit Tiered Compilers
+    user.home = /home/quentin
+    user.timezone = Europe/Paris
+    file.encoding = UTF-8
+    org.graphstream.ui.renderer = org.graphstream.ui.j2dviewer.J2DGraphRenderer
+    user.name = quentin
+    sun.java.command = interfaceGraphique.Window
+    sun.arch.data.model = 64
+    user.language = fr
+    awt.toolkit = sun.awt.X11.XToolkit
+    file.separator = /
+    sun.font.fontmanager = sun.awt.X11FontManager
+    sun.io.unicode.encoding = UnicodeLittle
+    sun.cpu.endian = little
+    sun.desktop = gnome
+    sun.cpu.isalist = 
+2015-05-27 14:09:55.032+0000 INFO  [org.neo4j]: Linux scheduler information:
+    noop [deadline] cfq 
+    noop [deadline] cfq 
+    none
+    none
+    none
+    none
+    none
+    none
+    none
+    none
+    none
+    none
+    none
+    none
+    none
+    none
+    none
+    none
+    none
+    none
+    none
+    none
+    none
+    none
+    none
+    none
+2015-05-27 14:09:55.034+0000 INFO  [org.neo4j]: Network information:
+    Interface wlan0:
+        address: fe80:0:0:0:6a5d:43ff:febf:3934%3
+        address: 130.120.210.240
+    Interface lo:
+        address: 0:0:0:0:0:0:0:1%1
+        address: 127.0.0.1
+2015-05-27 14:09:55.034+0000 INFO  [org.neo4j]: --- INITIALIZED diagnostics END ---
+2015-05-27 14:09:55.056+0000 INFO  [org.neo4j]: Opened logical log [./src/test/resources/grapheTemporaire/neostore.transaction.db.1] version=1, lastTxId=35 (clean)
+2015-05-27 14:09:55.059+0000 INFO  [org.neo4j]: Kernel health set to OK
+2015-05-27 14:09:55.064+0000 INFO  [org.neo4j]: --- STARTED diagnostics for KernelDiagnostics:Versions START ---
+2015-05-27 14:09:55.064+0000 INFO  [org.neo4j]: Graph Database: org.neo4j.kernel.EmbeddedGraphDatabase StoreId{creationTime=1432735789132, randomId=5552187868672819771, storeVersion=14969031248344582, upgradeTime=1432735789132, upgradeId=1}
+2015-05-27 14:09:55.064+0000 INFO  [org.neo4j]: Kernel version: Neo4j - Graph Database Kernel (neo4j-kernel), version: 2.2.1
+2015-05-27 14:09:55.064+0000 INFO  [org.neo4j]: Neo4j component versions:
+2015-05-27 14:09:55.069+0000 INFO  [org.neo4j]:   Neo4j - Lucene Index (neo4j-lucene-index), version: 2.2.1; revision: 2.2.1:2.2:904/c23258e99edbfff137bea0d83af56c79a46bca31
+2015-05-27 14:09:55.069+0000 INFO  [org.neo4j]:   Neo4j - Cypher Compiler 2.1 (neo4j-cypher-compiler-2.1), version: 2.1.7; revision: 2.1.7:2.1-maint:649/ed233fc1087f4549d1956b8ec4a504fe2f13a446
+2015-05-27 14:09:55.070+0000 INFO  [org.neo4j]:   Neo4j - Consistency Checker (neo4j-consistency-check), version: 2.2.1; revision: 2.2.1:2.2:904/c23258e99edbfff137bea0d83af56c79a46bca31
+2015-05-27 14:09:55.070+0000 INFO  [org.neo4j]:   Neo4j - Graph Algorithms (neo4j-graph-algo), version: 2.2.1; revision: 2.2.1:2.2:904/c23258e99edbfff137bea0d83af56c79a46bca31
+2015-05-27 14:09:55.070+0000 INFO  [org.neo4j]:   Neo4j - Cypher Compiler 2.0 (neo4j-cypher-compiler-2.0), version: 2.0.4; revision: 2.0.4:2.0-maint:130/4a7d10bc274a5d26a180bbe9df25100e8a694748
+2015-05-27 14:09:55.070+0000 INFO  [org.neo4j]:   Neo4j - Cypher Compiler 2.2 (neo4j-cypher-compiler-2.2), version: 2.2.1; revision: 2.2.1:2.2:904/c23258e99edbfff137bea0d83af56c79a46bca31
+2015-05-27 14:09:55.070+0000 INFO  [org.neo4j]:   Neo4j - Cypher Compiler 1.9 (neo4j-cypher-compiler-1.9), version: 2.0.4; revision: 2.0.4:2.0-maint:130/4a7d10bc274a5d26a180bbe9df25100e8a694748
+2015-05-27 14:09:55.070+0000 INFO  [org.neo4j]:   neo4j-udc, version: 2.2.1; revision: 2.2.1:2.2:904/c23258e99edbfff137bea0d83af56c79a46bca31
+2015-05-27 14:09:55.070+0000 INFO  [org.neo4j]:   Neo4j - JMX support (neo4j-jmx), version: 2.2.1; revision: 2.2.1:2.2:904/c23258e99edbfff137bea0d83af56c79a46bca31
+2015-05-27 14:09:55.070+0000 INFO  [org.neo4j]:   Neo4j - Graph Matching (neo4j-graph-matching), version: 2.2.1; revision: 2.2.1:2.2:904/c23258e99edbfff137bea0d83af56c79a46bca31
+2015-05-27 14:09:55.070+0000 INFO  [org.neo4j]:   Neo4j - Graph Database Kernel (neo4j-kernel), version: 2.2.1; revision: 2.2.1:2.2:904/c23258e99edbfff137bea0d83af56c79a46bca31
+2015-05-27 14:09:55.070+0000 INFO  [org.neo4j]:   Neo4j - Cypher (neo4j-cypher), version: 2.2.1; revision: 2.2.1:2.2:904/c23258e99edbfff137bea0d83af56c79a46bca31
+2015-05-27 14:09:55.070+0000 INFO  [org.neo4j]:   Neo4j - Community (neo4j), version: 2.2.1; revision: 2.2.1:2.2:904/c23258e99edbfff137bea0d83af56c79a46bca31
+2015-05-27 14:09:55.070+0000 INFO  [org.neo4j]: --- STARTED diagnostics for KernelDiagnostics:Versions END ---
+2015-05-27 14:09:55.071+0000 INFO  [org.neo4j]: --- STARTED diagnostics for NEO_STORE_VERSIONS START ---
+2015-05-27 14:09:55.071+0000 INFO  [org.neo4j]: Store versions:
+    Store versions:
+      NeoStore v0.A.5
+      SchemaStore v0.A.5
+      NodeStore v0.A.5
+      RelationshipStore v0.A.5
+      RelationshipTypeStore v0.A.5
+      LabelTokenStore v0.A.5
+      PropertyStore v0.A.5
+      PropertyIndexStore v0.A.5
+      StringPropertyStore v0.A.5
+      ArrayPropertyStore v0.A.5
+      RelationshipGroupStore v0.A.5
+2015-05-27 14:09:55.071+0000 INFO  [org.neo4j]: --- STARTED diagnostics for NEO_STORE_VERSIONS END ---
+2015-05-27 14:09:55.071+0000 INFO  [org.neo4j]: --- STARTED diagnostics for NEO_STORE_ID_USAGE START ---
+2015-05-27 14:09:55.071+0000 INFO  [org.neo4j]: Id usage:
+    Id usage:
+      SchemaStore: used=1 high=0
+      NodeStore: used=10 high=9
+      RelationshipStore: used=23 high=22
+      RelationshipTypeStore: used=1 high=0
+      LabelTokenStore: used=2 high=1
+      PropertyStore: used=91 high=90
+      PropertyIndexStore: used=30 high=29
+      StringPropertyStore: used=1 high=0
+      ArrayPropertyStore: used=1 high=0
+      RelationshipGroupStore: used=1 high=0
+2015-05-27 14:09:55.072+0000 INFO  [org.neo4j]: --- STARTED diagnostics for NEO_STORE_ID_USAGE END ---
+2015-05-27 14:09:55.072+0000 INFO  [org.neo4j]: --- STARTED diagnostics for KernelDiagnostics:StoreFiles START ---
+2015-05-27 14:09:55.072+0000 INFO  [org.neo4j]: Disk space on partition (Total / Free / Free %): 625834442752 / 542429839360 / 86
+Storage files: (filename : modification date - size)
+      index:
+      - Total: 2015-05-27T16:09:49+0200 - 0,00 B
+      lock: 2015-05-27T16:09:55+0200 - 0,00 B
+      messages.log: 2015-05-27T16:09:55+0200 - 34,86 kB
+      neostore: 2015-05-27T16:09:55+0200 - 99,00 B
+      neostore.counts.db.a: 2015-05-27T16:09:51+0200 - 114,00 B
+      neostore.counts.db.b: 2015-05-27T16:09:53+0200 - 530,00 B
+      neostore.id: 2015-05-27T16:09:55+0200 - 9,00 B
+      neostore.labeltokenstore.db: 2015-05-27T16:09:55+0200 - 10,00 B
+      neostore.labeltokenstore.db.id: 2015-05-27T16:09:55+0200 - 9,00 B
+      neostore.labeltokenstore.db.names: 2015-05-27T16:09:55+0200 - 114,00 B
+      neostore.labeltokenstore.db.names.id: 2015-05-27T16:09:55+0200 - 9,00 B
+      neostore.nodestore.db: 2015-05-27T16:09:55+0200 - 150,00 B
+      neostore.nodestore.db.id: 2015-05-27T16:09:55+0200 - 9,00 B
+      neostore.nodestore.db.labels: 2015-05-27T16:09:55+0200 - 68,00 B
+      neostore.nodestore.db.labels.id: 2015-05-27T16:09:55+0200 - 9,00 B
+      neostore.propertystore.db: 2015-05-27T16:09:55+0200 - 3,64 kB
+      neostore.propertystore.db.arrays: 2015-05-27T16:09:55+0200 - 128,00 B
+      neostore.propertystore.db.arrays.id: 2015-05-27T16:09:55+0200 - 9,00 B
+      neostore.propertystore.db.id: 2015-05-27T16:09:55+0200 - 9,00 B
+      neostore.propertystore.db.index: 2015-05-27T16:09:55+0200 - 270,00 B
+      neostore.propertystore.db.index.id: 2015-05-27T16:09:55+0200 - 9,00 B
+      neostore.propertystore.db.index.keys: 2015-05-27T16:09:55+0200 - 1,15 kB
+      neostore.propertystore.db.index.keys.id: 2015-05-27T16:09:55+0200 - 9,00 B
+      neostore.propertystore.db.strings: 2015-05-27T16:09:55+0200 - 128,00 B
+      neostore.propertystore.db.strings.id: 2015-05-27T16:09:55+0200 - 9,00 B
+      neostore.relationshipgroupstore.db: 2015-05-27T16:09:55+0200 - 25,00 B
+      neostore.relationshipgroupstore.db.id: 2015-05-27T16:09:55+0200 - 9,00 B
+      neostore.relationshipstore.db: 2015-05-27T16:09:55+0200 - 782,00 B
+      neostore.relationshipstore.db.id: 2015-05-27T16:09:55+0200 - 9,00 B
+      neostore.relationshiptypestore.db: 2015-05-27T16:09:55+0200 - 5,00 B
+      neostore.relationshiptypestore.db.id: 2015-05-27T16:09:55+0200 - 9,00 B
+      neostore.relationshiptypestore.db.names: 2015-05-27T16:09:55+0200 - 76,00 B
+      neostore.relationshiptypestore.db.names.id: 2015-05-27T16:09:55+0200 - 9,00 B
+      neostore.schemastore.db: 2015-05-27T16:09:55+0200 - 64,00 B
+      neostore.schemastore.db.id: 2015-05-27T16:09:55+0200 - 9,00 B
+      neostore.transaction.db.0: 2015-05-27T16:09:53+0200 - 15,44 kB
+      neostore.transaction.db.1: 2015-05-27T16:09:55+0200 - 16,00 B
+      schema:
+        label:
+          lucene:
+            _0.cfs: 2015-05-27T16:09:53+0200 - 243,00 B
+            segments.gen: 2015-05-27T16:09:53+0200 - 20,00 B
+            segments_1: 2015-05-27T16:09:53+0200 - 250,00 B
+            write.lock: 2015-05-27T16:09:55+0200 - 0,00 B
+          - Total: 2015-05-27T16:09:55+0200 - 513,00 B
+        - Total: 2015-05-27T16:09:51+0200 - 513,00 B
+      - Total: 2015-05-27T16:09:51+0200 - 513,00 B
+      store_lock: 2015-05-27T16:09:49+0200 - 0,00 B
+2015-05-27 14:09:55.082+0000 INFO  [org.neo4j]: --- STARTED diagnostics for KernelDiagnostics:StoreFiles END ---
+2015-05-27 14:09:55.083+0000 INFO  [org.neo4j]: Database is now ready
+2015-05-27 14:09:55.105+0000 INFO  [org.neo4j]: Shutdown started
+2015-05-27 14:09:55.106+0000 INFO  [org.neo4j]: Database is now unavailable
+2015-05-27 14:09:56.118+0000 INFO  [org.neo4j]: NeoStore closed
+2015-05-27 14:09:56.118+0000 INFO  [org.neo4j]: --- STOPPING diagnostics START ---
+2015-05-27 14:09:56.119+0000 INFO  [org.neo4j]: --- STOPPING diagnostics END ---
+2015-05-27 14:10:20.636+0000 INFO  [org.neo4j]: No locking implementation specified, defaulting to 'community'
+2015-05-27 14:10:20.637+0000 INFO  [org.neo4j]: --- INITIALIZED diagnostics START ---
+2015-05-27 14:10:20.637+0000 INFO  [org.neo4j]: Neo4j Kernel properties:
+    store_dir=./src/test/resources/grapheTemporaire
+    ephemeral=false
+2015-05-27 14:10:20.637+0000 INFO  [org.neo4j]: Diagnostics providers:
+    org.neo4j.kernel.configuration.Config
+    org.neo4j.kernel.info.DiagnosticsManager
+    SYSTEM_MEMORY
+    JAVA_MEMORY
+    OPERATING_SYSTEM
+    JAVA_VIRTUAL_MACHINE
+    CLASSPATH
+    LIBRARY_PATH
+    SYSTEM_PROPERTIES
+    LINUX_SCHEDULERS
+    NETWORK
+2015-05-27 14:10:20.637+0000 INFO  [org.neo4j]: System memory information:
+    Total Physical memory: 3,76 GB
+    Free Physical memory: 399,79 MB
+    Committed virtual memory: 3,02 GB
+    Total swap space: 3,90 GB
+    Free swap space: 3,90 GB
+2015-05-27 14:10:20.638+0000 INFO  [org.neo4j]: JVM memory information:
+    Free  memory: 272,83 MB
+    Total memory: 392,00 MB
+    Max   memory: 857,00 MB
+    Garbage Collector: PS Scavenge: [PS Eden Space, PS Survivor Space]
+    Garbage Collector: PS MarkSweep: [PS Eden Space, PS Survivor Space, PS Old Gen, PS Perm Gen]
+    Memory Pool: Code Cache (Non-heap memory): committed=2,44 MB, used=2,38 MB, max=48,00 MB, threshold=0,00 B
+    Memory Pool: PS Eden Space (Heap memory): committed=216,00 MB, used=17,76 MB, max=263,00 MB, threshold=?
+    Memory Pool: PS Survivor Space (Heap memory): committed=22,00 MB, used=4,48 MB, max=22,00 MB, threshold=?
+    Memory Pool: PS Old Gen (Heap memory): committed=154,00 MB, used=96,93 MB, max=642,50 MB, threshold=0,00 B
+    Memory Pool: PS Perm Gen (Non-heap memory): committed=68,50 MB, used=38,54 MB, max=166,00 MB, threshold=0,00 B
+2015-05-27 14:10:20.640+0000 INFO  [org.neo4j]: Operating system information:
+    Operating System: Linux; version: 3.13.0-45-generic; arch: amd64; cpus: 4
+    Max number of file descriptors: 4096
+    Number of open file descriptors: 83
+    Process id: 12545@quentin-W251ESQ-W270ESQ
+    Byte order: LITTLE_ENDIAN
+    Local timezone: Europe/Paris
+2015-05-27 14:10:20.640+0000 INFO  [org.neo4j]: JVM information:
+    VM Name: OpenJDK 64-Bit Server VM
+    VM Vendor: Oracle Corporation
+    VM Version: 24.75-b04
+    JIT compiler: HotSpot 64-Bit Tiered Compilers
+    VM Arguments: [-Dfile.encoding=UTF-8]
+2015-05-27 14:10:20.641+0000 INFO  [org.neo4j]: Java classpath:
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/graphstream/pherd/1.0/pherd-1.0.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/graphstream/gs-ui/1.3/gs-ui-1.3.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/neo4j/neo4j-cypher-compiler-2.1/2.1.7/neo4j-cypher-compiler-2.1-2.1.7.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.3.3/jackson-databind-2.3.3.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/neo4j/neo4j-graph-algo/2.2.1/neo4j-graph-algo-2.2.1.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/apache/commons/commons-math3/3.4.1/commons-math3-3.4.1.jar
+     [bootstrap] /usr/lib/jvm/java-7-openjdk-amd64/jre/lib/charsets.jar
+     [bootstrap] /usr/lib/jvm/java-7-openjdk-amd64/jre/lib/sunrsasign.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/neo4j/neo4j-consistency-check/2.2.1/neo4j-consistency-check-2.2.1.jar
+     [bootstrap] /usr/lib/jvm/java-7-openjdk-amd64/jre/lib/rhino.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/junit/junit/3.8.1/junit-3.8.1.jar
+     [loader.1] file:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/ext/zipfs.jar
+     [loader.1] file:/usr/lib/x86_64-linux-gnu/jni/libatk-wrapper.so.0.0.18
+     [classpath + loader.0] file:/home/quentin/.m2/repository/xml-apis/xml-apis/1.3.04/xml-apis-1.3.04.jar
+     [loader.1] file:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/ext/sunpkcs11.jar
+     [classpath + loader.0] file:/home/quentin/git/ProjetSMBL/Generator/target/classes/
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/neo4j/neo4j-graph-matching/2.2.1/neo4j-graph-matching-2.2.1.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/neo4j/neo4j-lucene-index/2.2.1/neo4j-lucene-index-2.2.1.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/neo4j/neo4j-kernel/2.2.1/neo4j-kernel-2.2.1.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/net/sf/opencsv/opencsv/2.3/opencsv-2.3.jar
+     [classpath + loader.0] file:/home/quentin/git/ProjetSMBL/Generator/target/test-classes/
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/neo4j/neo4j-jmx/2.2.1/neo4j-jmx-2.2.1.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/scala-lang/scala-reflect/2.10.5/scala-reflect-2.10.5.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/jfree/jfreechart/1.0.14/jfreechart-1.0.14.jar
+     [bootstrap] /usr/lib/jvm/java-7-openjdk-amd64/jre/lib/resources.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/jfree/jcommon/1.0.17/jcommon-1.0.17.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/graphstream/gs-core/1.3/gs-core-1.3.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/neo4j/neo4j-cypher-compiler-2.2/2.2.1/neo4j-cypher-compiler-2.2-2.2.1.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/neo4j/neo4j-cypher-compiler-1.9/2.0.4/neo4j-cypher-compiler-1.9-2.0.4.jar
+     [classpath + loader.0] file:/home/quentin/git/ProjetSMBL/View/target/classes/
+     [loader.1] file:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/ext/icedtea-sound.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/neo4j/neo4j-cypher/2.2.1/neo4j-cypher-2.2.1.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/neo4j/neo4j-primitive-collections/2.2.1/neo4j-primitive-collections-2.2.1.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/apache/commons/commons-math/2.1/commons-math-2.1.jar
+     [loader.1] file:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/ext/sunjce_provider.jar
+     [classpath + loader.0] file:/home/quentin/Program_Files/eclipse-luna/plugins/org.hamcrest.core_1.3.0.v201303031735.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/neo4j/neo4j-csv/2.2.1/neo4j-csv-2.2.1.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/neo4j/neo4j-udc/2.2.1/neo4j-udc-2.2.1.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/parboiled/parboiled-scala_2.10/1.1.7/parboiled-scala_2.10-1.1.7.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/parboiled/parboiled-core/1.1.7/parboiled-core-1.1.7.jar
+     [bootstrap] /usr/lib/jvm/java-7-openjdk-amd64/jre/lib/jce.jar
+     [loader.1] file:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/ext/dnsns.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/bouncycastle/bcprov-jdk14/138/bcprov-jdk14-138.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/neo4j/neo4j/2.2.1/neo4j-2.2.1.jar
+     [classpath + loader.0] file:/home/quentin/Program_Files/eclipse-luna/plugins/org.junit_4.11.0.v201303080030/junit.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/apache/lucene/lucene-core/3.6.2/lucene-core-3.6.2.jar
+     [bootstrap] /usr/lib/jvm/java-7-openjdk-amd64/jre/lib/jsse.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/neo4j/neo4j-cypher-compiler-2.0/2.0.4/neo4j-cypher-compiler-2.0-2.0.4.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/neo4j/neo4j-io/2.2.1/neo4j-io-2.2.1.jar
+     [loader.1] file:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/ext/java-atk-wrapper.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/graphstream/mbox2/1.0/mbox2-1.0.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.3.1/jackson-core-2.3.1.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.3.0/jackson-annotations-2.3.0.jar
+     [bootstrap] /usr/lib/jvm/java-7-openjdk-amd64/jre/classes
+     [bootstrap] /usr/lib/jvm/java-7-openjdk-amd64/jre/lib/jfr.jar
+     [bootstrap] /usr/lib/jvm/java-7-openjdk-amd64/jre/lib/rt.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/graphstream/gs-algo/1.3/gs-algo-1.3.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/com/googlecode/concurrentlinkedhashmap/concurrentlinkedhashmap-lru/1.4/concurrentlinkedhashmap-lru-1.4.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/bouncycastle/bcmail-jdk14/138/bcmail-jdk14-138.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/com/lowagie/itext/2.1.5/itext-2.1.5.jar
+     [loader.1] file:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/ext/localedata.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/neo4j/neo4j-unsafe/2.2.1/neo4j-unsafe-2.2.1.jar
+     [classpath + loader.0] file:/home/quentin/.m2/repository/org/scala-lang/scala-library/2.10.1/scala-library-2.10.1.jar
+2015-05-27 14:10:20.643+0000 INFO  [org.neo4j]: Library path:
+    /usr/java/packages/lib/amd64
+    /usr/lib/x86_64-linux-gnu/jni
+    /lib/x86_64-linux-gnu
+    /usr/lib/x86_64-linux-gnu
+    /usr/lib/jni
+    /lib
+    /usr/lib
+2015-05-27 14:10:20.643+0000 INFO  [org.neo4j]: System.properties:
+    sun.boot.library.path = /usr/lib/jvm/java-7-openjdk-amd64/jre/lib/amd64
+    path.separator = :
+    file.encoding.pkg = sun.io
+    user.country = FR
+    sun.java.launcher = SUN_STANDARD
+    sun.os.patch.level = unknown
+    user.dir = /home/quentin/git/ProjetSMBL/View
+    sun.jnu.encoding = UTF-8
+    sun.awt.enableExtraMouseButtons = true
+    sun.management.compiler = HotSpot 64-Bit Tiered Compilers
+    user.home = /home/quentin
+    user.timezone = Europe/Paris
+    file.encoding = UTF-8
+    org.graphstream.ui.renderer = org.graphstream.ui.j2dviewer.J2DGraphRenderer
+    user.name = quentin
+    sun.java.command = interfaceGraphique.Window
+    sun.arch.data.model = 64
+    user.language = fr
+    awt.toolkit = sun.awt.X11.XToolkit
+    file.separator = /
+    sun.font.fontmanager = sun.awt.X11FontManager
+    sun.io.unicode.encoding = UnicodeLittle
+    sun.cpu.endian = little
+    sun.desktop = gnome
+    sun.cpu.isalist = 
+2015-05-27 14:10:20.644+0000 INFO  [org.neo4j]: Linux scheduler information:
+    noop [deadline] cfq 
+    noop [deadline] cfq 
+    none
+    none
+    none
+    none
+    none
+    none
+    none
+    none
+    none
+    none
+    none
+    none
+    none
+    none
+    none
+    none
+    none
+    none
+    none
+    none
+    none
+    none
+    none
+    none
+2015-05-27 14:10:20.645+0000 INFO  [org.neo4j]: Network information:
+    Interface wlan0:
+        address: fe80:0:0:0:6a5d:43ff:febf:3934%3
+        address: 130.120.210.240
+    Interface lo:
+        address: 0:0:0:0:0:0:0:1%1
+        address: 127.0.0.1
+2015-05-27 14:10:20.646+0000 INFO  [org.neo4j]: --- INITIALIZED diagnostics END ---
+2015-05-27 14:10:20.662+0000 INFO  [org.neo4j]: Opened logical log [./src/test/resources/grapheTemporaire/neostore.transaction.db.2] version=2, lastTxId=35 (clean)
+2015-05-27 14:10:20.664+0000 INFO  [org.neo4j]: Kernel health set to OK
+2015-05-27 14:10:20.668+0000 INFO  [org.neo4j]: --- STARTED diagnostics for KernelDiagnostics:Versions START ---
+2015-05-27 14:10:20.668+0000 INFO  [org.neo4j]: Graph Database: org.neo4j.kernel.EmbeddedGraphDatabase StoreId{creationTime=1432735789132, randomId=5552187868672819771, storeVersion=14969031248344582, upgradeTime=1432735789132, upgradeId=1}
+2015-05-27 14:10:20.668+0000 INFO  [org.neo4j]: Kernel version: Neo4j - Graph Database Kernel (neo4j-kernel), version: 2.2.1
+2015-05-27 14:10:20.669+0000 INFO  [org.neo4j]: Neo4j component versions:
+2015-05-27 14:10:20.674+0000 INFO  [org.neo4j]:   Neo4j - Lucene Index (neo4j-lucene-index), version: 2.2.1; revision: 2.2.1:2.2:904/c23258e99edbfff137bea0d83af56c79a46bca31
+2015-05-27 14:10:20.674+0000 INFO  [org.neo4j]:   Neo4j - Cypher Compiler 2.1 (neo4j-cypher-compiler-2.1), version: 2.1.7; revision: 2.1.7:2.1-maint:649/ed233fc1087f4549d1956b8ec4a504fe2f13a446
+2015-05-27 14:10:20.674+0000 INFO  [org.neo4j]:   Neo4j - Consistency Checker (neo4j-consistency-check), version: 2.2.1; revision: 2.2.1:2.2:904/c23258e99edbfff137bea0d83af56c79a46bca31
+2015-05-27 14:10:20.674+0000 INFO  [org.neo4j]:   Neo4j - Graph Algorithms (neo4j-graph-algo), version: 2.2.1; revision: 2.2.1:2.2:904/c23258e99edbfff137bea0d83af56c79a46bca31
+2015-05-27 14:10:20.674+0000 INFO  [org.neo4j]:   Neo4j - Cypher Compiler 2.0 (neo4j-cypher-compiler-2.0), version: 2.0.4; revision: 2.0.4:2.0-maint:130/4a7d10bc274a5d26a180bbe9df25100e8a694748
+2015-05-27 14:10:20.674+0000 INFO  [org.neo4j]:   Neo4j - Cypher Compiler 2.2 (neo4j-cypher-compiler-2.2), version: 2.2.1; revision: 2.2.1:2.2:904/c23258e99edbfff137bea0d83af56c79a46bca31
+2015-05-27 14:10:20.675+0000 INFO  [org.neo4j]:   Neo4j - Cypher Compiler 1.9 (neo4j-cypher-compiler-1.9), version: 2.0.4; revision: 2.0.4:2.0-maint:130/4a7d10bc274a5d26a180bbe9df25100e8a694748
+2015-05-27 14:10:20.675+0000 INFO  [org.neo4j]:   neo4j-udc, version: 2.2.1; revision: 2.2.1:2.2:904/c23258e99edbfff137bea0d83af56c79a46bca31
+2015-05-27 14:10:20.675+0000 INFO  [org.neo4j]:   Neo4j - JMX support (neo4j-jmx), version: 2.2.1; revision: 2.2.1:2.2:904/c23258e99edbfff137bea0d83af56c79a46bca31
+2015-05-27 14:10:20.675+0000 INFO  [org.neo4j]:   Neo4j - Graph Matching (neo4j-graph-matching), version: 2.2.1; revision: 2.2.1:2.2:904/c23258e99edbfff137bea0d83af56c79a46bca31
+2015-05-27 14:10:20.675+0000 INFO  [org.neo4j]:   Neo4j - Graph Database Kernel (neo4j-kernel), version: 2.2.1; revision: 2.2.1:2.2:904/c23258e99edbfff137bea0d83af56c79a46bca31
+2015-05-27 14:10:20.675+0000 INFO  [org.neo4j]:   Neo4j - Cypher (neo4j-cypher), version: 2.2.1; revision: 2.2.1:2.2:904/c23258e99edbfff137bea0d83af56c79a46bca31
+2015-05-27 14:10:20.675+0000 INFO  [org.neo4j]:   Neo4j - Community (neo4j), version: 2.2.1; revision: 2.2.1:2.2:904/c23258e99edbfff137bea0d83af56c79a46bca31
+2015-05-27 14:10:20.675+0000 INFO  [org.neo4j]: --- STARTED diagnostics for KernelDiagnostics:Versions END ---
+2015-05-27 14:10:20.675+0000 INFO  [org.neo4j]: --- STARTED diagnostics for NEO_STORE_VERSIONS START ---
+2015-05-27 14:10:20.675+0000 INFO  [org.neo4j]: Store versions:
+    Store versions:
+      NeoStore v0.A.5
+      SchemaStore v0.A.5
+      NodeStore v0.A.5
+      RelationshipStore v0.A.5
+      RelationshipTypeStore v0.A.5
+      LabelTokenStore v0.A.5
+      PropertyStore v0.A.5
+      PropertyIndexStore v0.A.5
+      StringPropertyStore v0.A.5
+      ArrayPropertyStore v0.A.5
+      RelationshipGroupStore v0.A.5
+2015-05-27 14:10:20.675+0000 INFO  [org.neo4j]: --- STARTED diagnostics for NEO_STORE_VERSIONS END ---
+2015-05-27 14:10:20.675+0000 INFO  [org.neo4j]: --- STARTED diagnostics for NEO_STORE_ID_USAGE START ---
+2015-05-27 14:10:20.675+0000 INFO  [org.neo4j]: Id usage:
+    Id usage:
+      SchemaStore: used=1 high=0
+      NodeStore: used=10 high=9
+      RelationshipStore: used=23 high=22
+      RelationshipTypeStore: used=1 high=0
+      LabelTokenStore: used=2 high=1
+      PropertyStore: used=91 high=90
+      PropertyIndexStore: used=30 high=29
+      StringPropertyStore: used=1 high=0
+      ArrayPropertyStore: used=1 high=0
+      RelationshipGroupStore: used=1 high=0
+2015-05-27 14:10:20.676+0000 INFO  [org.neo4j]: --- STARTED diagnostics for NEO_STORE_ID_USAGE END ---
+2015-05-27 14:10:20.676+0000 INFO  [org.neo4j]: --- STARTED diagnostics for KernelDiagnostics:StoreFiles START ---
+2015-05-27 14:10:20.676+0000 INFO  [org.neo4j]: Disk space on partition (Total / Free / Free %): 625834442752 / 542429806592 / 86
+Storage files: (filename : modification date - size)
+      index:
+      - Total: 2015-05-27T16:09:49+0200 - 0,00 B
+      lock: 2015-05-27T16:10:20+0200 - 0,00 B
+      messages.log: 2015-05-27T16:10:20+0200 - 53,89 kB
+      neostore: 2015-05-27T16:10:20+0200 - 99,00 B
+      neostore.counts.db.a: 2015-05-27T16:09:51+0200 - 114,00 B
+      neostore.counts.db.b: 2015-05-27T16:09:53+0200 - 530,00 B
+      neostore.id: 2015-05-27T16:10:20+0200 - 9,00 B
+      neostore.labeltokenstore.db: 2015-05-27T16:10:20+0200 - 10,00 B
+      neostore.labeltokenstore.db.id: 2015-05-27T16:10:20+0200 - 9,00 B
+      neostore.labeltokenstore.db.names: 2015-05-27T16:10:20+0200 - 114,00 B
+      neostore.labeltokenstore.db.names.id: 2015-05-27T16:10:20+0200 - 9,00 B
+      neostore.nodestore.db: 2015-05-27T16:10:20+0200 - 150,00 B
+      neostore.nodestore.db.id: 2015-05-27T16:10:20+0200 - 9,00 B
+      neostore.nodestore.db.labels: 2015-05-27T16:10:20+0200 - 68,00 B
+      neostore.nodestore.db.labels.id: 2015-05-27T16:10:20+0200 - 9,00 B
+      neostore.propertystore.db: 2015-05-27T16:10:20+0200 - 3,64 kB
+      neostore.propertystore.db.arrays: 2015-05-27T16:10:20+0200 - 128,00 B
+      neostore.propertystore.db.arrays.id: 2015-05-27T16:10:20+0200 - 9,00 B
+      neostore.propertystore.db.id: 2015-05-27T16:10:20+0200 - 9,00 B
+      neostore.propertystore.db.index: 2015-05-27T16:10:20+0200 - 270,00 B
+      neostore.propertystore.db.index.id: 2015-05-27T16:10:20+0200 - 9,00 B
+      neostore.propertystore.db.index.keys: 2015-05-27T16:10:20+0200 - 1,15 kB
+      neostore.propertystore.db.index.keys.id: 2015-05-27T16:10:20+0200 - 9,00 B
+      neostore.propertystore.db.strings: 2015-05-27T16:10:20+0200 - 128,00 B
+      neostore.propertystore.db.strings.id: 2015-05-27T16:10:20+0200 - 9,00 B
+      neostore.relationshipgroupstore.db: 2015-05-27T16:10:20+0200 - 25,00 B
+      neostore.relationshipgroupstore.db.id: 2015-05-27T16:10:20+0200 - 9,00 B
+      neostore.relationshipstore.db: 2015-05-27T16:10:20+0200 - 782,00 B
+      neostore.relationshipstore.db.id: 2015-05-27T16:10:20+0200 - 9,00 B
+      neostore.relationshiptypestore.db: 2015-05-27T16:10:20+0200 - 5,00 B
+      neostore.relationshiptypestore.db.id: 2015-05-27T16:10:20+0200 - 9,00 B
+      neostore.relationshiptypestore.db.names: 2015-05-27T16:10:20+0200 - 76,00 B
+      neostore.relationshiptypestore.db.names.id: 2015-05-27T16:10:20+0200 - 9,00 B
+      neostore.schemastore.db: 2015-05-27T16:10:20+0200 - 64,00 B
+      neostore.schemastore.db.id: 2015-05-27T16:10:20+0200 - 9,00 B
+      neostore.transaction.db.0: 2015-05-27T16:09:53+0200 - 15,44 kB
+      neostore.transaction.db.1: 2015-05-27T16:09:55+0200 - 16,00 B
+      neostore.transaction.db.2: 2015-05-27T16:10:20+0200 - 16,00 B
+      schema:
+        label:
+          lucene:
+            _0.cfs: 2015-05-27T16:09:53+0200 - 243,00 B
+            segments.gen: 2015-05-27T16:09:53+0200 - 20,00 B
+            segments_1: 2015-05-27T16:09:53+0200 - 250,00 B
+            write.lock: 2015-05-27T16:10:20+0200 - 0,00 B
+          - Total: 2015-05-27T16:10:20+0200 - 513,00 B
+        - Total: 2015-05-27T16:09:51+0200 - 513,00 B
+      - Total: 2015-05-27T16:09:51+0200 - 513,00 B
+      store_lock: 2015-05-27T16:09:49+0200 - 0,00 B
+2015-05-27 14:10:20.683+0000 INFO  [org.neo4j]: --- STARTED diagnostics for KernelDiagnostics:StoreFiles END ---
+2015-05-27 14:10:20.683+0000 INFO  [org.neo4j]: Database is now ready
+2015-05-27 14:10:20.729+0000 INFO  [org.neo4j]: Shutdown started
+2015-05-27 14:10:20.729+0000 INFO  [org.neo4j]: Database is now unavailable
+2015-05-27 14:10:21.838+0000 INFO  [org.neo4j]: NeoStore closed
+2015-05-27 14:10:21.838+0000 INFO  [org.neo4j]: --- STOPPING diagnostics START ---
+2015-05-27 14:10:21.839+0000 INFO  [org.neo4j]: --- STOPPING diagnostics END ---
