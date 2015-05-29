@@ -26,8 +26,7 @@ public class CustomGraphRenderer {
 			+ MyJsonGenerator.FORMAT_NODE_FINAL;
 
 	public static final int GAP_SIDE = 10;
-	public static final int GAP_X_BETWEEN_NODE = 10;
-	public static final int GAP_Y_BETWEEN_NODE = 5;
+	public static final int GAP_Y_BETWEEN_NODE = 50;
 
 	public void SetRenderer() {
 		// remplacement du renderer par défaut
@@ -44,7 +43,7 @@ public class CustomGraphRenderer {
 				graph.addAttribute("ui.antialias");
 				graph.addAttribute(
 						"ui.stylesheet",
-						"edge { z-index: 0; text-alignment: along; text-offset: 0,10; fill-color: grey; }"
+						"edge { z-index: 0; text-alignment: center; text-offset: 0,10; fill-color: grey; }"
 								+ "node { z-index: 3; text-alignment: at-right; size: 20px; fill-image: url(\"./src/main/resources/Node_Basic.png\"); fill-mode: image-scaled; }"
 								+ NODE_SOURCE
 								+ "{ size: 20px; fill-image: url(\"./src/main/resources/Node_Source.png\"); fill-mode: image-scaled; }"
@@ -65,7 +64,7 @@ public class CustomGraphRenderer {
 				graph.addAttribute("ui.antialias");
 				graph.addAttribute(
 						"ui.stylesheet",
-						"edge { z-index: 0; text-alignment: along; text-offset: 0,10; fill-color: grey; }"
+						"edge { z-index: 0; text-alignment: center; text-offset: 0,10; fill-color: grey; }"
 								+ "node { z-index: 3; text-alignment: at-right; size: 20px; fill-image: url(\"./src/main/resources/Node.png\"); fill-mode: image-scaled; }"
 								+ NODE_SOURCE
 								+ "{ size: 40px; fill-image: url(\"./src/main/resources/NodeSource.png\"); fill-mode: image-scaled; }"
@@ -86,7 +85,7 @@ public class CustomGraphRenderer {
 				graph.addAttribute("ui.antialias");
 				graph.addAttribute(
 						"ui.stylesheet",
-						"edge { z-index: 0; text-alignment: along; text-offset: 0,10; fill-color: grey; }"
+						"edge { z-index: 0; text-alignment: center; text-offset: 0,10; fill-color: grey; }"
 								+ "node { z-index: 3; text-alignment: at-right;}"
 								+ NODE_SOURCE
 								+ "{ size: 13px; shape: triangle; }"
@@ -102,8 +101,9 @@ public class CustomGraphRenderer {
 	// TODO essayer de rapprocher les nodes connectées
 	// Applique un placement sous forme d'arbre avec la(les) racine(s) en haut
 	public void setTreeLayout(GraphicGraph gGraph, Graph graph, Viewer viewer) {
-		int heightView;
-		int widthView;
+		int heightView = viewer.getDefaultView().getHeight();
+		int widthView = viewer.getDefaultView().getWidth();
+		float ratioXY = ((float) widthView) / ((float) heightView);
 		int nbRacine = 0;
 		int nbLevel = 0;
 		int nbMaxNodeInLevel = 0;
@@ -149,8 +149,8 @@ public class CustomGraphRenderer {
 			}
 		}
 
-		widthView = (nbMaxNodeInLevel * GAP_X_BETWEEN_NODE) + 2 * GAP_SIDE;
 		heightView = (nbLevel * GAP_Y_BETWEEN_NODE) + 2 * GAP_SIDE;
+		widthView = (int) (heightView * ratioXY);
 
 		// Placement des nodes
 		for (int cptLevel = nbLevel; cptLevel > 0; cptLevel--) {
@@ -161,7 +161,7 @@ public class CustomGraphRenderer {
 						getYNode(cptLevel, nbLevel, heightView));
 			}
 		}
-
+		viewer.getDefaultView().getCamera().resetView();
 	}
 
 	// récupère les nodes du niveau supérieur au niveau de la node passée en
