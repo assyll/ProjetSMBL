@@ -65,7 +65,7 @@ import convertGraph.Fichier;
 public class Window extends JFrame {
 
 	public final static String pathGraphTemp =
-			"./src/test/resources/grapheTemporaire";
+			"./src/test/resources/.grapheTemporaire";
 	
 	public static final String NO_FILE_SELECTED = "Veuillez d'abord s�lectionner un fichier � importer";
 	public static final String GRAPH_JSON_NAME = "graphJson";
@@ -764,28 +764,33 @@ public class Window extends JFrame {
 								"Sauvegarder", JOptionPane.YES_NO_OPTION);
 							
 							if (option == JOptionPane.OK_OPTION) {
+								// SAUVEGARDE
+								ajouterMessageToTextColorStatut(
+										"graph is saving");
 								new ConvertGStoNeo4j(graphJson).
 									convertToNeo4j(path);
-								textColorStatut.appendDoc(
-										"Graphe sauvegarde! (" +
-										path + ").\n");
+								ajouterMessageToTextColorStatut(
+										"Graph saved ! (" + path + ").");
 							} else {
-								textColorStatut.appendDoc(
-										"Graphe non sauvegarde.\n");
+								ajouterMessageToTextColorStatut(
+										"Graph didn't save !");
 							}
 						} else {
+							// SAUVEGARDE
+							ajouterMessageToTextColorStatut(
+									"graph is saving");
 							new ConvertGStoNeo4j(graphJson).
 								convertToNeo4j(path);
-							textColorStatut.appendDoc(
-									"Graphe sauvegarde! (" + path + ").\n");
+							ajouterMessageToTextColorStatut(
+									"Graph saved ! (" + path + ").");
 						}
 					} else if(jFileChooser.getSelectedFile() == null) {
-						textColorStatut.appendDoc(
-								"Erreur: Un Fichier porte le meme nom");
+						ajouterMessageToTextColorStatut(
+								"Error: A file has the same name.");
 					}
 				} else {
-					textColorStatut.appendDoc(
-							"Pas de graphe a sauvegarder.\n");
+					ajouterMessageToTextColorStatut(
+							"No graph to save.");
 				}
 			}
 		});
@@ -1092,6 +1097,9 @@ public class Window extends JFrame {
 				textDirectory.setText("Directory");
 			} else {
 				// sinon IMPORTER NEO4J
+				ajouterMessageToTextColorStatut(
+						"graph is importing ...");
+				
 				if (wantToGenerateToLeft) {
 					graphJson = new ConvertNeo4jToGS(
 							fichier.toString()).convertToGS();
@@ -1105,6 +1113,9 @@ public class Window extends JFrame {
 	
 	// clique sur generate Traces (nimporte lequel)
 	public void generateTraces(boolean oneByFile) {
+		ajouterMessageToTextColorStatut(
+				"traces Generate Dialog Opening ...");
+		
 		TracesGenerateDialog dialog =
 				new TracesGenerateDialog(this, oneByFile,
 						graphJson, isGraphJsonLoaded);
@@ -1360,6 +1371,19 @@ public class Window extends JFrame {
 	private void msgAlert(String s) {
 		JOptionPane.showMessageDialog(this, s, "Alert",
 				JOptionPane.INFORMATION_MESSAGE);
+	}
+	
+	/**
+	 * Ajoute un message dans la barre de statut.
+	 * @param msg Message a ecrire.
+	 */
+	public void ajouterMessageToTextColorStatut(final String msg) {
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				Window.this.textColorStatut.appendDoc(msg);
+			}
+		}).start();
 	}
 
 	public static void main(String[] args) {

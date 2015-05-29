@@ -8,12 +8,17 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
 
 public class Trace {
 	
 	public static Map<String, Date> usernames =
 			new HashMap<String, Date>();
+	public static Map<String, Integer> tracesByUser =
+			new HashMap<String, Integer>();
+	public static int nbTracesByUser;
+	
 	public final static String _end = "END";
 
 	private List<Action> _actions;
@@ -54,23 +59,47 @@ public class Trace {
 		if (usernames.isEmpty()) {
 			// oblige creer nouveau username
 			usernames.put(username = "user0", new Date());
+			tracesByUser.put(username, 1);
 		} else {
-			// tire au sort sil faut en creer
-			int nbAleat = new Random().nextInt(2);
-			if (nbAleat < 1) {
+			// verifie dabord si tous les users ont nbTracesByUser traces
+			username = getUsernameEnManqueDeTraces();
+			if (username != null) {
+				tracesByUser.put(username, tracesByUser.get(username) + 1);
+				return username;
+			}
+			
+			// sinon tirer au sort sil faut en creer
+			//int nbAleat = new Random().nextInt(2);
+			//if (nbAleat < 1) {
 				// creer un nouveau username
 				usernames.put(
 						username = "user" + usernames.size(), new Date());
-			} else {
+				tracesByUser.put(username, 1);
+			/*} else {
 				// prend un username existant au hasard
 				List<String> usernamesList = new ArrayList<String>();
 				usernamesList.addAll(usernames.keySet());
 				
 				nbAleat = new Random().nextInt(usernamesList.size());
 				username = usernamesList.get(nbAleat);
-			}
+				tracesByUser.put(username, tracesByUser.get(username) + 1);
+			}*/
 		}
 		return username;
+	}
+	
+	/**
+	 * Retourne un utilisateur qui n'a pas encore le nombre de traces voulues.
+	 * Retourne null si tous les utilisateurs l'ont.
+	 * @return username
+	 */
+	private static String getUsernameEnManqueDeTraces() {
+		for (Entry<String, Integer> e: tracesByUser.entrySet()) {
+			if (e.getValue() < nbTracesByUser) {
+				return e.getKey();
+			}
+		}
+		return null;
 	}
 	
 	public String getDateFormatString(Date date) {

@@ -30,10 +30,12 @@ public class GeneratorGraph {
 	 * @param path : chemin de creation de la base de donnees.
 	 * @param nbNodes : nombre de noeuds a creer (environ).
 	 * @param maxTrans : nombre de transitions sortantes maximum par noeud.
+	 * @param nbFinalStates : nombre d'etat final souhaite.
 	 * @throws Exception 
 	 */
 	public void generateGrapheAleat(
-			final String path, final int nbNodes, final int maxTrans)
+			final String path, final int nbNodes, final int maxTrans,
+			final int nbFinalStates)
 					throws Exception {
 		
 		// noeuds et transitions crees
@@ -55,7 +57,7 @@ public class GeneratorGraph {
 				quadruplet, node, nbNodes, maxTrans);
 		
 		// Ajout des attributs source et final
-		addAttributs(quadruplet.nodesCreated);
+		addAttributs(quadruplet.nodesCreated, nbFinalStates);
 		
 		// Desinne le graphe
 		drawGraph(path, quadruplet.nodesCreated);
@@ -310,8 +312,10 @@ public class GeneratorGraph {
 	/**
 	 * Ajoute aux noeuds leur attribut "Source" et "Final".
 	 * @param nodes Noeuds dont leur attribut sont a mettre a jour
+	 * @param nbFinal Nombre detat final
 	 */
-	private void addAttributs(List<NodeToCreate> nodes) {
+	private void addAttributs(List<NodeToCreate> nodes, int nbFinal) {
+		int nbFinalCreated = 0;
 		for (NodeToCreate node: nodes) {
 			node.addAttribut("Source",
 					node.getName().equals("Racine") ? true : false);
@@ -320,7 +324,31 @@ public class GeneratorGraph {
 			node.addAttribut("ui.label", node.getName());
 			node.addAttribut("ui.class",
 					node.getName().equals("Racine") ? "Source" : "Node");
+			
+			if (node.getTransitions().size() == 0
+					&& nbFinalCreated < nbFinal) {
+				nbFinalCreated++;
+			}
 		}
+		
+		while (nbFinalCreated < nbFinal
+				&& nbFinalCreated < nodes.size()) {
+			
+			NodeToCreate nodeAleat = chooseRandom(nodes);
+			nodeAleat.addAttribut("Final", true);
+			nbFinalCreated++;
+		}
+	}
+	
+	private NodeToCreate chooseRandom(List<NodeToCreate> nodes) {
+		List<NodeToCreate> nodesNoFinal = new ArrayList<NodeToCreate>();
+		for (NodeToCreate nodeToCreate: nodes) {
+			if (!((Boolean) nodeToCreate.getAttributs().get("Final"))) {
+				nodesNoFinal.add(nodeToCreate);
+			}
+		}
+		
+		return nodesNoFinal.get(new Random().nextInt(nodesNoFinal.size()));
 	}
 	
 	/**

@@ -58,7 +58,8 @@ public class TracesToJson {
 					private Date extraireTimeStamp(String actionJson) {
 						JsonFactory jfactory = new JsonFactory();
 						try {
-							JsonParser jParser = jfactory.createParser(actionJson);
+							JsonParser jParser = jfactory.
+									createParser(actionJson);
 							jParser.nextToken();
 							String jToken = "";
 							
@@ -69,8 +70,8 @@ public class TracesToJson {
 							
 							jParser.nextToken();
 							jToken = jParser.getText();
-							Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss a").
-									parse(jToken);
+							Date date = new SimpleDateFormat
+									("yyyy-MM-dd HH:mm:ss a").parse(jToken);
 							
 							return date;
 							

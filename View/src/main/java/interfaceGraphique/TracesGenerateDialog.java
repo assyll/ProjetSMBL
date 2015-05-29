@@ -12,8 +12,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.io.File;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Map.Entry;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -39,20 +40,22 @@ import convertGraph.Fichier;
 public class TracesGenerateDialog extends JDialog {
 	
 	private static String tracesNumberOld = "", maxActionOld = "",
-			percentOld = "", pathOld = "";
+			percentOld = "", pathOld = "", tracesUserOld = "";
 	private static boolean stopToFinalOld = true, withRepetitionOld = false;
 	
 	private String path;
+	private JFrame jFrame;
 	private boolean possible;
 	private boolean oneByFile;
 	private int methodEnabled;
 	private JPanel methodPanel, tracesPanel, maxActionsPanel, stopToFinalPanel,
-	               withRepetitionPanel, percentToCoverPanel, pathSavePanel;
+	               withRepetitionPanel, percentToCoverPanel, pathSavePanel,
+	               nbTracesByUserPanel;
 	private JLabel methodLabel, nbTracesLabel, maxActionsLabel,
 	               stopToFinalLabel, withRepetitionLabel, percentToCoverLabel,
-	               pathSaveLabel;
+	               pathSaveLabel, nbTracesByUserLabel;
 	private JTextField nbTracesField, maxActionsField, percentToCoverField,
-	                   pathSaveField;
+	                   pathSaveField, nbTracesByUserField;
 	private JRadioButton methodRButton1, methodRButton2, methodRButton3;
 	private JComboBox stopToFinalComboBox, withRepetitionComboBox;
 	private JButton pathSaveButton;
@@ -64,6 +67,7 @@ public class TracesGenerateDialog extends JDialog {
 		
 		super(jFrame, "Traces Generate", true);
 		this.oneByFile = oneByFile;
+		this.jFrame = jFrame;
 		
 		setSize(700, 400);
 		setLocationRelativeTo(null);
@@ -157,11 +161,11 @@ public class TracesGenerateDialog extends JDialog {
 		// Nombre de traces
 		tracesPanel = new JPanel();
 		tracesPanel.setBackground(Color.WHITE);
-		tracesPanel.setPreferredSize(new Dimension(325, 75));
+		tracesPanel.setPreferredSize(new Dimension(200, 75));
 		
 		nbTracesField = new JTextField();
 		nbTracesField.setFont(new Font(" TimesRoman ", Font.PLAIN, 20));
-		nbTracesField.setPreferredSize(new Dimension(150, 40));
+		nbTracesField.setPreferredSize(new Dimension(50, 40));
 		
 		nbTracesLabel = new JLabel("Enter a number :");
 		
@@ -173,11 +177,11 @@ public class TracesGenerateDialog extends JDialog {
 		// Nombre d'actions maximum
 		maxActionsPanel = new JPanel();
 		maxActionsPanel.setBackground(Color.WHITE);
-		maxActionsPanel.setPreferredSize(new Dimension(325, 75));
+		maxActionsPanel.setPreferredSize(new Dimension(250, 75));
 		
 		maxActionsField = new JTextField();
 		maxActionsField.setFont(new Font(" TimesRoman ", Font.PLAIN, 20));
-		maxActionsField.setPreferredSize(new Dimension(150, 40));
+		maxActionsField.setPreferredSize(new Dimension(75, 40));
 		
 		maxActionsLabel = new JLabel("Enter a number :");
 		
@@ -185,6 +189,22 @@ public class TracesGenerateDialog extends JDialog {
 				createTitledBorder("Max Actions number by trace"));
 		maxActionsPanel.add(maxActionsLabel);
 		maxActionsPanel.add(maxActionsField);
+		
+		// Nombre de traces par utilisateur
+		nbTracesByUserPanel = new JPanel();
+		nbTracesByUserPanel.setBackground(Color.WHITE);
+		nbTracesByUserPanel.setPreferredSize(new Dimension(200, 75));
+		
+		nbTracesByUserField = new JTextField();
+		nbTracesByUserField.setFont(new Font(" TimesRoman ", Font.PLAIN, 20));
+		nbTracesByUserField.setPreferredSize(new Dimension(50, 40));
+		
+		nbTracesByUserLabel = new JLabel("Enter a number :");
+		
+		nbTracesByUserPanel.setBorder(BorderFactory.
+				createTitledBorder("trace number by user"));
+		nbTracesByUserPanel.add(nbTracesByUserLabel);
+		nbTracesByUserPanel.add(nbTracesByUserField);
 		
 		// Stop to final
 		stopToFinalPanel = new JPanel();
@@ -272,6 +292,7 @@ public class TracesGenerateDialog extends JDialog {
 		JPanel mainPanel = new JPanel();
 		mainPanel.add(methodPanel);
 		mainPanel.add(tracesPanel);
+		mainPanel.add(nbTracesByUserPanel);
 		mainPanel.add(maxActionsPanel);
 		mainPanel.add(stopToFinalPanel);
 		mainPanel.add(withRepetitionPanel);
@@ -298,7 +319,6 @@ public class TracesGenerateDialog extends JDialog {
 				registerOldValues();
 				TracesGenerateDialog.this.close();
 			}
-			
 		});
 		
 		buttonPanel.add(okButton);
@@ -347,6 +367,7 @@ public class TracesGenerateDialog extends JDialog {
 		withRepetitionComboBox.setSelectedItem("" + withRepetitionOld);
 		percentToCoverField.setText(percentOld);
 		pathSaveField.setText(pathOld);
+		nbTracesByUserField.setText(tracesUserOld);
 	}
 	
 	private void registerOldValues() {
@@ -358,10 +379,20 @@ public class TracesGenerateDialog extends JDialog {
 				(String) withRepetitionComboBox.getSelectedItem());
 		percentOld = percentToCoverField.getText();
 		pathOld = pathSaveField.getText();
+		tracesUserOld = nbTracesByUserField.getText();
 	}
 	
 	private void actionClickToGenerate() {
 		List<Trace> traces = null;
+		
+		try {
+			Trace.nbTracesByUser = Integer.parseInt(
+					nbTracesByUserField.getText());
+		} catch (Exception e) {
+			errorNumber();
+			return;
+		}
+		
 		switch (methodEnabled) {
 		case 1:
 			traces = enableMethod1();
@@ -410,6 +441,8 @@ public class TracesGenerateDialog extends JDialog {
 
 	private List<Trace> enableMethod3() {
 		try {
+			((Window) jFrame).ajouterMessageToTextColorStatut(
+					"traces are generating ...");
 			int maxActions = Integer.parseInt(maxActionsField.getText());
 			return generatorTraces.traceGenerateCoverageIntelligent(maxActions);
 		} catch (Exception e) {
@@ -429,13 +462,17 @@ public class TracesGenerateDialog extends JDialog {
 	}
 	
 	private void successMessage() {
-		JOptionPane.showMessageDialog(
-				getContentPane(), "Traces generated with success");
+		/*JOptionPane.showMessageDialog(
+				getContentPane(), "Traces generated with success");*/
+		((Window) jFrame).ajouterMessageToTextColorStatut(
+				"Traces generated with success");
 	}
 	
 	private void failureMessage() {
-		JOptionPane.showMessageDialog(
-				getContentPane(), "Traces generate failure");
+		/*JOptionPane.showMessageDialog(
+				getContentPane(), "Traces generate failure");*/
+		((Window) jFrame).ajouterMessageToTextColorStatut(
+				"Traces generate failure");
 	}
 	
 	private void initGeneratorTraces(Graph graphGS) {
@@ -457,6 +494,11 @@ public class TracesGenerateDialog extends JDialog {
 	
 	private void writeTracesInFichier(List<Trace> traces) {
 		boolean isWrited = true;
+		
+		// Initialisation des parametres
+		Trace.usernames = new HashMap<String, Date>();
+		Trace.tracesByUser = new HashMap<String, Integer>();
+		
 		if (oneByFile) {
 			for (int i = 0; i < traces.size(); i++) {
 				isWrited = isWrited &&

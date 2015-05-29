@@ -20,7 +20,7 @@ public class GeneratorGraphTest {
 				+ "(" + _nbNodes + " noeuds, " + _maxTrans
 				+ " transitions max / noeud) ...");
 		
-		generator.generateGrapheAleat(_path, _nbNodes, _maxTrans);
+		generator.generateGrapheAleat(_path, _nbNodes, _maxTrans, 1);
 		
 		System.out.println("Graphe: cree (" + _path + ")");
 	}

@@ -26,16 +26,18 @@ public class GraphGenerateDialog extends JDialog{
 
 	private static String nodeOld = "", transOld = "";
 	
+	private JFrame jFrame;
 	private boolean generatedWithSuccess;
-	private JLabel nodeLabel, transLabel;
-	private JTextField nodeField, transField;
+	private JLabel nodeLabel, transLabel, finauxLabel;
+	private JTextField nodeField, transField, finauxField;
 	
 	public GraphGenerateDialog (JFrame jFrame) {
 		super(jFrame, "Generate Graph", true);
 		
+		this.jFrame = jFrame;
 		this.generatedWithSuccess = false;
 		
-		setSize(600, 250);
+		setSize(600, 325);
 		setLocationRelativeTo(null);
 		setResizable(false);
 		initComponent();
@@ -69,11 +71,25 @@ public class GraphGenerateDialog extends JDialog{
 		transPanel.add(transLabel);
 		transPanel.add(transField);
 		
+		// etats finaux
+		JPanel finauxPanel = new JPanel();
+		finauxPanel.setBackground(Color.WHITE);
+		finauxPanel.setPreferredSize(new Dimension(550, 75));
+		finauxField = new JTextField();
+		finauxField.setFont(new Font(" TimesRoman ",Font.PLAIN,20));
+		finauxField.setPreferredSize(new Dimension(350, 40));
+		finauxPanel.setBorder(BorderFactory.
+				createTitledBorder("final state number"));
+		finauxLabel = new JLabel("Enter a number :");
+		finauxPanel.add(finauxLabel);
+		finauxPanel.add(finauxField);
+		
 		// panel principal
 		JPanel mainPanel = new JPanel();
 		mainPanel.setBackground(Color.WHITE);
 		mainPanel.add(nodePanel);
 		mainPanel.add(transPanel);
+		mainPanel.add(finauxPanel);
 		
 		// panel des boutons
 		JPanel buttonPanel = new JPanel();
@@ -84,7 +100,7 @@ public class GraphGenerateDialog extends JDialog{
 			public void actionPerformed(ActionEvent arg0) {
 				registerValuesOld();
 				
-				int nbNodes, nbTrans;
+				int nbNodes, nbTrans, nbFinaux;
 				try {
 					nbNodes = Integer.parseInt(nodeField.getText());
 				} catch (Exception e) {
@@ -103,18 +119,32 @@ public class GraphGenerateDialog extends JDialog{
 					return;
 				}
 				
+				try {
+					nbFinaux = Integer.parseInt(finauxField.getText());
+				} catch (Exception e) {
+					JOptionPane.showMessageDialog(
+							GraphGenerateDialog.this.getContentPane(),
+							"Enter a number for final state please");
+					return;
+				}
+				
 				JOptionPane jOptionPane = new JOptionPane();
-				jOptionPane.showMessageDialog(
-						GraphGenerateDialog.this.getContentPane(),
+				
+				((Window) jFrame).ajouterMessageToTextColorStatut(
 						"Graph is building ...");
+				/*jOptionPane.showMessageDialog(
+						GraphGenerateDialog.this.getContentPane(),
+						"Graph is building ...");*/
 				
 				setVisible(false);
-				String success = genererLeGraphe(nbNodes, nbTrans)
+				String success = genererLeGraphe(nbNodes, nbTrans, nbFinaux)
 						? "success" : "failure";
 				
 				jOptionPane.setVisible(false);
-				JOptionPane.showMessageDialog(
+				/*JOptionPane.showMessageDialog(
 						GraphGenerateDialog.this.getContentPane(),
+						"Graph generated with " + success + " !");*/
+				((Window) jFrame).ajouterMessageToTextColorStatut(
 						"Graph generated with " + success + " !");
 			}
 		});
@@ -147,13 +177,13 @@ public class GraphGenerateDialog extends JDialog{
 		transOld = transField.getText();
 	}
 	
-	private boolean genererLeGraphe(int nbNodes, int nbTrans) {
+	private boolean genererLeGraphe(int nbNodes, int nbTrans, int nbFinaux) {
 		GeneratorGraph generator = new GeneratorGraph();
 		
 		try {
 			Fichier.deleteFileOrDirectory(Window.pathGraphTemp);
 			generator.generateGrapheAleat(Window.pathGraphTemp,
-					nbNodes, nbTrans);
+					nbNodes, nbTrans, nbFinaux);
 			generatedWithSuccess = true;
 		} catch (Exception e) {
 			return false;

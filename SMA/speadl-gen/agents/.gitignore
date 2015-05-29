@@ -5,3 +5,6 @@
 /.Perceive.java._trace
 /.Act.java._trace
 /.Decide.java._trace
+/Act.java
+/Decide.java
+/Perceive.java
