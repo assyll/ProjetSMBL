@@ -64,9 +64,8 @@ import convertGraph.Fichier;
 @SuppressWarnings("serial")
 public class Window extends JFrame {
 
-	public final static String pathGraphTemp =
-			"./src/test/resources/.grapheTemporaire";
-	
+	public final static String pathGraphTemp = "./src/test/resources/.grapheTemporaire";
+
 	public static final String NO_FILE_SELECTED = "Veuillez d'abord s�lectionner un fichier � importer";
 	public static final String GRAPH_JSON_NAME = "graphJson";
 	public static final String GRAPH_AGENT_NAME = "graphAgent";
@@ -102,9 +101,10 @@ public class Window extends JFrame {
 
 	JMenu menuFile, menuDisplay, menuTools, menuTraces;
 
-	JMenuItem importMenuGauche, importMenuDroite, exitMenu, displayDoubleCircle, displayRobot,
-			displayBasic, jMenuItemGenererGraphe, jMenuItemGenererTraces1,
-	          jMenuItemGenererTraces2;;
+	JMenuItem importMenuGauche, importMenuDroite, exitMenu, displayDefault,
+			displayDoubleCircle, displayRobot, displayBasic,
+			jMenuItemGenererGraphe, jMenuItemGenererTraces1,
+			jMenuItemGenererTraces2;
 
 	Viewer viewerJson, viewerAgent;
 
@@ -129,7 +129,7 @@ public class Window extends JFrame {
 	SpriteManager spriteManagerJson, spriteManagerAgent;
 
 	GraphicElement gElement = null;
-	
+
 	CustomGraphRenderer cGraphRenderer;
 
 	public Window() {
@@ -319,7 +319,7 @@ public class Window extends JFrame {
 		panelModifJSon.add(structGraphJson);
 		panelModifJSon.add(cleanGraphJson);
 		panelModifJSon.add(buttonSave);
-		
+
 		panelModifAgent.add(addNodeAgent);
 		panelModifAgent.add(suppNodeAgent);
 		panelModifAgent.add(addEdgeAgent);
@@ -365,28 +365,29 @@ public class Window extends JFrame {
 		importMenuDroite = new JMenuItem("Import to right");
 		exitMenu = new JMenuItem("Exit");
 
+		displayDefault = new JMenuItem("Default");
 		displayDoubleCircle = new JMenuItem("Double Circle");
 		displayRobot = new JMenuItem("Robot");
 		displayBasic = new JMenuItem("Basic");
-		
+
 		jMenuItemGenererGraphe = new JMenuItem("Generate graph");
-		jMenuItemGenererTraces1 = new JMenuItem(
-				"Generate one trace by file");
+		jMenuItemGenererTraces1 = new JMenuItem("Generate one trace by file");
 		jMenuItemGenererTraces2 = new JMenuItem(
 				"Generate multiple trace into one file");
 
 		menuFile.add(importMenuGauche);
 		menuFile.add(importMenuDroite);
 		menuFile.add(exitMenu);
+		menuDisplay.add(displayDefault);
 		menuDisplay.add(displayDoubleCircle);
 		menuDisplay.add(displayRobot);
 		menuDisplay.add(displayBasic);
-		
+
 		menuTraces.add(jMenuItemGenererTraces1);
 		menuTraces.add(jMenuItemGenererTraces2);
 		menuTools.add(jMenuItemGenererGraphe);
 		menuTools.add(menuTraces);
-		
+
 		menu_bar1.add(menuFile);
 		menu_bar1.add(menuDisplay);
 		menu_bar1.add(menuTools);
@@ -410,7 +411,7 @@ public class Window extends JFrame {
 				clickToImport(true);
 			}
 		});
-		
+
 		// Action lors du clic sur l'item "Import to right"
 		importMenuDroite.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -424,7 +425,7 @@ public class Window extends JFrame {
 				System.exit(1);
 			}
 		});
-		
+
 		// Action lors du clic sur l'item "Generate graph"
 		jMenuItemGenererGraphe.addActionListener(new ActionListener() {
 			@Override
@@ -432,19 +433,19 @@ public class Window extends JFrame {
 				// Ouverture d'une fenetre de dialogue proposant:
 				// chemin de sauvegarde, nombre de noeuds,
 				// nombre de transition maximum par noeud
-				GraphGenerateDialog dialog =
-						new GraphGenerateDialog(Window.this);
+				GraphGenerateDialog dialog = new GraphGenerateDialog(
+						Window.this);
 				dialog.show();
-				
+
 				// Graphe genere avec succes
 				if (dialog.isGeneratedWithSuccess()) {
 					// Met a jour les a valeurs afin quon puisse appuyer sur
 					// "To GraphStream"
 					isDirectoryNeo4j = true;
 					wantToGenerateToLeft = true;
-					
-					graphJson = new ConvertNeo4jToGS(pathGraphTemp).
-							convertToGS();
+
+					graphJson = new ConvertNeo4jToGS(pathGraphTemp)
+							.convertToGS();
 					textDirectory.setText("ready to load");
 					Fichier.deleteFileOrDirectory(pathGraphTemp);
 				} else {
@@ -452,7 +453,7 @@ public class Window extends JFrame {
 				}
 			}
 		});
-		
+
 		// Action lors du clic sur jMenuItemGenererTraces1
 		jMenuItemGenererTraces1.addActionListener(new ActionListener() {
 			@Override
@@ -460,7 +461,7 @@ public class Window extends JFrame {
 				generateTraces(true);
 			}
 		});
-		
+
 		// Action lors du clic sur jMenuItemGenererTraces2
 		jMenuItemGenererTraces2.addActionListener(new ActionListener() {
 			@Override
@@ -469,11 +470,17 @@ public class Window extends JFrame {
 			}
 		});
 
+		// Action lors du clic sur l'item "Default"
+		displayDefault.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				cGraphRenderer.setStyleGraphDefault(graphJson, graphAgent);
+			}
+		});
+
 		// Action lors du clic sur l'item "Double Circle"
 		displayDoubleCircle.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				cGraphRenderer.setStyleGraphDoubleCircle(graphJson,
-						graphAgent);
+				cGraphRenderer.setStyleGraphDoubleCircle(graphJson, graphAgent);
 			}
 		});
 
@@ -494,7 +501,8 @@ public class Window extends JFrame {
 		// Action lors du clic sur l'item "To GraphStream"
 		buttonGS.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// Visualisation du graph g�n�r� par le fichier import� au
+				// Visualisation du graph g�n�r� par le fichier import�
+				// au
 				// format .json
 
 				if (!textDirectory.getText().equals("Directory")) {
@@ -517,8 +525,8 @@ public class Window extends JFrame {
 							initPanelGraphJson();
 						} else {
 							if (!isDirectoryNeo4j) {
-								graphAgent = GraphModifier.GraphToGraph(graphJson,
-										GRAPH_AGENT_NAME);
+								graphAgent = GraphModifier.GraphToGraph(
+										graphJson, GRAPH_AGENT_NAME);
 							}
 							initGraphPropertiesAgent();
 							initPanelGraphAgent();
@@ -537,8 +545,8 @@ public class Window extends JFrame {
 						textColorStatut.appendErrorMessage(exception
 								.getMessage());
 					} catch (NullPointerException exception) {
-						textColorStatut.appendErrorMessage(
-								"Graphe Neo4j deja ouvert quelque part!");
+						textColorStatut
+								.appendErrorMessage("Graphe Neo4j deja ouvert quelque part!");
 					} finally {
 						frame.setCursor(Cursor
 								.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
@@ -566,9 +574,6 @@ public class Window extends JFrame {
 		// Action lors du clic sur l'item "%" de la partie gauche
 		zoomTextJSon.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				// TODO faire une fonction pour traiter les donn�es de la
-				// zone de texte car elle apparait 4 fois (textJSon,
-				// textAgent, zoomTextJSon, zoomTextAgent
 
 				if (isGraphJsonLoaded) {
 					String s = textJSon.getText();
@@ -709,7 +714,8 @@ public class Window extends JFrame {
 						Edge e = graphJson.removeEdge(s);
 						spriteManagerJson.removeSprite(e.getId());
 						if (e != null) {
-							msgAlert("La transition " + s + " a �t� supprim�.");
+							msgAlert("La transition " + s
+									+ " a �t� supprim�.");
 						}
 					}
 				} else {
@@ -730,67 +736,64 @@ public class Window extends JFrame {
 						isAutoLayoutJson = false;
 					} else {
 						structGraphJson.setText("Manual");
-						cGraphRenderer.setTreeLayout(viewerJson.getGraphicGraph(), graphJson, viewerJson);
+						cGraphRenderer.setTreeLayout(
+								viewerJson.getGraphicGraph(), graphJson,
+								viewerJson);
 						isAutoLayoutJson = true;
 					}
 				}
 			}
 		});
-		
+
 		// Action lors du clic sur l'item "Sauvegarder" (partie gauche)
 		buttonSave.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (isGraphJsonLoaded) {
-					JFileChooser jFileChooser = new JFileChooser(
-							new File("./src/test/resources"));
-					jFileChooser.setFileSelectionMode(
-							JFileChooser.DIRECTORIES_ONLY);
+					JFileChooser jFileChooser = new JFileChooser(new File(
+							"./src/test/resources"));
+					jFileChooser
+							.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
 					String path;
-					if (jFileChooser.showSaveDialog(null) ==
-							JFileChooser.APPROVE_OPTION) {
-						
+					if (jFileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+
 						File file = jFileChooser.getSelectedFile();
 						path = file.toString();
-						
+
 						if (file.exists()) {
-							int option = JOptionPane.showConfirmDialog(null,
-								(Fichier.isFolderNeo4j(path)
-								? "Il semblerait " : "Il ne semblerait pas ")+
-								"que ce soit un dossier Neo4J" +
-								"\nVoulez-vous sauvegarder dans ce dossier ?" +
-								"\nNB: le dossier sera supprimé.",
-								"Sauvegarder", JOptionPane.YES_NO_OPTION);
-							
+							int option = JOptionPane.showConfirmDialog(
+									null,
+									(Fichier.isFolderNeo4j(path) ? "Il semblerait "
+											: "Il ne semblerait pas ")
+											+ "que ce soit un dossier Neo4J"
+											+ "\nVoulez-vous sauvegarder dans ce dossier ?"
+											+ "\nNB: le dossier sera supprimé.",
+									"Sauvegarder", JOptionPane.YES_NO_OPTION);
+
 							if (option == JOptionPane.OK_OPTION) {
 								// SAUVEGARDE
-								ajouterMessageToTextColorStatut(
-										"graph is saving");
-								new ConvertGStoNeo4j(graphJson).
-									convertToNeo4j(path);
-								ajouterMessageToTextColorStatut(
-										"Graph saved ! (" + path + ").");
+								ajouterMessageToTextColorStatut("graph is saving");
+								new ConvertGStoNeo4j(graphJson)
+										.convertToNeo4j(path);
+								ajouterMessageToTextColorStatut("Graph saved ! ("
+										+ path + ").");
 							} else {
-								ajouterMessageToTextColorStatut(
-										"Graph didn't save !");
+								ajouterMessageToTextColorStatut("Graph didn't save !");
 							}
 						} else {
 							// SAUVEGARDE
-							ajouterMessageToTextColorStatut(
-									"graph is saving");
-							new ConvertGStoNeo4j(graphJson).
-								convertToNeo4j(path);
-							ajouterMessageToTextColorStatut(
-									"Graph saved ! (" + path + ").");
+							ajouterMessageToTextColorStatut("graph is saving");
+							new ConvertGStoNeo4j(graphJson)
+									.convertToNeo4j(path);
+							ajouterMessageToTextColorStatut("Graph saved ! ("
+									+ path + ").");
 						}
-					} else if(jFileChooser.getSelectedFile() == null) {
-						ajouterMessageToTextColorStatut(
-								"Error: A file has the same name.");
+					} else if (jFileChooser.getSelectedFile() == null) {
+						ajouterMessageToTextColorStatut("Error: A file has the same name.");
 					}
 				} else {
-					ajouterMessageToTextColorStatut(
-							"No graph to save.");
+					ajouterMessageToTextColorStatut("No graph to save.");
 				}
 			}
 		});
@@ -812,7 +815,8 @@ public class Window extends JFrame {
 					isGraphJsonLoaded = false;
 					panelGraphJSon.updateUI();
 				} else {
-					textColorStatut.appendDoc("G�n�rez un graphe au pr�alable");
+					textColorStatut
+							.appendDoc("G�n�rez un graphe au pr�alable");
 				}
 			}
 		});
@@ -824,7 +828,8 @@ public class Window extends JFrame {
 				if (isGraphJsonLoaded) {
 					graphJson.display();
 				} else {
-					textColorStatut.appendDoc("G�n�rez un graphe au pr�alable");
+					textColorStatut
+							.appendDoc("G�n�rez un graphe au pr�alable");
 				}
 			}
 		});
@@ -963,7 +968,8 @@ public class Window extends JFrame {
 						Edge e = graphAgent.removeEdge(s);
 						spriteManagerAgent.removeSprite(e.getId());
 						if (e != null) {
-							msgAlert("La transition " + s + " a �t� supprim�.");
+							msgAlert("La transition " + s
+									+ " a �t� supprim�.");
 						}
 					}
 				} else {
@@ -1009,7 +1015,8 @@ public class Window extends JFrame {
 					isGraphAgentLoaded = false;
 					panelGraphAgent.updateUI();
 				} else {
-					textColorStatut.appendDoc("G�n�rez un graphe au pr�alable");
+					textColorStatut
+							.appendDoc("G�n�rez un graphe au pr�alable");
 				}
 			}
 		});
@@ -1021,7 +1028,8 @@ public class Window extends JFrame {
 				if (isGraphAgentLoaded) {
 					graphAgent.display();
 				} else {
-					textColorStatut.appendDoc("G�n�rez un graphe au pr�alable");
+					textColorStatut
+							.appendDoc("G�n�rez un graphe au pr�alable");
 				}
 			}
 		});
@@ -1050,7 +1058,7 @@ public class Window extends JFrame {
 		frame.setResizable(true);
 		frame.setBounds(xWindow, yWindow, widthWindow, heightWindow);
 		frame.setVisible(true);
-		
+
 		// Redefinition de la fermeture de la fenetre
 		frame.addWindowListener(new WindowAdapter() {
 			@Override
@@ -1064,61 +1072,53 @@ public class Window extends JFrame {
 		pack();
 		frame.setLocationRelativeTo(null);
 	}
-	
+
 	// clique sur le bouton "import" nimporte lequel
 	public void clickToImport(boolean importToLeft) {
 		wantToGenerateToLeft = importToLeft;
-		
+
 		// TODO changer le chemin d'acces lors de la release
 		JFileChooser dialogue = new JFileChooser(new File(
 				"./src/test/resources"));
-		dialogue.setFileSelectionMode(
-				JFileChooser.FILES_AND_DIRECTORIES);
+		dialogue.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 		File fichier;
 
 		isDirectoryNeo4j = false;
-		if (dialogue.showOpenDialog(null)
-				== JFileChooser.APPROVE_OPTION) {
-			
+		if (dialogue.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+
 			// Recupere le fichier a importer
 			fichier = dialogue.getSelectedFile();
 			textDirectory.setText(fichier.toString());
 
-			isDirectoryNeo4j =
-					Fichier.isFolderNeo4j(fichier.toString());
-			
+			isDirectoryNeo4j = Fichier.isFolderNeo4j(fichier.toString());
+
 			// Si cest un dossier et que cest pas un neo4j
 			if (fichier.isDirectory() && !isDirectoryNeo4j) {
-				JOptionPane.showConfirmDialog(null,
-						"It's not a Neo4J folder",
-						"Import Problem",
-						JOptionPane.CLOSED_OPTION);
-				
+				JOptionPane.showConfirmDialog(null, "It's not a Neo4J folder",
+						"Import Problem", JOptionPane.CLOSED_OPTION);
+
 				textDirectory.setText("Directory");
 			} else {
 				// sinon IMPORTER NEO4J
-				ajouterMessageToTextColorStatut(
-						"graph is importing ...");
-				
+				ajouterMessageToTextColorStatut("graph is importing ...");
+
 				if (wantToGenerateToLeft) {
-					graphJson = new ConvertNeo4jToGS(
-							fichier.toString()).convertToGS();
+					graphJson = new ConvertNeo4jToGS(fichier.toString())
+							.convertToGS();
 				} else {
-					graphAgent = new ConvertNeo4jToGS(
-							fichier.toString()).convertToGS();
+					graphAgent = new ConvertNeo4jToGS(fichier.toString())
+							.convertToGS();
 				}
 			}
 		}
 	}
-	
+
 	// clique sur generate Traces (nimporte lequel)
 	public void generateTraces(boolean oneByFile) {
-		ajouterMessageToTextColorStatut(
-				"traces Generate Dialog Opening ...");
-		
-		TracesGenerateDialog dialog =
-				new TracesGenerateDialog(this, oneByFile,
-						graphJson, isGraphJsonLoaded);
+		ajouterMessageToTextColorStatut("traces Generate Dialog Opening ...");
+
+		TracesGenerateDialog dialog = new TracesGenerateDialog(this, oneByFile,
+				graphJson, isGraphJsonLoaded);
 		dialog.show();
 	}
 
@@ -1372,10 +1372,12 @@ public class Window extends JFrame {
 		JOptionPane.showMessageDialog(this, s, "Alert",
 				JOptionPane.INFORMATION_MESSAGE);
 	}
-	
+
 	/**
 	 * Ajoute un message dans la barre de statut.
-	 * @param msg Message a ecrire.
+	 * 
+	 * @param msg
+	 *            Message a ecrire.
 	 */
 	public void ajouterMessageToTextColorStatut(final String msg) {
 		new Thread(new Runnable() {
