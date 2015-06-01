@@ -109,7 +109,8 @@ public class CustomGraphRenderer {
 
 	// TODO essayer de rapprocher les nodes connectées
 	// Applique un placement sous forme d'arbre avec la(les) racine(s) en haut
-	public static void setTreeLayout(GraphicGraph gGraph, Graph graph, Viewer viewer) {
+	public static void setTreeLayout(GraphicGraph gGraph, Graph graph,
+			Viewer viewer) {
 		int heightView = viewer.getDefaultView().getHeight();
 		int widthView = viewer.getDefaultView().getWidth();
 		float ratioXY = ((float) widthView) / ((float) heightView);
@@ -125,6 +126,8 @@ public class CustomGraphRenderer {
 
 		// Récupère toutes les informations nécessaire pour organiser les nodes
 		// par niveau
+		
+		//Traitement des sources
 		for (Node gNode : gGraph.getEachNode()) {
 			node = graph.getNode(gNode.getId());
 			if (node.getAttribute(MyJsonGenerator.FORMAT_NODE_SOURCE).equals(
@@ -137,12 +140,9 @@ public class CustomGraphRenderer {
 			}
 		}
 
+		//traitement des autres nodes
 		while (!nodeToBePlaced.isEmpty()) {
 			cptLevel++;
-			/*
-			 * nbNodesPerLevel.add(nodeToBePlaced.size()); nbLevel =
-			 * nbNodesPerLevel.size();
-			 */
 			nodeInPlacement.clear();
 			nodeInPlacement.addAll(nodeToBePlaced);
 			nodeToBePlaced.clear();
@@ -153,6 +153,7 @@ public class CustomGraphRenderer {
 			}
 		}
 
+		// Calcul du maximum de node sur un même niveau
 		for (int cpt = 1; cpt < cptLevel; cpt++) {
 			int nbNodes = getNbNodeInLevel(cpt, nodesPerLevel);
 			if (nbNodes > nbMaxNodeInLevel) {
@@ -185,7 +186,7 @@ public class CustomGraphRenderer {
 
 		for (Edge edge : node.getEachEdge()) {
 			targetNode = edge.getTargetNode();
-			if (isNodeAlreadyPlaced(targetNode, nodesPlaced)) {
+			if (!isNodeAlreadyPlaced(targetNode, nodesPlaced)) {
 				if (!targetNode.getId().equals(node.getId())) {
 					targetNodes.add(targetNode);
 				}
@@ -212,12 +213,19 @@ public class CustomGraphRenderer {
 
 	// calcul le placement en y de la node par rapport à son niveau
 	public static int getYNode(int nodeLevel, int nbLevel, int heightView) {
-		int yNode = ((heightView) / (nbLevel - 1)) * nodeLevel + GAP_SIDE;
+		int yNode;
+
+		if (nbLevel == 1) {
+			yNode = heightView / 2;
+		} else {
+			yNode = ((heightView) / (nbLevel - 1)) * nodeLevel + GAP_SIDE;
+		}
 		return yNode;
 	}
 
 	// Retourne la list des Node du level donné en paramètre
-	public static List<Node> getNodePerLevel(int level, Set<NodeLeveled> nodesPerLevel) {
+	public static List<Node> getNodePerLevel(int level,
+			Set<NodeLeveled> nodesPerLevel) {
 		List<Node> listNodes = new LinkedList<Node>();
 
 		for (NodeLeveled nodeLeveled : nodesPerLevel) {
