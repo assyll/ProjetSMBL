@@ -1,8 +1,9 @@
 package interfaceGraphique;
 
-import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.ToolTipManager;
 
@@ -35,6 +36,14 @@ public class CustomGraphRenderer {
 		ToolTipManager.sharedInstance().setInitialDelay(0);
 	}
 
+	public void setStyleGraphDefault(Graph... graphics) {
+		for (Graph graph : graphics) {
+			if (graph != null) {
+				graph.removeAttribute("ui.stylesheet");
+			}
+		}
+	}
+
 	public void setStyleGraphDoubleCircle(Graph... graphics) {
 		for (Graph graph : graphics) {
 			if (graph != null) {
@@ -46,11 +55,11 @@ public class CustomGraphRenderer {
 						"edge { z-index: 0; text-alignment: center; text-offset: 0,10; fill-color: grey; }"
 								+ "node { z-index: 3; text-alignment: at-right; size: 20px; fill-image: url(\"./src/main/resources/Node_Basic.png\"); fill-mode: image-scaled; }"
 								+ NODE_SOURCE
-								+ "{ size: 20px; fill-image: url(\"./src/main/resources/Node_Source.png\"); fill-mode: image-scaled; }"
+								+ "{ size: 25px; fill-image: url(\"./src/main/resources/Node_Source.png\"); fill-mode: image-scaled; }"
 								+ NODE_FINAL
 								+ "{ size: 20px; fill-image: url(\"./src/main/resources/Node_Final.png\"); fill-mode: image-scaled; }"
 								+ NODE_SOURCE_FINAL
-								+ "{ size: 20px; fill-image: url(\"./src/main/resources/Node_Source_Final.png\"); fill-mode: image-scaled; }"
+								+ "{ size: 25px; fill-image: url(\"./src/main/resources/Node_Source_Final.png\"); fill-mode: image-scaled; }"
 								+ "sprite { z-index: 2; shape: circle; fill-color: rgba(250,250,250,64); stroke-mode: plain; stroke-color: lightblue; }");
 			}
 		}
@@ -104,13 +113,11 @@ public class CustomGraphRenderer {
 		int heightView = viewer.getDefaultView().getHeight();
 		int widthView = viewer.getDefaultView().getWidth();
 		float ratioXY = ((float) widthView) / ((float) heightView);
-		int nbRacine = 0;
-		int nbLevel = 0;
+		int cptLevel = 1;
 		int nbMaxNodeInLevel = 0;
 		Node node;
 
-		List<Integer> nbNodesPerLevel = new ArrayList<Integer>();
-		List<NodeLeveled> nodesPerLevel = new ArrayList<NodeLeveled>();
+		Set<NodeLeveled> nodesPerLevel = new LinkedHashSet<NodeLeveled>();
 		List<Node> nodeInPlacement = new LinkedList<Node>();
 		List<Node> nodeToBePlaced = new LinkedList<Node>();
 
@@ -121,44 +128,51 @@ public class CustomGraphRenderer {
 		for (Node gNode : gGraph.getEachNode()) {
 			node = graph.getNode(gNode.getId());
 			if (node.getAttribute(MyJsonGenerator.FORMAT_NODE_SOURCE).equals(
-					true)) {
+					true)
+					|| node.getAttribute(MyJsonGenerator.FORMAT_NODE_SOURCE)
+							.equals("true")) {
 				nodeToBePlaced.addAll(getNexts(gNode, nodesPerLevel,
 						nodeInPlacement));
-				nodesPerLevel.add(new NodeLeveled(gNode, 1));
-				nbRacine++;
+				nodesPerLevel.add(new NodeLeveled(gNode, cptLevel));
 			}
 		}
-		nbNodesPerLevel.add(nbRacine);
-		nbLevel = nbNodesPerLevel.size();
 
 		while (!nodeToBePlaced.isEmpty()) {
-			nbNodesPerLevel.add(nodeToBePlaced.size());
-			nbLevel = nbNodesPerLevel.size();
+			cptLevel++;
+			/*
+			 * nbNodesPerLevel.add(nodeToBePlaced.size()); nbLevel =
+			 * nbNodesPerLevel.size();
+			 */
 			nodeInPlacement.clear();
 			nodeInPlacement.addAll(nodeToBePlaced);
 			nodeToBePlaced.clear();
 			for (Node gNode : nodeInPlacement) {
-				nodesPerLevel.add(new NodeLeveled(gNode, nbLevel));
+				nodesPerLevel.add(new NodeLeveled(gNode, cptLevel));
 				nodeToBePlaced.addAll(getNexts(gNode, nodesPerLevel,
 						nodeInPlacement));
 			}
 		}
-		for (int nbNodes : nbNodesPerLevel) {
+
+		cptLevel--;
+
+		for (int cpt = 1; cpt < cptLevel; cpt++) {
+			int nbNodes = getNbNodeInLevel(cpt, nodesPerLevel);
 			if (nbNodes > nbMaxNodeInLevel) {
 				nbMaxNodeInLevel = nbNodes;
 			}
 		}
 
-		heightView = (nbLevel * GAP_Y_BETWEEN_NODE) + 2 * GAP_SIDE;
+		// Calcul de la taille en x et en y de la fenetre
+		heightView = (cptLevel * GAP_Y_BETWEEN_NODE) + 2 * GAP_SIDE;
 		widthView = (int) (heightView * ratioXY);
 
 		// Placement des nodes
-		for (int cptLevel = nbLevel; cptLevel > 0; cptLevel--) {
-			nodeInPlacement = getNodePerLevel(nodesPerLevel, cptLevel);
+		for (int indexLevel = 1; indexLevel <= cptLevel; indexLevel++) {
+			nodeInPlacement = getNodePerLevel(indexLevel, nodesPerLevel);
 			for (Node gNode : nodeInPlacement) {
 				viewer.getDefaultView().moveElementAtPx((GraphicElement) gNode,
 						getXNode(gNode, nodeInPlacement, widthView),
-						getYNode(cptLevel, nbLevel, heightView));
+						getYNode(indexLevel, cptLevel, heightView));
 			}
 		}
 		viewer.getDefaultView().getCamera().resetView();
@@ -166,7 +180,7 @@ public class CustomGraphRenderer {
 
 	// récupère les nodes du niveau supérieur au niveau de la node passée en
 	// paramètre connectées à celle-ci
-	public List<Node> getNexts(Node node, List<NodeLeveled> nodesPlaced,
+	public List<Node> getNexts(Node node, Set<NodeLeveled> nodesPlaced,
 			List<Node> nodesBeingPlaced) {
 		List<Node> targetNodes = new LinkedList<Node>();
 		Node targetNode;
@@ -205,7 +219,7 @@ public class CustomGraphRenderer {
 	}
 
 	// Retourne la list des Node du level donné en paramètre
-	public List<Node> getNodePerLevel(List<NodeLeveled> nodesPerLevel, int level) {
+	public List<Node> getNodePerLevel(int level, Set<NodeLeveled> nodesPerLevel) {
 		List<Node> listNodes = new LinkedList<Node>();
 
 		for (NodeLeveled nodeLeveled : nodesPerLevel) {
@@ -216,10 +230,23 @@ public class CustomGraphRenderer {
 		return listNodes;
 	}
 
+	public int getNbNodeInLevel(int level, Set<NodeLeveled> nodePlaced) {
+		int nbNode = 0;
+		for (NodeLeveled nodeLeveled : nodePlaced) {
+			if (nodeLeveled.get_level() == level) {
+				nbNode++;
+			}
+		}
+		return nbNode;
+	}
+
+	// TODO vérifié que ces méthodes sont bien inutiles du fait de l'utilisation
+	// d'une linkedHashSet
+
 	// vérifie si la node passée en paramètre est déjà dans la list des nodes
 	// placées
 	public boolean isNodeAlreadyPlaced(Node nodeToVerify,
-			List<NodeLeveled> nodesPlaced) {
+			Set<NodeLeveled> nodesPlaced) {
 		for (NodeLeveled nodeLeveled : nodesPlaced) {
 			if (nodeLeveled.get_node().getId().equals(nodeToVerify.getId())) {
 				return true;
@@ -242,7 +269,7 @@ public class CustomGraphRenderer {
 
 	// vérifie si la node passée en paramètre est encore à placer
 	public boolean isNodeYetToBePlaced(Node nodeToVerify,
-			List<NodeLeveled> nodesPlaced, List<Node> nodesBeingPlaced) {
+			Set<NodeLeveled> nodesPlaced, List<Node> nodesBeingPlaced) {
 		return (!isNodeAlreadyPlaced(nodeToVerify, nodesPlaced) && !isNodeBeingPlaced(
 				nodeToVerify, nodesBeingPlaced));
 	}
