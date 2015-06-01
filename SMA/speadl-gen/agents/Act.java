@@ -1,6 +1,6 @@
 package agents;
 
-import agents.interfaces.Action;
+import agents.interfaces.Do;
 
 @SuppressWarnings("all")
 public abstract class Act {
@@ -15,7 +15,7 @@ public abstract class Act {
      * This can be called to access the provided port.
      * 
      */
-    public Action action();
+    public Do action();
   }
   
   public interface Parts {
@@ -63,9 +63,9 @@ public abstract class Act {
       }
     }
     
-    private Action action;
+    private Do action;
     
-    public Action action() {
+    public Do action() {
       return this.action;
     }
   }
@@ -114,7 +114,7 @@ public abstract class Act {
    * This will be called once during the construction of the component to initialize the port.
    * 
    */
-  protected abstract Action make_action();
+  protected abstract Do make_action();
   
   /**
    * This can be called by the implementation to access the required ports.

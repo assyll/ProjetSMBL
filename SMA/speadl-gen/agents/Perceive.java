@@ -1,7 +1,6 @@
 package agents;
 
-import agents.interfaces.Decision;
-import agents.interfaces.Perception;
+import agents.interfaces.Do;
 
 @SuppressWarnings("all")
 public abstract class Perceive {
@@ -10,7 +9,7 @@ public abstract class Perceive {
      * This can be called by the implementation to access this required port.
      * 
      */
-    public Decision decision();
+    public Do decision();
   }
   
   public interface Component extends Perceive.Provides {
@@ -21,7 +20,7 @@ public abstract class Perceive {
      * This can be called to access the provided port.
      * 
      */
-    public Perception perceive();
+    public Do perception();
   }
   
   public interface Parts {
@@ -41,16 +40,16 @@ public abstract class Perceive {
       
     }
     
-    private void init_perceive() {
-      assert this.perceive == null: "This is a bug.";
-      this.perceive = this.implementation.make_perceive();
-      if (this.perceive == null) {
-      	throw new RuntimeException("make_perceive() in agents.Perceive should not return null.");
+    private void init_perception() {
+      assert this.perception == null: "This is a bug.";
+      this.perception = this.implementation.make_perception();
+      if (this.perception == null) {
+      	throw new RuntimeException("make_perception() in agents.Perceive should not return null.");
       }
     }
     
     protected void initProvidedPorts() {
-      init_perceive();
+      init_perception();
     }
     
     public ComponentImpl(final Perceive implem, final Perceive.Requires b, final boolean doInits) {
@@ -69,10 +68,10 @@ public abstract class Perceive {
       }
     }
     
-    private Perception perceive;
+    private Do perception;
     
-    public Perception perceive() {
-      return this.perceive;
+    public Do perception() {
+      return this.perception;
     }
   }
   
@@ -120,7 +119,7 @@ public abstract class Perceive {
    * This will be called once during the construction of the component to initialize the port.
    * 
    */
-  protected abstract Perception make_perceive();
+  protected abstract Do make_perception();
   
   /**
    * This can be called by the implementation to access the required ports.
