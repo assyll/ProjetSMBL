@@ -55,11 +55,11 @@ public class CustomGraphRenderer {
 						"edge { z-index: 0; text-alignment: center; text-offset: 0,10; fill-color: grey; }"
 								+ "node { z-index: 3; text-alignment: at-right; size: 20px; fill-image: url(\"./src/main/resources/Node_Basic.png\"); fill-mode: image-scaled; }"
 								+ NODE_SOURCE
-								+ "{ size: 20px; fill-image: url(\"./src/main/resources/Node_Source.png\"); fill-mode: image-scaled; }"
+								+ "{ size: 25px; fill-image: url(\"./src/main/resources/Node_Source.png\"); fill-mode: image-scaled; }"
 								+ NODE_FINAL
 								+ "{ size: 20px; fill-image: url(\"./src/main/resources/Node_Final.png\"); fill-mode: image-scaled; }"
 								+ NODE_SOURCE_FINAL
-								+ "{ size: 20px; fill-image: url(\"./src/main/resources/Node_Source_Final.png\"); fill-mode: image-scaled; }"
+								+ "{ size: 25px; fill-image: url(\"./src/main/resources/Node_Source_Final.png\"); fill-mode: image-scaled; }"
 								+ "sprite { z-index: 2; shape: circle; fill-color: rgba(250,250,250,64); stroke-mode: plain; stroke-color: lightblue; }");
 			}
 		}
@@ -127,11 +127,17 @@ public class CustomGraphRenderer {
 		// par niveau
 		for (Node gNode : gGraph.getEachNode()) {
 			node = graph.getNode(gNode.getId());
+			System.out.println(node);
+			System.out.println(node
+					.getAttribute(MyJsonGenerator.FORMAT_NODE_SOURCE));
 			if (node.getAttribute(MyJsonGenerator.FORMAT_NODE_SOURCE).equals(
-					true)) {
+					true)
+					|| node.getAttribute(MyJsonGenerator.FORMAT_NODE_SOURCE)
+							.equals("true")) {
 				nodeToBePlaced.addAll(getNexts(gNode, nodesPerLevel,
 						nodeInPlacement));
 				nodesPerLevel.add(new NodeLeveled(gNode, cptLevel));
+				System.out.println(node);
 			}
 		}
 
@@ -149,6 +155,7 @@ public class CustomGraphRenderer {
 				nodeToBePlaced.addAll(getNexts(gNode, nodesPerLevel,
 						nodeInPlacement));
 			}
+			System.out.println(nodeToBePlaced);
 		}
 
 		cptLevel--;
@@ -185,12 +192,11 @@ public class CustomGraphRenderer {
 
 		for (Edge edge : node.getEachEdge()) {
 			targetNode = edge.getTargetNode();
-			// if (isNodeYetToBePlaced(targetNode, nodesPlaced,
-			// nodesBeingPlaced)) {
-			if (!targetNode.getId().equals(node.getId())) {
-				targetNodes.add(targetNode);
+			if (isNodeYetToBePlaced(targetNode, nodesPlaced, nodesBeingPlaced)) {
+				if (!targetNode.getId().equals(node.getId())) {
+					targetNodes.add(targetNode);
+				}
 			}
-			// }
 		}
 		return targetNodes;
 	}
