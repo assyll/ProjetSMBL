@@ -3,33 +3,28 @@ package agents;
 import agents.interfaces.Do;
 
 @SuppressWarnings("all")
-public abstract class Decide {
+public class Launcher {
   public interface Requires {
     /**
      * This can be called by the implementation to access this required port.
      * 
      */
-    public Do action();
+    public Do lancer();
   }
   
-  public interface Component extends Decide.Provides {
+  public interface Component extends Launcher.Provides {
   }
   
   public interface Provides {
-    /**
-     * This can be called to access the provided port.
-     * 
-     */
-    public Do decision();
   }
   
   public interface Parts {
   }
   
-  public static class ComponentImpl implements Decide.Component, Decide.Parts {
-    private final Decide.Requires bridge;
+  public static class ComponentImpl implements Launcher.Component, Launcher.Parts {
+    private final Launcher.Requires bridge;
     
-    private final Decide implementation;
+    private final Launcher implementation;
     
     public void start() {
       this.implementation.start();
@@ -40,19 +35,11 @@ public abstract class Decide {
       
     }
     
-    private void init_decision() {
-      assert this.decision == null: "This is a bug.";
-      this.decision = this.implementation.make_decision();
-      if (this.decision == null) {
-      	throw new RuntimeException("make_decision() in agents.Decide should not return null.");
-      }
-    }
-    
     protected void initProvidedPorts() {
-      init_decision();
+      
     }
     
-    public ComponentImpl(final Decide implem, final Decide.Requires b, final boolean doInits) {
+    public ComponentImpl(final Launcher implem, final Launcher.Requires b, final boolean doInits) {
       this.bridge = b;
       this.implementation = implem;
       
@@ -66,12 +53,6 @@ public abstract class Decide {
       	initParts();
       	initProvidedPorts();
       }
-    }
-    
-    private Do decision;
-    
-    public Do decision() {
-      return this.decision;
     }
   }
   
@@ -89,7 +70,7 @@ public abstract class Decide {
    */
   private boolean started = false;;
   
-  private Decide.ComponentImpl selfComponent;
+  private Launcher.ComponentImpl selfComponent;
   
   /**
    * Can be overridden by the implementation.
@@ -106,7 +87,7 @@ public abstract class Decide {
    * This can be called by the implementation to access the provided ports.
    * 
    */
-  protected Decide.Provides provides() {
+  protected Launcher.Provides provides() {
     assert this.selfComponent != null: "This is a bug.";
     if (!this.init) {
     	throw new RuntimeException("provides() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if provides() is needed to initialise the component.");
@@ -115,17 +96,10 @@ public abstract class Decide {
   }
   
   /**
-   * This should be overridden by the implementation to define the provided port.
-   * This will be called once during the construction of the component to initialize the port.
-   * 
-   */
-  protected abstract Do make_decision();
-  
-  /**
    * This can be called by the implementation to access the required ports.
    * 
    */
-  protected Decide.Requires requires() {
+  protected Launcher.Requires requires() {
     assert this.selfComponent != null: "This is a bug.";
     if (!this.init) {
     	throw new RuntimeException("requires() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if requires() is needed to initialise the component.");
@@ -137,7 +111,7 @@ public abstract class Decide {
    * This can be called by the implementation to access the parts and their provided ports.
    * 
    */
-  protected Decide.Parts parts() {
+  protected Launcher.Parts parts() {
     assert this.selfComponent != null: "This is a bug.";
     if (!this.init) {
     	throw new RuntimeException("parts() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if parts() is needed to initialise the component.");
@@ -149,12 +123,12 @@ public abstract class Decide {
    * Not meant to be used to manually instantiate components (except for testing).
    * 
    */
-  public synchronized Decide.Component _newComponent(final Decide.Requires b, final boolean start) {
+  public synchronized Launcher.Component _newComponent(final Launcher.Requires b, final boolean start) {
     if (this.init) {
-    	throw new RuntimeException("This instance of Decide has already been used to create a component, use another one.");
+    	throw new RuntimeException("This instance of Launcher has already been used to create a component, use another one.");
     }
     this.init = true;
-    Decide.ComponentImpl  _comp = new Decide.ComponentImpl(this, b, true);
+    Launcher.ComponentImpl  _comp = new Launcher.ComponentImpl(this, b, true);
     if (start) {
     	_comp.start();
     }
