@@ -127,9 +127,6 @@ public class CustomGraphRenderer {
 		// par niveau
 		for (Node gNode : gGraph.getEachNode()) {
 			node = graph.getNode(gNode.getId());
-			System.out.println(node);
-			System.out.println(node
-					.getAttribute(MyJsonGenerator.FORMAT_NODE_SOURCE));
 			if (node.getAttribute(MyJsonGenerator.FORMAT_NODE_SOURCE).equals(
 					true)
 					|| node.getAttribute(MyJsonGenerator.FORMAT_NODE_SOURCE)
@@ -137,7 +134,6 @@ public class CustomGraphRenderer {
 				nodeToBePlaced.addAll(getNexts(gNode, nodesPerLevel,
 						nodeInPlacement));
 				nodesPerLevel.add(new NodeLeveled(gNode, cptLevel));
-				System.out.println(node);
 			}
 		}
 
@@ -155,7 +151,6 @@ public class CustomGraphRenderer {
 				nodeToBePlaced.addAll(getNexts(gNode, nodesPerLevel,
 						nodeInPlacement));
 			}
-			System.out.println(nodeToBePlaced);
 		}
 
 		cptLevel--;
