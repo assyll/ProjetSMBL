@@ -68,8 +68,10 @@ public class CreationJsonTree {
 				"action !", new LinkedList<String>());
 		MyJsonEdge e9 = new MyJsonEdge("edge 9", "node 9", "node 4",
 				"action !", new LinkedList<String>());
+		MyJsonEdge e10 = new MyJsonEdge("edge 10", "node 8", "node 6",
+				"action !", new LinkedList<String>());
 
-		mLE.addEdges(e1, e2, e3, e4, e5, e6, e7, e8, e9);
+		mLE.addEdges(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10);
 
 		generator.generateJson(mLN, mLE).getAbsolutePath();
 	}
