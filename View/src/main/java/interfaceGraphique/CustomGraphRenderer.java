@@ -94,7 +94,7 @@ public class CustomGraphRenderer {
 				graph.addAttribute("ui.antialias");
 				graph.addAttribute(
 						"ui.stylesheet",
-						"edge { z-index: 0; text-alignment: center; text-offset: 0,10; fill-color: grey; }"
+						"edge { z-index: 0; text-alignment: along; text-offset: 0,10; fill-color: grey; }"
 								+ "node { z-index: 3; text-alignment: at-right;}"
 								+ NODE_SOURCE
 								+ "{ size: 13px; shape: triangle; }"
@@ -153,8 +153,6 @@ public class CustomGraphRenderer {
 			}
 		}
 
-		cptLevel--;
-
 		for (int cpt = 1; cpt < cptLevel; cpt++) {
 			int nbNodes = getNbNodeInLevel(cpt, nodesPerLevel);
 			if (nbNodes > nbMaxNodeInLevel) {
@@ -163,7 +161,7 @@ public class CustomGraphRenderer {
 		}
 
 		// Calcul de la taille en x et en y de la fenetre
-		heightView = (cptLevel * GAP_Y_BETWEEN_NODE) + 2 * GAP_SIDE;
+		heightView = ((cptLevel - 1) * GAP_Y_BETWEEN_NODE) + 2 * GAP_SIDE;
 		widthView = (int) (heightView * ratioXY);
 
 		// Placement des nodes
@@ -240,9 +238,6 @@ public class CustomGraphRenderer {
 		return nbNode;
 	}
 
-	// TODO vérifié que ces méthodes sont bien inutiles du fait de l'utilisation
-	// d'une linkedHashSet
-
 	// vérifie si la node passée en paramètre est déjà dans la list des nodes
 	// placées
 	public boolean isNodeAlreadyPlaced(Node nodeToVerify,
@@ -259,11 +254,11 @@ public class CustomGraphRenderer {
 	// cours de placement
 	public boolean isNodeBeingPlaced(Node nodeToVerify,
 			List<Node> nodesBeingPlaced) {
-		for (Node node : nodesBeingPlaced) {
+		/*for (Node node : nodesBeingPlaced) {
 			if (node.getId().equals(nodeToVerify.getId())) {
 				return true;
 			}
-		}
+		}*/
 		return false;
 	}
 
