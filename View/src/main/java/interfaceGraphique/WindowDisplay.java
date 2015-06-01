@@ -38,7 +38,7 @@ public class WindowDisplay extends JFrame {
 	JPanel panelFrame, panelGraph, panelOption, panelModif, panelZoom;
 
 	JButton zoomAvant, zoomArr, zoomText, zoomCenter, display, addNode,
-			suppNode, addEdge, suppEdge, structGraph, cleanGraph;
+			suppNode, addEdge, suppEdge, structGraph;
 
 	JTextField text;
 
@@ -48,7 +48,7 @@ public class WindowDisplay extends JFrame {
 
 	Viewer viewer;
 
-	Double valZoom;
+	Double valZoom = 100.00;
 
 	Graph graph;
 
@@ -82,8 +82,6 @@ public class WindowDisplay extends JFrame {
 
 		// Initialisation du panneau qui contiendra le graph
 		panelGraph = new JPanel();
-		panelGraph.setLayout(new BorderLayout());
-		panelGraph.add((Component) view, BorderLayout.CENTER);
 
 		// Initialisation du panneau option gauche
 		panelOption = new JPanel(new FlowLayout());
@@ -159,7 +157,6 @@ public class WindowDisplay extends JFrame {
 		panelZoom.add(zoomArr);
 		panelZoom.add(text);
 		panelZoom.add(zoomCenter);
-		cleanGraph = new JButton("<html><b>Clean</b></html>");
 
 		// Initialisation des boutons d'option
 		addNode = new JButton("Node +");
@@ -174,7 +171,6 @@ public class WindowDisplay extends JFrame {
 		panelModif.add(addEdge);
 		panelModif.add(suppEdge);
 		panelModif.add(structGraph);
-		panelModif.add(cleanGraph);
 
 		// Définition du panneau de gauche
 		panelOption.add(panelZoom);
@@ -314,7 +310,7 @@ public class WindowDisplay extends JFrame {
 						isAutoLayout = false;
 					} else {
 						structGraph.setText("Manual");
-						viewer.enableAutoLayout();
+						cGraphRenderer.setTreeLayout(viewer.getGraphicGraph(), graph, viewer);
 						isAutoLayout = true;
 					}
 				}
@@ -328,18 +324,9 @@ public class WindowDisplay extends JFrame {
 				valZoom = view.getCamera().getViewPercent() * 100;
 			}
 		});
-
-		// Action lors du clic sur l'item "Clean" de la partie gauche
-		cleanGraph.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (isGraphLoaded) {
-					panelGraph.removeAll();
-					isGraphLoaded = false;
-					panelGraph.updateUI();
-				}
-			}
-		});
-
+		
+		initGraphPropertiesJson();
+		initPanelGraphJson();
 		// Définition de la fenêtre principale
 		frame.add(panelFrame);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -389,8 +376,13 @@ public class WindowDisplay extends JFrame {
 
 		viewer.enableAutoLayout();
 		isAutoLayout = true;
-
 		view = viewer.addDefaultView(false);
+
+		// suppression du comportement par defaut du MouseListener de la view
+		view.setMouseManager(new CustomMouseManager());
+
+		Window.setListenerOnViewer(viewer, graph, text,
+				isGraphLoaded);
 		
 	}
 

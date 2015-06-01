@@ -114,11 +114,17 @@ public class Window extends JFrame {
 
 	double zoom = 1, dezoom = 1;
 
-	Double x = null, y = null, x2 = null, y2 = null;
+	static Double x = null;
+
+	static Double y = null;
+
+	static Double x2 = null;
+
+	static Double y2 = null;
 
 	Double valZoom = 100.00;
 
-	DecimalFormat df = new DecimalFormat("###.00");
+	static DecimalFormat df = new DecimalFormat("###.00");
 
 	final int xWindow = 50, yWindow = 0, widthWindow = 1280,
 			heightWindow = 700, sizeSeparator = 5;
@@ -128,7 +134,7 @@ public class Window extends JFrame {
 
 	SpriteManager spriteManagerJson, spriteManagerAgent;
 
-	GraphicElement gElement = null;
+	static GraphicElement gElement = null;
 	
 	CustomGraphRenderer cGraphRenderer;
 
@@ -799,8 +805,7 @@ public class Window extends JFrame {
 		zoomCenterJSon.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				viewJson.getCamera().resetView();
-				valZoom = viewJson.getCamera().getViewPercent() * 100;
-				textJSon.setText(df.format(valZoom) + " %");
+				textJSon.setText("100 %");
 			}
 		});
 
@@ -822,7 +827,7 @@ public class Window extends JFrame {
 		displayJson.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (isGraphJsonLoaded) {
-					graphJson.display();
+					WindowDisplay windowJson = new WindowDisplay("Graph Json", viewJson, viewerJson, graphJson);
 				} else {
 					textColorStatut.appendDoc("G�n�rez un graphe au pr�alable");
 				}
@@ -995,8 +1000,7 @@ public class Window extends JFrame {
 		zoomCenterAgent.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				viewAgent.getCamera().resetView();
-				valZoom = viewAgent.getCamera().getViewPercent() * 100;
-				textAgent.setText(df.format(valZoom) + " %");
+				textAgent.setText("100 %");
 			}
 		});
 
@@ -1019,7 +1023,7 @@ public class Window extends JFrame {
 		displayAgent.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (isGraphAgentLoaded) {
-					graphAgent.display();
+					WindowDisplay windowAgent = new WindowDisplay("Graph Agent", viewAgent, viewerAgent, graphAgent);
 				} else {
 					textColorStatut.appendDoc("G�n�rez un graphe au pr�alable");
 				}
@@ -1122,7 +1126,7 @@ public class Window extends JFrame {
 		dialog.show();
 	}
 
-	public void setListenerOnViewer(final Viewer viewer, final Graph graph,
+	public static void setListenerOnViewer(final Viewer viewer, final Graph graph,
 			final JTextField jTextField, final boolean isGraphLoaded) {
 		// Action lors du d�placement de la souris sur le graphe
 		final View view = viewer.getDefaultView();
@@ -1233,7 +1237,7 @@ public class Window extends JFrame {
 		});
 	}
 
-	public GraphicElement findNodeOrSpriteAtWithTolerance(MouseEvent e,
+	public static GraphicElement findNodeOrSpriteAtWithTolerance(MouseEvent e,
 			View view) {
 		GraphicElement elem = null;
 		for (double yEvt = e.getY() - tolerance; yEvt < e.getY() + tolerance; yEvt += tolerance / 10) {
@@ -1304,7 +1308,7 @@ public class Window extends JFrame {
 		scrollAgent.setViewportView(panelGraphAgent);
 	}
 
-	public void modifZoom(View view, JTextField jTextField,
+	public static void modifZoom(View view, JTextField jTextField,
 			boolean isGraphLoaded, double modif) {
 		double zoom, valZoom;
 		if (isGraphLoaded) {
@@ -1315,7 +1319,7 @@ public class Window extends JFrame {
 		}
 	}
 
-	public String getNodeInformations(GraphicElement gElem, Graph graph) {
+	public static String getNodeInformations(GraphicElement gElem, Graph graph) {
 		String s = "<html>", fieldName, res = "";
 		String idNode = gElem.getId();
 		int cpt = 1;
@@ -1338,7 +1342,7 @@ public class Window extends JFrame {
 		return s;
 	}
 
-	public String getEdgeInformations(GraphicElement gElem, Graph graph) {
+	public static String getEdgeInformations(GraphicElement gElem, Graph graph) {
 		String s = "<html>", fieldName, res = "";
 		String idSprite = gElem.getId();
 		Edge edge = graph.getEdge(idSprite);
