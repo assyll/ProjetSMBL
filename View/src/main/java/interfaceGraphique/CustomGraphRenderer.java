@@ -29,14 +29,14 @@ public class CustomGraphRenderer {
 	public static final int GAP_SIDE = 10;
 	public static final int GAP_Y_BETWEEN_NODE = 50;
 
-	public void SetRenderer() {
+	public static void SetRenderer() {
 		// remplacement du renderer par défaut
 		System.setProperty("org.graphstream.ui.renderer",
 				"org.graphstream.ui.j2dviewer.J2DGraphRenderer");
 		ToolTipManager.sharedInstance().setInitialDelay(0);
 	}
 
-	public void setStyleGraphDefault(Graph... graphics) {
+	public static void setStyleGraphDefault(Graph... graphics) {
 		for (Graph graph : graphics) {
 			if (graph != null) {
 				graph.removeAttribute("ui.stylesheet");
@@ -44,7 +44,7 @@ public class CustomGraphRenderer {
 		}
 	}
 
-	public void setStyleGraphDoubleCircle(Graph... graphics) {
+	public static void setStyleGraphDoubleCircle(Graph... graphics) {
 		for (Graph graph : graphics) {
 			if (graph != null) {
 				graph.removeAttribute("ui.stylesheet");
@@ -65,7 +65,7 @@ public class CustomGraphRenderer {
 		}
 	}
 
-	public void setStyleGraphAutomaton(Graph... graphics) {
+	public static void setStyleGraphAutomaton(Graph... graphics) {
 		for (Graph graph : graphics) {
 			if (graph != null) {
 				graph.removeAttribute("ui.stylesheet");
@@ -86,7 +86,7 @@ public class CustomGraphRenderer {
 		}
 	}
 
-	public void setStyleGraphBasic(Graph... graphics) {
+	public static void setStyleGraphBasic(Graph... graphics) {
 		for (Graph graph : graphics) {
 			if (graph != null) {
 				graph.removeAttribute("ui.stylesheet");
@@ -109,7 +109,8 @@ public class CustomGraphRenderer {
 
 	// TODO essayer de rapprocher les nodes connectées
 	// Applique un placement sous forme d'arbre avec la(les) racine(s) en haut
-	public void setTreeLayout(GraphicGraph gGraph, Graph graph, Viewer viewer) {
+	public static void setTreeLayout(GraphicGraph gGraph, Graph graph,
+			Viewer viewer) {
 		int heightView = viewer.getDefaultView().getHeight();
 		int widthView = viewer.getDefaultView().getWidth();
 		float ratioXY = ((float) widthView) / ((float) heightView);
@@ -125,6 +126,8 @@ public class CustomGraphRenderer {
 
 		// Récupère toutes les informations nécessaire pour organiser les nodes
 		// par niveau
+		
+		//Traitement des sources
 		for (Node gNode : gGraph.getEachNode()) {
 			node = graph.getNode(gNode.getId());
 			if (node.getAttribute(MyJsonGenerator.FORMAT_NODE_SOURCE).equals(
@@ -137,12 +140,9 @@ public class CustomGraphRenderer {
 			}
 		}
 
+		//traitement des autres nodes
 		while (!nodeToBePlaced.isEmpty()) {
 			cptLevel++;
-			/*
-			 * nbNodesPerLevel.add(nodeToBePlaced.size()); nbLevel =
-			 * nbNodesPerLevel.size();
-			 */
 			nodeInPlacement.clear();
 			nodeInPlacement.addAll(nodeToBePlaced);
 			nodeToBePlaced.clear();
@@ -153,6 +153,7 @@ public class CustomGraphRenderer {
 			}
 		}
 
+		// Calcul du maximum de node sur un même niveau
 		for (int cpt = 1; cpt < cptLevel; cpt++) {
 			int nbNodes = getNbNodeInLevel(cpt, nodesPerLevel);
 			if (nbNodes > nbMaxNodeInLevel) {
@@ -178,14 +179,14 @@ public class CustomGraphRenderer {
 
 	// récupère les nodes du niveau supérieur au niveau de la node passée en
 	// paramètre connectées à celle-ci
-	public List<Node> getNexts(Node node, Set<NodeLeveled> nodesPlaced,
+	public static List<Node> getNexts(Node node, Set<NodeLeveled> nodesPlaced,
 			List<Node> nodesBeingPlaced) {
 		List<Node> targetNodes = new LinkedList<Node>();
 		Node targetNode;
 
 		for (Edge edge : node.getEachEdge()) {
 			targetNode = edge.getTargetNode();
-			if (isNodeYetToBePlaced(targetNode, nodesPlaced, nodesBeingPlaced)) {
+			if (!isNodeAlreadyPlaced(targetNode, nodesPlaced)) {
 				if (!targetNode.getId().equals(node.getId())) {
 					targetNodes.add(targetNode);
 				}
@@ -195,7 +196,7 @@ public class CustomGraphRenderer {
 	}
 
 	// calcul le placement en x de la node passée en paramètre
-	public int getXNode(Node node, List<Node> nodeInLevel, int widthView) {
+	public static int getXNode(Node node, List<Node> nodeInLevel, int widthView) {
 		int nbNodeInLevel = nodeInLevel.size();
 		int nodeNumber = nodeInLevel.indexOf(node);
 		int xNode;
@@ -211,13 +212,20 @@ public class CustomGraphRenderer {
 	}
 
 	// calcul le placement en y de la node par rapport à son niveau
-	public int getYNode(int nodeLevel, int nbLevel, int heightView) {
-		int yNode = ((heightView) / (nbLevel - 1)) * nodeLevel + GAP_SIDE;
+	public static int getYNode(int nodeLevel, int nbLevel, int heightView) {
+		int yNode;
+
+		if (nbLevel == 1) {
+			yNode = heightView / 2;
+		} else {
+			yNode = ((heightView) / (nbLevel - 1)) * nodeLevel + GAP_SIDE;
+		}
 		return yNode;
 	}
 
 	// Retourne la list des Node du level donné en paramètre
-	public List<Node> getNodePerLevel(int level, Set<NodeLeveled> nodesPerLevel) {
+	public static List<Node> getNodePerLevel(int level,
+			Set<NodeLeveled> nodesPerLevel) {
 		List<Node> listNodes = new LinkedList<Node>();
 
 		for (NodeLeveled nodeLeveled : nodesPerLevel) {
@@ -228,7 +236,7 @@ public class CustomGraphRenderer {
 		return listNodes;
 	}
 
-	public int getNbNodeInLevel(int level, Set<NodeLeveled> nodePlaced) {
+	public static int getNbNodeInLevel(int level, Set<NodeLeveled> nodePlaced) {
 		int nbNode = 0;
 		for (NodeLeveled nodeLeveled : nodePlaced) {
 			if (nodeLeveled.get_level() == level) {
@@ -240,7 +248,7 @@ public class CustomGraphRenderer {
 
 	// vérifie si la node passée en paramètre est déjà dans la list des nodes
 	// placées
-	public boolean isNodeAlreadyPlaced(Node nodeToVerify,
+	public static boolean isNodeAlreadyPlaced(Node nodeToVerify,
 			Set<NodeLeveled> nodesPlaced) {
 		for (NodeLeveled nodeLeveled : nodesPlaced) {
 			if (nodeLeveled.get_node().getId().equals(nodeToVerify.getId())) {
@@ -250,22 +258,21 @@ public class CustomGraphRenderer {
 		return false;
 	}
 
-	// vérifie si la node passée en paramètre est dans la list des nodes en
-	// cours de placement
-	public boolean isNodeBeingPlaced(Node nodeToVerify,
-			List<Node> nodesBeingPlaced) {
-		/*for (Node node : nodesBeingPlaced) {
-			if (node.getId().equals(nodeToVerify.getId())) {
-				return true;
-			}
-		}*/
-		return false;
-	}
+	// // vérifie si la node passée en paramètre est dans la list des nodes en
+	// // cours de placement
+	// public boolean isNodeBeingPlaced(Node nodeToVerify,
+	// List<Node> nodesBeingPlaced) {
+	// for (Node node : nodesBeingPlaced) {
+	// if (node.getId().equals(nodeToVerify.getId())) {
+	// return true;
+	// }
+	// }
+	// return false;
+	// }
 
-	// vérifie si la node passée en paramètre est encore à placer
-	public boolean isNodeYetToBePlaced(Node nodeToVerify,
-			Set<NodeLeveled> nodesPlaced, List<Node> nodesBeingPlaced) {
-		return (!isNodeAlreadyPlaced(nodeToVerify, nodesPlaced) && !isNodeBeingPlaced(
-				nodeToVerify, nodesBeingPlaced));
-	}
+	// // vérifie si la node passée en paramètre est encore à placer
+	// public boolean isNodeYetToBePlaced(Node nodeToVerify,
+	// Set<NodeLeveled> nodesPlaced, List<Node> nodesBeingPlaced) {
+	// return (!isNodeAlreadyPlaced(nodeToVerify, nodesPlaced));
+	// }
 }

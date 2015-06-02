@@ -20,7 +20,6 @@ import junit.framework.TestCase;
 public class JsonToGSTest extends TestCase {
 	
 	public void testGenerateNode(){
-		JsonToGS jTGS = new JsonToGS();
 		Graph graph = new MultiGraph("graphTest");
 		
 		File fileTest = new File("./src/test/resources/TestNode");
@@ -31,7 +30,7 @@ public class JsonToGSTest extends TestCase {
 		try {
 			parser = jfactory.createParser(fileTest);
 			parser.nextToken();
-			jTGS.generateNodes(parser, graph);
+			JsonToGS.generateNodes(parser, graph);
 			
 			assertEquals(graph.getNodeCount(), 1);
 			
@@ -57,7 +56,6 @@ public class JsonToGSTest extends TestCase {
 	}
 	
 	public void testGenerateEdge(){
-		JsonToGS jTGS = new JsonToGS();
 		Graph graph = new MultiGraph("graph");
 		
 		File fileTest = new File("./src/test/resources/TestEdge");
@@ -68,11 +66,11 @@ public class JsonToGSTest extends TestCase {
 		try {
 			parser = jfactory.createParser(fileTest);
 			parser.nextToken();
-			jTGS.generateNodes(parser, graph);
+			JsonToGS.generateNodes(parser, graph);
 			parser.nextToken();
-			jTGS.generateNodes(parser, graph);
+			JsonToGS.generateNodes(parser, graph);
 			parser.nextToken();
-			jTGS.generateEdges(parser, graph);
+			JsonToGS.generateEdges(parser, graph);
 			
 			assertEquals(graph.getEdgeCount(), 1);
 			
@@ -100,7 +98,6 @@ public class JsonToGSTest extends TestCase {
 	}
 	
 	public void testGenerateJson() {
-		JsonToGS jTGS = new JsonToGS();
 		
 		File fileTest = new File("./src/test/resources/TestJson");
 		
@@ -110,7 +107,7 @@ public class JsonToGSTest extends TestCase {
 		try {
 			parser = jfactory.createParser(fileTest);
 			parser.nextToken();
-			Graph graph = jTGS.generateGraph(fileTest.getAbsolutePath(), "graphTest");
+			Graph graph = JsonToGS.generateGraph(fileTest.getAbsolutePath(), "graphTest");
 			
 			assertEquals(graph.getEdgeCount(), 1);
 			

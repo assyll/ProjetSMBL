@@ -59,7 +59,6 @@ import convertGraph.ConvertGStoNeo4j;
 import convertGraph.ConvertNeo4jToGS;
 import convertGraph.Fichier;
 
-//TODO Penser � demander si on doit mettre les m�thodes en static ou non (CustomGraphRender, GraphModifier, JsonToGS)
 
 @SuppressWarnings("serial")
 public class Window extends JFrame {
@@ -135,12 +134,9 @@ public class Window extends JFrame {
 	SpriteManager spriteManagerJson, spriteManagerAgent;
 
 	static GraphicElement gElement = null;
-	
-	CustomGraphRenderer cGraphRenderer;
 
 	public Window() {
-		cGraphRenderer = new CustomGraphRenderer();
-		cGraphRenderer.SetRenderer();
+		CustomGraphRenderer.SetRenderer();
 
 		// Initialisation de la fen�tre principale
 		frame = new JFrame("Projet SMBL");
@@ -479,28 +475,28 @@ public class Window extends JFrame {
 		// Action lors du clic sur l'item "Default"
 		displayDefault.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				cGraphRenderer.setStyleGraphDefault(graphJson, graphAgent);
+				CustomGraphRenderer.setStyleGraphDefault(graphJson, graphAgent);
 			}
 		});
 
 		// Action lors du clic sur l'item "Double Circle"
 		displayDoubleCircle.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				cGraphRenderer.setStyleGraphDoubleCircle(graphJson, graphAgent);
+				CustomGraphRenderer.setStyleGraphDoubleCircle(graphJson, graphAgent);
 			}
 		});
 
 		// Action lors du clic sur l'item "Robot"
 		displayRobot.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				cGraphRenderer.setStyleGraphAutomaton(graphJson, graphAgent);
+				CustomGraphRenderer.setStyleGraphAutomaton(graphJson, graphAgent);
 			}
 		});
 
 		// Action lors du clic sur l'item "Basic"
 		displayBasic.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				cGraphRenderer.setStyleGraphBasic(graphJson, graphAgent);
+				CustomGraphRenderer.setStyleGraphBasic(graphJson, graphAgent);
 			}
 		});
 
@@ -512,7 +508,6 @@ public class Window extends JFrame {
 				// format .json
 
 				if (!textDirectory.getText().equals("Directory")) {
-					JsonToGS jSTGS = new JsonToGS();
 					try {
 						frame.setCursor(Cursor
 								.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -523,7 +518,7 @@ public class Window extends JFrame {
 
 						if (wantToGenerateToLeft) {
 							if (!isDirectoryNeo4j) {
-								graphJson = jSTGS.generateGraph(
+								graphJson = JsonToGS.generateGraph(
 										textDirectory.getText(),
 										GRAPH_JSON_NAME);
 							}
@@ -742,7 +737,7 @@ public class Window extends JFrame {
 						isAutoLayoutJson = false;
 					} else {
 						structGraphJson.setText("Manual");
-						cGraphRenderer.setTreeLayout(
+						CustomGraphRenderer.setTreeLayout(
 								viewerJson.getGraphicGraph(), graphJson,
 								viewerJson);
 						isAutoLayoutJson = true;
@@ -831,7 +826,7 @@ public class Window extends JFrame {
 		displayJson.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (isGraphJsonLoaded) {
-					WindowDisplay windowJson = new WindowDisplay("Graph Json", viewJson, viewerJson, graphJson);
+					/*WindowDisplay windowJson = */new WindowDisplay("Graph Json", viewJson, viewerJson, graphJson);
 				} else {
 					textColorStatut
 							.appendDoc("G�n�rez un graphe au pr�alable");
@@ -1030,7 +1025,7 @@ public class Window extends JFrame {
 		displayAgent.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (isGraphAgentLoaded) {
-					WindowDisplay windowAgent = new WindowDisplay("Graph Agent", viewAgent, viewerAgent, graphAgent);
+					/*WindowDisplay windowAgent = */new WindowDisplay("Graph Agent", viewAgent, viewerAgent, graphAgent);
 				} else {
 					textColorStatut
 							.appendDoc("G�n�rez un graphe au pr�alable");
@@ -1253,7 +1248,7 @@ public class Window extends JFrame {
 	}
 
 	public void initGraphPropertiesJson() {
-		cGraphRenderer.setStyleGraphBasic(graphJson);
+		CustomGraphRenderer.setStyleGraphBasic(graphJson);
 		GraphModifier.setNodesClass(graphJson);
 		spriteManagerJson = new SpriteManager(graphJson);
 		GraphModifier.generateSprites(graphJson, spriteManagerJson);
@@ -1274,7 +1269,7 @@ public class Window extends JFrame {
 	}
 
 	public void initGraphPropertiesAgent() {
-		cGraphRenderer.setStyleGraphBasic(graphAgent);
+		CustomGraphRenderer.setStyleGraphBasic(graphAgent);
 		GraphModifier.setNodesClass(graphAgent);
 		spriteManagerAgent = new SpriteManager(graphAgent);
 		GraphModifier.generateSprites(graphAgent, spriteManagerAgent);

@@ -50,7 +50,7 @@ public class JsonToGS {
 	 * 
 	 * @since 1.0
 	 */
-	public void generateNodes(JsonParser jParser, Graph graph)
+	public static void generateNodes(JsonParser jParser, Graph graph)
 			throws JsonParseException, IOException, FileFormatException {
 		String name, fieldname;
 		boolean source, fin;
@@ -122,7 +122,7 @@ public class JsonToGS {
 	 * 
 	 * @since 1.0
 	 */
-	public void generateEdges(JsonParser jParser, Graph graph)
+	public static void generateEdges(JsonParser jParser, Graph graph)
 			throws JsonParseException, IOException, FileFormatException {
 		String label, nodeB, nodeE, action;
 		Edge edge;
@@ -203,7 +203,7 @@ public class JsonToGS {
 	 * 
 	 * @since 1.0
 	 */
-	public Graph generateGraph(String filePath, String graphName)
+	public static Graph generateGraph(String filePath, String graphName)
 			throws JsonParseException, IOException, FileFormatException {
 		Graph graph = new MultiGraph(graphName);
 

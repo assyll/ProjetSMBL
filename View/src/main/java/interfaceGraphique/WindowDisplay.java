@@ -310,7 +310,7 @@ public class WindowDisplay extends JFrame {
 						isAutoLayout = false;
 					} else {
 						structGraph.setText("Manual");
-						cGraphRenderer.setTreeLayout(viewer.getGraphicGraph(), graph, viewer);
+						CustomGraphRenderer.setTreeLayout(viewer.getGraphicGraph(), graph, viewer);
 						isAutoLayout = true;
 					}
 				}
@@ -365,7 +365,7 @@ public class WindowDisplay extends JFrame {
 	}
 	
 	public void initGraphPropertiesJson() {
-		cGraphRenderer.setStyleGraphBasic(graph);
+		CustomGraphRenderer.setStyleGraphBasic(graph);
 		GraphModifier.setNodesClass(graph);
 		spriteManager = new SpriteManager(graph);
 		GraphModifier.generateSprites(graph, spriteManager);
