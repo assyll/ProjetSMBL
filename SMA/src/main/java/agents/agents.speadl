@@ -26,7 +26,6 @@ namespace agents{
 	}
 	
 	ecosystem EcoAgentsEtat{
-		provides currentAgents: AgentTrace
 		species AgentEtat(id: String){
 			
 			part act: Act

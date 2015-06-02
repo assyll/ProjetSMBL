@@ -33,11 +33,6 @@ public class EcoAgentsEtatImpl extends EcoAgentsEtat implements AgentTrace {
 	}
 
 	@Override
-	protected AgentTrace make_currentAgents() {
-		return this;
-	}
-
-	@Override
 	public String getCurrentAgent(String user) {
 		return currentAgentsMap.get(user);
 	}

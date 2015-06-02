@@ -3,7 +3,6 @@ package agents;
 import agents.Act;
 import agents.Decide;
 import agents.Perceive;
-import agents.interfaces.AgentTrace;
 import agents.interfaces.Do;
 
 @SuppressWarnings("all")
@@ -15,11 +14,6 @@ public abstract class EcoAgentsEtat {
   }
   
   public interface Provides {
-    /**
-     * This can be called to access the provided port.
-     * 
-     */
-    public AgentTrace currentAgents();
   }
   
   public interface Parts {
@@ -39,16 +33,8 @@ public abstract class EcoAgentsEtat {
       
     }
     
-    private void init_currentAgents() {
-      assert this.currentAgents == null: "This is a bug.";
-      this.currentAgents = this.implementation.make_currentAgents();
-      if (this.currentAgents == null) {
-      	throw new RuntimeException("make_currentAgents() in agents.EcoAgentsEtat should not return null.");
-      }
-    }
-    
     protected void initProvidedPorts() {
-      init_currentAgents();
+      
     }
     
     public ComponentImpl(final EcoAgentsEtat implem, final EcoAgentsEtat.Requires b, final boolean doInits) {
@@ -65,12 +51,6 @@ public abstract class EcoAgentsEtat {
       	initParts();
       	initProvidedPorts();
       }
-    }
-    
-    private AgentTrace currentAgents;
-    
-    public AgentTrace currentAgents() {
-      return this.currentAgents;
     }
   }
   
@@ -556,13 +536,6 @@ public abstract class EcoAgentsEtat {
     }
     return this.selfComponent;
   }
-  
-  /**
-   * This should be overridden by the implementation to define the provided port.
-   * This will be called once during the construction of the component to initialize the port.
-   * 
-   */
-  protected abstract AgentTrace make_currentAgents();
   
   /**
    * This can be called by the implementation to access the required ports.
