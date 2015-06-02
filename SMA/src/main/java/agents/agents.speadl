@@ -2,12 +2,14 @@ import agents.interfaces.AgentTrace
 import agents.interfaces.Do
 import agents.interfaces.ICreateAgent
 import java.util.concurrent.Executor
+import agents.interfaces.Callable
 
 namespace agents{
 
 	
 	component Launcher{
 		requires lancer: Do
+		provides call: Callable
 	}
 	
 	ecosystem BigEco{

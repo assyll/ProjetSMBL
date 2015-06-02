@@ -42,7 +42,7 @@ public class ForwardImpl extends Forward<Do> implements Do, ICreateAgent{
 
 		@Override
 		public void doIt() {
-			this.requires().a();
+			this.requires().a().doIt();
 		}
 		
 	}

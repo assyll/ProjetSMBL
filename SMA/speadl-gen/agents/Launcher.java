@@ -1,9 +1,10 @@
 package agents;
 
+import agents.interfaces.Callable;
 import agents.interfaces.Do;
 
 @SuppressWarnings("all")
-public class Launcher {
+public abstract class Launcher {
   public interface Requires {
     /**
      * This can be called by the implementation to access this required port.
@@ -16,6 +17,11 @@ public class Launcher {
   }
   
   public interface Provides {
+    /**
+     * This can be called to access the provided port.
+     * 
+     */
+    public Callable call();
   }
   
   public interface Parts {
@@ -35,8 +41,16 @@ public class Launcher {
       
     }
     
+    private void init_call() {
+      assert this.call == null: "This is a bug.";
+      this.call = this.implementation.make_call();
+      if (this.call == null) {
+      	throw new RuntimeException("make_call() in agents.Launcher should not return null.");
+      }
+    }
+    
     protected void initProvidedPorts() {
-      
+      init_call();
     }
     
     public ComponentImpl(final Launcher implem, final Launcher.Requires b, final boolean doInits) {
@@ -53,6 +67,12 @@ public class Launcher {
       	initParts();
       	initProvidedPorts();
       }
+    }
+    
+    private Callable call;
+    
+    public Callable call() {
+      return this.call;
     }
   }
   
@@ -94,6 +114,13 @@ public class Launcher {
     }
     return this.selfComponent;
   }
+  
+  /**
+   * This should be overridden by the implementation to define the provided port.
+   * This will be called once during the construction of the component to initialize the port.
+   * 
+   */
+  protected abstract Callable make_call();
   
   /**
    * This can be called by the implementation to access the required ports.
