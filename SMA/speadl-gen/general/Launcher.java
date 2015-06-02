@@ -1,13 +1,21 @@
-package agents;
+package general;
 
+import agents.interfaces.Callable;
 import agents.interfaces.Do;
+import agents.interfaces.IGetThread;
+import generalStructure.interfaces.CycleAlert;
 
 @SuppressWarnings("all")
-public abstract class Act {
+public abstract class Launcher {
   public interface Requires {
+    /**
+     * This can be called by the implementation to access this required port.
+     * 
+     */
+    public Do lancer();
   }
   
-  public interface Component extends Act.Provides {
+  public interface Component extends Launcher.Provides {
   }
   
   public interface Provides {
@@ -15,16 +23,28 @@ public abstract class Act {
      * This can be called to access the provided port.
      * 
      */
-    public Do action();
+    public Callable call();
+    
+    /**
+     * This can be called to access the provided port.
+     * 
+     */
+    public CycleAlert finishedCycle();
+    
+    /**
+     * This can be called to access the provided port.
+     * 
+     */
+    public IGetThread threads();
   }
   
   public interface Parts {
   }
   
-  public static class ComponentImpl implements Act.Component, Act.Parts {
-    private final Act.Requires bridge;
+  public static class ComponentImpl implements Launcher.Component, Launcher.Parts {
+    private final Launcher.Requires bridge;
     
-    private final Act implementation;
+    private final Launcher implementation;
     
     public void start() {
       this.implementation.start();
@@ -35,19 +55,37 @@ public abstract class Act {
       
     }
     
-    private void init_action() {
-      assert this.action == null: "This is a bug.";
-      this.action = this.implementation.make_action();
-      if (this.action == null) {
-      	throw new RuntimeException("make_action() in agents.Act should not return null.");
+    private void init_call() {
+      assert this.call == null: "This is a bug.";
+      this.call = this.implementation.make_call();
+      if (this.call == null) {
+      	throw new RuntimeException("make_call() in general.Launcher should not return null.");
+      }
+    }
+    
+    private void init_finishedCycle() {
+      assert this.finishedCycle == null: "This is a bug.";
+      this.finishedCycle = this.implementation.make_finishedCycle();
+      if (this.finishedCycle == null) {
+      	throw new RuntimeException("make_finishedCycle() in general.Launcher should not return null.");
+      }
+    }
+    
+    private void init_threads() {
+      assert this.threads == null: "This is a bug.";
+      this.threads = this.implementation.make_threads();
+      if (this.threads == null) {
+      	throw new RuntimeException("make_threads() in general.Launcher should not return null.");
       }
     }
     
     protected void initProvidedPorts() {
-      init_action();
+      init_call();
+      init_finishedCycle();
+      init_threads();
     }
     
-    public ComponentImpl(final Act implem, final Act.Requires b, final boolean doInits) {
+    public ComponentImpl(final Launcher implem, final Launcher.Requires b, final boolean doInits) {
       this.bridge = b;
       this.implementation = implem;
       
@@ -63,10 +101,22 @@ public abstract class Act {
       }
     }
     
-    private Do action;
+    private Callable call;
     
-    public Do action() {
-      return this.action;
+    public Callable call() {
+      return this.call;
+    }
+    
+    private CycleAlert finishedCycle;
+    
+    public CycleAlert finishedCycle() {
+      return this.finishedCycle;
+    }
+    
+    private IGetThread threads;
+    
+    public IGetThread threads() {
+      return this.threads;
     }
   }
   
@@ -84,7 +134,7 @@ public abstract class Act {
    */
   private boolean started = false;;
   
-  private Act.ComponentImpl selfComponent;
+  private Launcher.ComponentImpl selfComponent;
   
   /**
    * Can be overridden by the implementation.
@@ -101,7 +151,7 @@ public abstract class Act {
    * This can be called by the implementation to access the provided ports.
    * 
    */
-  protected Act.Provides provides() {
+  protected Launcher.Provides provides() {
     assert this.selfComponent != null: "This is a bug.";
     if (!this.init) {
     	throw new RuntimeException("provides() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if provides() is needed to initialise the component.");
@@ -114,13 +164,27 @@ public abstract class Act {
    * This will be called once during the construction of the component to initialize the port.
    * 
    */
-  protected abstract Do make_action();
+  protected abstract Callable make_call();
+  
+  /**
+   * This should be overridden by the implementation to define the provided port.
+   * This will be called once during the construction of the component to initialize the port.
+   * 
+   */
+  protected abstract CycleAlert make_finishedCycle();
+  
+  /**
+   * This should be overridden by the implementation to define the provided port.
+   * This will be called once during the construction of the component to initialize the port.
+   * 
+   */
+  protected abstract IGetThread make_threads();
   
   /**
    * This can be called by the implementation to access the required ports.
    * 
    */
-  protected Act.Requires requires() {
+  protected Launcher.Requires requires() {
     assert this.selfComponent != null: "This is a bug.";
     if (!this.init) {
     	throw new RuntimeException("requires() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if requires() is needed to initialise the component.");
@@ -132,7 +196,7 @@ public abstract class Act {
    * This can be called by the implementation to access the parts and their provided ports.
    * 
    */
-  protected Act.Parts parts() {
+  protected Launcher.Parts parts() {
     assert this.selfComponent != null: "This is a bug.";
     if (!this.init) {
     	throw new RuntimeException("parts() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if parts() is needed to initialise the component.");
@@ -144,23 +208,15 @@ public abstract class Act {
    * Not meant to be used to manually instantiate components (except for testing).
    * 
    */
-  public synchronized Act.Component _newComponent(final Act.Requires b, final boolean start) {
+  public synchronized Launcher.Component _newComponent(final Launcher.Requires b, final boolean start) {
     if (this.init) {
-    	throw new RuntimeException("This instance of Act has already been used to create a component, use another one.");
+    	throw new RuntimeException("This instance of Launcher has already been used to create a component, use another one.");
     }
     this.init = true;
-    Act.ComponentImpl  _comp = new Act.ComponentImpl(this, b, true);
+    Launcher.ComponentImpl  _comp = new Launcher.ComponentImpl(this, b, true);
     if (start) {
     	_comp.start();
     }
     return _comp;
-  }
-  
-  /**
-   * Use to instantiate a component from this implementation.
-   * 
-   */
-  public Act.Component newComponent() {
-    return this._newComponent(new Act.Requires() {}, true);
   }
 }

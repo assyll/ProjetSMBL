@@ -1,4 +1,5 @@
 package agents;
+import generalStructure.impl.BigEcoImpl;
 import agents.impl.*;
 public class MainClass {
 

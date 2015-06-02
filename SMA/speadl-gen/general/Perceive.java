@@ -1,4 +1,4 @@
-package agents;
+package general;
 
 import agents.interfaces.Do;
 
@@ -44,7 +44,7 @@ public abstract class Perceive {
       assert this.perception == null: "This is a bug.";
       this.perception = this.implementation.make_perception();
       if (this.perception == null) {
-      	throw new RuntimeException("make_perception() in agents.Perceive should not return null.");
+      	throw new RuntimeException("make_perception() in general.Perceive should not return null.");
       }
     }
     

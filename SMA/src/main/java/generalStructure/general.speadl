@@ -1,0 +1,48 @@
+import agents.interfaces.Do
+import agents.interfaces.Callable
+import generalStructure.interfaces.CycleAlert
+import agents.interfaces.IGetThread
+
+namespace general{
+	
+	component Launcher{
+		requires lancer: Do
+		provides call: Callable
+		provides finishedCycle: CycleAlert
+		provides threads: IGetThread
+	}
+	
+		ecosystem BigEco{
+		part ecoAE: EcoAgentsEtat{
+			bind threads to launcher.threads
+		}
+		part fw: Forward[Do]{
+			bind finishedCycle to launcher.finishedCycle
+		}
+		
+		part launcher: Launcher{
+			bind lancer to fw.i
+			
+		}
+		
+		species DynamicAssembly(id: String){
+			use agentE: ecoAE.AgentEtat(id){
+				bind finishedCycle to aFW.finishedCycle
+			}
+			use aFW: fw.Agent{
+				bind a to agentE.cycle
+			}
+		}
+	}
+	
+	ecosystem Forward[I]{
+		 species Agent{
+		 	
+		 	requires a:I
+		 	provides finishedCycle: CycleAlert
+		 }
+		 
+		 requires finishedCycle: CycleAlert
+		 provides i:I
+	}
+}

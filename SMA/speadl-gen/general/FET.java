@@ -1,19 +1,13 @@
-package trace;
+package general;
 
-import trace.interfaces.IGetAction;
 import trace.interfaces.TraceElement;
 
 @SuppressWarnings("all")
-public abstract class TraceElementEater {
+public abstract class FET {
   public interface Requires {
-    /**
-     * This can be called by the implementation to access this required port.
-     * 
-     */
-    public TraceElement traceElement();
   }
   
-  public interface Component extends TraceElementEater.Provides {
+  public interface Component extends FET.Provides {
   }
   
   public interface Provides {
@@ -21,16 +15,16 @@ public abstract class TraceElementEater {
      * This can be called to access the provided port.
      * 
      */
-    public IGetAction actionElement();
+    public TraceElement elementDeTrace();
   }
   
   public interface Parts {
   }
   
-  public static class ComponentImpl implements TraceElementEater.Component, TraceElementEater.Parts {
-    private final TraceElementEater.Requires bridge;
+  public static class ComponentImpl implements FET.Component, FET.Parts {
+    private final FET.Requires bridge;
     
-    private final TraceElementEater implementation;
+    private final FET implementation;
     
     public void start() {
       this.implementation.start();
@@ -41,19 +35,19 @@ public abstract class TraceElementEater {
       
     }
     
-    private void init_actionElement() {
-      assert this.actionElement == null: "This is a bug.";
-      this.actionElement = this.implementation.make_actionElement();
-      if (this.actionElement == null) {
-      	throw new RuntimeException("make_actionElement() in trace.TraceElementEater should not return null.");
+    private void init_elementDeTrace() {
+      assert this.elementDeTrace == null: "This is a bug.";
+      this.elementDeTrace = this.implementation.make_elementDeTrace();
+      if (this.elementDeTrace == null) {
+      	throw new RuntimeException("make_elementDeTrace() in general.FET should not return null.");
       }
     }
     
     protected void initProvidedPorts() {
-      init_actionElement();
+      init_elementDeTrace();
     }
     
-    public ComponentImpl(final TraceElementEater implem, final TraceElementEater.Requires b, final boolean doInits) {
+    public ComponentImpl(final FET implem, final FET.Requires b, final boolean doInits) {
       this.bridge = b;
       this.implementation = implem;
       
@@ -69,10 +63,10 @@ public abstract class TraceElementEater {
       }
     }
     
-    private IGetAction actionElement;
+    private TraceElement elementDeTrace;
     
-    public IGetAction actionElement() {
-      return this.actionElement;
+    public TraceElement elementDeTrace() {
+      return this.elementDeTrace;
     }
   }
   
@@ -90,7 +84,7 @@ public abstract class TraceElementEater {
    */
   private boolean started = false;;
   
-  private TraceElementEater.ComponentImpl selfComponent;
+  private FET.ComponentImpl selfComponent;
   
   /**
    * Can be overridden by the implementation.
@@ -107,7 +101,7 @@ public abstract class TraceElementEater {
    * This can be called by the implementation to access the provided ports.
    * 
    */
-  protected TraceElementEater.Provides provides() {
+  protected FET.Provides provides() {
     assert this.selfComponent != null: "This is a bug.";
     if (!this.init) {
     	throw new RuntimeException("provides() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if provides() is needed to initialise the component.");
@@ -120,13 +114,13 @@ public abstract class TraceElementEater {
    * This will be called once during the construction of the component to initialize the port.
    * 
    */
-  protected abstract IGetAction make_actionElement();
+  protected abstract TraceElement make_elementDeTrace();
   
   /**
    * This can be called by the implementation to access the required ports.
    * 
    */
-  protected TraceElementEater.Requires requires() {
+  protected FET.Requires requires() {
     assert this.selfComponent != null: "This is a bug.";
     if (!this.init) {
     	throw new RuntimeException("requires() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if requires() is needed to initialise the component.");
@@ -138,7 +132,7 @@ public abstract class TraceElementEater {
    * This can be called by the implementation to access the parts and their provided ports.
    * 
    */
-  protected TraceElementEater.Parts parts() {
+  protected FET.Parts parts() {
     assert this.selfComponent != null: "This is a bug.";
     if (!this.init) {
     	throw new RuntimeException("parts() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if parts() is needed to initialise the component.");
@@ -150,15 +144,23 @@ public abstract class TraceElementEater {
    * Not meant to be used to manually instantiate components (except for testing).
    * 
    */
-  public synchronized TraceElementEater.Component _newComponent(final TraceElementEater.Requires b, final boolean start) {
+  public synchronized FET.Component _newComponent(final FET.Requires b, final boolean start) {
     if (this.init) {
-    	throw new RuntimeException("This instance of TraceElementEater has already been used to create a component, use another one.");
+    	throw new RuntimeException("This instance of FET has already been used to create a component, use another one.");
     }
     this.init = true;
-    TraceElementEater.ComponentImpl  _comp = new TraceElementEater.ComponentImpl(this, b, true);
+    FET.ComponentImpl  _comp = new FET.ComponentImpl(this, b, true);
     if (start) {
     	_comp.start();
     }
     return _comp;
+  }
+  
+  /**
+   * Use to instantiate a component from this implementation.
+   * 
+   */
+  public FET.Component newComponent() {
+    return this._newComponent(new FET.Requires() {}, true);
   }
 }

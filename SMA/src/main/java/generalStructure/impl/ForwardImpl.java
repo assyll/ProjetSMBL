@@ -1,13 +1,15 @@
-package agents.impl;
+package generalStructure.impl;
+
+import general.Forward;
+import general.Forward.Agent;
+import generalStructure.interfaces.CycleAlert;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import agents.Forward;
 import agents.interfaces.Do;
-import agents.interfaces.ICreateAgent;
 
-public class ForwardImpl extends Forward<Do> implements Do, ICreateAgent{
+public class ForwardImpl extends Forward<Do> implements Do{
 
 	private List<AgentImpl> list = new ArrayList<AgentImpl>();
 	
@@ -22,13 +24,6 @@ public class ForwardImpl extends Forward<Do> implements Do, ICreateAgent{
 		for(AgentImpl agent: list)
 			agent.doIt();
 	}
-
-	@Override
-	public void createNewAgent() {
-		
-		
-	}
-	
 	
 
 	@Override
@@ -38,11 +33,23 @@ public class ForwardImpl extends Forward<Do> implements Do, ICreateAgent{
 		return a;
 	}
 
-	private class AgentImpl extends Agent<Do> implements Do {
+	private class AgentImpl extends Agent<Do> implements Do, CycleAlert {
 
 		@Override
 		public void doIt() {
 			this.requires().a().doIt();
+		}
+
+		@Override
+		protected CycleAlert make_finishedCycle() {
+			// TODO Auto-generated method stub
+			return this;
+		}
+
+		@Override
+		public void endOfCycleAlert(String id) {
+			eco_requires().finishedCycle().endOfCycleAlert(id);
+			
 		}
 		
 	}

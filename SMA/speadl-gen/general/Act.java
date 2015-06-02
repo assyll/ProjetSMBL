@@ -1,13 +1,19 @@
-package agents;
+package general;
 
-import java.util.concurrent.Executor;
+import agents.interfaces.Do;
+import generalStructure.interfaces.CycleAlert;
 
 @SuppressWarnings("all")
-public abstract class LauncherComponent {
+public abstract class Act {
   public interface Requires {
+    /**
+     * This can be called by the implementation to access this required port.
+     * 
+     */
+    public CycleAlert finishedCycle();
   }
   
-  public interface Component extends LauncherComponent.Provides {
+  public interface Component extends Act.Provides {
   }
   
   public interface Provides {
@@ -15,16 +21,16 @@ public abstract class LauncherComponent {
      * This can be called to access the provided port.
      * 
      */
-    public Executor exec();
+    public Do action();
   }
   
   public interface Parts {
   }
   
-  public static class ComponentImpl implements LauncherComponent.Component, LauncherComponent.Parts {
-    private final LauncherComponent.Requires bridge;
+  public static class ComponentImpl implements Act.Component, Act.Parts {
+    private final Act.Requires bridge;
     
-    private final LauncherComponent implementation;
+    private final Act implementation;
     
     public void start() {
       this.implementation.start();
@@ -35,19 +41,19 @@ public abstract class LauncherComponent {
       
     }
     
-    private void init_exec() {
-      assert this.exec == null: "This is a bug.";
-      this.exec = this.implementation.make_exec();
-      if (this.exec == null) {
-      	throw new RuntimeException("make_exec() in agents.LauncherComponent should not return null.");
+    private void init_action() {
+      assert this.action == null: "This is a bug.";
+      this.action = this.implementation.make_action();
+      if (this.action == null) {
+      	throw new RuntimeException("make_action() in general.Act should not return null.");
       }
     }
     
     protected void initProvidedPorts() {
-      init_exec();
+      init_action();
     }
     
-    public ComponentImpl(final LauncherComponent implem, final LauncherComponent.Requires b, final boolean doInits) {
+    public ComponentImpl(final Act implem, final Act.Requires b, final boolean doInits) {
       this.bridge = b;
       this.implementation = implem;
       
@@ -63,10 +69,10 @@ public abstract class LauncherComponent {
       }
     }
     
-    private Executor exec;
+    private Do action;
     
-    public Executor exec() {
-      return this.exec;
+    public Do action() {
+      return this.action;
     }
   }
   
@@ -84,7 +90,7 @@ public abstract class LauncherComponent {
    */
   private boolean started = false;;
   
-  private LauncherComponent.ComponentImpl selfComponent;
+  private Act.ComponentImpl selfComponent;
   
   /**
    * Can be overridden by the implementation.
@@ -101,7 +107,7 @@ public abstract class LauncherComponent {
    * This can be called by the implementation to access the provided ports.
    * 
    */
-  protected LauncherComponent.Provides provides() {
+  protected Act.Provides provides() {
     assert this.selfComponent != null: "This is a bug.";
     if (!this.init) {
     	throw new RuntimeException("provides() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if provides() is needed to initialise the component.");
@@ -114,13 +120,13 @@ public abstract class LauncherComponent {
    * This will be called once during the construction of the component to initialize the port.
    * 
    */
-  protected abstract Executor make_exec();
+  protected abstract Do make_action();
   
   /**
    * This can be called by the implementation to access the required ports.
    * 
    */
-  protected LauncherComponent.Requires requires() {
+  protected Act.Requires requires() {
     assert this.selfComponent != null: "This is a bug.";
     if (!this.init) {
     	throw new RuntimeException("requires() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if requires() is needed to initialise the component.");
@@ -132,7 +138,7 @@ public abstract class LauncherComponent {
    * This can be called by the implementation to access the parts and their provided ports.
    * 
    */
-  protected LauncherComponent.Parts parts() {
+  protected Act.Parts parts() {
     assert this.selfComponent != null: "This is a bug.";
     if (!this.init) {
     	throw new RuntimeException("parts() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if parts() is needed to initialise the component.");
@@ -144,23 +150,15 @@ public abstract class LauncherComponent {
    * Not meant to be used to manually instantiate components (except for testing).
    * 
    */
-  public synchronized LauncherComponent.Component _newComponent(final LauncherComponent.Requires b, final boolean start) {
+  public synchronized Act.Component _newComponent(final Act.Requires b, final boolean start) {
     if (this.init) {
-    	throw new RuntimeException("This instance of LauncherComponent has already been used to create a component, use another one.");
+    	throw new RuntimeException("This instance of Act has already been used to create a component, use another one.");
     }
     this.init = true;
-    LauncherComponent.ComponentImpl  _comp = new LauncherComponent.ComponentImpl(this, b, true);
+    Act.ComponentImpl  _comp = new Act.ComponentImpl(this, b, true);
     if (start) {
     	_comp.start();
     }
     return _comp;
-  }
-  
-  /**
-   * Use to instantiate a component from this implementation.
-   * 
-   */
-  public LauncherComponent.Component newComponent() {
-    return this._newComponent(new LauncherComponent.Requires() {}, true);
   }
 }

@@ -1,28 +1,31 @@
-package agents;
+package general;
+
+import trace.interfaces.IGetAction;
+import trace.interfaces.TraceElement;
 
 @SuppressWarnings("all")
-public abstract class Forward<I> {
-  public interface Requires<I> {
-  }
-  
-  public interface Component<I> extends Forward.Provides<I> {
-  }
-  
-  public interface Provides<I> {
+public abstract class ActionParserEco {
+  public interface Requires {
     /**
-     * This can be called to access the provided port.
+     * This can be called by the implementation to access this required port.
      * 
      */
-    public I i();
+    public TraceElement traceElement();
   }
   
-  public interface Parts<I> {
+  public interface Component extends ActionParserEco.Provides {
   }
   
-  public static class ComponentImpl<I> implements Forward.Component<I>, Forward.Parts<I> {
-    private final Forward.Requires<I> bridge;
+  public interface Provides {
+  }
+  
+  public interface Parts {
+  }
+  
+  public static class ComponentImpl implements ActionParserEco.Component, ActionParserEco.Parts {
+    private final ActionParserEco.Requires bridge;
     
-    private final Forward<I> implementation;
+    private final ActionParserEco implementation;
     
     public void start() {
       this.implementation.start();
@@ -33,19 +36,11 @@ public abstract class Forward<I> {
       
     }
     
-    private void init_i() {
-      assert this.i == null: "This is a bug.";
-      this.i = this.implementation.make_i();
-      if (this.i == null) {
-      	throw new RuntimeException("make_i() in agents.Forward<I> should not return null.");
-      }
-    }
-    
     protected void initProvidedPorts() {
-      init_i();
+      
     }
     
-    public ComponentImpl(final Forward<I> implem, final Forward.Requires<I> b, final boolean doInits) {
+    public ComponentImpl(final ActionParserEco implem, final ActionParserEco.Requires b, final boolean doInits) {
       this.bridge = b;
       this.implementation = implem;
       
@@ -60,36 +55,30 @@ public abstract class Forward<I> {
       	initProvidedPorts();
       }
     }
-    
-    private I i;
-    
-    public I i() {
-      return this.i;
-    }
   }
   
-  public static class Agent<I> {
-    public interface Requires<I> {
+  public static abstract class ActionParser {
+    public interface Requires {
+    }
+    
+    public interface Component extends ActionParserEco.ActionParser.Provides {
+    }
+    
+    public interface Provides {
       /**
-       * This can be called by the implementation to access this required port.
+       * This can be called to access the provided port.
        * 
        */
-      public I a();
+      public IGetAction actionGetter();
     }
     
-    public interface Component<I> extends Forward.Agent.Provides<I> {
+    public interface Parts {
     }
     
-    public interface Provides<I> {
-    }
-    
-    public interface Parts<I> {
-    }
-    
-    public static class ComponentImpl<I> implements Forward.Agent.Component<I>, Forward.Agent.Parts<I> {
-      private final Forward.Agent.Requires<I> bridge;
+    public static class ComponentImpl implements ActionParserEco.ActionParser.Component, ActionParserEco.ActionParser.Parts {
+      private final ActionParserEco.ActionParser.Requires bridge;
       
-      private final Forward.Agent<I> implementation;
+      private final ActionParserEco.ActionParser implementation;
       
       public void start() {
         this.implementation.start();
@@ -100,11 +89,19 @@ public abstract class Forward<I> {
         
       }
       
-      protected void initProvidedPorts() {
-        
+      private void init_actionGetter() {
+        assert this.actionGetter == null: "This is a bug.";
+        this.actionGetter = this.implementation.make_actionGetter();
+        if (this.actionGetter == null) {
+        	throw new RuntimeException("make_actionGetter() in general.ActionParserEco$ActionParser should not return null.");
+        }
       }
       
-      public ComponentImpl(final Forward.Agent<I> implem, final Forward.Agent.Requires<I> b, final boolean doInits) {
+      protected void initProvidedPorts() {
+        init_actionGetter();
+      }
+      
+      public ComponentImpl(final ActionParserEco.ActionParser implem, final ActionParserEco.ActionParser.Requires b, final boolean doInits) {
         this.bridge = b;
         this.implementation = implem;
         
@@ -118,6 +115,12 @@ public abstract class Forward<I> {
         	initParts();
         	initProvidedPorts();
         }
+      }
+      
+      private IGetAction actionGetter;
+      
+      public IGetAction actionGetter() {
+        return this.actionGetter;
       }
     }
     
@@ -135,7 +138,7 @@ public abstract class Forward<I> {
      */
     private boolean started = false;;
     
-    private Forward.Agent.ComponentImpl<I> selfComponent;
+    private ActionParserEco.ActionParser.ComponentImpl selfComponent;
     
     /**
      * Can be overridden by the implementation.
@@ -152,7 +155,7 @@ public abstract class Forward<I> {
      * This can be called by the implementation to access the provided ports.
      * 
      */
-    protected Forward.Agent.Provides<I> provides() {
+    protected ActionParserEco.ActionParser.Provides provides() {
       assert this.selfComponent != null: "This is a bug.";
       if (!this.init) {
       	throw new RuntimeException("provides() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if provides() is needed to initialise the component.");
@@ -161,10 +164,17 @@ public abstract class Forward<I> {
     }
     
     /**
+     * This should be overridden by the implementation to define the provided port.
+     * This will be called once during the construction of the component to initialize the port.
+     * 
+     */
+    protected abstract IGetAction make_actionGetter();
+    
+    /**
      * This can be called by the implementation to access the required ports.
      * 
      */
-    protected Forward.Agent.Requires<I> requires() {
+    protected ActionParserEco.ActionParser.Requires requires() {
       assert this.selfComponent != null: "This is a bug.";
       if (!this.init) {
       	throw new RuntimeException("requires() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if requires() is needed to initialise the component.");
@@ -176,7 +186,7 @@ public abstract class Forward<I> {
      * This can be called by the implementation to access the parts and their provided ports.
      * 
      */
-    protected Forward.Agent.Parts<I> parts() {
+    protected ActionParserEco.ActionParser.Parts parts() {
       assert this.selfComponent != null: "This is a bug.";
       if (!this.init) {
       	throw new RuntimeException("parts() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if parts() is needed to initialise the component.");
@@ -188,25 +198,25 @@ public abstract class Forward<I> {
      * Not meant to be used to manually instantiate components (except for testing).
      * 
      */
-    public synchronized Forward.Agent.Component<I> _newComponent(final Forward.Agent.Requires<I> b, final boolean start) {
+    public synchronized ActionParserEco.ActionParser.Component _newComponent(final ActionParserEco.ActionParser.Requires b, final boolean start) {
       if (this.init) {
-      	throw new RuntimeException("This instance of Agent has already been used to create a component, use another one.");
+      	throw new RuntimeException("This instance of ActionParser has already been used to create a component, use another one.");
       }
       this.init = true;
-      Forward.Agent.ComponentImpl<I>  _comp = new Forward.Agent.ComponentImpl<I>(this, b, true);
+      ActionParserEco.ActionParser.ComponentImpl  _comp = new ActionParserEco.ActionParser.ComponentImpl(this, b, true);
       if (start) {
       	_comp.start();
       }
       return _comp;
     }
     
-    private Forward.ComponentImpl<I> ecosystemComponent;
+    private ActionParserEco.ComponentImpl ecosystemComponent;
     
     /**
      * This can be called by the species implementation to access the provided ports of its ecosystem.
      * 
      */
-    protected Forward.Provides<I> eco_provides() {
+    protected ActionParserEco.Provides eco_provides() {
       assert this.ecosystemComponent != null: "This is a bug.";
       return this.ecosystemComponent;
     }
@@ -215,7 +225,7 @@ public abstract class Forward<I> {
      * This can be called by the species implementation to access the required ports of its ecosystem.
      * 
      */
-    protected Forward.Requires<I> eco_requires() {
+    protected ActionParserEco.Requires eco_requires() {
       assert this.ecosystemComponent != null: "This is a bug.";
       return this.ecosystemComponent.bridge;
     }
@@ -224,7 +234,7 @@ public abstract class Forward<I> {
      * This can be called by the species implementation to access the parts of its ecosystem and their provided ports.
      * 
      */
-    protected Forward.Parts<I> eco_parts() {
+    protected ActionParserEco.Parts eco_parts() {
       assert this.ecosystemComponent != null: "This is a bug.";
       return this.ecosystemComponent;
     }
@@ -244,7 +254,7 @@ public abstract class Forward<I> {
    */
   private boolean started = false;;
   
-  private Forward.ComponentImpl<I> selfComponent;
+  private ActionParserEco.ComponentImpl selfComponent;
   
   /**
    * Can be overridden by the implementation.
@@ -261,7 +271,7 @@ public abstract class Forward<I> {
    * This can be called by the implementation to access the provided ports.
    * 
    */
-  protected Forward.Provides<I> provides() {
+  protected ActionParserEco.Provides provides() {
     assert this.selfComponent != null: "This is a bug.";
     if (!this.init) {
     	throw new RuntimeException("provides() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if provides() is needed to initialise the component.");
@@ -270,17 +280,10 @@ public abstract class Forward<I> {
   }
   
   /**
-   * This should be overridden by the implementation to define the provided port.
-   * This will be called once during the construction of the component to initialize the port.
-   * 
-   */
-  protected abstract I make_i();
-  
-  /**
    * This can be called by the implementation to access the required ports.
    * 
    */
-  protected Forward.Requires<I> requires() {
+  protected ActionParserEco.Requires requires() {
     assert this.selfComponent != null: "This is a bug.";
     if (!this.init) {
     	throw new RuntimeException("requires() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if requires() is needed to initialise the component.");
@@ -292,7 +295,7 @@ public abstract class Forward<I> {
    * This can be called by the implementation to access the parts and their provided ports.
    * 
    */
-  protected Forward.Parts<I> parts() {
+  protected ActionParserEco.Parts parts() {
     assert this.selfComponent != null: "This is a bug.";
     if (!this.init) {
     	throw new RuntimeException("parts() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if parts() is needed to initialise the component.");
@@ -304,12 +307,12 @@ public abstract class Forward<I> {
    * Not meant to be used to manually instantiate components (except for testing).
    * 
    */
-  public synchronized Forward.Component<I> _newComponent(final Forward.Requires<I> b, final boolean start) {
+  public synchronized ActionParserEco.Component _newComponent(final ActionParserEco.Requires b, final boolean start) {
     if (this.init) {
-    	throw new RuntimeException("This instance of Forward has already been used to create a component, use another one.");
+    	throw new RuntimeException("This instance of ActionParserEco has already been used to create a component, use another one.");
     }
     this.init = true;
-    Forward.ComponentImpl<I>  _comp = new Forward.ComponentImpl<I>(this, b, true);
+    ActionParserEco.ComponentImpl  _comp = new ActionParserEco.ComponentImpl(this, b, true);
     if (start) {
     	_comp.start();
     }
@@ -320,18 +323,16 @@ public abstract class Forward<I> {
    * This should be overridden by the implementation to instantiate the implementation of the species.
    * 
    */
-  protected Forward.Agent<I> make_Agent() {
-    return new Forward.Agent<I>();
-  }
+  protected abstract ActionParserEco.ActionParser make_ActionParser(final String id);
   
   /**
    * Do not call, used by generated code.
    * 
    */
-  public Forward.Agent<I> _createImplementationOfAgent() {
-    Forward.Agent<I> implem = make_Agent();
+  public ActionParserEco.ActionParser _createImplementationOfActionParser(final String id) {
+    ActionParserEco.ActionParser implem = make_ActionParser(id);
     if (implem == null) {
-    	throw new RuntimeException("make_Agent() in agents.Forward should not return null.");
+    	throw new RuntimeException("make_ActionParser() in general.ActionParserEco should not return null.");
     }
     assert implem.ecosystemComponent == null: "This is a bug.";
     assert this.selfComponent != null: "This is a bug.";
@@ -340,10 +341,11 @@ public abstract class Forward<I> {
   }
   
   /**
-   * Use to instantiate a component from this implementation.
+   * This can be called to create an instance of the species from inside the implementation of the ecosystem.
    * 
    */
-  public Forward.Component<I> newComponent() {
-    return this._newComponent(new Forward.Requires<I>() {}, true);
+  protected ActionParserEco.ActionParser.Component newActionParser(final String id) {
+    ActionParserEco.ActionParser _implem = _createImplementationOfActionParser(id);
+    return _implem._newComponent(new ActionParserEco.ActionParser.Requires() {},true);
   }
 }

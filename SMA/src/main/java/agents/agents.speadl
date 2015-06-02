@@ -1,36 +1,20 @@
-import agents.interfaces.AgentTrace
 import agents.interfaces.Do
-import agents.interfaces.ICreateAgent
-import java.util.concurrent.Executor
-import agents.interfaces.Callable
+import agents.interfaces.IGetThread
+import generalStructure.interfaces.CycleAlert
+import agents.Suicide
 
-namespace agents{
+namespace general{
 
-	
-	component Launcher{
-		requires lancer: Do
-		provides call: Callable
-	}
-	
-	ecosystem BigEco{
-		part ecoAE: EcoAgentsEtat
-		part fw: Forward[Do]
-		part launcher: Launcher{
-			bind lancer to fw.i
-		}
-		
-		species DynamicAssembly(id: String){
-			use agentE: ecoAE.AgentEtat(id)
-			use aFW: fw.Agent{
-				bind a to agentE.cycle
-			}
-		}
-	}
-	
 	ecosystem EcoAgentsEtat{
+		requires threads: IGetThread
+		
 		species AgentEtat(id: String){
 			
-			part act: Act
+			
+			
+			part act: Act{
+				bind finishedCycle to finishedCycle
+			}
 	
 			part decide: Decide{
 				bind action to act.action
@@ -43,23 +27,13 @@ namespace agents{
 			//requires getTraceElement: IGetAction
 			
 			provides cycle: Do = perceive.perception
+			requires finishedCycle: CycleAlert
+
 		}
 		
 		species AgentTransition(id:String){
 			
 		}
-	}
-	
-	ecosystem Forward[I]{
-		 species Agent{
-		 	requires a:I
-		 }
-		 
-		 provides i:I
-	}
-	
-	component LauncherComponent{
-		provides exec: Executor
 	}
 	
 	component Perceive{
@@ -74,6 +48,7 @@ namespace agents{
 	
 	component Act{
 		provides action: Do
+		requires finishedCycle: CycleAlert
 	}
 		
 	

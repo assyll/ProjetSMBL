@@ -1,6 +1,9 @@
 package trace.impl;
 
-import trace.ActionParserEco;
+import general.ActionParserEco;
+import general.ActionParserEco.ActionParser;
+
+
 
 public class ActionParserEcoImpl extends ActionParserEco{
 

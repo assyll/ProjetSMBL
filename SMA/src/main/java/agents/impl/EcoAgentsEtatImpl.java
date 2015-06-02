@@ -1,30 +1,43 @@
 package agents.impl;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.Executor;
+import general.Act;
+import general.Decide;
+import general.EcoAgentsEtat;
+import general.EcoAgentsEtat.AgentEtat;
+import general.Perceive;
 
-import agents.Act;
-import agents.Decide;
-import agents.EcoAgentsEtat;
-import agents.Perceive;
-import agents.interfaces.Action;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+
+import agents.Suicide;
 import agents.interfaces.AgentTrace;
-import agents.interfaces.Decision;
 import agents.interfaces.Do;
-import agents.interfaces.Perception;
+import agents.interfaces.IGetThread;
 
 public class EcoAgentsEtatImpl extends EcoAgentsEtat implements AgentTrace {
 
 	private Map<String,String> currentAgentsMap;
+	private Map<String,Runnable> agentsMap;
+	private  List<Runnable> listRunnable;
 	
 	public EcoAgentsEtatImpl(){
 		currentAgentsMap = new HashMap<String,String>();
+		agentsMap = new HashMap<String,Runnable>();
+		listRunnable = new ArrayList<Runnable>();
 	}
 	
 	@Override
 	protected AgentEtat make_AgentEtat(String id) {
-		return new AgentEtatImpl(id);
+		AgentEtatImpl agent = new AgentEtatImpl(id);
+	//	threadsMap.put(id, agent.getThread());
+		synchronized (agentsMap) {
+			agentsMap.put(id, agent);
+		}
+
+		return agent;
 	}
 
 	@Override
@@ -37,10 +50,47 @@ public class EcoAgentsEtatImpl extends EcoAgentsEtat implements AgentTrace {
 		return currentAgentsMap.get(user);
 	}
 	
+	public void killAgent(String id) {
+
+		System.out.println(id+" suicide!!!!!!!");
+		
+
+		System.out.println("Kill Agent");
+		
+		synchronized (listRunnable) {
+			listRunnable.remove(agentsMap.get(id));
+			this.requires().threads().getAgents(listRunnable);
+			
+			synchronized (agentsMap) {
+				agentsMap.remove(id);
+			}
+			
+		}
+	}
+	
+
+	/****************************************************************** Private Classes ****************************************************************/
 	private class AgentEtatImpl extends AgentEtat implements Runnable {
 
-		String id;
+		@Override
+		protected void start() {
+			synchronized (listRunnable) {
+				listRunnable.add(this);
+				eco_requires().threads().getAgents(listRunnable);
+			}
+		}
 		
+		String id;
+		Thread t;
+		
+		private void suicide() {
+			//killAgent(id);
+		}
+		
+		public Thread getThread(){
+			return t;
+		}
+
 		public AgentEtatImpl(String id)
 		{
 			this.id = id;
@@ -66,80 +116,86 @@ public class EcoAgentsEtatImpl extends EcoAgentsEtat implements AgentTrace {
 
 		@Override
 		public void run() {
-			// TODO Auto-generated method stub
+			this.parts().perceive().perception().doIt();
+		}
+
+		
+		private class PerceptionImpl extends Perceive implements Do {
+
+			String id = "";
+			
+			public PerceptionImpl(String id){
+				this.id = id;
+			}
+			
+			@Override
+			public void doIt() {
+				System.out.println(id+": Perception");
+				this.requires().decision().doIt();
+				
+			}
+
+			@Override
+			protected Do make_perception() {
+				// TODO Auto-generated method stub
+				return this;
+			}
+			
+		}
+		
+		private class DecisionImpl extends Decide implements Do {
+
+			String id = "";
+			
+			public DecisionImpl(String id){
+				this.id = id;
+			}
+			
+			@Override
+			public void doIt() {
+				System.out.println(id+": Decision");
+				this.requires().action().doIt();
+				
+			}
+
+			@Override
+			protected Do make_decision() {
+				// TODO Auto-generated method stub
+				return this;
+			}
+			
+		}
+		
+		private class ActImpl extends Act implements Do{
+
+			private String id = "";
+			private int i = (new Random().nextInt(2) +1);
+			
+			public ActImpl(String id){
+				this.id = id;
+			}
+			
+			@Override
+			public void doIt() {
+				System.out.println(id+": Action");
+				i--;
+				if(i == 0) suicide();
+				this.requires().finishedCycle().endOfCycleAlert(id);
+
+			}
+
+			@Override
+			protected Do make_action() {
+				// TODO Auto-generated method stub
+				return this;
+			}
 			
 		}
 
 
 	}
 	
-	private class PerceptionImpl extends Perceive implements Do {
 
-		String id = "";
-		
-		public PerceptionImpl(String id){
-			this.id = id;
-		}
-		
-		@Override
-		public void doIt() {
-			System.out.println(id+": Perception");
-			this.requires().decision().doIt();
-			
-		}
-
-		@Override
-		protected Do make_perception() {
-			// TODO Auto-generated method stub
-			return this;
-		}
-		
-	}
-	
-	private class DecisionImpl extends Decide implements Do {
-
-		String id = "";
-		
-		public DecisionImpl(String id){
-			this.id = id;
-		}
-		
-		@Override
-		public void doIt() {
-			System.out.println(id+": Decision");
-			this.requires().action().doIt();
-			
-		}
-
-		@Override
-		protected Do make_decision() {
-			// TODO Auto-generated method stub
-			return this;
-		}
-		
-	}
-	
-	private class ActImpl extends Act implements Do{
-
-		private String id = "";
-		
-		public ActImpl(String id){
-			this.id = id;
-		}
-		
-		@Override
-		public void doIt() {
-			System.out.println(id+": Action");
-			
-		}
-
-		@Override
-		protected Do make_action() {
-			// TODO Auto-generated method stub
-			return this;
-		}
-		
-	}
 
 
 }

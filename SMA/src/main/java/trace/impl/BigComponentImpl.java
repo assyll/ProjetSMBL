@@ -1,10 +1,11 @@
 package trace.impl;
 
+import general.BigComponent;
+import general.FET;
+import general.TraceElementEater;
+
 import java.io.FileNotFoundException;
 
-import trace.BigComponent;
-import trace.FET;
-import trace.TraceElementEater;
 
 public class BigComponentImpl extends BigComponent {
 

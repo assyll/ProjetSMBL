@@ -1,4 +1,4 @@
-package agents;
+package general;
 
 import agents.interfaces.Do;
 
@@ -44,7 +44,7 @@ public abstract class Decide {
       assert this.decision == null: "This is a bug.";
       this.decision = this.implementation.make_decision();
       if (this.decision == null) {
-      	throw new RuntimeException("make_decision() in agents.Decide should not return null.");
+      	throw new RuntimeException("make_decision() in general.Decide should not return null.");
       }
     }
     

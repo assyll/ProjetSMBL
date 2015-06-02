@@ -1,16 +1,14 @@
 package trace.impl;
 
+import general.TraceElementEater;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
 
-
-
-
 import trace.ActionObject;
-import trace.TraceElementEater;
 import trace.interfaces.IGetAction;
 
 import com.fasterxml.jackson.core.JsonFactory;

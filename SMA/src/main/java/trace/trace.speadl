@@ -1,7 +1,7 @@
 import trace.interfaces.IGetAction
 import trace.interfaces.TraceElement
 
-namespace trace{
+namespace general{
 	component FET{
 		provides elementDeTrace: TraceElement
 	}
@@ -19,8 +19,6 @@ namespace trace{
 	}
 	
 	ecosystem ActionParserEco {
-		
-		
 		requires traceElement: TraceElement 
 		
 		species ActionParser(id: String){

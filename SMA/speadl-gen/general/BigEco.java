@@ -1,9 +1,11 @@
-package agents;
+package general;
 
-import agents.EcoAgentsEtat;
-import agents.Forward;
-import agents.Launcher;
 import agents.interfaces.Do;
+import agents.interfaces.IGetThread;
+import general.EcoAgentsEtat;
+import general.Forward;
+import general.Launcher;
+import generalStructure.interfaces.CycleAlert;
 
 @SuppressWarnings("all")
 public abstract class BigEco {
@@ -60,7 +62,7 @@ public abstract class BigEco {
       assert this.implem_ecoAE == null: "This is a bug.";
       this.implem_ecoAE = this.implementation.make_ecoAE();
       if (this.implem_ecoAE == null) {
-      	throw new RuntimeException("make_ecoAE() in agents.BigEco should not return null.");
+      	throw new RuntimeException("make_ecoAE() in general.BigEco should not return null.");
       }
       this.ecoAE = this.implem_ecoAE._newComponent(new BridgeImpl_ecoAE(), false);
       
@@ -71,7 +73,7 @@ public abstract class BigEco {
       assert this.implem_fw == null: "This is a bug.";
       this.implem_fw = this.implementation.make_fw();
       if (this.implem_fw == null) {
-      	throw new RuntimeException("make_fw() in agents.BigEco should not return null.");
+      	throw new RuntimeException("make_fw() in general.BigEco should not return null.");
       }
       this.fw = this.implem_fw._newComponent(new BridgeImpl_fw(), false);
       
@@ -82,7 +84,7 @@ public abstract class BigEco {
       assert this.implem_launcher == null: "This is a bug.";
       this.implem_launcher = this.implementation.make_launcher();
       if (this.implem_launcher == null) {
-      	throw new RuntimeException("make_launcher() in agents.BigEco should not return null.");
+      	throw new RuntimeException("make_launcher() in general.BigEco should not return null.");
       }
       this.launcher = this.implem_launcher._newComponent(new BridgeImpl_launcher(), false);
       
@@ -119,6 +121,9 @@ public abstract class BigEco {
     private EcoAgentsEtat implem_ecoAE;
     
     private final class BridgeImpl_ecoAE implements EcoAgentsEtat.Requires {
+      public final IGetThread threads() {
+        return BigEco.ComponentImpl.this.launcher().threads();
+      }
     }
     
     public final EcoAgentsEtat.Component ecoAE() {
@@ -130,6 +135,9 @@ public abstract class BigEco {
     private Forward<Do> implem_fw;
     
     private final class BridgeImpl_fw implements Forward.Requires<Do> {
+      public final CycleAlert finishedCycle() {
+        return BigEco.ComponentImpl.this.launcher().finishedCycle();
+      }
     }
     
     public final Forward.Component<Do> fw() {
@@ -233,6 +241,9 @@ public abstract class BigEco {
       private EcoAgentsEtat.AgentEtat.Component agentE;
       
       private final class BridgeImpl_ecoAE_agentE implements EcoAgentsEtat.AgentEtat.Requires {
+        public final CycleAlert finishedCycle() {
+          return BigEco.DynamicAssembly.ComponentImpl.this.aFW().finishedCycle();
+        }
       }
       
       public final EcoAgentsEtat.AgentEtat.Component agentE() {
@@ -480,7 +491,7 @@ public abstract class BigEco {
   public BigEco.DynamicAssembly _createImplementationOfDynamicAssembly(final String id) {
     BigEco.DynamicAssembly implem = make_DynamicAssembly(id);
     if (implem == null) {
-    	throw new RuntimeException("make_DynamicAssembly() in agents.BigEco should not return null.");
+    	throw new RuntimeException("make_DynamicAssembly() in general.BigEco should not return null.");
     }
     assert implem.ecosystemComponent == null: "This is a bug.";
     assert this.selfComponent != null: "This is a bug.";

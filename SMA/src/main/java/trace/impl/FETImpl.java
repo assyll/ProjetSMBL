@@ -1,10 +1,11 @@
 package trace.impl;
 
+import general.FET;
+
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
-import trace.FET;
 import trace.interfaces.TraceElement;
 
 

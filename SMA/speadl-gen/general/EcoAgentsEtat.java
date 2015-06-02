@@ -1,13 +1,20 @@
-package agents;
+package general;
 
-import agents.Act;
-import agents.Decide;
-import agents.Perceive;
 import agents.interfaces.Do;
+import agents.interfaces.IGetThread;
+import general.Act;
+import general.Decide;
+import general.Perceive;
+import generalStructure.interfaces.CycleAlert;
 
 @SuppressWarnings("all")
 public abstract class EcoAgentsEtat {
   public interface Requires {
+    /**
+     * This can be called by the implementation to access this required port.
+     * 
+     */
+    public IGetThread threads();
   }
   
   public interface Component extends EcoAgentsEtat.Provides {
@@ -56,6 +63,11 @@ public abstract class EcoAgentsEtat {
   
   public static abstract class AgentEtat {
     public interface Requires {
+      /**
+       * This can be called by the implementation to access this required port.
+       * 
+       */
+      public CycleAlert finishedCycle();
     }
     
     public interface Component extends EcoAgentsEtat.AgentEtat.Provides {
@@ -113,7 +125,7 @@ public abstract class EcoAgentsEtat {
         assert this.implem_act == null: "This is a bug.";
         this.implem_act = this.implementation.make_act();
         if (this.implem_act == null) {
-        	throw new RuntimeException("make_act() in agents.EcoAgentsEtat$AgentEtat should not return null.");
+        	throw new RuntimeException("make_act() in general.EcoAgentsEtat$AgentEtat should not return null.");
         }
         this.act = this.implem_act._newComponent(new BridgeImpl_act(), false);
         
@@ -124,7 +136,7 @@ public abstract class EcoAgentsEtat {
         assert this.implem_decide == null: "This is a bug.";
         this.implem_decide = this.implementation.make_decide();
         if (this.implem_decide == null) {
-        	throw new RuntimeException("make_decide() in agents.EcoAgentsEtat$AgentEtat should not return null.");
+        	throw new RuntimeException("make_decide() in general.EcoAgentsEtat$AgentEtat should not return null.");
         }
         this.decide = this.implem_decide._newComponent(new BridgeImpl_decide(), false);
         
@@ -135,7 +147,7 @@ public abstract class EcoAgentsEtat {
         assert this.implem_perceive == null: "This is a bug.";
         this.implem_perceive = this.implementation.make_perceive();
         if (this.implem_perceive == null) {
-        	throw new RuntimeException("make_perceive() in agents.EcoAgentsEtat$AgentEtat should not return null.");
+        	throw new RuntimeException("make_perceive() in general.EcoAgentsEtat$AgentEtat should not return null.");
         }
         this.perceive = this.implem_perceive._newComponent(new BridgeImpl_perceive(), false);
         
@@ -176,6 +188,9 @@ public abstract class EcoAgentsEtat {
       private Act implem_act;
       
       private final class BridgeImpl_act implements Act.Requires {
+        public final CycleAlert finishedCycle() {
+          return EcoAgentsEtat.AgentEtat.ComponentImpl.this.bridge.finishedCycle();
+        }
       }
       
       public final Act.Component act() {
@@ -590,21 +605,12 @@ public abstract class EcoAgentsEtat {
   public EcoAgentsEtat.AgentEtat _createImplementationOfAgentEtat(final String id) {
     EcoAgentsEtat.AgentEtat implem = make_AgentEtat(id);
     if (implem == null) {
-    	throw new RuntimeException("make_AgentEtat() in agents.EcoAgentsEtat should not return null.");
+    	throw new RuntimeException("make_AgentEtat() in general.EcoAgentsEtat should not return null.");
     }
     assert implem.ecosystemComponent == null: "This is a bug.";
     assert this.selfComponent != null: "This is a bug.";
     implem.ecosystemComponent = this.selfComponent;
     return implem;
-  }
-  
-  /**
-   * This can be called to create an instance of the species from inside the implementation of the ecosystem.
-   * 
-   */
-  protected EcoAgentsEtat.AgentEtat.Component newAgentEtat(final String id) {
-    EcoAgentsEtat.AgentEtat _implem = _createImplementationOfAgentEtat(id);
-    return _implem._newComponent(new EcoAgentsEtat.AgentEtat.Requires() {},true);
   }
   
   /**
@@ -622,7 +628,7 @@ public abstract class EcoAgentsEtat {
   public EcoAgentsEtat.AgentTransition _createImplementationOfAgentTransition(final String id) {
     EcoAgentsEtat.AgentTransition implem = make_AgentTransition(id);
     if (implem == null) {
-    	throw new RuntimeException("make_AgentTransition() in agents.EcoAgentsEtat should not return null.");
+    	throw new RuntimeException("make_AgentTransition() in general.EcoAgentsEtat should not return null.");
     }
     assert implem.ecosystemComponent == null: "This is a bug.";
     assert this.selfComponent != null: "This is a bug.";
@@ -637,13 +643,5 @@ public abstract class EcoAgentsEtat {
   protected EcoAgentsEtat.AgentTransition.Component newAgentTransition(final String id) {
     EcoAgentsEtat.AgentTransition _implem = _createImplementationOfAgentTransition(id);
     return _implem._newComponent(new EcoAgentsEtat.AgentTransition.Requires() {},true);
-  }
-  
-  /**
-   * Use to instantiate a component from this implementation.
-   * 
-   */
-  public EcoAgentsEtat.Component newComponent() {
-    return this._newComponent(new EcoAgentsEtat.Requires() {}, true);
   }
 }

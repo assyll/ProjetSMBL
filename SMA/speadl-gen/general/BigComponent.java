@@ -1,7 +1,7 @@
-package trace;
+package general;
 
-import trace.FET;
-import trace.TraceElementEater;
+import general.FET;
+import general.TraceElementEater;
 import trace.interfaces.TraceElement;
 
 @SuppressWarnings("all")
@@ -50,7 +50,7 @@ public abstract class BigComponent {
       assert this.implem_fet == null: "This is a bug.";
       this.implem_fet = this.implementation.make_fet();
       if (this.implem_fet == null) {
-      	throw new RuntimeException("make_fet() in trace.BigComponent should not return null.");
+      	throw new RuntimeException("make_fet() in general.BigComponent should not return null.");
       }
       this.fet = this.implem_fet._newComponent(new BridgeImpl_fet(), false);
       
@@ -61,7 +61,7 @@ public abstract class BigComponent {
       assert this.implem_traceEater == null: "This is a bug.";
       this.implem_traceEater = this.implementation.make_traceEater();
       if (this.implem_traceEater == null) {
-      	throw new RuntimeException("make_traceEater() in trace.BigComponent should not return null.");
+      	throw new RuntimeException("make_traceEater() in general.BigComponent should not return null.");
       }
       this.traceEater = this.implem_traceEater._newComponent(new BridgeImpl_traceEater(), false);
       
