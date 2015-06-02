@@ -1,7 +1,5 @@
 package agents;
 
-import agents.interfaces.ICreateAgent;
-
 @SuppressWarnings("all")
 public abstract class Forward<I> {
   public interface Requires<I> {
@@ -11,12 +9,6 @@ public abstract class Forward<I> {
   }
   
   public interface Provides<I> {
-    /**
-     * This can be called to access the provided port.
-     * 
-     */
-    public ICreateAgent createAgent();
-    
     /**
      * This can be called to access the provided port.
      * 
@@ -41,14 +33,6 @@ public abstract class Forward<I> {
       
     }
     
-    private void init_createAgent() {
-      assert this.createAgent == null: "This is a bug.";
-      this.createAgent = this.implementation.make_createAgent();
-      if (this.createAgent == null) {
-      	throw new RuntimeException("make_createAgent() in agents.Forward<I> should not return null.");
-      }
-    }
-    
     private void init_i() {
       assert this.i == null: "This is a bug.";
       this.i = this.implementation.make_i();
@@ -58,7 +42,6 @@ public abstract class Forward<I> {
     }
     
     protected void initProvidedPorts() {
-      init_createAgent();
       init_i();
     }
     
@@ -76,12 +59,6 @@ public abstract class Forward<I> {
       	initParts();
       	initProvidedPorts();
       }
-    }
-    
-    private ICreateAgent createAgent;
-    
-    public ICreateAgent createAgent() {
-      return this.createAgent;
     }
     
     private I i;
@@ -291,13 +268,6 @@ public abstract class Forward<I> {
     }
     return this.selfComponent;
   }
-  
-  /**
-   * This should be overridden by the implementation to define the provided port.
-   * This will be called once during the construction of the component to initialize the port.
-   * 
-   */
-  protected abstract ICreateAgent make_createAgent();
   
   /**
    * This should be overridden by the implementation to define the provided port.

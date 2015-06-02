@@ -49,7 +49,6 @@ namespace agents{
 	}
 	
 	ecosystem Forward[I]{
-		 provides createAgent: ICreateAgent
 		 species Agent{
 		 	requires a:I
 		 }

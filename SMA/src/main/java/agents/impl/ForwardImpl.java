@@ -37,12 +37,6 @@ public class ForwardImpl extends Forward<Do> implements Do, ICreateAgent{
 		list.add(a);
 		return a;
 	}
-	
-	@Override
-	protected ICreateAgent make_createAgent() {
-		// TODO Auto-generated method stub
-		return this;
-	}
 
 	private class AgentImpl extends Agent<Do> implements Do {
 
