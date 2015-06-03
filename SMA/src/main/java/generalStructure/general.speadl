@@ -6,7 +6,6 @@ import agents.interfaces.IGetThread
 namespace general{
 	
 	component Launcher{
-		requires lancer: Do
 		provides call: Callable
 		provides finishedCycle: CycleAlert
 		provides threads: IGetThread
@@ -16,33 +15,27 @@ namespace general{
 		part ecoAE: EcoAgentsEtat{
 			bind threads to launcher.threads
 		}
-		part fw: Forward[Do]{
-			bind finishedCycle to launcher.finishedCycle
+		part fw: Forward[CycleAlert]{
+			bind i to launcher.finishedCycle
 		}
 		
-		part launcher: Launcher{
-			bind lancer to fw.i
-			
-		}
+		part launcher: Launcher
+		
 		
 		species DynamicAssembly(id: String){
 			use agentE: ecoAE.AgentEtat(id){
-				bind finishedCycle to aFW.finishedCycle
+				bind finishedCycle to aFW.a
 			}
-			use aFW: fw.Agent{
-				bind a to agentE.cycle
-			}
+			use aFW: fw.Agent
 		}
 	}
 	
 	ecosystem Forward[I]{
 		 species Agent{
 		 	
-		 	requires a:I
-		 	provides finishedCycle: CycleAlert
+		 	provides a: I
 		 }
 		 
-		 requires finishedCycle: CycleAlert
-		 provides i:I
+		 requires i: I
 	}
 }

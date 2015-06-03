@@ -1,6 +1,5 @@
 package general;
 
-import agents.interfaces.Do;
 import agents.interfaces.IGetThread;
 import general.EcoAgentsEtat;
 import general.Forward;
@@ -31,7 +30,7 @@ public abstract class BigEco {
      * It will be initialized after the required ports are initialized and before the provided ports are initialized.
      * 
      */
-    public Forward.Component<Do> fw();
+    public Forward.Component<CycleAlert> fw();
     
     /**
      * This can be called by the implementation to access the part and its provided ports.
@@ -50,7 +49,7 @@ public abstract class BigEco {
       assert this.ecoAE != null: "This is a bug.";
       ((EcoAgentsEtat.ComponentImpl) this.ecoAE).start();
       assert this.fw != null: "This is a bug.";
-      ((Forward.ComponentImpl<Do>) this.fw).start();
+      ((Forward.ComponentImpl<CycleAlert>) this.fw).start();
       assert this.launcher != null: "This is a bug.";
       ((Launcher.ComponentImpl) this.launcher).start();
       this.implementation.start();
@@ -130,17 +129,17 @@ public abstract class BigEco {
       return this.ecoAE;
     }
     
-    private Forward.Component<Do> fw;
+    private Forward.Component<CycleAlert> fw;
     
-    private Forward<Do> implem_fw;
+    private Forward<CycleAlert> implem_fw;
     
-    private final class BridgeImpl_fw implements Forward.Requires<Do> {
-      public final CycleAlert finishedCycle() {
+    private final class BridgeImpl_fw implements Forward.Requires<CycleAlert> {
+      public final CycleAlert i() {
         return BigEco.ComponentImpl.this.launcher().finishedCycle();
       }
     }
     
-    public final Forward.Component<Do> fw() {
+    public final Forward.Component<CycleAlert> fw() {
       return this.fw;
     }
     
@@ -149,9 +148,6 @@ public abstract class BigEco {
     private Launcher implem_launcher;
     
     private final class BridgeImpl_launcher implements Launcher.Requires {
-      public final Do lancer() {
-        return BigEco.ComponentImpl.this.fw().i();
-      }
     }
     
     public final Launcher.Component launcher() {
@@ -182,7 +178,7 @@ public abstract class BigEco {
        * It will be initialized after the required ports are initialized and before the provided ports are initialized.
        * 
        */
-      public Forward.Agent.Component<Do> aFW();
+      public Forward.Agent.Component<CycleAlert> aFW();
     }
     
     public static class ComponentImpl implements BigEco.DynamicAssembly.Component, BigEco.DynamicAssembly.Parts {
@@ -194,7 +190,7 @@ public abstract class BigEco {
         assert this.agentE != null: "This is a bug.";
         ((EcoAgentsEtat.AgentEtat.ComponentImpl) this.agentE).start();
         assert this.aFW != null: "This is a bug.";
-        ((Forward.Agent.ComponentImpl<Do>) this.aFW).start();
+        ((Forward.Agent.ComponentImpl<CycleAlert>) this.aFW).start();
         this.implementation.start();
         this.implementation.started = true;
       }
@@ -242,7 +238,7 @@ public abstract class BigEco {
       
       private final class BridgeImpl_ecoAE_agentE implements EcoAgentsEtat.AgentEtat.Requires {
         public final CycleAlert finishedCycle() {
-          return BigEco.DynamicAssembly.ComponentImpl.this.aFW().finishedCycle();
+          return BigEco.DynamicAssembly.ComponentImpl.this.aFW().a();
         }
       }
       
@@ -250,15 +246,12 @@ public abstract class BigEco {
         return this.agentE;
       }
       
-      private Forward.Agent.Component<Do> aFW;
+      private Forward.Agent.Component<CycleAlert> aFW;
       
-      private final class BridgeImpl_fw_aFW implements Forward.Agent.Requires<Do> {
-        public final Do a() {
-          return BigEco.DynamicAssembly.ComponentImpl.this.agentE().cycle();
-        }
+      private final class BridgeImpl_fw_aFW implements Forward.Agent.Requires<CycleAlert> {
       }
       
-      public final Forward.Agent.Component<Do> aFW() {
+      public final Forward.Agent.Component<CycleAlert> aFW() {
         return this.aFW;
       }
     }
@@ -328,7 +321,7 @@ public abstract class BigEco {
     
     private EcoAgentsEtat.AgentEtat use_agentE;
     
-    private Forward.Agent<Do> use_aFW;
+    private Forward.Agent<CycleAlert> use_aFW;
     
     /**
      * Not meant to be used to manually instantiate components (except for testing).
@@ -451,7 +444,7 @@ public abstract class BigEco {
    * This will be called once during the construction of the component to initialize this sub-component.
    * 
    */
-  protected abstract Forward<Do> make_fw();
+  protected abstract Forward<CycleAlert> make_fw();
   
   /**
    * This should be overridden by the implementation to define how to create this sub-component.

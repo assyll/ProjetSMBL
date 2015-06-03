@@ -1,0 +1,12 @@
+import environnement.interfaces.CellInfos
+import java.util.Map
+
+namespace general{
+	
+	ecosystem Environnement{
+		
+		species Cell(actionMap : Map[String,String]){
+			provides cellInfos: CellInfos
+		}
+	}
+}

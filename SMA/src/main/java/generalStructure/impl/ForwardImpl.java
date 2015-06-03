@@ -9,47 +9,30 @@ import java.util.List;
 
 import agents.interfaces.Do;
 
-public class ForwardImpl extends Forward<Do> implements Do{
+public class ForwardImpl extends Forward<CycleAlert>{
 
 	private List<AgentImpl> list = new ArrayList<AgentImpl>();
 	
 	@Override
-	protected Do make_i() {
-		// TODO Auto-generated method stub
-		return this;
-	}
-
-	@Override
-	public void doIt() {
-		for(AgentImpl agent: list)
-			agent.doIt();
-	}
-	
-
-	@Override
-	protected Agent<Do> make_Agent(){
+	protected Agent<CycleAlert> make_Agent(){
 		AgentImpl a = new AgentImpl();
 		list.add(a);
 		return a;
 	}
 
-	private class AgentImpl extends Agent<Do> implements Do, CycleAlert {
+	private class AgentImpl extends Agent<CycleAlert> implements CycleAlert {
 
-		@Override
-		public void doIt() {
-			this.requires().a().doIt();
-		}
-
-		@Override
-		protected CycleAlert make_finishedCycle() {
-			// TODO Auto-generated method stub
-			return this;
-		}
 
 		@Override
 		public void endOfCycleAlert(String id) {
-			eco_requires().finishedCycle().endOfCycleAlert(id);
+			eco_requires().i().endOfCycleAlert(id);
 			
+		}
+
+		@Override
+		protected CycleAlert make_a() {
+			// TODO Auto-generated method stub
+			return this;
 		}
 		
 	}

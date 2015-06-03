@@ -5,5 +5,6 @@ import java.util.Map;
 
 public interface IGetThread {
 	public void getThreadsMap( Map<String,Thread> threadMap);
-	public void getAgents( List<Runnable> agents);
+	//public void getAgents( List<Runnable> agents);
+	public void setAgentsMap( Map<String,Runnable> agents);
 }

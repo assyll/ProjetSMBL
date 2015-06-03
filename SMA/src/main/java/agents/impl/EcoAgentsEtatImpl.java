@@ -57,13 +57,13 @@ public class EcoAgentsEtatImpl extends EcoAgentsEtat implements AgentTrace {
 
 		System.out.println("Kill Agent");
 		
-		synchronized (listRunnable) {
-			listRunnable.remove(agentsMap.get(id));
-			this.requires().threads().getAgents(listRunnable);
+		synchronized (agentsMap) {
+		/*	listRunnable.remove(agentsMap.get(id));
+			this.requires().threads().getAgents(listRunnable);*/
+
+			agentsMap.remove(id);
+			this.requires().threads().setAgentsMap(agentsMap);
 			
-			synchronized (agentsMap) {
-				agentsMap.remove(id);
-			}
 			
 		}
 	}
@@ -74,9 +74,9 @@ public class EcoAgentsEtatImpl extends EcoAgentsEtat implements AgentTrace {
 
 		@Override
 		protected void start() {
-			synchronized (listRunnable) {
-				listRunnable.add(this);
-				eco_requires().threads().getAgents(listRunnable);
+			synchronized (agentsMap) {
+				//listRunnable.add(this);
+				eco_requires().threads().setAgentsMap(agentsMap);
 			}
 		}
 		
@@ -118,7 +118,7 @@ public class EcoAgentsEtatImpl extends EcoAgentsEtat implements AgentTrace {
 		public void run() {
 			this.parts().perceive().perception().doIt();
 		}
-
+		
 		
 		private class PerceptionImpl extends Perceive implements Do {
 

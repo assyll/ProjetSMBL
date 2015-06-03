@@ -24,6 +24,7 @@ namespace general{
 				bind decision to decide.decision
 			}
 			
+			
 			//requires getTraceElement: IGetAction
 			
 			provides cycle: Do = perceive.perception

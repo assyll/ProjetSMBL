@@ -8,7 +8,8 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
 
-import trace.ActionObject;
+import trace.Action;
+import trace.ActionTrace;
 import trace.interfaces.IGetAction;
 
 import com.fasterxml.jackson.core.JsonFactory;
@@ -17,7 +18,7 @@ import com.fasterxml.jackson.core.JsonToken;
 
 public class TraceElementEaterImpl extends TraceElementEater implements Runnable, IGetAction{
 
-	Queue<ActionObject> actionList = new LinkedList<ActionObject>();
+	Queue<ActionTrace> actionList = new LinkedList<ActionTrace>();
 	
 	@Override
 	public void run() {
@@ -28,7 +29,7 @@ public class TraceElementEaterImpl extends TraceElementEater implements Runnable
 		while(!traceElement.isEmpty())
 		{
 			try {
-				ActionObject action = getActionFromTraceElement(traceElement);
+				ActionTrace action = getActionFromTraceElement(traceElement);
 				if(action != null){
 					actionList.add(action);
 				}
@@ -55,7 +56,7 @@ public class TraceElementEaterImpl extends TraceElementEater implements Runnable
 	}
 
 	@Override
-	public ActionObject getNextAction() {
+	public ActionTrace getNextAction() {
 		return actionList.poll();
 	}
 
@@ -65,13 +66,14 @@ public class TraceElementEaterImpl extends TraceElementEater implements Runnable
 		return actionList.peek().getUserName();
 	}
 	
-	public ActionObject getActionFromTraceElement(String traceElement) throws IOException
+	public ActionTrace getActionFromTraceElement(String traceElement) throws IOException
 	{
 		JsonParser parser = (new JsonFactory()).createParser(traceElement);
 		JsonToken token = null;
 		Map<String,String> actionFields = new HashMap<String,String>();
 		String userName = "";
-		ActionObject action = null;
+		ActionTrace actionTrace = null;
+		Action action = new Action(); 
 		
 		while (!parser.isClosed()) {
 			token = parser.nextToken();
@@ -94,10 +96,11 @@ public class TraceElementEaterImpl extends TraceElementEater implements Runnable
 		}
 		
 		if(!actionFields.isEmpty()){
-			action = new ActionObject(userName, actionFields);
+			action.setActionMap(actionFields);
+			actionTrace = new ActionTrace(userName, action);
 		}
 		
-		return action;
+		return actionTrace;
 		
 	}
 
