@@ -1,11 +1,7 @@
 package general;
 
-import general.FET;
-import general.TraceElementEater;
-import trace.interfaces.TraceElement;
-
 @SuppressWarnings("all")
-public abstract class BigComponent {
+public class BigComponent {
   public interface Requires {
   }
   
@@ -16,19 +12,6 @@ public abstract class BigComponent {
   }
   
   public interface Parts {
-    /**
-     * This can be called by the implementation to access the part and its provided ports.
-     * It will be initialized after the required ports are initialized and before the provided ports are initialized.
-     * 
-     */
-    public FET.Component fet();
-    
-    /**
-     * This can be called by the implementation to access the part and its provided ports.
-     * It will be initialized after the required ports are initialized and before the provided ports are initialized.
-     * 
-     */
-    public TraceElementEater.Component traceEater();
   }
   
   public static class ComponentImpl implements BigComponent.Component, BigComponent.Parts {
@@ -37,39 +20,12 @@ public abstract class BigComponent {
     private final BigComponent implementation;
     
     public void start() {
-      assert this.fet != null: "This is a bug.";
-      ((FET.ComponentImpl) this.fet).start();
-      assert this.traceEater != null: "This is a bug.";
-      ((TraceElementEater.ComponentImpl) this.traceEater).start();
       this.implementation.start();
       this.implementation.started = true;
     }
     
-    private void init_fet() {
-      assert this.fet == null: "This is a bug.";
-      assert this.implem_fet == null: "This is a bug.";
-      this.implem_fet = this.implementation.make_fet();
-      if (this.implem_fet == null) {
-      	throw new RuntimeException("make_fet() in general.BigComponent should not return null.");
-      }
-      this.fet = this.implem_fet._newComponent(new BridgeImpl_fet(), false);
-      
-    }
-    
-    private void init_traceEater() {
-      assert this.traceEater == null: "This is a bug.";
-      assert this.implem_traceEater == null: "This is a bug.";
-      this.implem_traceEater = this.implementation.make_traceEater();
-      if (this.implem_traceEater == null) {
-      	throw new RuntimeException("make_traceEater() in general.BigComponent should not return null.");
-      }
-      this.traceEater = this.implem_traceEater._newComponent(new BridgeImpl_traceEater(), false);
-      
-    }
-    
     protected void initParts() {
-      init_fet();
-      init_traceEater();
+      
     }
     
     protected void initProvidedPorts() {
@@ -90,31 +46,6 @@ public abstract class BigComponent {
       	initParts();
       	initProvidedPorts();
       }
-    }
-    
-    private FET.Component fet;
-    
-    private FET implem_fet;
-    
-    private final class BridgeImpl_fet implements FET.Requires {
-    }
-    
-    public final FET.Component fet() {
-      return this.fet;
-    }
-    
-    private TraceElementEater.Component traceEater;
-    
-    private TraceElementEater implem_traceEater;
-    
-    private final class BridgeImpl_traceEater implements TraceElementEater.Requires {
-      public final TraceElement traceElement() {
-        return BigComponent.ComponentImpl.this.fet().elementDeTrace();
-      }
-    }
-    
-    public final TraceElementEater.Component traceEater() {
-      return this.traceEater;
     }
   }
   
@@ -180,20 +111,6 @@ public abstract class BigComponent {
     }
     return this.selfComponent;
   }
-  
-  /**
-   * This should be overridden by the implementation to define how to create this sub-component.
-   * This will be called once during the construction of the component to initialize this sub-component.
-   * 
-   */
-  protected abstract FET make_fet();
-  
-  /**
-   * This should be overridden by the implementation to define how to create this sub-component.
-   * This will be called once during the construction of the component to initialize this sub-component.
-   * 
-   */
-  protected abstract TraceElementEater make_traceEater();
   
   /**
    * Not meant to be used to manually instantiate components (except for testing).

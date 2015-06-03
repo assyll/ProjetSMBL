@@ -1,17 +1,15 @@
 package general;
 
-import environnement.interfaces.CellInfos;
-import environnement.interfaces.EnvInfos;
-import environnement.interfaces.EnvUpdate;
-import java.util.List;
-import trace.Action;
+import trace.interfaces.IAddAction;
+import trace.interfaces.ITakeAction;
+import trace.interfaces.IUpdateCurrentAgent;
 
 @SuppressWarnings("all")
-public abstract class Environnement {
+public abstract class LetterBoxEco {
   public interface Requires {
   }
   
-  public interface Component extends Environnement.Provides {
+  public interface Component extends LetterBoxEco.Provides {
   }
   
   public interface Provides {
@@ -19,22 +17,22 @@ public abstract class Environnement {
      * This can be called to access the provided port.
      * 
      */
-    public EnvInfos envInfos();
+    public IAddAction addAction();
     
     /**
      * This can be called to access the provided port.
      * 
      */
-    public EnvUpdate envUpdate();
+    public IUpdateCurrentAgent updateCurrentAgent();
   }
   
   public interface Parts {
   }
   
-  public static class ComponentImpl implements Environnement.Component, Environnement.Parts {
-    private final Environnement.Requires bridge;
+  public static class ComponentImpl implements LetterBoxEco.Component, LetterBoxEco.Parts {
+    private final LetterBoxEco.Requires bridge;
     
-    private final Environnement implementation;
+    private final LetterBoxEco implementation;
     
     public void start() {
       this.implementation.start();
@@ -45,28 +43,28 @@ public abstract class Environnement {
       
     }
     
-    private void init_envInfos() {
-      assert this.envInfos == null: "This is a bug.";
-      this.envInfos = this.implementation.make_envInfos();
-      if (this.envInfos == null) {
-      	throw new RuntimeException("make_envInfos() in general.Environnement should not return null.");
+    private void init_addAction() {
+      assert this.addAction == null: "This is a bug.";
+      this.addAction = this.implementation.make_addAction();
+      if (this.addAction == null) {
+      	throw new RuntimeException("make_addAction() in general.LetterBoxEco should not return null.");
       }
     }
     
-    private void init_envUpdate() {
-      assert this.envUpdate == null: "This is a bug.";
-      this.envUpdate = this.implementation.make_envUpdate();
-      if (this.envUpdate == null) {
-      	throw new RuntimeException("make_envUpdate() in general.Environnement should not return null.");
+    private void init_updateCurrentAgent() {
+      assert this.updateCurrentAgent == null: "This is a bug.";
+      this.updateCurrentAgent = this.implementation.make_updateCurrentAgent();
+      if (this.updateCurrentAgent == null) {
+      	throw new RuntimeException("make_updateCurrentAgent() in general.LetterBoxEco should not return null.");
       }
     }
     
     protected void initProvidedPorts() {
-      init_envInfos();
-      init_envUpdate();
+      init_addAction();
+      init_updateCurrentAgent();
     }
     
-    public ComponentImpl(final Environnement implem, final Environnement.Requires b, final boolean doInits) {
+    public ComponentImpl(final LetterBoxEco implem, final LetterBoxEco.Requires b, final boolean doInits) {
       this.bridge = b;
       this.implementation = implem;
       
@@ -82,24 +80,24 @@ public abstract class Environnement {
       }
     }
     
-    private EnvInfos envInfos;
+    private IAddAction addAction;
     
-    public EnvInfos envInfos() {
-      return this.envInfos;
+    public IAddAction addAction() {
+      return this.addAction;
     }
     
-    private EnvUpdate envUpdate;
+    private IUpdateCurrentAgent updateCurrentAgent;
     
-    public EnvUpdate envUpdate() {
-      return this.envUpdate;
+    public IUpdateCurrentAgent updateCurrentAgent() {
+      return this.updateCurrentAgent;
     }
   }
   
-  public static abstract class Cell {
+  public static abstract class LetterBoxSpecies {
     public interface Requires {
     }
     
-    public interface Component extends Environnement.Cell.Provides {
+    public interface Component extends LetterBoxEco.LetterBoxSpecies.Provides {
     }
     
     public interface Provides {
@@ -107,16 +105,16 @@ public abstract class Environnement {
        * This can be called to access the provided port.
        * 
        */
-      public CellInfos cellInfos();
+      public ITakeAction getAction();
     }
     
     public interface Parts {
     }
     
-    public static class ComponentImpl implements Environnement.Cell.Component, Environnement.Cell.Parts {
-      private final Environnement.Cell.Requires bridge;
+    public static class ComponentImpl implements LetterBoxEco.LetterBoxSpecies.Component, LetterBoxEco.LetterBoxSpecies.Parts {
+      private final LetterBoxEco.LetterBoxSpecies.Requires bridge;
       
-      private final Environnement.Cell implementation;
+      private final LetterBoxEco.LetterBoxSpecies implementation;
       
       public void start() {
         this.implementation.start();
@@ -127,19 +125,19 @@ public abstract class Environnement {
         
       }
       
-      private void init_cellInfos() {
-        assert this.cellInfos == null: "This is a bug.";
-        this.cellInfos = this.implementation.make_cellInfos();
-        if (this.cellInfos == null) {
-        	throw new RuntimeException("make_cellInfos() in general.Environnement$Cell should not return null.");
+      private void init_getAction() {
+        assert this.getAction == null: "This is a bug.";
+        this.getAction = this.implementation.make_getAction();
+        if (this.getAction == null) {
+        	throw new RuntimeException("make_getAction() in general.LetterBoxEco$LetterBoxSpecies should not return null.");
         }
       }
       
       protected void initProvidedPorts() {
-        init_cellInfos();
+        init_getAction();
       }
       
-      public ComponentImpl(final Environnement.Cell implem, final Environnement.Cell.Requires b, final boolean doInits) {
+      public ComponentImpl(final LetterBoxEco.LetterBoxSpecies implem, final LetterBoxEco.LetterBoxSpecies.Requires b, final boolean doInits) {
         this.bridge = b;
         this.implementation = implem;
         
@@ -155,10 +153,10 @@ public abstract class Environnement {
         }
       }
       
-      private CellInfos cellInfos;
+      private ITakeAction getAction;
       
-      public CellInfos cellInfos() {
-        return this.cellInfos;
+      public ITakeAction getAction() {
+        return this.getAction;
       }
     }
     
@@ -176,7 +174,7 @@ public abstract class Environnement {
      */
     private boolean started = false;;
     
-    private Environnement.Cell.ComponentImpl selfComponent;
+    private LetterBoxEco.LetterBoxSpecies.ComponentImpl selfComponent;
     
     /**
      * Can be overridden by the implementation.
@@ -193,7 +191,7 @@ public abstract class Environnement {
      * This can be called by the implementation to access the provided ports.
      * 
      */
-    protected Environnement.Cell.Provides provides() {
+    protected LetterBoxEco.LetterBoxSpecies.Provides provides() {
       assert this.selfComponent != null: "This is a bug.";
       if (!this.init) {
       	throw new RuntimeException("provides() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if provides() is needed to initialise the component.");
@@ -206,13 +204,13 @@ public abstract class Environnement {
      * This will be called once during the construction of the component to initialize the port.
      * 
      */
-    protected abstract CellInfos make_cellInfos();
+    protected abstract ITakeAction make_getAction();
     
     /**
      * This can be called by the implementation to access the required ports.
      * 
      */
-    protected Environnement.Cell.Requires requires() {
+    protected LetterBoxEco.LetterBoxSpecies.Requires requires() {
       assert this.selfComponent != null: "This is a bug.";
       if (!this.init) {
       	throw new RuntimeException("requires() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if requires() is needed to initialise the component.");
@@ -224,7 +222,7 @@ public abstract class Environnement {
      * This can be called by the implementation to access the parts and their provided ports.
      * 
      */
-    protected Environnement.Cell.Parts parts() {
+    protected LetterBoxEco.LetterBoxSpecies.Parts parts() {
       assert this.selfComponent != null: "This is a bug.";
       if (!this.init) {
       	throw new RuntimeException("parts() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if parts() is needed to initialise the component.");
@@ -236,25 +234,25 @@ public abstract class Environnement {
      * Not meant to be used to manually instantiate components (except for testing).
      * 
      */
-    public synchronized Environnement.Cell.Component _newComponent(final Environnement.Cell.Requires b, final boolean start) {
+    public synchronized LetterBoxEco.LetterBoxSpecies.Component _newComponent(final LetterBoxEco.LetterBoxSpecies.Requires b, final boolean start) {
       if (this.init) {
-      	throw new RuntimeException("This instance of Cell has already been used to create a component, use another one.");
+      	throw new RuntimeException("This instance of LetterBoxSpecies has already been used to create a component, use another one.");
       }
       this.init = true;
-      Environnement.Cell.ComponentImpl  _comp = new Environnement.Cell.ComponentImpl(this, b, true);
+      LetterBoxEco.LetterBoxSpecies.ComponentImpl  _comp = new LetterBoxEco.LetterBoxSpecies.ComponentImpl(this, b, true);
       if (start) {
       	_comp.start();
       }
       return _comp;
     }
     
-    private Environnement.ComponentImpl ecosystemComponent;
+    private LetterBoxEco.ComponentImpl ecosystemComponent;
     
     /**
      * This can be called by the species implementation to access the provided ports of its ecosystem.
      * 
      */
-    protected Environnement.Provides eco_provides() {
+    protected LetterBoxEco.Provides eco_provides() {
       assert this.ecosystemComponent != null: "This is a bug.";
       return this.ecosystemComponent;
     }
@@ -263,7 +261,7 @@ public abstract class Environnement {
      * This can be called by the species implementation to access the required ports of its ecosystem.
      * 
      */
-    protected Environnement.Requires eco_requires() {
+    protected LetterBoxEco.Requires eco_requires() {
       assert this.ecosystemComponent != null: "This is a bug.";
       return this.ecosystemComponent.bridge;
     }
@@ -272,7 +270,7 @@ public abstract class Environnement {
      * This can be called by the species implementation to access the parts of its ecosystem and their provided ports.
      * 
      */
-    protected Environnement.Parts eco_parts() {
+    protected LetterBoxEco.Parts eco_parts() {
       assert this.ecosystemComponent != null: "This is a bug.";
       return this.ecosystemComponent;
     }
@@ -292,7 +290,7 @@ public abstract class Environnement {
    */
   private boolean started = false;;
   
-  private Environnement.ComponentImpl selfComponent;
+  private LetterBoxEco.ComponentImpl selfComponent;
   
   /**
    * Can be overridden by the implementation.
@@ -309,7 +307,7 @@ public abstract class Environnement {
    * This can be called by the implementation to access the provided ports.
    * 
    */
-  protected Environnement.Provides provides() {
+  protected LetterBoxEco.Provides provides() {
     assert this.selfComponent != null: "This is a bug.";
     if (!this.init) {
     	throw new RuntimeException("provides() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if provides() is needed to initialise the component.");
@@ -322,20 +320,20 @@ public abstract class Environnement {
    * This will be called once during the construction of the component to initialize the port.
    * 
    */
-  protected abstract EnvInfos make_envInfos();
+  protected abstract IAddAction make_addAction();
   
   /**
    * This should be overridden by the implementation to define the provided port.
    * This will be called once during the construction of the component to initialize the port.
    * 
    */
-  protected abstract EnvUpdate make_envUpdate();
+  protected abstract IUpdateCurrentAgent make_updateCurrentAgent();
   
   /**
    * This can be called by the implementation to access the required ports.
    * 
    */
-  protected Environnement.Requires requires() {
+  protected LetterBoxEco.Requires requires() {
     assert this.selfComponent != null: "This is a bug.";
     if (!this.init) {
     	throw new RuntimeException("requires() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if requires() is needed to initialise the component.");
@@ -347,7 +345,7 @@ public abstract class Environnement {
    * This can be called by the implementation to access the parts and their provided ports.
    * 
    */
-  protected Environnement.Parts parts() {
+  protected LetterBoxEco.Parts parts() {
     assert this.selfComponent != null: "This is a bug.";
     if (!this.init) {
     	throw new RuntimeException("parts() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if parts() is needed to initialise the component.");
@@ -359,12 +357,12 @@ public abstract class Environnement {
    * Not meant to be used to manually instantiate components (except for testing).
    * 
    */
-  public synchronized Environnement.Component _newComponent(final Environnement.Requires b, final boolean start) {
+  public synchronized LetterBoxEco.Component _newComponent(final LetterBoxEco.Requires b, final boolean start) {
     if (this.init) {
-    	throw new RuntimeException("This instance of Environnement has already been used to create a component, use another one.");
+    	throw new RuntimeException("This instance of LetterBoxEco has already been used to create a component, use another one.");
     }
     this.init = true;
-    Environnement.ComponentImpl  _comp = new Environnement.ComponentImpl(this, b, true);
+    LetterBoxEco.ComponentImpl  _comp = new LetterBoxEco.ComponentImpl(this, b, true);
     if (start) {
     	_comp.start();
     }
@@ -375,16 +373,16 @@ public abstract class Environnement {
    * This should be overridden by the implementation to instantiate the implementation of the species.
    * 
    */
-  protected abstract Environnement.Cell make_Cell(final List<Action> actions);
+  protected abstract LetterBoxEco.LetterBoxSpecies make_LetterBoxSpecies();
   
   /**
    * Do not call, used by generated code.
    * 
    */
-  public Environnement.Cell _createImplementationOfCell(final List<Action> actions) {
-    Environnement.Cell implem = make_Cell(actions);
+  public LetterBoxEco.LetterBoxSpecies _createImplementationOfLetterBoxSpecies() {
+    LetterBoxEco.LetterBoxSpecies implem = make_LetterBoxSpecies();
     if (implem == null) {
-    	throw new RuntimeException("make_Cell() in general.Environnement should not return null.");
+    	throw new RuntimeException("make_LetterBoxSpecies() in general.LetterBoxEco should not return null.");
     }
     assert implem.ecosystemComponent == null: "This is a bug.";
     assert this.selfComponent != null: "This is a bug.";
@@ -396,16 +394,16 @@ public abstract class Environnement {
    * This can be called to create an instance of the species from inside the implementation of the ecosystem.
    * 
    */
-  protected Environnement.Cell.Component newCell(final List<Action> actions) {
-    Environnement.Cell _implem = _createImplementationOfCell(actions);
-    return _implem._newComponent(new Environnement.Cell.Requires() {},true);
+  protected LetterBoxEco.LetterBoxSpecies.Component newLetterBoxSpecies() {
+    LetterBoxEco.LetterBoxSpecies _implem = _createImplementationOfLetterBoxSpecies();
+    return _implem._newComponent(new LetterBoxEco.LetterBoxSpecies.Requires() {},true);
   }
   
   /**
    * Use to instantiate a component from this implementation.
    * 
    */
-  public Environnement.Component newComponent() {
-    return this._newComponent(new Environnement.Requires() {}, true);
+  public LetterBoxEco.Component newComponent() {
+    return this._newComponent(new LetterBoxEco.Requires() {}, true);
   }
 }

@@ -19,7 +19,7 @@ import agents.interfaces.IGetThread;
 
 public class EcoAgentsEtatImpl extends EcoAgentsEtat implements AgentTrace {
 
-	private Map<String,String> currentAgentsMap;
+	private Map<String,String> currentAgentsMap; // map<username, idAgent>
 	private Map<String,Runnable> agentsMap;
 	private  List<Runnable> listRunnable;
 	

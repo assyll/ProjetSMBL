@@ -2,11 +2,6 @@ package trace.interfaces;
 
 import trace.ActionTrace;
 
-
-public interface IGetAction {
-
+public interface ITakeAction {
 	public ActionTrace getNextAction();
-	public String getNextActionUser();
-	
-	
 }

@@ -1,27 +1,28 @@
 package general;
 
-import trace.interfaces.IGetAction;
+import trace.interfaces.IAddAction;
 import trace.interfaces.TraceElement;
 
 @SuppressWarnings("all")
-public abstract class TraceElementEater {
+public class TraceElementEater {
   public interface Requires {
     /**
      * This can be called by the implementation to access this required port.
      * 
      */
     public TraceElement traceElement();
+    
+    /**
+     * This can be called by the implementation to access this required port.
+     * 
+     */
+    public IAddAction actionElement();
   }
   
   public interface Component extends TraceElementEater.Provides {
   }
   
   public interface Provides {
-    /**
-     * This can be called to access the provided port.
-     * 
-     */
-    public IGetAction actionElement();
   }
   
   public interface Parts {
@@ -41,16 +42,8 @@ public abstract class TraceElementEater {
       
     }
     
-    private void init_actionElement() {
-      assert this.actionElement == null: "This is a bug.";
-      this.actionElement = this.implementation.make_actionElement();
-      if (this.actionElement == null) {
-      	throw new RuntimeException("make_actionElement() in general.TraceElementEater should not return null.");
-      }
-    }
-    
     protected void initProvidedPorts() {
-      init_actionElement();
+      
     }
     
     public ComponentImpl(final TraceElementEater implem, final TraceElementEater.Requires b, final boolean doInits) {
@@ -67,12 +60,6 @@ public abstract class TraceElementEater {
       	initParts();
       	initProvidedPorts();
       }
-    }
-    
-    private IGetAction actionElement;
-    
-    public IGetAction actionElement() {
-      return this.actionElement;
     }
   }
   
@@ -114,13 +101,6 @@ public abstract class TraceElementEater {
     }
     return this.selfComponent;
   }
-  
-  /**
-   * This should be overridden by the implementation to define the provided port.
-   * This will be called once during the construction of the component to initialize the port.
-   * 
-   */
-  protected abstract IGetAction make_actionElement();
   
   /**
    * This can be called by the implementation to access the required ports.

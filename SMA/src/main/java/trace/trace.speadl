@@ -1,5 +1,7 @@
-import trace.interfaces.IGetAction
+import trace.interfaces.IAddAction
+import trace.interfaces.IUpdateCurrentAgent
 import trace.interfaces.TraceElement
+import trace.interfaces.ITakeAction
 
 namespace general{
 	component FET{
@@ -8,13 +10,22 @@ namespace general{
 	
 	component TraceElementEater{
 		requires traceElement: TraceElement
-		provides actionElement: IGetAction
+		requires actionElement: IAddAction
 	}
 	
 	component BigComponent{
-		part fet: FET
+		/*part fet: FET
 		part traceEater: TraceElementEater{
 			bind traceElement to fet.elementDeTrace
+		}*/
+	}
+	
+	ecosystem LetterBoxEco {
+		provides addAction: IAddAction
+		provides updateCurrentAgent: IUpdateCurrentAgent
+		
+		species LetterBoxSpecies {
+			provides getAction: ITakeAction
 		}
 	}
 	
@@ -22,7 +33,7 @@ namespace general{
 		requires traceElement: TraceElement 
 		
 		species ActionParser(id: String){
-			provides actionGetter: IGetAction
+			provides actionGetter: ITakeAction
 		}
 	}
 	

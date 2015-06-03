@@ -1,12 +1,19 @@
 import environnement.interfaces.CellInfos
-import java.util.Map
+import environnement.interfaces.EnvInfos
+import environnement.interfaces.EnvUpdate
+import java.util.List
+import trace.Action
 
 namespace general{
 	
 	ecosystem Environnement{
+		provides envInfos: EnvInfos
+		provides envUpdate: EnvUpdate
 		
-		species Cell(actionMap : Map[String,String]){
+		species Cell(actions : List[Action]){
 			provides cellInfos: CellInfos
 		}
 	}
+	
+
 }

@@ -10,13 +10,13 @@ import java.util.Queue;
 
 import trace.Action;
 import trace.ActionTrace;
-import trace.interfaces.IGetAction;
+import trace.interfaces.IAddAction;
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 
-public class TraceElementEaterImpl extends TraceElementEater implements Runnable, IGetAction{
+public class TraceElementEaterImpl extends TraceElementEater implements Runnable, IAddAction{
 
 	Queue<ActionTrace> actionList = new LinkedList<ActionTrace>();
 	
@@ -50,8 +50,8 @@ public class TraceElementEaterImpl extends TraceElementEater implements Runnable
 		
 	}
 
-	@Override
-	protected IGetAction make_actionElement() {
+	/*@Override
+	protected IAddAction make_actionElement() {
 		return this;
 	}
 
@@ -64,7 +64,7 @@ public class TraceElementEaterImpl extends TraceElementEater implements Runnable
 	public String getNextActionUser() {
 		// TODO Auto-generated method stub
 		return actionList.peek().getUserName();
-	}
+	}*/
 	
 	public ActionTrace getActionFromTraceElement(String traceElement) throws IOException
 	{
@@ -101,6 +101,12 @@ public class TraceElementEaterImpl extends TraceElementEater implements Runnable
 		}
 		
 		return actionTrace;
+		
+	}
+
+	@Override
+	public void addAction(ActionTrace actionTrace) {
+		// TODO Auto-generated method stub
 		
 	}
 

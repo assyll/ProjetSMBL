@@ -9,7 +9,7 @@ import java.io.FileNotFoundException;
 
 public class BigComponentImpl extends BigComponent {
 
-	@Override
+	/*@Override
 	protected FET make_fet() {
 		FETImpl fet = null;
 		try {
@@ -25,7 +25,7 @@ public class BigComponentImpl extends BigComponent {
 	@Override
 	protected TraceElementEater make_traceEater() {
 		return new TraceElementEaterImpl();
-	}
+	}*/
 	
 
 }

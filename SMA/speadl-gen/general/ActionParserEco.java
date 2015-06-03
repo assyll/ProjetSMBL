@@ -1,6 +1,6 @@
 package general;
 
-import trace.interfaces.IGetAction;
+import trace.interfaces.ITakeAction;
 import trace.interfaces.TraceElement;
 
 @SuppressWarnings("all")
@@ -69,7 +69,7 @@ public abstract class ActionParserEco {
        * This can be called to access the provided port.
        * 
        */
-      public IGetAction actionGetter();
+      public ITakeAction actionGetter();
     }
     
     public interface Parts {
@@ -117,9 +117,9 @@ public abstract class ActionParserEco {
         }
       }
       
-      private IGetAction actionGetter;
+      private ITakeAction actionGetter;
       
-      public IGetAction actionGetter() {
+      public ITakeAction actionGetter() {
         return this.actionGetter;
       }
     }
@@ -168,7 +168,7 @@ public abstract class ActionParserEco {
      * This will be called once during the construction of the component to initialize the port.
      * 
      */
-    protected abstract IGetAction make_actionGetter();
+    protected abstract ITakeAction make_actionGetter();
     
     /**
      * This can be called by the implementation to access the required ports.
