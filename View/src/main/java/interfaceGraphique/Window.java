@@ -101,7 +101,7 @@ public class Window extends JFrame {
 	JMenu menuFile, menuDisplay, menuTools, menuTraces;
 
 	JMenuItem importMenuGauche, importMenuDroite, exitMenu, displayDefault,
-			displayDoubleCircle, displayRobot, displayBasic,
+			displayUML, displayAutomaton, displayBasic,
 			jMenuItemGenererGraphe, jMenuItemGenererTraces1,
 			jMenuItemGenererTraces2;
 
@@ -368,8 +368,8 @@ public class Window extends JFrame {
 		exitMenu = new JMenuItem("Exit");
 
 		displayDefault = new JMenuItem("Default");
-		displayDoubleCircle = new JMenuItem("Double Circle");
-		displayRobot = new JMenuItem("Robot");
+		displayUML = new JMenuItem("UML");
+		displayAutomaton = new JMenuItem("Automaton");
 		displayBasic = new JMenuItem("Basic");
 
 		jMenuItemGenererGraphe = new JMenuItem("Generate graph");
@@ -381,8 +381,8 @@ public class Window extends JFrame {
 		menuFile.add(importMenuDroite);
 		menuFile.add(exitMenu);
 		menuDisplay.add(displayDefault);
-		menuDisplay.add(displayDoubleCircle);
-		menuDisplay.add(displayRobot);
+		menuDisplay.add(displayUML);
+		menuDisplay.add(displayAutomaton);
 		menuDisplay.add(displayBasic);
 
 		menuTraces.add(jMenuItemGenererTraces1);
@@ -480,14 +480,14 @@ public class Window extends JFrame {
 		});
 
 		// Action lors du clic sur l'item "Double Circle"
-		displayDoubleCircle.addActionListener(new ActionListener() {
+		displayUML.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				CustomGraphRenderer.setStyleGraphDoubleCircle(graphJson, graphAgent);
+				CustomGraphRenderer.setStyleGraphUML(graphJson, graphAgent);
 			}
 		});
 
 		// Action lors du clic sur l'item "Robot"
-		displayRobot.addActionListener(new ActionListener() {
+		displayAutomaton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				CustomGraphRenderer.setStyleGraphAutomaton(graphJson, graphAgent);
 			}

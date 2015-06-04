@@ -44,7 +44,7 @@ public class CustomGraphRenderer {
 		}
 	}
 
-	public static void setStyleGraphDoubleCircle(Graph... graphics) {
+	public static void setStyleGraphUML(Graph... graphics) {
 		for (Graph graph : graphics) {
 			if (graph != null) {
 				graph.removeAttribute("ui.stylesheet");
@@ -53,13 +53,13 @@ public class CustomGraphRenderer {
 				graph.addAttribute(
 						"ui.stylesheet",
 						"edge { z-index: 0; text-alignment: center; text-offset: 0,10; fill-color: grey; }"
-								+ "node { z-index: 3; text-alignment: at-right; size: 20px; fill-image: url(\"./src/main/resources/Node_Basic.png\"); fill-mode: image-scaled; }"
+								+ "node { z-index: 3; size: 15px; text-alignment: at-right; shape: diamond; fill-color: white; stroke-mode: plain; }"
 								+ NODE_SOURCE
-								+ "{ size: 25px; fill-image: url(\"./src/main/resources/Node_Source.png\"); fill-mode: image-scaled; }"
+								+ "{ size: 10px; shape: circle; fill-color: rgb(4,195,223); stroke-mode: none; }"
 								+ NODE_FINAL
-								+ "{ size: 20px; fill-image: url(\"./src/main/resources/Node_Final.png\"); fill-mode: image-scaled; }"
+								+ "{ size: 35px; fill-image: url(\"./src/main/resources/NodeFinalUML.png\"); fill-mode: image-scaled; stroke-mode: none; }"
 								+ NODE_SOURCE_FINAL
-								+ "{ size: 25px; fill-image: url(\"./src/main/resources/Node_Source_Final.png\"); fill-mode: image-scaled; }"
+								+ "{ size: 35px; fill-image: url(\"./src/main/resources/NodeSourceFinalUML.png\"); fill-mode: image-scaled; stroke-mode: none; }"
 								+ "sprite { z-index: 2; shape: circle; fill-color: rgba(250,250,250,64); stroke-mode: plain; stroke-color: lightblue; }");
 			}
 		}
@@ -74,13 +74,13 @@ public class CustomGraphRenderer {
 				graph.addAttribute(
 						"ui.stylesheet",
 						"edge { z-index: 0; text-alignment: center; text-offset: 0,10; fill-color: grey; }"
-								+ "node { z-index: 3; text-alignment: at-right; size: 20px; fill-image: url(\"./src/main/resources/Node.png\"); fill-mode: image-scaled; }"
+								+ "node { z-index: 3; text-alignment: at-right; }"
 								+ NODE_SOURCE
-								+ "{ size: 40px; fill-image: url(\"./src/main/resources/NodeSource.png\"); fill-mode: image-scaled; }"
+								+ "{ size: 50px; fill-image: url(\"./src/main/resources/NodeSourceAutomaton.png\"); fill-mode: image-scaled; }"
 								+ NODE_FINAL
-								+ "{ size: 40px; fill-image: url(\"./src/main/resources/NodeFinal.png\"); fill-mode: image-scaled; }"
+								+ "{ size: 50px; fill-image: url(\"./src/main/resources/NodeFinalAutomaton.png\"); fill-mode: image-scaled; }"
 								+ NODE_SOURCE_FINAL
-								+ "{ size: 40px; fill-image: url(\"./src/main/resources/NodeSourceFinal.png\"); fill-mode: image-scaled; }"
+								+ "{ size: 50px; fill-image: url(\"./src/main/resources/NodeSourceFinalAutomaton.png\"); fill-mode: image-scaled; }"
 								+ "sprite { z-index: 2; shape: circle; fill-color: rgba(250,250,250,64); stroke-mode: plain; stroke-color: lightblue; }");
 			}
 		}
