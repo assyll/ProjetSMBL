@@ -2,6 +2,9 @@ package general;
 
 import agents.interfaces.Do;
 import agents.interfaces.IGetThread;
+import environnement.interfaces.CellInfo;
+import environnement.interfaces.EnvInfos;
+import environnement.interfaces.EnvUpdate;
 import general.Act;
 import general.Decide;
 import general.Perceive;
@@ -68,6 +71,24 @@ public abstract class EcoAgentsEtat {
        * 
        */
       public CycleAlert finishedCycle();
+      
+      /**
+       * This can be called by the implementation to access this required port.
+       * 
+       */
+      public EnvInfos getEnvInfos();
+      
+      /**
+       * This can be called by the implementation to access this required port.
+       * 
+       */
+      public EnvUpdate setEnv();
+      
+      /**
+       * This can be called by the implementation to access this required port.
+       * 
+       */
+      public CellInfo getCellInfo();
     }
     
     public interface Component extends EcoAgentsEtat.AgentEtat.Provides {
@@ -191,6 +212,10 @@ public abstract class EcoAgentsEtat {
         public final CycleAlert finishedCycle() {
           return EcoAgentsEtat.AgentEtat.ComponentImpl.this.bridge.finishedCycle();
         }
+        
+        public final EnvUpdate setEnv() {
+          return EcoAgentsEtat.AgentEtat.ComponentImpl.this.bridge.setEnv();
+        }
       }
       
       public final Act.Component act() {
@@ -218,6 +243,10 @@ public abstract class EcoAgentsEtat {
       private final class BridgeImpl_perceive implements Perceive.Requires {
         public final Do decision() {
           return EcoAgentsEtat.AgentEtat.ComponentImpl.this.decide().decision();
+        }
+        
+        public final EnvInfos getEnvInfos() {
+          return EcoAgentsEtat.AgentEtat.ComponentImpl.this.bridge.getEnvInfos();
         }
       }
       
@@ -596,14 +625,14 @@ public abstract class EcoAgentsEtat {
    * This should be overridden by the implementation to instantiate the implementation of the species.
    * 
    */
-  protected abstract EcoAgentsEtat.AgentEtat make_AgentEtat(final String id);
+  protected abstract EcoAgentsEtat.AgentEtat make_AgentEtat(final String id, final String username);
   
   /**
    * Do not call, used by generated code.
    * 
    */
-  public EcoAgentsEtat.AgentEtat _createImplementationOfAgentEtat(final String id) {
-    EcoAgentsEtat.AgentEtat implem = make_AgentEtat(id);
+  public EcoAgentsEtat.AgentEtat _createImplementationOfAgentEtat(final String id, final String username) {
+    EcoAgentsEtat.AgentEtat implem = make_AgentEtat(id,username);
     if (implem == null) {
     	throw new RuntimeException("make_AgentEtat() in general.EcoAgentsEtat should not return null.");
     }

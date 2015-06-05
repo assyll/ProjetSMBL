@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import trace.Action;
 import agents.Suicide;
 import agents.interfaces.AgentTrace;
 import agents.interfaces.Do;
@@ -30,11 +31,14 @@ public class EcoAgentsEtatImpl extends EcoAgentsEtat implements AgentTrace {
 	}
 	
 	@Override
-	protected AgentEtat make_AgentEtat(String id) {
-		AgentEtatImpl agent = new AgentEtatImpl(id);
-	//	threadsMap.put(id, agent.getThread());
+	protected AgentEtat make_AgentEtat(String id, String username) {
+		AgentEtatImpl agent = new AgentEtatImpl(id, username);
+		//threadsMap.put(id, agent.getThread());
 		synchronized (agentsMap) {
 			agentsMap.put(id, agent);
+		}
+		synchronized (currentAgentsMap) {
+			currentAgentsMap.put(id,  username);
 		}
 
 		return agent;
@@ -69,9 +73,21 @@ public class EcoAgentsEtatImpl extends EcoAgentsEtat implements AgentTrace {
 	}
 	
 
-	/****************************************************************** Private Classes ****************************************************************/
+	/**************************** Private Classes **************************/
+
+	private enum PossibleAction {
+		FUSION, DEFUSION, MOVE, SEARCH_TRACE, READ_TRACE;
+	}
+	
 	private class AgentEtatImpl extends AgentEtat implements Runnable {
 
+		private String username;
+		
+		public AgentEtatImpl(String id, String username) {
+			this.id = id;
+			this.username = username;
+		}
+		
 		@Override
 		protected void start() {
 			synchronized (agentsMap) {
@@ -89,11 +105,6 @@ public class EcoAgentsEtatImpl extends EcoAgentsEtat implements AgentTrace {
 		
 		public Thread getThread(){
 			return t;
-		}
-
-		public AgentEtatImpl(String id)
-		{
-			this.id = id;
 		}
 
 		@Override
@@ -116,9 +127,8 @@ public class EcoAgentsEtatImpl extends EcoAgentsEtat implements AgentTrace {
 
 		@Override
 		public void run() {
-			this.parts().perceive().perception().doIt();
+			this.parts().perceive().perception().doIt(null);
 		}
-		
 		
 		private class PerceptionImpl extends Perceive implements Do {
 
@@ -129,16 +139,35 @@ public class EcoAgentsEtatImpl extends EcoAgentsEtat implements AgentTrace {
 			}
 			
 			@Override
-			public void doIt() {
+			public void doIt(Object informations) {
 				System.out.println(id+": Perception");
-				this.requires().decision().doIt();
-				
+				this.requires().decision().doIt(perceive());
 			}
 
 			@Override
 			protected Do make_perception() {
 				// TODO Auto-generated method stub
 				return this;
+			}
+			
+			private Object perceive() {
+				
+				// ---------- CAS 1: VERIFIE S'IL EST LE COURANT ----------
+				
+				
+				
+				// ---------- CAS 2: PERCOIT DANS SA CELLULE ----------
+				
+				// Recuperation de la liste des mes actions
+				//TODO recuperer les actions d'un agent
+				List<Action> actions = new ArrayList<Action>();
+				
+				// Regarde dans sa cellule s'il n' y a pas d'autre agent
+				List<String> nextToAgentsId =
+						requires().getEnvInfos().getAllAgentsInCell(actions);
+				
+				// Retourne la liste de ses "voisins" dont lui
+				return nextToAgentsId;
 			}
 			
 		}
@@ -152,16 +181,39 @@ public class EcoAgentsEtatImpl extends EcoAgentsEtat implements AgentTrace {
 			}
 			
 			@Override
-			public void doIt() {
+			public void doIt(Object informations) {
 				System.out.println(id+": Decision");
-				this.requires().action().doIt();
-				
+				this.requires().action().doIt(decide(informations));
 			}
 
 			@Override
 			protected Do make_decision() {
 				// TODO Auto-generated method stub
 				return this;
+			}
+			
+			private Object decide(Object informations) {
+				// Construction de l'information a renvoyer
+				PossibleAction decision = null;
+				Object[] newInformations = new Object[2];
+				
+				// Si l'agent a percu les agents autour de lui
+				if (informations instanceof List) {
+					
+					List<String> nextToAgentsId = (List<String>) informations;
+					
+					// S'il y a au moins un agent, fusionner avec
+					if (!nextToAgentsId.isEmpty()) {
+						decision = PossibleAction.FUSION;
+					}
+					
+				}
+				
+				// Retourner la decision et les informations si necessaire
+				newInformations[0] = decision;
+				newInformations[1] = informations;
+				
+				return newInformations;
 			}
 			
 		}
@@ -176,12 +228,13 @@ public class EcoAgentsEtatImpl extends EcoAgentsEtat implements AgentTrace {
 			}
 			
 			@Override
-			public void doIt() {
+			public void doIt(Object informations) {
 				System.out.println(id+": Action");
 				i--;
 				if(i == 0) suicide();
+				
+				act(informations);
 				this.requires().finishedCycle().endOfCycleAlert(id);
-
 			}
 
 			@Override
@@ -190,12 +243,37 @@ public class EcoAgentsEtatImpl extends EcoAgentsEtat implements AgentTrace {
 				return this;
 			}
 			
+			@SuppressWarnings("unchecked")
+			private void act(Object informations) {
+				// Recuperation de la decision
+				PossibleAction decision =
+						(PossibleAction) ((Object[]) informations)[0];
+				
+				// Agir selon la decision prise
+				/*switch (decision) {
+				
+				case FUSION:
+					// s'il veut faire une fusion, recuperer les agents
+					List<String> agentsIdToFusion =
+							(List<String>) ((Object[]) informations)[1];
+					
+					// Recuperer l'id du nouvelle agent creer
+					String newAgentId = fusionner(agentsIdToFusion);
+					
+					// Modifier l'environnement
+					//requires().setEnv().removeAgent(newAgentId, actions);
+					//requires().setEnv().addAgent(newAgentId);
+					
+					break;
+				}*/
+			}
+			
+			private String fusionner(List<String> agentsIdToFusion) {
+				return null;
+			}
+			
 		}
 
-
 	}
-	
-
-
 
 }

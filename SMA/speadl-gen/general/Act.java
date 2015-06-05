@@ -1,6 +1,7 @@
 package general;
 
 import agents.interfaces.Do;
+import environnement.interfaces.EnvUpdate;
 import generalStructure.interfaces.CycleAlert;
 
 @SuppressWarnings("all")
@@ -11,6 +12,12 @@ public abstract class Act {
      * 
      */
     public CycleAlert finishedCycle();
+    
+    /**
+     * This can be called by the implementation to access this required port.
+     * 
+     */
+    public EnvUpdate setEnv();
   }
   
   public interface Component extends Act.Provides {

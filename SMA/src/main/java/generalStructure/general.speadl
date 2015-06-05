@@ -1,7 +1,11 @@
-import agents.interfaces.Do
 import agents.interfaces.Callable
 import generalStructure.interfaces.CycleAlert
 import agents.interfaces.IGetThread
+import environnement.interfaces.EnvInfos
+import environnement.interfaces.EnvUpdate
+import trace.Action
+import java.util.List
+import environnement.interfaces.CellInfo
 
 namespace general{
 	
@@ -11,31 +15,78 @@ namespace general{
 		provides threads: IGetThread
 	}
 	
-		ecosystem BigEco{
+	ecosystem BigEco{
 		part ecoAE: EcoAgentsEtat{
 			bind threads to launcher.threads
 		}
+		
 		part fw: Forward[CycleAlert]{
 			bind i to launcher.finishedCycle
 		}
 		
+		part fwEnvInfos: Forward[EnvInfos] {
+			bind i to envEco.envInfos
+		}
+		
+		part fwEnvUpdate: Forward[EnvUpdate] {
+			bind i to envEco.envUpdate
+		}
+		
+		part fwCellInfo: ForwardParam[CellInfo] {
+			bind i to envEco.getCellInfo
+		}
+		
 		part launcher: Launcher
 		
+		part envEco: Environnement
 		
-		species DynamicAssembly(id: String){
-			use agentE: ecoAE.AgentEtat(id){
+		part fwEnvToCell: Forward2[CellInfo]
+		
+		species DynamicAssemblyAgentEtat
+				(id: String, username: String, actions: List[Action]) {
+					
+			use agentE: ecoAE.AgentEtat(id, username) {
 				bind finishedCycle to aFW.a
+				bind getEnvInfos to afwEnvInfos.a
+				bind setEnv to afwEnvUpdate.a
+				bind getCellInfo to afwCellInfo.a
 			}
 			use aFW: fw.Agent
+			use afwEnvInfos: fwEnvInfos.Agent
+			use afwEnvUpdate: fwEnvUpdate.Agent
+			use afwCellInfo: fwCellInfo.Agent(actions)
+		}
+		
+		species DynamicAssemblyAgentCell(actions: List[Action]) {
+			use agentCell: envEco.Cell(actions)
+			
+			use aFwCellInfos: fwEnvToCell.Agent(actions) {
+				bind a to agentCell.cellInfos
+			}
 		}
 	}
 	
 	ecosystem Forward[I]{
 		 species Agent{
-		 	
 		 	provides a: I
 		 }
 		 
 		 requires i: I
+	}
+	
+	ecosystem ForwardParam[I] {
+		 species Agent (actions: List[Action]) {
+		 	provides a: I
+		 }
+
+		 requires i: I
+	}
+	
+	ecosystem Forward2[I] {
+		 species Agent (actions: List[Action]){
+		 	requires a: I
+		 }
+		 
+		 provides i: I
 	}
 }

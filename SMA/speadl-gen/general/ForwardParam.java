@@ -1,46 +1,31 @@
 package general;
 
-import environnement.interfaces.CellInfo;
-import environnement.interfaces.EnvInfos;
-import environnement.interfaces.EnvUpdate;
 import java.util.List;
 import trace.Action;
 
 @SuppressWarnings("all")
-public abstract class Environnement {
-  public interface Requires {
-  }
-  
-  public interface Component extends Environnement.Provides {
-  }
-  
-  public interface Provides {
+public abstract class ForwardParam<I> {
+  public interface Requires<I> {
     /**
-     * This can be called to access the provided port.
+     * This can be called by the implementation to access this required port.
      * 
      */
-    public EnvInfos envInfos();
-    
-    /**
-     * This can be called to access the provided port.
-     * 
-     */
-    public EnvUpdate envUpdate();
-    
-    /**
-     * This can be called to access the provided port.
-     * 
-     */
-    public CellInfo getCellInfo();
+    public I i();
   }
   
-  public interface Parts {
+  public interface Component<I> extends ForwardParam.Provides<I> {
   }
   
-  public static class ComponentImpl implements Environnement.Component, Environnement.Parts {
-    private final Environnement.Requires bridge;
+  public interface Provides<I> {
+  }
+  
+  public interface Parts<I> {
+  }
+  
+  public static class ComponentImpl<I> implements ForwardParam.Component<I>, ForwardParam.Parts<I> {
+    private final ForwardParam.Requires<I> bridge;
     
-    private final Environnement implementation;
+    private final ForwardParam<I> implementation;
     
     public void start() {
       this.implementation.start();
@@ -51,37 +36,11 @@ public abstract class Environnement {
       
     }
     
-    private void init_envInfos() {
-      assert this.envInfos == null: "This is a bug.";
-      this.envInfos = this.implementation.make_envInfos();
-      if (this.envInfos == null) {
-      	throw new RuntimeException("make_envInfos() in general.Environnement should not return null.");
-      }
-    }
-    
-    private void init_envUpdate() {
-      assert this.envUpdate == null: "This is a bug.";
-      this.envUpdate = this.implementation.make_envUpdate();
-      if (this.envUpdate == null) {
-      	throw new RuntimeException("make_envUpdate() in general.Environnement should not return null.");
-      }
-    }
-    
-    private void init_getCellInfo() {
-      assert this.getCellInfo == null: "This is a bug.";
-      this.getCellInfo = this.implementation.make_getCellInfo();
-      if (this.getCellInfo == null) {
-      	throw new RuntimeException("make_getCellInfo() in general.Environnement should not return null.");
-      }
-    }
-    
     protected void initProvidedPorts() {
-      init_envInfos();
-      init_envUpdate();
-      init_getCellInfo();
+      
     }
     
-    public ComponentImpl(final Environnement implem, final Environnement.Requires b, final boolean doInits) {
+    public ComponentImpl(final ForwardParam<I> implem, final ForwardParam.Requires<I> b, final boolean doInits) {
       this.bridge = b;
       this.implementation = implem;
       
@@ -96,48 +55,30 @@ public abstract class Environnement {
       	initProvidedPorts();
       }
     }
-    
-    private EnvInfos envInfos;
-    
-    public EnvInfos envInfos() {
-      return this.envInfos;
-    }
-    
-    private EnvUpdate envUpdate;
-    
-    public EnvUpdate envUpdate() {
-      return this.envUpdate;
-    }
-    
-    private CellInfo getCellInfo;
-    
-    public CellInfo getCellInfo() {
-      return this.getCellInfo;
-    }
   }
   
-  public static abstract class Cell {
-    public interface Requires {
+  public static abstract class Agent<I> {
+    public interface Requires<I> {
     }
     
-    public interface Component extends Environnement.Cell.Provides {
+    public interface Component<I> extends ForwardParam.Agent.Provides<I> {
     }
     
-    public interface Provides {
+    public interface Provides<I> {
       /**
        * This can be called to access the provided port.
        * 
        */
-      public CellInfo cellInfos();
+      public I a();
     }
     
-    public interface Parts {
+    public interface Parts<I> {
     }
     
-    public static class ComponentImpl implements Environnement.Cell.Component, Environnement.Cell.Parts {
-      private final Environnement.Cell.Requires bridge;
+    public static class ComponentImpl<I> implements ForwardParam.Agent.Component<I>, ForwardParam.Agent.Parts<I> {
+      private final ForwardParam.Agent.Requires<I> bridge;
       
-      private final Environnement.Cell implementation;
+      private final ForwardParam.Agent<I> implementation;
       
       public void start() {
         this.implementation.start();
@@ -148,19 +89,19 @@ public abstract class Environnement {
         
       }
       
-      private void init_cellInfos() {
-        assert this.cellInfos == null: "This is a bug.";
-        this.cellInfos = this.implementation.make_cellInfos();
-        if (this.cellInfos == null) {
-        	throw new RuntimeException("make_cellInfos() in general.Environnement$Cell should not return null.");
+      private void init_a() {
+        assert this.a == null: "This is a bug.";
+        this.a = this.implementation.make_a();
+        if (this.a == null) {
+        	throw new RuntimeException("make_a() in general.ForwardParam$Agent<I> should not return null.");
         }
       }
       
       protected void initProvidedPorts() {
-        init_cellInfos();
+        init_a();
       }
       
-      public ComponentImpl(final Environnement.Cell implem, final Environnement.Cell.Requires b, final boolean doInits) {
+      public ComponentImpl(final ForwardParam.Agent<I> implem, final ForwardParam.Agent.Requires<I> b, final boolean doInits) {
         this.bridge = b;
         this.implementation = implem;
         
@@ -176,10 +117,10 @@ public abstract class Environnement {
         }
       }
       
-      private CellInfo cellInfos;
+      private I a;
       
-      public CellInfo cellInfos() {
-        return this.cellInfos;
+      public I a() {
+        return this.a;
       }
     }
     
@@ -197,7 +138,7 @@ public abstract class Environnement {
      */
     private boolean started = false;;
     
-    private Environnement.Cell.ComponentImpl selfComponent;
+    private ForwardParam.Agent.ComponentImpl<I> selfComponent;
     
     /**
      * Can be overridden by the implementation.
@@ -214,7 +155,7 @@ public abstract class Environnement {
      * This can be called by the implementation to access the provided ports.
      * 
      */
-    protected Environnement.Cell.Provides provides() {
+    protected ForwardParam.Agent.Provides<I> provides() {
       assert this.selfComponent != null: "This is a bug.";
       if (!this.init) {
       	throw new RuntimeException("provides() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if provides() is needed to initialise the component.");
@@ -227,13 +168,13 @@ public abstract class Environnement {
      * This will be called once during the construction of the component to initialize the port.
      * 
      */
-    protected abstract CellInfo make_cellInfos();
+    protected abstract I make_a();
     
     /**
      * This can be called by the implementation to access the required ports.
      * 
      */
-    protected Environnement.Cell.Requires requires() {
+    protected ForwardParam.Agent.Requires<I> requires() {
       assert this.selfComponent != null: "This is a bug.";
       if (!this.init) {
       	throw new RuntimeException("requires() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if requires() is needed to initialise the component.");
@@ -245,7 +186,7 @@ public abstract class Environnement {
      * This can be called by the implementation to access the parts and their provided ports.
      * 
      */
-    protected Environnement.Cell.Parts parts() {
+    protected ForwardParam.Agent.Parts<I> parts() {
       assert this.selfComponent != null: "This is a bug.";
       if (!this.init) {
       	throw new RuntimeException("parts() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if parts() is needed to initialise the component.");
@@ -257,25 +198,25 @@ public abstract class Environnement {
      * Not meant to be used to manually instantiate components (except for testing).
      * 
      */
-    public synchronized Environnement.Cell.Component _newComponent(final Environnement.Cell.Requires b, final boolean start) {
+    public synchronized ForwardParam.Agent.Component<I> _newComponent(final ForwardParam.Agent.Requires<I> b, final boolean start) {
       if (this.init) {
-      	throw new RuntimeException("This instance of Cell has already been used to create a component, use another one.");
+      	throw new RuntimeException("This instance of Agent has already been used to create a component, use another one.");
       }
       this.init = true;
-      Environnement.Cell.ComponentImpl  _comp = new Environnement.Cell.ComponentImpl(this, b, true);
+      ForwardParam.Agent.ComponentImpl<I>  _comp = new ForwardParam.Agent.ComponentImpl<I>(this, b, true);
       if (start) {
       	_comp.start();
       }
       return _comp;
     }
     
-    private Environnement.ComponentImpl ecosystemComponent;
+    private ForwardParam.ComponentImpl<I> ecosystemComponent;
     
     /**
      * This can be called by the species implementation to access the provided ports of its ecosystem.
      * 
      */
-    protected Environnement.Provides eco_provides() {
+    protected ForwardParam.Provides<I> eco_provides() {
       assert this.ecosystemComponent != null: "This is a bug.";
       return this.ecosystemComponent;
     }
@@ -284,7 +225,7 @@ public abstract class Environnement {
      * This can be called by the species implementation to access the required ports of its ecosystem.
      * 
      */
-    protected Environnement.Requires eco_requires() {
+    protected ForwardParam.Requires<I> eco_requires() {
       assert this.ecosystemComponent != null: "This is a bug.";
       return this.ecosystemComponent.bridge;
     }
@@ -293,7 +234,7 @@ public abstract class Environnement {
      * This can be called by the species implementation to access the parts of its ecosystem and their provided ports.
      * 
      */
-    protected Environnement.Parts eco_parts() {
+    protected ForwardParam.Parts<I> eco_parts() {
       assert this.ecosystemComponent != null: "This is a bug.";
       return this.ecosystemComponent;
     }
@@ -313,7 +254,7 @@ public abstract class Environnement {
    */
   private boolean started = false;;
   
-  private Environnement.ComponentImpl selfComponent;
+  private ForwardParam.ComponentImpl<I> selfComponent;
   
   /**
    * Can be overridden by the implementation.
@@ -330,7 +271,7 @@ public abstract class Environnement {
    * This can be called by the implementation to access the provided ports.
    * 
    */
-  protected Environnement.Provides provides() {
+  protected ForwardParam.Provides<I> provides() {
     assert this.selfComponent != null: "This is a bug.";
     if (!this.init) {
     	throw new RuntimeException("provides() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if provides() is needed to initialise the component.");
@@ -339,31 +280,10 @@ public abstract class Environnement {
   }
   
   /**
-   * This should be overridden by the implementation to define the provided port.
-   * This will be called once during the construction of the component to initialize the port.
-   * 
-   */
-  protected abstract EnvInfos make_envInfos();
-  
-  /**
-   * This should be overridden by the implementation to define the provided port.
-   * This will be called once during the construction of the component to initialize the port.
-   * 
-   */
-  protected abstract EnvUpdate make_envUpdate();
-  
-  /**
-   * This should be overridden by the implementation to define the provided port.
-   * This will be called once during the construction of the component to initialize the port.
-   * 
-   */
-  protected abstract CellInfo make_getCellInfo();
-  
-  /**
    * This can be called by the implementation to access the required ports.
    * 
    */
-  protected Environnement.Requires requires() {
+  protected ForwardParam.Requires<I> requires() {
     assert this.selfComponent != null: "This is a bug.";
     if (!this.init) {
     	throw new RuntimeException("requires() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if requires() is needed to initialise the component.");
@@ -375,7 +295,7 @@ public abstract class Environnement {
    * This can be called by the implementation to access the parts and their provided ports.
    * 
    */
-  protected Environnement.Parts parts() {
+  protected ForwardParam.Parts<I> parts() {
     assert this.selfComponent != null: "This is a bug.";
     if (!this.init) {
     	throw new RuntimeException("parts() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if parts() is needed to initialise the component.");
@@ -387,12 +307,12 @@ public abstract class Environnement {
    * Not meant to be used to manually instantiate components (except for testing).
    * 
    */
-  public synchronized Environnement.Component _newComponent(final Environnement.Requires b, final boolean start) {
+  public synchronized ForwardParam.Component<I> _newComponent(final ForwardParam.Requires<I> b, final boolean start) {
     if (this.init) {
-    	throw new RuntimeException("This instance of Environnement has already been used to create a component, use another one.");
+    	throw new RuntimeException("This instance of ForwardParam has already been used to create a component, use another one.");
     }
     this.init = true;
-    Environnement.ComponentImpl  _comp = new Environnement.ComponentImpl(this, b, true);
+    ForwardParam.ComponentImpl<I>  _comp = new ForwardParam.ComponentImpl<I>(this, b, true);
     if (start) {
     	_comp.start();
     }
@@ -403,16 +323,16 @@ public abstract class Environnement {
    * This should be overridden by the implementation to instantiate the implementation of the species.
    * 
    */
-  protected abstract Environnement.Cell make_Cell(final List<Action> actions);
+  protected abstract ForwardParam.Agent<I> make_Agent(final List<Action> actions);
   
   /**
    * Do not call, used by generated code.
    * 
    */
-  public Environnement.Cell _createImplementationOfCell(final List<Action> actions) {
-    Environnement.Cell implem = make_Cell(actions);
+  public ForwardParam.Agent<I> _createImplementationOfAgent(final List<Action> actions) {
+    ForwardParam.Agent<I> implem = make_Agent(actions);
     if (implem == null) {
-    	throw new RuntimeException("make_Cell() in general.Environnement should not return null.");
+    	throw new RuntimeException("make_Agent() in general.ForwardParam should not return null.");
     }
     assert implem.ecosystemComponent == null: "This is a bug.";
     assert this.selfComponent != null: "This is a bug.";
@@ -424,16 +344,8 @@ public abstract class Environnement {
    * This can be called to create an instance of the species from inside the implementation of the ecosystem.
    * 
    */
-  protected Environnement.Cell.Component newCell(final List<Action> actions) {
-    Environnement.Cell _implem = _createImplementationOfCell(actions);
-    return _implem._newComponent(new Environnement.Cell.Requires() {},true);
-  }
-  
-  /**
-   * Use to instantiate a component from this implementation.
-   * 
-   */
-  public Environnement.Component newComponent() {
-    return this._newComponent(new Environnement.Requires() {}, true);
+  protected ForwardParam.Agent.Component<I> newAgent(final List<Action> actions) {
+    ForwardParam.Agent<I> _implem = _createImplementationOfAgent(actions);
+    return _implem._newComponent(new ForwardParam.Agent.Requires<I>() {},true);
   }
 }

@@ -1,4 +1,6 @@
 package agents;
+import generalStructure.impl.BigEcoImpl;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,15 +10,15 @@ import trace.Action;
 public class MainClass {
 
 	public static void main(String[] args) {
-	//new BigEcoImpl().newComponent();
+		new BigEcoImpl().newComponent();
 		
-		Map<String,String> actions = new HashMap<>();
+		/*Map<String,String> actions = new HashMap<>();
 		actions.put("action1", "A1");
 		actions.put("action2", "A2");
 		actions.put("action3", "A3");
 		actions.put("action4", "A4");
 		
-		Map<String,String> actions1 = new HashMap<>();
+		Map<String,String> actions1 = new HashMap<>();*/
 		/*actions1.put("action1", "A1");
 		actions1.put("action2", "A2");
 		actions1.put("action4", "A4");
@@ -54,11 +56,11 @@ public class MainClass {
 		
 		System.out.println(l1.containsAll(l2));*/
 		
-		actions1 = actions;
+		/*actions1 = actions;
 		
 		actions1.remove("action4");
 		
-		System.out.println(actions.get("action4"));
+		System.out.println(actions.get("action4"));*/
 		
 		
 

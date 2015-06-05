@@ -1,19 +1,20 @@
 import agents.interfaces.Do
 import agents.interfaces.IGetThread
 import generalStructure.interfaces.CycleAlert
-import agents.Suicide
+import environnement.interfaces.EnvInfos
+import environnement.interfaces.EnvUpdate
+import environnement.interfaces.CellInfo
 
 namespace general{
 
 	ecosystem EcoAgentsEtat{
 		requires threads: IGetThread
 		
-		species AgentEtat(id: String){
-			
-			
+		species AgentEtat(id: String, username: String){
 			
 			part act: Act{
 				bind finishedCycle to finishedCycle
+				bind setEnv to setEnv
 			}
 	
 			part decide: Decide{
@@ -22,6 +23,7 @@ namespace general{
 	
 			part perceive: Perceive{
 				bind decision to decide.decision
+				bind getEnvInfos to getEnvInfos
 			}
 			
 			
@@ -29,6 +31,9 @@ namespace general{
 			
 			provides cycle: Do = perceive.perception
 			requires finishedCycle: CycleAlert
+			requires getEnvInfos: EnvInfos
+			requires setEnv: EnvUpdate
+			requires getCellInfo: CellInfo
 
 		}
 		
@@ -40,6 +45,7 @@ namespace general{
 	component Perceive{
 		provides perception: Do
 		requires decision: Do
+		requires getEnvInfos: EnvInfos
 	}
 	
 	component Decide{
@@ -50,6 +56,7 @@ namespace general{
 	component Act{
 		provides action: Do
 		requires finishedCycle: CycleAlert
+		requires setEnv: EnvUpdate
 	}
 		
 	

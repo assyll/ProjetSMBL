@@ -26,7 +26,6 @@ public class ForwardImpl extends Forward<CycleAlert>{
 		@Override
 		public void endOfCycleAlert(String id) {
 			eco_requires().i().endOfCycleAlert(id);
-			
 		}
 
 		@Override

@@ -4,13 +4,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import trace.Action;
-import environnement.interfaces.CellInfos;
+import environnement.interfaces.CellInfo;
 import environnement.interfaces.EnvInfos;
 import environnement.interfaces.EnvUpdate;
 import general.Environnement;
+import general.Forward;
+import generalStructure.impl.BigEcoImpl;
 
-public class EnvironnementImpl extends Environnement implements EnvUpdate, EnvInfos{
+public class EnvironnementImpl extends Environnement
+		implements EnvUpdate, EnvInfos{
 
 	private Map<Integer,List<CellImpl>> cellsByLevel = new HashMap<>();
 	
@@ -44,7 +48,12 @@ public class EnvironnementImpl extends Environnement implements EnvUpdate, EnvIn
 	protected EnvUpdate make_envUpdate() {
 		return this;
 	}
-
+	
+	@Override
+	protected CellInfo make_getCellInfo() {
+		//TODO retourner la bonne cellule
+		return cellsByLevel.get(0).get(0);
+	}
 
 	@Override
 	public List<String> getAllAgentsInCell(List<Action> listActions) {
@@ -116,7 +125,7 @@ public class EnvironnementImpl extends Environnement implements EnvUpdate, EnvIn
 
 	
 
-	private class CellImpl extends Cell implements CellInfos{
+	private class CellImpl extends Cell implements CellInfo {
 
 		private List<Action> cellActionList;
 		private Map<Action, CellImpl> childrenMap;
@@ -126,6 +135,8 @@ public class EnvironnementImpl extends Environnement implements EnvUpdate, EnvIn
 			cellActionList = new ArrayList<>(actions);
 			childrenMap = new HashMap<>();
 			agentsEtatIDList = new ArrayList<String>();
+			
+			BigEcoImpl.bigEcoImpl.newDynamicAssemblyAgentCellInstance(actions);
 		}
 		
 		
@@ -144,7 +155,7 @@ public class EnvironnementImpl extends Environnement implements EnvUpdate, EnvIn
 		}
 		
 		@Override
-		protected CellInfos make_cellInfos() {
+		protected CellInfo make_cellInfos() {
 			return this;
 		}
 		@Override
@@ -171,6 +182,5 @@ public class EnvironnementImpl extends Environnement implements EnvUpdate, EnvIn
 		}
 
 	}
-
 
 }

@@ -1,8 +1,19 @@
 package generalStructure.impl;
 
+import java.util.List;
+
+import trace.Action;
+import environnement.impl.EnvironnementImpl;
+import environnement.impl.Forward2CellInfo;
+import environnement.interfaces.CellInfo;
+import environnement.interfaces.EnvInfos;
+import environnement.interfaces.EnvUpdate;
 import general.BigEco;
 import general.EcoAgentsEtat;
+import general.Environnement;
 import general.Forward;
+import general.Forward2;
+import general.ForwardParam;
 import general.Launcher;
 import generalStructure.interfaces.CycleAlert;
 import agents.impl.EcoAgentsEtatImpl;
@@ -10,7 +21,14 @@ import agents.interfaces.Do;
 
 public class BigEcoImpl extends BigEco {
 
-	Thread t = null;
+	public static BigEcoImpl bigEcoImpl;
+	
+	private Thread t = null;
+	
+	public BigEcoImpl() {
+		bigEcoImpl = this;
+	}
+	
 	@Override
 	protected EcoAgentsEtat make_ecoAE() {
 		// TODO Auto-generated method stub
@@ -29,16 +47,18 @@ public class BigEcoImpl extends BigEco {
 		return new LauncherImpl();
 	}
 	
-	
+	public void newDynamicAssemblyAgentCellInstance(List<Action> actions) {
+		//newDynamicAssemblyAgentCell(actions);
+	}
 	
 	@Override
 	protected void start() {
 		// TODO Auto-generated method stub
 		super.start();
-		this.newDynamicAssembly("Agent Etat 1");
-		this.newDynamicAssembly("Agent Etat 2");
-		this.newDynamicAssembly("Agent Etat 3");
-		this.newDynamicAssembly("Agent Etat 4");
+		this.newDynamicAssemblyAgentEtat("Agent Etat 1", "user1", null);
+		this.newDynamicAssemblyAgentEtat("Agent Etat 2", "user1", null);
+		this.newDynamicAssemblyAgentEtat("Agent Etat 3", "user1", null);
+		this.newDynamicAssemblyAgentEtat("Agent Etat 4", "user1", null);
 		System.out.println("Start BigEco");
 		
 		t = new Thread(new Runnable() {
@@ -52,7 +72,7 @@ public class BigEcoImpl extends BigEco {
 					e.printStackTrace();
 				}
 				System.out.println("debut ajout");
-				BigEcoImpl.this.newDynamicAssembly("Agent Etat 4");
+				BigEcoImpl.this.newDynamicAssemblyAgentEtat("Agent Etat 4", "user1", null);
 				System.out.println("ajout");
 				
 				try {
@@ -62,8 +82,8 @@ public class BigEcoImpl extends BigEco {
 					e.printStackTrace();
 				}
 				
-				BigEcoImpl.this.newDynamicAssembly("Agent Etat 5");
-				BigEcoImpl.this.newDynamicAssembly("Agent Etat 6");
+				BigEcoImpl.this.newDynamicAssemblyAgentEtat("Agent Etat 5", "user1", null);
+				BigEcoImpl.this.newDynamicAssemblyAgentEtat("Agent Etat 6", "user1", null);
 				
 				try {
 					Thread.sleep(5000);
@@ -82,6 +102,36 @@ public class BigEcoImpl extends BigEco {
 		
 
 
+	}
+
+	@Override
+	protected Environnement make_envEco() {
+		// TODO Auto-generated method stub
+		return new EnvironnementImpl();
+	}
+
+	@Override
+	protected Forward<EnvInfos> make_fwEnvInfos() {
+		// TODO Auto-generated method stub
+		return new ForwardEnvInfosImpl();
+	}
+	
+	@Override
+	protected Forward<EnvUpdate> make_fwEnvUpdate() {
+		// TODO Auto-generated method stub
+		return new ForwardEnvUpdateImpl();
+	}
+
+	@Override
+	protected Forward2<CellInfo> make_fwEnvToCell() {
+		// TODO Auto-generated method stub
+		return new Forward2CellInfo();
+	}
+
+	@Override
+	protected ForwardParam<CellInfo> make_fwCellInfo() {
+		// TODO Auto-generated method stub
+		return new ForwardParamCellInfoImpl();
 	}
 
 }

@@ -1,6 +1,7 @@
 package general;
 
 import agents.interfaces.Do;
+import environnement.interfaces.EnvInfos;
 
 @SuppressWarnings("all")
 public abstract class Perceive {
@@ -10,6 +11,12 @@ public abstract class Perceive {
      * 
      */
     public Do decision();
+    
+    /**
+     * This can be called by the implementation to access this required port.
+     * 
+     */
+    public EnvInfos getEnvInfos();
   }
   
   public interface Component extends Perceive.Provides {

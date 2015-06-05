@@ -1,5 +1,5 @@
 package agents.interfaces;
 
 public interface Do {
-	public void doIt();
+	public void doIt(Object informations);
 }
