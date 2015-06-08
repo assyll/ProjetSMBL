@@ -15,78 +15,72 @@ namespace general{
 		provides threads: IGetThread
 	}
 	
-	ecosystem BigEco{
-		part ecoAE: EcoAgentsEtat{
+	ecosystem BigEco[ActionableState, ActionableTransition, Context, ContextUpdate, StateSharedMemory, TransSharedMemory, Push, Pull] {
+		part ecoAE: EcoAgents[ActionableState, ActionableTransition, Context, ContextUpdate, StateSharedMemory, TransSharedMemory, Push, Pull] {
 			bind threads to launcher.threads
 		}
 		
-		part fw: Forward[CycleAlert]{
+		part fw: Forward[CycleAlert, Context, ContextUpdate, Push, Pull] {
 			bind i to launcher.finishedCycle
+			bind j to envEco.envInfos
+			bind k to envEco.envUpdate
 		}
 		
-		part fwEnvInfos: Forward[EnvInfos] {
-			bind i to envEco.envInfos
-		}
-		
-		part fwEnvUpdate: Forward[EnvUpdate] {
-			bind i to envEco.envUpdate
-		}
-		
-		part fwCellInfo: ForwardParam[CellInfo] {
-			bind i to envEco.getCellInfo
-		}
+		/*part fwTrans: Forward[CycleAlert, Context, ContextUpdate, Push, Pull] {
+			bind i to launcher.finishedCycle
+			bind j to envEco.envInfos
+			bind k to envEco.envUpdate
+		}*/
 		
 		part launcher: Launcher
 		
-		part envEco: Environnement
+		part envEco: Environnement[Context, ContextUpdate]
 		
-		part fwEnvToCell: Forward2[CellInfo]
-		
-		species DynamicAssemblyAgentEtat
-				(id: String, username: String, actions: List[Action]) {
-					
-			use agentE: ecoAE.AgentEtat(id, username) {
+		species DynamicAssemblyAgentTransition(id: String) {
+			use agentT: ecoAE.TransitionAgent(id) {
 				bind finishedCycle to aFW.a
-				bind getEnvInfos to afwEnvInfos.a
-				bind setEnv to afwEnvUpdate.a
-				bind getCellInfo to afwCellInfo.a
+				bind getContext to aFW.b
+				bind setContext to aFW.c
+				bind push to aFW.d
+				bind pull to aFW.e
 			}
-			use aFW: fw.Agent
-			use afwEnvInfos: fwEnvInfos.Agent
-			use afwEnvUpdate: fwEnvUpdate.Agent
-			use afwCellInfo: fwCellInfo.Agent(actions)
+			use aFW: fw.TransForward(id)
 		}
-		
-		species DynamicAssemblyAgentCell(actions: List[Action]) {
-			use agentCell: envEco.Cell(actions)
-			
-			use aFwCellInfos: fwEnvToCell.Agent(actions) {
-				bind a to agentCell.cellInfos
+		                                                                                                                                                                                                                                                                      
+		species DynamicAssemblyAgentEtat(id: String) {
+					
+			use agentE: ecoAE.StateAgent(id) {
+				bind finishedCycle to aFW.a
+				bind getContext to aFW.b
+				bind setContext to aFW.c
+				bind push to aFW.d
+				bind pull to aFW.e
 			}
+			use aFW: fw.StateForward(id)
 		}
 	}
 	
-	ecosystem Forward[I]{
-		 species Agent{
+	ecosystem Forward[I, J, K, L, M] {
+		 species StateForward (id: String) {
 		 	provides a: I
+		 	provides b: J
+		 	provides c: K
+		 	provides d: L
+		 	provides e: M
+		 }
+		 
+		  species TransForward (id: String) {
+		 	provides a: I
+		 	provides b: J
+		 	provides c: K
+		 	provides d: L
+		 	provides e: M
 		 }
 		 
 		 requires i: I
+		 requires j: J
+		 requires k: K
+		 provides l: L
 	}
 	
-	ecosystem ForwardParam[I] {
-		 species Agent (actions: List[Action]) {
-		 	provides a: I
-		 }
-
-		 requires i: I
-	}
-	
-	ecosystem Forward2[I] {
-		 species Agent (actions: List[Action]){
-		 	requires a: I
-		 }
-		 
-		 provides i: I
-	}
 }

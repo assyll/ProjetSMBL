@@ -13,7 +13,7 @@ import general.Environnement;
 import general.Forward;
 import generalStructure.impl.BigEcoImpl;
 
-public class EnvironnementImpl extends Environnement
+public class EnvironnementImpl extends Environnement<EnvInfos, EnvUpdate>
 		implements EnvUpdate, EnvInfos{
 
 	private Map<Integer,List<CellImpl>> cellsByLevel = new HashMap<>();
@@ -24,7 +24,7 @@ public class EnvironnementImpl extends Environnement
 	
 
 	@Override
-	protected Cell make_Cell(List<Action> actionList) {
+	protected Cell<EnvInfos, EnvUpdate> make_Cell(List<Action> actionList) {
 		int level = actionList.size();
 		CellImpl cell = new CellImpl(actionList);
 
@@ -49,12 +49,6 @@ public class EnvironnementImpl extends Environnement
 		return this;
 	}
 	
-	@Override
-	protected CellInfo make_getCellInfo() {
-		//TODO retourner la bonne cellule
-		return cellsByLevel.get(0).get(0);
-	}
-
 	@Override
 	public List<String> getAllAgentsInCell(List<Action> listActions) {
 		CellImpl cell = getCellByActionList(listActions);
@@ -89,13 +83,13 @@ public class EnvironnementImpl extends Environnement
 
 
 	@Override
-	public void addAgent(String id) {
+	public void addStateAgent(String id) {
 		this.newCell(new ArrayList<Action>()).cellInfos().addNewStateAgent(id);
 	}
 
 
 	@Override
-	public void addAgent(String id, List<Action> actions) {
+	public void addStateAgent(String id, List<Action> actions) {
 		CellImpl cell = getCellByActionList(actions);
 		
 		if(cell != null) {
@@ -125,7 +119,7 @@ public class EnvironnementImpl extends Environnement
 
 	
 
-	private class CellImpl extends Cell implements CellInfo {
+	private class CellImpl extends Cell<EnvInfos, EnvUpdate> implements CellInfo {
 
 		private List<Action> cellActionList;
 		private Map<Action, CellImpl> childrenMap;
@@ -136,7 +130,6 @@ public class EnvironnementImpl extends Environnement
 			childrenMap = new HashMap<>();
 			agentsEtatIDList = new ArrayList<String>();
 			
-			BigEcoImpl.bigEcoImpl.newDynamicAssemblyAgentCellInstance(actions);
 		}
 		
 		

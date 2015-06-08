@@ -1,5 +1,5 @@
 package agents.interfaces;
 
-public interface Decision {
+public interface SendMessage {
 
 }

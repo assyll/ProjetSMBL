@@ -3,19 +3,19 @@ package general;
 import agents.interfaces.Do;
 
 @SuppressWarnings("all")
-public abstract class Decide {
-  public interface Requires {
+public abstract class Decide<Actionable, SharedMemory> {
+  public interface Requires<Actionable, SharedMemory> {
     /**
      * This can be called by the implementation to access this required port.
      * 
      */
-    public Do action();
+    public Actionable action();
   }
   
-  public interface Component extends Decide.Provides {
+  public interface Component<Actionable, SharedMemory> extends Decide.Provides<Actionable, SharedMemory> {
   }
   
-  public interface Provides {
+  public interface Provides<Actionable, SharedMemory> {
     /**
      * This can be called to access the provided port.
      * 
@@ -23,13 +23,13 @@ public abstract class Decide {
     public Do decision();
   }
   
-  public interface Parts {
+  public interface Parts<Actionable, SharedMemory> {
   }
   
-  public static class ComponentImpl implements Decide.Component, Decide.Parts {
-    private final Decide.Requires bridge;
+  public static class ComponentImpl<Actionable, SharedMemory> implements Decide.Component<Actionable, SharedMemory>, Decide.Parts<Actionable, SharedMemory> {
+    private final Decide.Requires<Actionable, SharedMemory> bridge;
     
-    private final Decide implementation;
+    private final Decide<Actionable, SharedMemory> implementation;
     
     public void start() {
       this.implementation.start();
@@ -44,7 +44,7 @@ public abstract class Decide {
       assert this.decision == null: "This is a bug.";
       this.decision = this.implementation.make_decision();
       if (this.decision == null) {
-      	throw new RuntimeException("make_decision() in general.Decide should not return null.");
+      	throw new RuntimeException("make_decision() in general.Decide<Actionable, SharedMemory> should not return null.");
       }
     }
     
@@ -52,7 +52,7 @@ public abstract class Decide {
       init_decision();
     }
     
-    public ComponentImpl(final Decide implem, final Decide.Requires b, final boolean doInits) {
+    public ComponentImpl(final Decide<Actionable, SharedMemory> implem, final Decide.Requires<Actionable, SharedMemory> b, final boolean doInits) {
       this.bridge = b;
       this.implementation = implem;
       
@@ -89,7 +89,7 @@ public abstract class Decide {
    */
   private boolean started = false;;
   
-  private Decide.ComponentImpl selfComponent;
+  private Decide.ComponentImpl<Actionable, SharedMemory> selfComponent;
   
   /**
    * Can be overridden by the implementation.
@@ -106,7 +106,7 @@ public abstract class Decide {
    * This can be called by the implementation to access the provided ports.
    * 
    */
-  protected Decide.Provides provides() {
+  protected Decide.Provides<Actionable, SharedMemory> provides() {
     assert this.selfComponent != null: "This is a bug.";
     if (!this.init) {
     	throw new RuntimeException("provides() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if provides() is needed to initialise the component.");
@@ -125,7 +125,7 @@ public abstract class Decide {
    * This can be called by the implementation to access the required ports.
    * 
    */
-  protected Decide.Requires requires() {
+  protected Decide.Requires<Actionable, SharedMemory> requires() {
     assert this.selfComponent != null: "This is a bug.";
     if (!this.init) {
     	throw new RuntimeException("requires() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if requires() is needed to initialise the component.");
@@ -137,7 +137,7 @@ public abstract class Decide {
    * This can be called by the implementation to access the parts and their provided ports.
    * 
    */
-  protected Decide.Parts parts() {
+  protected Decide.Parts<Actionable, SharedMemory> parts() {
     assert this.selfComponent != null: "This is a bug.";
     if (!this.init) {
     	throw new RuntimeException("parts() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if parts() is needed to initialise the component.");
@@ -149,12 +149,12 @@ public abstract class Decide {
    * Not meant to be used to manually instantiate components (except for testing).
    * 
    */
-  public synchronized Decide.Component _newComponent(final Decide.Requires b, final boolean start) {
+  public synchronized Decide.Component<Actionable, SharedMemory> _newComponent(final Decide.Requires<Actionable, SharedMemory> b, final boolean start) {
     if (this.init) {
     	throw new RuntimeException("This instance of Decide has already been used to create a component, use another one.");
     }
     this.init = true;
-    Decide.ComponentImpl  _comp = new Decide.ComponentImpl(this, b, true);
+    Decide.ComponentImpl<Actionable, SharedMemory>  _comp = new Decide.ComponentImpl<Actionable, SharedMemory>(this, b, true);
     if (start) {
     	_comp.start();
     }

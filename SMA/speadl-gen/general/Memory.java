@@ -1,41 +1,28 @@
 package general;
 
-import agents.interfaces.Do;
-
 @SuppressWarnings("all")
-public abstract class Perceive<Context, SharedMemory, Pull> {
-  public interface Requires<Context, SharedMemory, Pull> {
-    /**
-     * This can be called by the implementation to access this required port.
-     * 
-     */
-    public Do decision();
-    
-    /**
-     * This can be called by the implementation to access this required port.
-     * 
-     */
-    public Context getContext();
+public abstract class Memory<SharedMemory> {
+  public interface Requires<SharedMemory> {
   }
   
-  public interface Component<Context, SharedMemory, Pull> extends Perceive.Provides<Context, SharedMemory, Pull> {
+  public interface Component<SharedMemory> extends Memory.Provides<SharedMemory> {
   }
   
-  public interface Provides<Context, SharedMemory, Pull> {
+  public interface Provides<SharedMemory> {
     /**
      * This can be called to access the provided port.
      * 
      */
-    public Do perception();
+    public SharedMemory infos();
   }
   
-  public interface Parts<Context, SharedMemory, Pull> {
+  public interface Parts<SharedMemory> {
   }
   
-  public static class ComponentImpl<Context, SharedMemory, Pull> implements Perceive.Component<Context, SharedMemory, Pull>, Perceive.Parts<Context, SharedMemory, Pull> {
-    private final Perceive.Requires<Context, SharedMemory, Pull> bridge;
+  public static class ComponentImpl<SharedMemory> implements Memory.Component<SharedMemory>, Memory.Parts<SharedMemory> {
+    private final Memory.Requires<SharedMemory> bridge;
     
-    private final Perceive<Context, SharedMemory, Pull> implementation;
+    private final Memory<SharedMemory> implementation;
     
     public void start() {
       this.implementation.start();
@@ -46,19 +33,19 @@ public abstract class Perceive<Context, SharedMemory, Pull> {
       
     }
     
-    private void init_perception() {
-      assert this.perception == null: "This is a bug.";
-      this.perception = this.implementation.make_perception();
-      if (this.perception == null) {
-      	throw new RuntimeException("make_perception() in general.Perceive<Context, SharedMemory, Pull> should not return null.");
+    private void init_infos() {
+      assert this.infos == null: "This is a bug.";
+      this.infos = this.implementation.make_infos();
+      if (this.infos == null) {
+      	throw new RuntimeException("make_infos() in general.Memory<SharedMemory> should not return null.");
       }
     }
     
     protected void initProvidedPorts() {
-      init_perception();
+      init_infos();
     }
     
-    public ComponentImpl(final Perceive<Context, SharedMemory, Pull> implem, final Perceive.Requires<Context, SharedMemory, Pull> b, final boolean doInits) {
+    public ComponentImpl(final Memory<SharedMemory> implem, final Memory.Requires<SharedMemory> b, final boolean doInits) {
       this.bridge = b;
       this.implementation = implem;
       
@@ -74,10 +61,10 @@ public abstract class Perceive<Context, SharedMemory, Pull> {
       }
     }
     
-    private Do perception;
+    private SharedMemory infos;
     
-    public Do perception() {
-      return this.perception;
+    public SharedMemory infos() {
+      return this.infos;
     }
   }
   
@@ -95,7 +82,7 @@ public abstract class Perceive<Context, SharedMemory, Pull> {
    */
   private boolean started = false;;
   
-  private Perceive.ComponentImpl<Context, SharedMemory, Pull> selfComponent;
+  private Memory.ComponentImpl<SharedMemory> selfComponent;
   
   /**
    * Can be overridden by the implementation.
@@ -112,7 +99,7 @@ public abstract class Perceive<Context, SharedMemory, Pull> {
    * This can be called by the implementation to access the provided ports.
    * 
    */
-  protected Perceive.Provides<Context, SharedMemory, Pull> provides() {
+  protected Memory.Provides<SharedMemory> provides() {
     assert this.selfComponent != null: "This is a bug.";
     if (!this.init) {
     	throw new RuntimeException("provides() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if provides() is needed to initialise the component.");
@@ -125,13 +112,13 @@ public abstract class Perceive<Context, SharedMemory, Pull> {
    * This will be called once during the construction of the component to initialize the port.
    * 
    */
-  protected abstract Do make_perception();
+  protected abstract SharedMemory make_infos();
   
   /**
    * This can be called by the implementation to access the required ports.
    * 
    */
-  protected Perceive.Requires<Context, SharedMemory, Pull> requires() {
+  protected Memory.Requires<SharedMemory> requires() {
     assert this.selfComponent != null: "This is a bug.";
     if (!this.init) {
     	throw new RuntimeException("requires() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if requires() is needed to initialise the component.");
@@ -143,7 +130,7 @@ public abstract class Perceive<Context, SharedMemory, Pull> {
    * This can be called by the implementation to access the parts and their provided ports.
    * 
    */
-  protected Perceive.Parts<Context, SharedMemory, Pull> parts() {
+  protected Memory.Parts<SharedMemory> parts() {
     assert this.selfComponent != null: "This is a bug.";
     if (!this.init) {
     	throw new RuntimeException("parts() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if parts() is needed to initialise the component.");
@@ -155,15 +142,23 @@ public abstract class Perceive<Context, SharedMemory, Pull> {
    * Not meant to be used to manually instantiate components (except for testing).
    * 
    */
-  public synchronized Perceive.Component<Context, SharedMemory, Pull> _newComponent(final Perceive.Requires<Context, SharedMemory, Pull> b, final boolean start) {
+  public synchronized Memory.Component<SharedMemory> _newComponent(final Memory.Requires<SharedMemory> b, final boolean start) {
     if (this.init) {
-    	throw new RuntimeException("This instance of Perceive has already been used to create a component, use another one.");
+    	throw new RuntimeException("This instance of Memory has already been used to create a component, use another one.");
     }
     this.init = true;
-    Perceive.ComponentImpl<Context, SharedMemory, Pull>  _comp = new Perceive.ComponentImpl<Context, SharedMemory, Pull>(this, b, true);
+    Memory.ComponentImpl<SharedMemory>  _comp = new Memory.ComponentImpl<SharedMemory>(this, b, true);
     if (start) {
     	_comp.start();
     }
     return _comp;
+  }
+  
+  /**
+   * Use to instantiate a component from this implementation.
+   * 
+   */
+  public Memory.Component<SharedMemory> newComponent() {
+    return this._newComponent(new Memory.Requires<SharedMemory>() {}, true);
   }
 }

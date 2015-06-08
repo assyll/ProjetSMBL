@@ -6,13 +6,13 @@ import environnement.interfaces.CellInfo
 
 namespace general{
 	
-	ecosystem Environnement {
-		provides envInfos: EnvInfos
-		provides envUpdate: EnvUpdate
-		provides getCellInfo: CellInfo
+	ecosystem Environnement [Context, ContextUpdate] {
+		provides envInfos: Context
+		provides envUpdate: ContextUpdate
 		
 		species Cell(actions : List[Action]) {
 			provides cellInfos: CellInfo
+			
 		}
 	}
 	

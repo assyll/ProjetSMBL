@@ -1,63 +1,94 @@
 import agents.interfaces.Do
 import agents.interfaces.IGetThread
 import generalStructure.interfaces.CycleAlert
-import environnement.interfaces.EnvInfos
-import environnement.interfaces.EnvUpdate
-import environnement.interfaces.CellInfo
 
 namespace general{
 
-	ecosystem EcoAgentsEtat{
+	ecosystem EcoAgents[ActionableState, ActionableTransition, Context, ContextUpdate, StateSharedMemory, TransSharedMemory, Push, Pull] {
 		requires threads: IGetThread
 		
-		species AgentEtat(id: String, username: String){
-			
-			part act: Act{
-				bind finishedCycle to finishedCycle
-				bind setEnv to setEnv
-			}
-	
-			part decide: Decide{
-				bind action to act.action
-			}
-	
-			part perceive: Perceive{
-				bind decision to decide.decision
-				bind getEnvInfos to getEnvInfos
-			}
-			
-			
-			//requires getTraceElement: IGetAction
-			
-			provides cycle: Do = perceive.perception
+		species StateAgent (id: String) {
+			provides cycle: Do = agentComponent.cycle
+			requires getContext: Context
+			requires setContext: ContextUpdate
 			requires finishedCycle: CycleAlert
-			requires getEnvInfos: EnvInfos
-			requires setEnv: EnvUpdate
-			requires getCellInfo: CellInfo
-
+			requires push: Push
+			requires pull: Pull
+			
+			 part agentComponent: Agent[Context, ContextUpdate, ActionableState, StateSharedMemory, Push, Pull] {
+			 	bind getContext to getContext
+			 	bind setContext to setContext
+			 	bind finishedCycle to finishedCycle
+			 	bind push to push
+			 	bind pull to pull
+			 }
+						
+			//requires getTraceElement: IGetAction
 		}
 		
-		species AgentTransition(id:String){
+		species TransitionAgent(id:String) {
 			
+			provides cycle: Do = agentComponent.cycle
+			requires getContext: Context
+			requires setContext: ContextUpdate
+			requires finishedCycle: CycleAlert
+			requires push: Push
+			requires pull: Pull
+			
+			part agentComponent: Agent[Context, ContextUpdate, ActionableTransition, TransSharedMemory, Push, Pull] {
+				bind getContext to getContext
+			 	bind setContext to setContext
+			 	bind finishedCycle to finishedCycle
+			 	bind push to push
+			 	bind pull to pull
+			}
 		}
 	}
 	
-	component Perceive{
+	component Agent[Context, ContextUpdate, Actionable, SharedMemory, Push, Pull] {
+		part memory: Memory[SharedMemory]
+		
+		part perceive: Perceive[Context, SharedMemory, Pull] {
+			bind decision to decide.decision
+			bind getContext to getContext
+		}
+			
+		part decide: Decide[Actionable, SharedMemory] {
+			bind action to act.action
+		}
+	
+		part act: Act[Actionable,ContextUpdate, SharedMemory, Push] {
+			bind finishedCycle to finishedCycle
+			bind setContext to setContext
+		}
+		
+		provides cycle: Do = perceive.perception
+		requires getContext: Context
+		requires setContext: ContextUpdate
+		requires finishedCycle: CycleAlert
+		requires push: Push
+		requires pull: Pull
+	}
+	
+	component Perceive[Context, SharedMemory, Pull] {
 		provides perception: Do
 		requires decision: Do
-		requires getEnvInfos: EnvInfos
+		requires getContext: Context
 	}
 	
-	component Decide{
+	component Decide[Actionable, SharedMemory] {
 		provides decision: Do
-		requires action: Do
+		requires action: Actionable
 	}
 	
-	component Act{
-		provides action: Do
+	component Act[Actionable, ContextUpdate, SharedMemory, Push] {
+		provides action: Actionable
 		requires finishedCycle: CycleAlert
-		requires setEnv: EnvUpdate
+		requires setContext: ContextUpdate
 	}
 		
+	component Memory[SharedMemory] {
+		provides infos: SharedMemory
+	}
 	
 }
