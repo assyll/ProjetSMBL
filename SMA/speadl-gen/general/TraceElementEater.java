@@ -1,37 +1,35 @@
 package general;
 
-import trace.interfaces.IAddAction;
 import trace.interfaces.TraceElement;
 
 @SuppressWarnings("all")
-public class TraceElementEater {
-  public interface Requires {
+public abstract class TraceElementEater<ActionGetter> {
+  public interface Requires<ActionGetter> {
     /**
      * This can be called by the implementation to access this required port.
      * 
      */
     public TraceElement traceElement();
-    
+  }
+  
+  public interface Component<ActionGetter> extends TraceElementEater.Provides<ActionGetter> {
+  }
+  
+  public interface Provides<ActionGetter> {
     /**
-     * This can be called by the implementation to access this required port.
+     * This can be called to access the provided port.
      * 
      */
-    public IAddAction actionElement();
+    public ActionGetter actionGetter();
   }
   
-  public interface Component extends TraceElementEater.Provides {
+  public interface Parts<ActionGetter> {
   }
   
-  public interface Provides {
-  }
-  
-  public interface Parts {
-  }
-  
-  public static class ComponentImpl implements TraceElementEater.Component, TraceElementEater.Parts {
-    private final TraceElementEater.Requires bridge;
+  public static class ComponentImpl<ActionGetter> implements TraceElementEater.Component<ActionGetter>, TraceElementEater.Parts<ActionGetter> {
+    private final TraceElementEater.Requires<ActionGetter> bridge;
     
-    private final TraceElementEater implementation;
+    private final TraceElementEater<ActionGetter> implementation;
     
     public void start() {
       this.implementation.start();
@@ -42,11 +40,19 @@ public class TraceElementEater {
       
     }
     
-    protected void initProvidedPorts() {
-      
+    private void init_actionGetter() {
+      assert this.actionGetter == null: "This is a bug.";
+      this.actionGetter = this.implementation.make_actionGetter();
+      if (this.actionGetter == null) {
+      	throw new RuntimeException("make_actionGetter() in general.TraceElementEater<ActionGetter> should not return null.");
+      }
     }
     
-    public ComponentImpl(final TraceElementEater implem, final TraceElementEater.Requires b, final boolean doInits) {
+    protected void initProvidedPorts() {
+      init_actionGetter();
+    }
+    
+    public ComponentImpl(final TraceElementEater<ActionGetter> implem, final TraceElementEater.Requires<ActionGetter> b, final boolean doInits) {
       this.bridge = b;
       this.implementation = implem;
       
@@ -60,6 +66,12 @@ public class TraceElementEater {
       	initParts();
       	initProvidedPorts();
       }
+    }
+    
+    private ActionGetter actionGetter;
+    
+    public ActionGetter actionGetter() {
+      return this.actionGetter;
     }
   }
   
@@ -77,7 +89,7 @@ public class TraceElementEater {
    */
   private boolean started = false;;
   
-  private TraceElementEater.ComponentImpl selfComponent;
+  private TraceElementEater.ComponentImpl<ActionGetter> selfComponent;
   
   /**
    * Can be overridden by the implementation.
@@ -94,7 +106,7 @@ public class TraceElementEater {
    * This can be called by the implementation to access the provided ports.
    * 
    */
-  protected TraceElementEater.Provides provides() {
+  protected TraceElementEater.Provides<ActionGetter> provides() {
     assert this.selfComponent != null: "This is a bug.";
     if (!this.init) {
     	throw new RuntimeException("provides() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if provides() is needed to initialise the component.");
@@ -103,10 +115,17 @@ public class TraceElementEater {
   }
   
   /**
+   * This should be overridden by the implementation to define the provided port.
+   * This will be called once during the construction of the component to initialize the port.
+   * 
+   */
+  protected abstract ActionGetter make_actionGetter();
+  
+  /**
    * This can be called by the implementation to access the required ports.
    * 
    */
-  protected TraceElementEater.Requires requires() {
+  protected TraceElementEater.Requires<ActionGetter> requires() {
     assert this.selfComponent != null: "This is a bug.";
     if (!this.init) {
     	throw new RuntimeException("requires() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if requires() is needed to initialise the component.");
@@ -118,7 +137,7 @@ public class TraceElementEater {
    * This can be called by the implementation to access the parts and their provided ports.
    * 
    */
-  protected TraceElementEater.Parts parts() {
+  protected TraceElementEater.Parts<ActionGetter> parts() {
     assert this.selfComponent != null: "This is a bug.";
     if (!this.init) {
     	throw new RuntimeException("parts() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if parts() is needed to initialise the component.");
@@ -130,12 +149,12 @@ public class TraceElementEater {
    * Not meant to be used to manually instantiate components (except for testing).
    * 
    */
-  public synchronized TraceElementEater.Component _newComponent(final TraceElementEater.Requires b, final boolean start) {
+  public synchronized TraceElementEater.Component<ActionGetter> _newComponent(final TraceElementEater.Requires<ActionGetter> b, final boolean start) {
     if (this.init) {
     	throw new RuntimeException("This instance of TraceElementEater has already been used to create a component, use another one.");
     }
     this.init = true;
-    TraceElementEater.ComponentImpl  _comp = new TraceElementEater.ComponentImpl(this, b, true);
+    TraceElementEater.ComponentImpl<ActionGetter>  _comp = new TraceElementEater.ComponentImpl<ActionGetter>(this, b, true);
     if (start) {
     	_comp.start();
     }

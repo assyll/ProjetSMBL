@@ -1,9 +1,10 @@
-package agents.impl;
+package agents.impl.state;
 
 import agents.interfaces.PullMessage;
 import agents.interfaces.SendMessage;
 import agents.interfaces.StateAction;
 import agents.interfaces.StateMemory;
+import environnement.interfaces.ContextInfos;
 import environnement.interfaces.EnvInfos;
 import environnement.interfaces.EnvUpdate;
 import general.Act;
@@ -12,7 +13,7 @@ import general.Decide;
 import general.Memory;
 import general.Perceive;
 
-public class StateAgentCompImpl extends Agent<EnvInfos, EnvUpdate, StateAction, StateMemory, SendMessage, PullMessage> {
+public class StateAgentCompImpl extends Agent<ContextInfos, EnvUpdate, StateAction, StateMemory, SendMessage, PullMessage> {
 
 	private String id;
 	
@@ -26,7 +27,7 @@ public class StateAgentCompImpl extends Agent<EnvInfos, EnvUpdate, StateAction, 
 	}
 
 	@Override
-	protected Perceive<EnvInfos, StateMemory, PullMessage> make_perceive() {
+	protected Perceive<ContextInfos, StateMemory, PullMessage> make_perceive() {
 		return new PerceiveStateImpl(id);
 	}
 

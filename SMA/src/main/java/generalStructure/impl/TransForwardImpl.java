@@ -3,6 +3,8 @@ package generalStructure.impl;
 import java.util.List;
 
 import trace.Action;
+import trace.interfaces.ITakeAction;
+import environnement.interfaces.ContextInfos;
 import environnement.interfaces.EnvInfos;
 import environnement.interfaces.EnvUpdate;
 import general.Forward.TransForward;
@@ -10,8 +12,14 @@ import generalStructure.interfaces.CycleAlert;
 import agents.interfaces.PullMessage;
 import agents.interfaces.SendMessage;
 
-public class TransForwardImpl extends TransForward<CycleAlert, EnvInfos, EnvUpdate, SendMessage, PullMessage> implements CycleAlert, EnvInfos, EnvUpdate, SendMessage, PullMessage {
+public class TransForwardImpl extends TransForward<CycleAlert, ContextInfos, EnvInfos, EnvUpdate, SendMessage, PullMessage, ITakeAction> 
+implements CycleAlert, EnvInfos, EnvUpdate, SendMessage, PullMessage {
 
+	private String id;
+	
+	public TransForwardImpl(String id) {
+		this.id = id;
+	}
 	
 	@Override
 	public void move(String id, List<Action> currentPositionActions,
@@ -35,7 +43,7 @@ public class TransForwardImpl extends TransForward<CycleAlert, EnvInfos, EnvUpda
 
 	@Override
 	public List<String> getAllAgentsInCell(List<Action> listActions) {
-		return eco_requires().j().getAllAgentsInCell(listActions);
+		return eco_requires().h().getAllAgentsInCell(listActions);
 	}
 
 	@Override
@@ -45,11 +53,6 @@ public class TransForwardImpl extends TransForward<CycleAlert, EnvInfos, EnvUpda
 
 	@Override
 	protected CycleAlert make_a() {
-		return this;
-	}
-
-	@Override
-	protected EnvInfos make_b() {
 		return this;
 	}
 
@@ -68,4 +71,8 @@ public class TransForwardImpl extends TransForward<CycleAlert, EnvInfos, EnvUpda
 		return this;
 	}
 
+	@Override
+	protected EnvInfos make_b() {
+		return this;
+	}
 }

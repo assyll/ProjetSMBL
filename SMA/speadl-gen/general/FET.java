@@ -15,7 +15,7 @@ public abstract class FET {
      * This can be called to access the provided port.
      * 
      */
-    public TraceElement elementDeTrace();
+    public TraceElement traceElement();
   }
   
   public interface Parts {
@@ -35,16 +35,16 @@ public abstract class FET {
       
     }
     
-    private void init_elementDeTrace() {
-      assert this.elementDeTrace == null: "This is a bug.";
-      this.elementDeTrace = this.implementation.make_elementDeTrace();
-      if (this.elementDeTrace == null) {
-      	throw new RuntimeException("make_elementDeTrace() in general.FET should not return null.");
+    private void init_traceElement() {
+      assert this.traceElement == null: "This is a bug.";
+      this.traceElement = this.implementation.make_traceElement();
+      if (this.traceElement == null) {
+      	throw new RuntimeException("make_traceElement() in general.FET should not return null.");
       }
     }
     
     protected void initProvidedPorts() {
-      init_elementDeTrace();
+      init_traceElement();
     }
     
     public ComponentImpl(final FET implem, final FET.Requires b, final boolean doInits) {
@@ -63,10 +63,10 @@ public abstract class FET {
       }
     }
     
-    private TraceElement elementDeTrace;
+    private TraceElement traceElement;
     
-    public TraceElement elementDeTrace() {
-      return this.elementDeTrace;
+    public TraceElement traceElement() {
+      return this.traceElement;
     }
   }
   
@@ -114,7 +114,7 @@ public abstract class FET {
    * This will be called once during the construction of the component to initialize the port.
    * 
    */
-  protected abstract TraceElement make_elementDeTrace();
+  protected abstract TraceElement make_traceElement();
   
   /**
    * This can be called by the implementation to access the required ports.

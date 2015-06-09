@@ -1,4 +1,4 @@
-import environnement.interfaces.EnvInfos
+import environnement.interfaces.ContextInfos
 import environnement.interfaces.EnvUpdate
 import java.util.List
 import trace.Action

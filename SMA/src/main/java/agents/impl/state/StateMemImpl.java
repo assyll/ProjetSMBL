@@ -1,4 +1,4 @@
-package agents.impl;
+package agents.impl.state;
 
 import general.Memory;
 
@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import trace.Action;
+import agents.impl.RequestMessage;
+import agents.impl.ResponseMessage;
 import agents.interfaces.StateMemory;
 
 public class StateMemImpl extends Memory<StateMemory> implements StateMemory {

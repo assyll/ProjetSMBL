@@ -1,10 +1,11 @@
-package agents.impl;
+package agents.impl.state;
 
+import agents.impl.AbstractPerceive;
 import agents.interfaces.PullMessage;
 import agents.interfaces.StateMemory;
-import environnement.interfaces.EnvInfos;
+import environnement.interfaces.ContextInfos;
 
-public class PerceiveStateImpl extends AbstractPerceive<EnvInfos, StateMemory, PullMessage> {
+public class PerceiveStateImpl extends AbstractPerceive<ContextInfos, StateMemory, PullMessage> {
 
 	private String id;
 	

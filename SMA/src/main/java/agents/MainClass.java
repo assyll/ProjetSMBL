@@ -10,7 +10,7 @@ import trace.Action;
 public class MainClass {
 
 	public static void main(String[] args) {
-		new BigEcoImpl().newComponent();
+		new BigEcoImpl("C:\\Traces\\SMA\\test1.txt").newComponent();
 		
 		/*Map<String,String> actions = new HashMap<>();
 		actions.put("action1", "A1");

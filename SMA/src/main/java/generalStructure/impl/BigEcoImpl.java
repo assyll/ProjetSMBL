@@ -1,8 +1,13 @@
 package generalStructure.impl;
 
+import trace.Action;
+import trace.impl.ActionProviderImpl;
+import trace.interfaces.ITakeAction;
 import environnement.impl.EnvironnementImpl;
+import environnement.interfaces.ContextInfos;
 import environnement.interfaces.EnvInfos;
 import environnement.interfaces.EnvUpdate;
+import general.ActionProvider;
 import general.BigEco;
 import general.EcoAgents;
 import general.Environnement;
@@ -17,25 +22,25 @@ import agents.interfaces.StateMemory;
 import agents.interfaces.TransAction;
 import agents.interfaces.TransMemory;
 
-public class BigEcoImpl extends BigEco<StateAction, TransAction, EnvInfos,
-EnvUpdate, StateMemory, TransMemory, SendMessage, PullMessage> {
+public class BigEcoImpl extends BigEco<StateAction, TransAction, ContextInfos, EnvInfos,
+EnvUpdate, StateMemory, TransMemory, ITakeAction, SendMessage, PullMessage> {
 
-	public static BigEcoImpl bigEcoImpl;
+	private final String path;
 
 	private Thread t = null;
 
-	public BigEcoImpl() {
-		bigEcoImpl = this;
+	public BigEcoImpl(String path) {
+		this.path = path;
 	}
 
 	@Override
-	protected EcoAgents<StateAction, TransAction, EnvInfos,
+	protected EcoAgents<StateAction, TransAction, ContextInfos, EnvInfos,
 	EnvUpdate, StateMemory, TransMemory, SendMessage, PullMessage> make_ecoAE() {
 		return new EcoAgentsImpl();
 	}
 
 	@Override
-	protected Forward<CycleAlert, EnvInfos, EnvUpdate, SendMessage, PullMessage> make_fw() {
+	protected Forward<CycleAlert, ContextInfos, EnvInfos, EnvUpdate, SendMessage, PullMessage, ITakeAction> make_fw() {
 		return new ForwardImpl();
 	}
 
@@ -49,7 +54,9 @@ EnvUpdate, StateMemory, TransMemory, SendMessage, PullMessage> {
 	protected void start() {
 		super.start();
 
-		this.newDynamicAssemblyAgentEtat("Agent Etat 1");
+		newDynamicAssemblyAgentTransition("A", new Action(), "ST1");
+		//newDynamicAssemblyAgentEtat("Agent Etat 1");
+		/*this.newDynamicAssemblyAgentEtat("Agent Etat 1");
 		this.newDynamicAssemblyAgentEtat("Agent Etat 2");
 		this.newDynamicAssemblyAgentEtat("Agent Etat 3");
 		this.newDynamicAssemblyAgentEtat("Agent Etat 4");
@@ -90,7 +97,7 @@ EnvUpdate, StateMemory, TransMemory, SendMessage, PullMessage> {
 			}
 
 		});
-		t.start();
+		t.start();*/
 
 	}
 
@@ -98,4 +105,10 @@ EnvUpdate, StateMemory, TransMemory, SendMessage, PullMessage> {
 	protected Environnement<EnvInfos, EnvUpdate> make_envEco() {
 		return new EnvironnementImpl();
 	}
+
+	@Override
+	protected ActionProvider<ITakeAction> make_actionProvider() {
+		return new ActionProviderImpl(path);
+	}
 }
+

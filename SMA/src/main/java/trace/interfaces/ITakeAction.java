@@ -1,7 +1,7 @@
 package trace.interfaces;
 
-import trace.ActionTrace;
+import trace.Action;
 
 public interface ITakeAction {
-	public ActionTrace getNextAction();
+	public Action getActionTrace(String userName);
 }

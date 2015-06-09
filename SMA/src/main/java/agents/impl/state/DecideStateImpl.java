@@ -1,5 +1,6 @@
-package agents.impl;
+package agents.impl.state;
 
+import agents.impl.AbstractDecide;
 import agents.interfaces.StateAction;
 import agents.interfaces.StateMemory;
 

@@ -198,6 +198,10 @@ public abstract class Agent<Context, ContextUpdate, Actionable, SharedMemory, Pu
       public final Context getContext() {
         return Agent.ComponentImpl.this.bridge.getContext();
       }
+      
+      public final SharedMemory memory() {
+        return Agent.ComponentImpl.this.memory().infos();
+      }
     }
     
     public final Perceive.Component<Context, SharedMemory, Pull> perceive() {
@@ -211,6 +215,10 @@ public abstract class Agent<Context, ContextUpdate, Actionable, SharedMemory, Pu
     private final class BridgeImpl_decide implements Decide.Requires<Actionable, SharedMemory> {
       public final Actionable action() {
         return Agent.ComponentImpl.this.act().action();
+      }
+      
+      public final SharedMemory memory() {
+        return Agent.ComponentImpl.this.memory().infos();
       }
     }
     
@@ -229,6 +237,10 @@ public abstract class Agent<Context, ContextUpdate, Actionable, SharedMemory, Pu
       
       public final ContextUpdate setContext() {
         return Agent.ComponentImpl.this.bridge.setContext();
+      }
+      
+      public final SharedMemory memory() {
+        return Agent.ComponentImpl.this.memory().infos();
       }
     }
     

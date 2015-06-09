@@ -16,6 +16,7 @@ public abstract class AbstractPerceive<Context, SharedMemory, Pull> extends Perc
 
 	@Override
 	public void doIt() {
+		System.out.println("bete");
 		makePerception();
 		this.requires().decision().doIt();
 	}

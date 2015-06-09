@@ -1,11 +1,8 @@
 import agents.interfaces.Callable
-import generalStructure.interfaces.CycleAlert
 import agents.interfaces.IGetThread
-import environnement.interfaces.EnvInfos
-import environnement.interfaces.EnvUpdate
+import generalStructure.interfaces.CycleAlert
+import generalStructure.interfaces.ICreateAgent
 import trace.Action
-import java.util.List
-import environnement.interfaces.CellInfo
 
 namespace general{
 	
@@ -15,29 +12,29 @@ namespace general{
 		provides threads: IGetThread
 	}
 	
-	ecosystem BigEco[ActionableState, ActionableTransition, Context, ContextUpdate, StateSharedMemory, TransSharedMemory, Push, Pull] {
-		part ecoAE: EcoAgents[ActionableState, ActionableTransition, Context, ContextUpdate, StateSharedMemory, TransSharedMemory, Push, Pull] {
+	ecosystem BigEco[ActionableState, ActionableTransition, ContextSA, ContextTA, 
+		ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull] {
+			
+		part ecoAE: EcoAgents[ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, Push, Pull] {
 			bind threads to launcher.threads
+			bind createAgent to fw.creatAgent
 		}
 		
-		part fw: Forward[CycleAlert, Context, ContextUpdate, Push, Pull] {
+		part fw: Forward[CycleAlert, ContextSA, ContextTA, ContextUpdate, Push, Pull, ActionGetter] {
 			bind i to launcher.finishedCycle
-			bind j to envEco.envInfos
+			bind h to envEco.envInfos
 			bind k to envEco.envUpdate
+			bind j to actionProvider.actionGetter
 		}
 		
-		/*part fwTrans: Forward[CycleAlert, Context, ContextUpdate, Push, Pull] {
-			bind i to launcher.finishedCycle
-			bind j to envEco.envInfos
-			bind k to envEco.envUpdate
-		}*/
+		part actionProvider: ActionProvider[ActionGetter]
 		
 		part launcher: Launcher
 		
-		part envEco: Environnement[Context, ContextUpdate]
+		part envEco: Environnement[ContextTA, ContextUpdate]
 		
-		species DynamicAssemblyAgentTransition(id: String) {
-			use agentT: ecoAE.TransitionAgent(id) {
+		species DynamicAssemblyAgentTransition(id: String, action:Action, stateSourceId:String) {
+			use agentT: ecoAE.TransitionAgent(id, action, stateSourceId) {
 				bind finishedCycle to aFW.a
 				bind getContext to aFW.b
 				bind setContext to aFW.c
@@ -60,27 +57,31 @@ namespace general{
 		}
 	}
 	
-	ecosystem Forward[I, J, K, L, M] {
+	
+	ecosystem Forward[CycleAlert, ContextSA, ContextTA, ContextUpdate, Push, Pull, ActionGetter] {
 		 species StateForward (id: String) {
-		 	provides a: I
-		 	provides b: J
-		 	provides c: K
-		 	provides d: L
-		 	provides e: M
+		 	provides a: CycleAlert
+		 	provides b: ContextSA
+		 	provides c: ContextUpdate
+		 	provides d: Push
+		 	provides e: Pull
 		 }
 		 
 		  species TransForward (id: String) {
-		 	provides a: I
-		 	provides b: J
-		 	provides c: K
-		 	provides d: L
-		 	provides e: M
+		 	provides a: CycleAlert
+		 	provides b: ContextTA
+		 	provides c: ContextUpdate
+		 	provides d: Push
+		 	provides e: Pull
 		 }
 		 
-		 requires i: I
-		 requires j: J
-		 requires k: K
-		 provides l: L
+		 requires i: CycleAlert
+		 requires j: ActionGetter
+		 requires h: ContextTA
+		 requires k: ContextUpdate
+		 provides l: Push
+		 provides creatAgent : ICreateAgent
 	}
+	
 	
 }

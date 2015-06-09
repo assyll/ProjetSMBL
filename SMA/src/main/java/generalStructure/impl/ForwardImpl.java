@@ -1,30 +1,39 @@
 package generalStructure.impl;
 
+import environnement.interfaces.ContextInfos;
 import environnement.interfaces.EnvInfos;
 import environnement.interfaces.EnvUpdate;
 import general.Forward;
 import generalStructure.interfaces.CycleAlert;
+import generalStructure.interfaces.ICreateAgent;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.PriorityQueue;
-import java.util.Queue;
+import java.util.Map;
 
-import trace.Action;
-import trace.ActionTrace;
-import agents.impl.RequestMessage;
-import agents.impl.ResponseMessage;
+import trace.interfaces.ITakeAction;
 import agents.interfaces.PullMessage;
 import agents.interfaces.SendMessage;
 
-public class ForwardImpl extends Forward<CycleAlert, EnvInfos, EnvUpdate, SendMessage, PullMessage> implements SendMessage {
+public class ForwardImpl extends Forward<CycleAlert, ContextInfos,EnvInfos,  EnvUpdate, SendMessage, PullMessage, ITakeAction> implements SendMessage, ICreateAgent {
 
-	private List<StateForwardImpl> list = new ArrayList<StateForwardImpl>();
+	private int nbState;
+	private int nbTrans;
+	private Map<String,StateForwardImpl> stateFwList;
+	private Map<String,TransForwardImpl> transFwList;
+
+	public ForwardImpl() {
+		stateFwList = new HashMap<String, StateForwardImpl>();
+		transFwList = new HashMap<String, TransForwardImpl>();
+		nbState = 0;
+		nbTrans = 0;
+	}
 	
 	@Override
-	protected StateForward<CycleAlert, EnvInfos, EnvUpdate, SendMessage, PullMessage> make_StateForward(String id){
+	protected StateForward<CycleAlert, ContextInfos, EnvInfos, EnvUpdate, SendMessage, PullMessage, ITakeAction> make_StateForward(String id){
 		StateForwardImpl a = new StateForwardImpl(id);
-		list.add(a);
+		stateFwList.put(id, a);
 		return a;
 	}
 
@@ -34,9 +43,29 @@ public class ForwardImpl extends Forward<CycleAlert, EnvInfos, EnvUpdate, SendMe
 	}
 
 	@Override
-	protected general.Forward.TransForward<CycleAlert, EnvInfos, EnvUpdate, SendMessage, PullMessage> make_TransForward(
+	protected TransForward<CycleAlert, ContextInfos, EnvInfos, EnvUpdate, SendMessage, PullMessage,ITakeAction> make_TransForward(
 			String id) {
-		// TODO Auto-generated method stub
-		return null;
+		TransForwardImpl a = new TransForwardImpl(id);
+		transFwList.put(id, a);
+		return a;
+	}
+
+	@Override
+	protected ICreateAgent make_creatAgent() {
+		return this;
+	}
+
+	@Override
+	public String createNewState() {
+		String id = "S"+ (nbState++);
+		newStateForward(id);
+		return id;
+	}
+
+	@Override
+	public String createNewTransition() {
+		String id = "T"+ (nbTrans++);
+		newTransForward(id);
+		return id;
 	}
 }

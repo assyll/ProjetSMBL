@@ -19,3 +19,7 @@
 /.Agent.java._trace
 /.EcoAgents.java._trace
 /.Memory.java._trace
+/.ActionPorivder.java._trace
+/.ActionProvider.java._trace
+/.TraceParser.java._trace
+/.TraceActionParser.java._trace

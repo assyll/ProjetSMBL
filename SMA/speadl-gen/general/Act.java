@@ -16,6 +16,12 @@ public abstract class Act<Actionable, ContextUpdate, SharedMemory, Push> {
      * 
      */
     public ContextUpdate setContext();
+    
+    /**
+     * This can be called by the implementation to access this required port.
+     * 
+     */
+    public SharedMemory memory();
   }
   
   public interface Component<Actionable, ContextUpdate, SharedMemory, Push> extends Act.Provides<Actionable, ContextUpdate, SharedMemory, Push> {

@@ -10,6 +10,12 @@ public abstract class Decide<Actionable, SharedMemory> {
      * 
      */
     public Actionable action();
+    
+    /**
+     * This can be called by the implementation to access this required port.
+     * 
+     */
+    public SharedMemory memory();
   }
   
   public interface Component<Actionable, SharedMemory> extends Decide.Provides<Actionable, SharedMemory> {

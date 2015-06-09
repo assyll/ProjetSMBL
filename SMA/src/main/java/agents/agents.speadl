@@ -1,21 +1,24 @@
 import agents.interfaces.Do
 import agents.interfaces.IGetThread
 import generalStructure.interfaces.CycleAlert
+import generalStructure.interfaces.ICreateAgent
+import trace.Action
 
 namespace general{
 
-	ecosystem EcoAgents[ActionableState, ActionableTransition, Context, ContextUpdate, StateSharedMemory, TransSharedMemory, Push, Pull] {
+	ecosystem EcoAgents[ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, Push, Pull] {
 		requires threads: IGetThread
+		requires createAgent: ICreateAgent
 		
 		species StateAgent (id: String) {
 			provides cycle: Do = agentComponent.cycle
-			requires getContext: Context
+			requires getContext: ContextSA
 			requires setContext: ContextUpdate
 			requires finishedCycle: CycleAlert
 			requires push: Push
 			requires pull: Pull
 			
-			 part agentComponent: Agent[Context, ContextUpdate, ActionableState, StateSharedMemory, Push, Pull] {
+			 part agentComponent: Agent[ContextSA, ContextUpdate, ActionableState, StateSharedMemory, Push, Pull] {
 			 	bind getContext to getContext
 			 	bind setContext to setContext
 			 	bind finishedCycle to finishedCycle
@@ -26,16 +29,16 @@ namespace general{
 			//requires getTraceElement: IGetAction
 		}
 		
-		species TransitionAgent(id:String) {
+		species TransitionAgent(id:String, action:Action , stateSource:String) {
 			
 			provides cycle: Do = agentComponent.cycle
-			requires getContext: Context
+			requires getContext: ContextTA
 			requires setContext: ContextUpdate
 			requires finishedCycle: CycleAlert
 			requires push: Push
 			requires pull: Pull
 			
-			part agentComponent: Agent[Context, ContextUpdate, ActionableTransition, TransSharedMemory, Push, Pull] {
+			part agentComponent: Agent[ContextTA, ContextUpdate, ActionableTransition, TransSharedMemory, Push, Pull] {
 				bind getContext to getContext
 			 	bind setContext to setContext
 			 	bind finishedCycle to finishedCycle
@@ -51,15 +54,18 @@ namespace general{
 		part perceive: Perceive[Context, SharedMemory, Pull] {
 			bind decision to decide.decision
 			bind getContext to getContext
+			bind memory to memory.infos
 		}
 			
 		part decide: Decide[Actionable, SharedMemory] {
 			bind action to act.action
+			bind memory to memory.infos
 		}
 	
 		part act: Act[Actionable,ContextUpdate, SharedMemory, Push] {
 			bind finishedCycle to finishedCycle
 			bind setContext to setContext
+			bind memory to memory.infos
 		}
 		
 		provides cycle: Do = perceive.perception
@@ -74,17 +80,20 @@ namespace general{
 		provides perception: Do
 		requires decision: Do
 		requires getContext: Context
+		requires memory: SharedMemory
 	}
 	
 	component Decide[Actionable, SharedMemory] {
 		provides decision: Do
 		requires action: Actionable
+		requires memory: SharedMemory
 	}
 	
 	component Act[Actionable, ContextUpdate, SharedMemory, Push] {
 		provides action: Actionable
 		requires finishedCycle: CycleAlert
 		requires setContext: ContextUpdate
+		requires memory: SharedMemory
 	}
 		
 	component Memory[SharedMemory] {

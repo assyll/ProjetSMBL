@@ -7,6 +7,7 @@ import java.util.Map;
 
 import trace.Action;
 import environnement.interfaces.CellInfo;
+import environnement.interfaces.ContextInfos;
 import environnement.interfaces.EnvInfos;
 import environnement.interfaces.EnvUpdate;
 import general.Environnement;
@@ -14,7 +15,7 @@ import general.Forward;
 import generalStructure.impl.BigEcoImpl;
 
 public class EnvironnementImpl extends Environnement<EnvInfos, EnvUpdate>
-		implements EnvUpdate, EnvInfos{
+		implements EnvUpdate, EnvInfos {
 
 	private Map<Integer,List<CellImpl>> cellsByLevel = new HashMap<>();
 	
@@ -175,5 +176,6 @@ public class EnvironnementImpl extends Environnement<EnvInfos, EnvUpdate>
 		}
 
 	}
+
 
 }

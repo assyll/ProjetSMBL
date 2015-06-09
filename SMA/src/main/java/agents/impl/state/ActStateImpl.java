@@ -1,8 +1,9 @@
-package agents.impl;
+package agents.impl.state;
 
 import java.util.List;
 
 import trace.Action;
+import agents.impl.AbstractAct;
 import agents.interfaces.SendMessage;
 import agents.interfaces.StateAction;
 import agents.interfaces.StateMemory;

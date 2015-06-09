@@ -1,41 +1,36 @@
-import trace.interfaces.IAddAction
-import trace.interfaces.IUpdateCurrentAgent
 import trace.interfaces.TraceElement
-import trace.interfaces.ITakeAction
 
 namespace general{
 	component FET{
-		provides elementDeTrace: TraceElement
+		provides traceElement: TraceElement
 	}
 	
-	component TraceElementEater{
+	component TraceActionParser {
 		requires traceElement: TraceElement
-		requires actionElement: IAddAction
+		provides actionTrace: TraceElement
 	}
 	
-	component BigComponent{
-		/*part fet: FET
-		part traceEater: TraceElementEater{
-			bind traceElement to fet.elementDeTrace
-		}*/
+	component TraceElementEater[ActionGetter] {
+		requires traceElement: TraceElement
+		provides actionGetter: ActionGetter
 	}
 	
-	ecosystem LetterBoxEco {
-		provides addAction: IAddAction
-		provides updateCurrentAgent: IUpdateCurrentAgent
+	
+	component ActionProvider[ActionGetter] {
 		
-		species LetterBoxSpecies {
-			provides getAction: ITakeAction
-		}
-	}
-	
-	ecosystem ActionParserEco {
-		requires traceElement: TraceElement 
+		provides actionGetter : ActionGetter = tee.actionGetter
 		
-		species ActionParser(id: String){
-			provides actionGetter: ITakeAction
+		part fet: FET
+		
+		part traceParser: TraceActionParser {
+			bind traceElement to fet.traceElement
 		}
+		
+		part tee: TraceElementEater[ActionGetter] {
+			bind traceElement to traceParser.actionTrace
+		}
+		
 	}
-	
+
 	 
 }

@@ -56,6 +56,8 @@ public class LauncherImpl extends Launcher implements Callable, CycleAlert, IGet
 			if(!(execService == null)){
 				
 				synchronized (agents) {
+					
+					System.out.println("********************************************************");
 					for(Runnable e: agents.values() )
 						execService.execute(e);
 				}

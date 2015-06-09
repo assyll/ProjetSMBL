@@ -1,23 +1,35 @@
 package general;
 
+import trace.interfaces.TraceElement;
+
 @SuppressWarnings("all")
-public class BigComponent {
+public abstract class TraceActionParser {
   public interface Requires {
+    /**
+     * This can be called by the implementation to access this required port.
+     * 
+     */
+    public TraceElement traceElement();
   }
   
-  public interface Component extends BigComponent.Provides {
+  public interface Component extends TraceActionParser.Provides {
   }
   
   public interface Provides {
+    /**
+     * This can be called to access the provided port.
+     * 
+     */
+    public TraceElement actionTrace();
   }
   
   public interface Parts {
   }
   
-  public static class ComponentImpl implements BigComponent.Component, BigComponent.Parts {
-    private final BigComponent.Requires bridge;
+  public static class ComponentImpl implements TraceActionParser.Component, TraceActionParser.Parts {
+    private final TraceActionParser.Requires bridge;
     
-    private final BigComponent implementation;
+    private final TraceActionParser implementation;
     
     public void start() {
       this.implementation.start();
@@ -28,11 +40,19 @@ public class BigComponent {
       
     }
     
-    protected void initProvidedPorts() {
-      
+    private void init_actionTrace() {
+      assert this.actionTrace == null: "This is a bug.";
+      this.actionTrace = this.implementation.make_actionTrace();
+      if (this.actionTrace == null) {
+      	throw new RuntimeException("make_actionTrace() in general.TraceActionParser should not return null.");
+      }
     }
     
-    public ComponentImpl(final BigComponent implem, final BigComponent.Requires b, final boolean doInits) {
+    protected void initProvidedPorts() {
+      init_actionTrace();
+    }
+    
+    public ComponentImpl(final TraceActionParser implem, final TraceActionParser.Requires b, final boolean doInits) {
       this.bridge = b;
       this.implementation = implem;
       
@@ -46,6 +66,12 @@ public class BigComponent {
       	initParts();
       	initProvidedPorts();
       }
+    }
+    
+    private TraceElement actionTrace;
+    
+    public TraceElement actionTrace() {
+      return this.actionTrace;
     }
   }
   
@@ -63,7 +89,7 @@ public class BigComponent {
    */
   private boolean started = false;;
   
-  private BigComponent.ComponentImpl selfComponent;
+  private TraceActionParser.ComponentImpl selfComponent;
   
   /**
    * Can be overridden by the implementation.
@@ -80,7 +106,7 @@ public class BigComponent {
    * This can be called by the implementation to access the provided ports.
    * 
    */
-  protected BigComponent.Provides provides() {
+  protected TraceActionParser.Provides provides() {
     assert this.selfComponent != null: "This is a bug.";
     if (!this.init) {
     	throw new RuntimeException("provides() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if provides() is needed to initialise the component.");
@@ -89,10 +115,17 @@ public class BigComponent {
   }
   
   /**
+   * This should be overridden by the implementation to define the provided port.
+   * This will be called once during the construction of the component to initialize the port.
+   * 
+   */
+  protected abstract TraceElement make_actionTrace();
+  
+  /**
    * This can be called by the implementation to access the required ports.
    * 
    */
-  protected BigComponent.Requires requires() {
+  protected TraceActionParser.Requires requires() {
     assert this.selfComponent != null: "This is a bug.";
     if (!this.init) {
     	throw new RuntimeException("requires() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if requires() is needed to initialise the component.");
@@ -104,7 +137,7 @@ public class BigComponent {
    * This can be called by the implementation to access the parts and their provided ports.
    * 
    */
-  protected BigComponent.Parts parts() {
+  protected TraceActionParser.Parts parts() {
     assert this.selfComponent != null: "This is a bug.";
     if (!this.init) {
     	throw new RuntimeException("parts() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if parts() is needed to initialise the component.");
@@ -116,23 +149,15 @@ public class BigComponent {
    * Not meant to be used to manually instantiate components (except for testing).
    * 
    */
-  public synchronized BigComponent.Component _newComponent(final BigComponent.Requires b, final boolean start) {
+  public synchronized TraceActionParser.Component _newComponent(final TraceActionParser.Requires b, final boolean start) {
     if (this.init) {
-    	throw new RuntimeException("This instance of BigComponent has already been used to create a component, use another one.");
+    	throw new RuntimeException("This instance of TraceActionParser has already been used to create a component, use another one.");
     }
     this.init = true;
-    BigComponent.ComponentImpl  _comp = new BigComponent.ComponentImpl(this, b, true);
+    TraceActionParser.ComponentImpl  _comp = new TraceActionParser.ComponentImpl(this, b, true);
     if (start) {
     	_comp.start();
     }
     return _comp;
-  }
-  
-  /**
-   * Use to instantiate a component from this implementation.
-   * 
-   */
-  public BigComponent.Component newComponent() {
-    return this._newComponent(new BigComponent.Requires() {}, true);
   }
 }

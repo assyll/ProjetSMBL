@@ -10,6 +10,10 @@ public class Action {
 		_actionMap = new HashMap<String, String>();
 	}
 	
+	public Action( Map<String,String> actionMap) {
+		_actionMap = actionMap;
+	}
+	
 	public void setNewActionField(String field, String value)
 	{
 		_actionMap.put(field, value);
