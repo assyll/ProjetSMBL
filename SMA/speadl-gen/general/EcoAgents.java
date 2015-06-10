@@ -723,14 +723,14 @@ public abstract class EcoAgents {
    * This should be overridden by the implementation to instantiate the implementation of the species.
    * 
    */
-  protected abstract EcoAgents.StateAgent make_StateAgent(final String id);
+  protected abstract EcoAgents.StateAgent make_StateAgent(final String id, final boolean isRoot);
   
   /**
    * Do not call, used by generated code.
    * 
    */
-  public EcoAgents.StateAgent _createImplementationOfStateAgent(final String id) {
-    EcoAgents.StateAgent implem = make_StateAgent(id);
+  public EcoAgents.StateAgent _createImplementationOfStateAgent(final String id, final boolean isRoot) {
+    EcoAgents.StateAgent implem = make_StateAgent(id,isRoot);
     if (implem == null) {
     	throw new RuntimeException("make_StateAgent() in general.EcoAgents should not return null.");
     }

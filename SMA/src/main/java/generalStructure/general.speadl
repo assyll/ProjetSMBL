@@ -34,7 +34,7 @@ namespace general{
 			bind j to actionProvider.actionGetter
 		}
 		
-		part actionProvider: ActionProvider
+		part actionProvider: ActionProvider 
 		
 		part launcher: Launcher
 		
@@ -51,22 +51,22 @@ namespace general{
 			use aFW: fw.TransForward(id)
 		}
 		                                                                                                                                                                                                                                                                      
-		species DynamicAssemblyAgentEtat(id: String) {
+		species DynamicAssemblyAgentEtat(id: String, isRoot: boolean) {
 					
-			use agentE: ecoAE.StateAgent(id) {
+			use agentE: ecoAE.StateAgent(id, isRoot) {
 				bind finishedCycle to aFW.a
 				bind getContext to aFW.b
 				bind setContext to aFW.c
 				bind push to aFW.d
 				bind pull to aFW.e
 			}
-			use aFW: fw.StateForward(id)
+			use aFW: fw.StateForward(id, isRoot)
 		}
 	}
 	
 	
 	ecosystem Forward[CycleAlert, ContextSA, ContextTA, ContextUpdate, Push, Pull, ActionGetter] {
-		 species StateForward (id: String) {
+		 species StateForward (id: String, isRoot: boolean) {
 		 	provides a: CycleAlert
 		 	provides b: ContextSA
 		 	provides c: ContextUpdate

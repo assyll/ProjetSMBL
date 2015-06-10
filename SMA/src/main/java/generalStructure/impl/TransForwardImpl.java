@@ -1,14 +1,15 @@
 package generalStructure.impl;
 
-import java.util.List;
-
-import trace.Action;
-import trace.interfaces.ITakeAction;
 import environnement.interfaces.ContextInfos;
 import environnement.interfaces.EnvInfos;
 import environnement.interfaces.EnvUpdate;
 import general.Forward.TransForward;
 import generalStructure.interfaces.CycleAlert;
+
+import java.util.List;
+
+import trace.Action;
+import trace.interfaces.ITakeAction;
 import agents.interfaces.PullMessage;
 import agents.interfaces.SendMessage;
 

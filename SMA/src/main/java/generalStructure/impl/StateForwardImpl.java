@@ -8,8 +8,6 @@ import generalStructure.interfaces.CycleAlert;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.PriorityQueue;
-import java.util.Queue;
 
 import trace.Action;
 import trace.ActionTrace;
@@ -93,5 +91,11 @@ implements CycleAlert, ContextInfos, EnvUpdate, SendMessage, PullMessage {
 	@Override
 	public Action getActionTrace(String userName) {
 		return eco_requires().j().getActionTrace(userName);
+	}
+
+	@Override
+	public ActionTrace newUserTrace() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

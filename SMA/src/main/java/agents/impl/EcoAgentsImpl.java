@@ -30,6 +30,7 @@ public class EcoAgentsImpl extends EcoAgents implements AgentTrace{
 	private  List<Runnable> listRunnable;
 	private int nbStateAgentsCreated;
 	private int nbTransAgentsCreated;
+	private String rootId;
 
 	public EcoAgentsImpl(){
 		currentAgentsMap = new HashMap<String,String>();
@@ -37,11 +38,23 @@ public class EcoAgentsImpl extends EcoAgents implements AgentTrace{
 		listRunnable = new ArrayList<Runnable>();
 		nbStateAgentsCreated = 0;
 		nbTransAgentsCreated = 0;
+		rootId = "";
 	}
 
 	@Override
-	protected StateAgent make_StateAgent(String id) {
-		StateAgentImpl agent = new StateAgentImpl(id);
+	protected void start() {
+		super.start();
+		
+		if(nbStateAgentsCreated == 0) {
+			rootId = "S0";
+			requires().createAgent().createNewState(rootId, true);
+			nbStateAgentsCreated++;
+		}
+	}
+	
+	@Override
+	protected StateAgent make_StateAgent(String id, boolean isRoot) {
+		StateAgentImpl agent = new StateAgentImpl(id, isRoot);
 
 		synchronized (agentsMap) {
 			agentsMap.put(id, agent);
@@ -83,12 +96,14 @@ public class EcoAgentsImpl extends EcoAgents implements AgentTrace{
 
 		return agent ;
 	}
+	
 
 	/**************************** Private Classes **************************/
 
 	private class StateAgentImpl extends StateAgent implements Runnable, ICreateAgent {
 
 		String id; 
+		boolean isRoot;
 
 		@Override
 		protected void start() {
@@ -97,8 +112,9 @@ public class EcoAgentsImpl extends EcoAgents implements AgentTrace{
 			}
 		}
 
-		public StateAgentImpl(String id) {
+		public StateAgentImpl(String id, boolean isRoot) {
 			this.id = id;
+			this.isRoot = isRoot;
 		}
 
 		@Override
@@ -108,25 +124,22 @@ public class EcoAgentsImpl extends EcoAgents implements AgentTrace{
 
 		@Override
 		protected Agent<ContextInfos, EnvUpdate, StateAction, StateMemory, ICreateAgent, SendMessage, PullMessage> make_agentComponent() {
-			return new StateAgentCompImpl(id);
+			return new StateAgentCompImpl(id, isRoot);
 		}
 
 		@Override
-		public void createNewState(String id) {
-			// TODO Auto-generated method stub
-			
+		public void createNewState(String id, boolean isRoot) {
+			eco_requires().createAgent().createNewState("S"+nbStateAgentsCreated, isRoot);
 		}
 
 		@Override
 		public void createNewTransition(String id, Action action,
 				String sourceStateId) {
-			// TODO Auto-generated method stub
-			
+			eco_requires().createAgent().createNewTransition("T"+nbTransAgentsCreated, action, sourceStateId);
 		}
 
 		@Override
 		protected ICreateAgent make_create() {
-			// TODO Auto-generated method stub
 			return this;
 		}
 
@@ -173,16 +186,14 @@ public class EcoAgentsImpl extends EcoAgents implements AgentTrace{
 		}
 
 		@Override
-		public void createNewState(String id) {
-			// TODO Auto-generated method stub
-			
+		public void createNewState(String id, boolean isRoot) {
+			eco_requires().createAgent().createNewState("S"+nbStateAgentsCreated, isRoot);
 		}
 
 		@Override
 		public void createNewTransition(String id, Action action,
 				String sourceStateId) {
-			// TODO Auto-generated method stub
-			
+			eco_requires().createAgent().createNewTransition("T"+nbTransAgentsCreated, action, sourceStateId);
 		}
 
 	}

@@ -18,9 +18,11 @@ public class StateMemImpl extends Memory<StateMemory> implements StateMemory {
 	private List<Action> actionList;
 	private RequestMessage requestMsg;
 	private ResponseMessage responseMsg;
+	private boolean isRoot;
 	
-	public StateMemImpl(String id) {
+	public StateMemImpl(String id, boolean isRoot) {
 		stateId = id;
+		this.isRoot = isRoot;
 		waitingForTraceElmt = false;
 		gotRequest = false;
 		waitingForResponse = false;

@@ -771,14 +771,14 @@ public abstract class Forward<CycleAlert, ContextSA, ContextTA, ContextUpdate, P
    * This should be overridden by the implementation to instantiate the implementation of the species.
    * 
    */
-  protected abstract Forward.StateForward<CycleAlert, ContextSA, ContextTA, ContextUpdate, Push, Pull, ActionGetter> make_StateForward(final String id);
+  protected abstract Forward.StateForward<CycleAlert, ContextSA, ContextTA, ContextUpdate, Push, Pull, ActionGetter> make_StateForward(final String id, final boolean isRoot);
   
   /**
    * Do not call, used by generated code.
    * 
    */
-  public Forward.StateForward<CycleAlert, ContextSA, ContextTA, ContextUpdate, Push, Pull, ActionGetter> _createImplementationOfStateForward(final String id) {
-    Forward.StateForward<CycleAlert, ContextSA, ContextTA, ContextUpdate, Push, Pull, ActionGetter> implem = make_StateForward(id);
+  public Forward.StateForward<CycleAlert, ContextSA, ContextTA, ContextUpdate, Push, Pull, ActionGetter> _createImplementationOfStateForward(final String id, final boolean isRoot) {
+    Forward.StateForward<CycleAlert, ContextSA, ContextTA, ContextUpdate, Push, Pull, ActionGetter> implem = make_StateForward(id,isRoot);
     if (implem == null) {
     	throw new RuntimeException("make_StateForward() in general.Forward should not return null.");
     }
@@ -792,8 +792,8 @@ public abstract class Forward<CycleAlert, ContextSA, ContextTA, ContextUpdate, P
    * This can be called to create an instance of the species from inside the implementation of the ecosystem.
    * 
    */
-  protected Forward.StateForward.Component<CycleAlert, ContextSA, ContextTA, ContextUpdate, Push, Pull, ActionGetter> newStateForward(final String id) {
-    Forward.StateForward<CycleAlert, ContextSA, ContextTA, ContextUpdate, Push, Pull, ActionGetter> _implem = _createImplementationOfStateForward(id);
+  protected Forward.StateForward.Component<CycleAlert, ContextSA, ContextTA, ContextUpdate, Push, Pull, ActionGetter> newStateForward(final String id, final boolean isRoot) {
+    Forward.StateForward<CycleAlert, ContextSA, ContextTA, ContextUpdate, Push, Pull, ActionGetter> _implem = _createImplementationOfStateForward(id,isRoot);
     return _implem._newComponent(new Forward.StateForward.Requires<CycleAlert, ContextSA, ContextTA, ContextUpdate, Push, Pull, ActionGetter>() {},true);
   }
   

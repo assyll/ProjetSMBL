@@ -19,7 +19,7 @@ namespace general{
 		requires threads: IGetThread
 		requires createAgent: ICreateAgent
 		
-		species StateAgent (id: String) {
+		species StateAgent (id: String, isRoot: boolean) {
 			provides cycle: Do = agentComponent.cycle
 			requires getContext: ContextInfos
 			requires setContext: EnvUpdate

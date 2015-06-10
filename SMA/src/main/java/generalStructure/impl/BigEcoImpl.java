@@ -1,8 +1,5 @@
 package generalStructure.impl;
 
-import trace.Action;
-import trace.impl.ActionProviderImpl;
-import trace.interfaces.ITakeAction;
 import environnement.impl.EnvironnementImpl;
 import environnement.interfaces.ContextInfos;
 import environnement.interfaces.EnvInfos;
@@ -15,13 +12,12 @@ import general.Forward;
 import general.Launcher;
 import generalStructure.interfaces.CycleAlert;
 import generalStructure.interfaces.ICreateAgent;
+import trace.Action;
+import trace.impl.ActionProviderImpl;
+import trace.interfaces.ITakeAction;
 import agents.impl.EcoAgentsImpl;
 import agents.interfaces.PullMessage;
 import agents.interfaces.SendMessage;
-import agents.interfaces.StateAction;
-import agents.interfaces.StateMemory;
-import agents.interfaces.TransAction;
-import agents.interfaces.TransMemory;
 
 public class BigEcoImpl extends BigEco implements ICreateAgent{
 
@@ -71,8 +67,8 @@ public class BigEcoImpl extends BigEco implements ICreateAgent{
 	}
 
 	@Override
-	public void createNewState(String id) {
-		newDynamicAssemblyAgentEtat(id);
+	public void createNewState(String id, boolean isRoot) {
+		newDynamicAssemblyAgentEtat(id, isRoot);
 	}
 
 	@Override

@@ -887,7 +887,7 @@ public abstract class BigEco {
    * This should be overridden by the implementation to instantiate the implementation of the species.
    * 
    */
-  protected BigEco.DynamicAssemblyAgentEtat make_DynamicAssemblyAgentEtat(final String id) {
+  protected BigEco.DynamicAssemblyAgentEtat make_DynamicAssemblyAgentEtat(final String id, final boolean isRoot) {
     return new BigEco.DynamicAssemblyAgentEtat();
   }
   
@@ -895,8 +895,8 @@ public abstract class BigEco {
    * Do not call, used by generated code.
    * 
    */
-  public BigEco.DynamicAssemblyAgentEtat _createImplementationOfDynamicAssemblyAgentEtat(final String id) {
-    BigEco.DynamicAssemblyAgentEtat implem = make_DynamicAssemblyAgentEtat(id);
+  public BigEco.DynamicAssemblyAgentEtat _createImplementationOfDynamicAssemblyAgentEtat(final String id, final boolean isRoot) {
+    BigEco.DynamicAssemblyAgentEtat implem = make_DynamicAssemblyAgentEtat(id,isRoot);
     if (implem == null) {
     	throw new RuntimeException("make_DynamicAssemblyAgentEtat() in general.BigEco should not return null.");
     }
@@ -905,10 +905,10 @@ public abstract class BigEco {
     implem.ecosystemComponent = this.selfComponent;
     assert this.selfComponent.implem_ecoAE != null: "This is a bug.";
     assert implem.use_agentE == null: "This is a bug.";
-    implem.use_agentE = this.selfComponent.implem_ecoAE._createImplementationOfStateAgent(id);
+    implem.use_agentE = this.selfComponent.implem_ecoAE._createImplementationOfStateAgent(id,isRoot);
     assert this.selfComponent.implem_fw != null: "This is a bug.";
     assert implem.use_aFW == null: "This is a bug.";
-    implem.use_aFW = this.selfComponent.implem_fw._createImplementationOfStateForward(id);
+    implem.use_aFW = this.selfComponent.implem_fw._createImplementationOfStateForward(id,isRoot);
     return implem;
   }
   
@@ -916,8 +916,8 @@ public abstract class BigEco {
    * This can be called to create an instance of the species from inside the implementation of the ecosystem.
    * 
    */
-  protected BigEco.DynamicAssemblyAgentEtat.Component newDynamicAssemblyAgentEtat(final String id) {
-    BigEco.DynamicAssemblyAgentEtat _implem = _createImplementationOfDynamicAssemblyAgentEtat(id);
+  protected BigEco.DynamicAssemblyAgentEtat.Component newDynamicAssemblyAgentEtat(final String id, final boolean isRoot) {
+    BigEco.DynamicAssemblyAgentEtat _implem = _createImplementationOfDynamicAssemblyAgentEtat(id,isRoot);
     return _implem._newComponent(new BigEco.DynamicAssemblyAgentEtat.Requires() {},true);
   }
   

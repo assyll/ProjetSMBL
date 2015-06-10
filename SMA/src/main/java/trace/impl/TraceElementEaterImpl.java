@@ -19,6 +19,7 @@ import com.fasterxml.jackson.core.JsonToken;
 
 public class TraceElementEaterImpl extends TraceElementEater implements Runnable, ITakeAction{
 	private Map<String, List<Action>> actionsByUserMap = new HashMap<>();
+	private List<String> newUserTrace = new LinkedList<String>();
 
 	@Override
 	public void run() {
@@ -106,6 +107,12 @@ public class TraceElementEaterImpl extends TraceElementEater implements Runnable
 			actionsByUserMap.get(userName).remove(0);
 			return  action;
 		}
+	}
+
+	@Override
+	public ActionTrace newUserTrace() {
+	//	ActionTrace newUserActionTrace = new ActionTrace(newUserTrace.get(0), )
+		return null;
 	}
 
 

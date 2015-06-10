@@ -17,14 +17,16 @@ import generalStructure.interfaces.ICreateAgent;
 public class StateAgentCompImpl extends Agent<ContextInfos, EnvUpdate, StateAction, StateMemory, ICreateAgent, SendMessage, PullMessage> {
 
 	private String id;
+	private boolean isRoot;
 	
-	public StateAgentCompImpl(String id) {
+	public StateAgentCompImpl(String id, boolean isRoot) {
 		this.id = id;
+		this.isRoot = isRoot;
 	}
 	
 	@Override
 	protected Memory<StateMemory> make_memory() {
-		return new StateMemImpl(id);
+		return new StateMemImpl(id, isRoot);
 	}
 
 	@Override
