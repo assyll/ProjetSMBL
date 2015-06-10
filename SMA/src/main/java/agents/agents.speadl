@@ -13,6 +13,7 @@ import environnement.interfaces.EnvInfos
 import agents.interfaces.TransAction
 import agents.interfaces.TransMemory
 import generalStructure.interfaces.ILog
+import trace.ActionTrace
 
 namespace general{
 
@@ -43,7 +44,7 @@ namespace general{
 			//requires getTraceElement: IGetAction
 		}
 		
-		species TransitionAgent(id:String, action:Action , stateSource:String) {
+		species TransitionAgent(id:String, action:ActionTrace) {
 			
 			provides cycle: Do = agentComponent.cycle
 			provides create: ICreateAgent

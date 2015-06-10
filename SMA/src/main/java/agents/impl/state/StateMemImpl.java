@@ -4,10 +4,12 @@ import general.Memory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import trace.Action;
+import trace.ActionTrace;
 import agents.impl.RequestMessage;
 import agents.impl.ResponseMessage;
 import agents.interfaces.StateMemory;
@@ -17,7 +19,7 @@ public class StateMemImpl extends Memory<StateMemory> implements StateMemory {
 	private String _stateId;
 	private boolean _waitingForTraceElmt, _gotRequest, _waitingForResponse, _gotResponse, _actionsToProcess;
 	private List<String> _userNameWaitingForTraceList;
-	private Map<String,Action> _actionMap;
+	private List<ActionTrace> _actionMap;
 	private RequestMessage _requestMsg;
 	private ResponseMessage _responseMsg;
 	private boolean _isRoot;
@@ -32,7 +34,7 @@ public class StateMemImpl extends Memory<StateMemory> implements StateMemory {
 		_gotRequest = false;
 		_waitingForResponse = false;
 		_userNameWaitingForTraceList = new ArrayList<String>();
-		_actionMap = new HashMap<String,Action>();
+		_actionMap = new LinkedList<ActionTrace>();
 		_requestMsg = null;
 		_responseMsg = null;
 		_gotResponse = false;
@@ -41,7 +43,7 @@ public class StateMemImpl extends Memory<StateMemory> implements StateMemory {
 		_actionsToProcess = false;
 		_userNameIndex = 0;
 	}
-	
+
 
 
 	@Override
@@ -77,7 +79,7 @@ public class StateMemImpl extends Memory<StateMemory> implements StateMemory {
 	@Override
 	public void removeUserName(String userName) {
 		_userNameWaitingForTraceList.remove(userName);
-		
+
 		if(_userNameWaitingForTraceList.isEmpty()) {
 			_waitingForTraceElmt = false;
 		}
@@ -126,20 +128,28 @@ public class StateMemImpl extends Memory<StateMemory> implements StateMemory {
 
 
 	@Override
-	public void addAction(String userName, Action newAction) {
-		_actionMap.put(userName, newAction);
-		_userNameWaitingForTraceList.remove(userName);
-		_actionsToProcess = true;
-		
-		if(_userNameWaitingForTraceList.isEmpty()) {
-			_waitingForTraceElmt = false;
+	public boolean addAction(ActionTrace newAction) {
+		String user = newAction.getUserName();
+		if(_userNameWaitingForTraceList.contains(user)) {
+
+			_actionMap.add(newAction);
+			_userNameWaitingForTraceList.remove(user);
+			_actionsToProcess = true;
+
+			if(_userNameWaitingForTraceList.isEmpty()) {
+				_waitingForTraceElmt = false;
+			}
+
+			return true;
 		}
+		return false;
+
 	}
 
 
 
 	@Override
-	public Map<String,Action> getActionMap() {
+	public List<ActionTrace> getActionList() {
 		return _actionMap;
 	}
 
@@ -219,7 +229,7 @@ public class StateMemImpl extends Memory<StateMemory> implements StateMemory {
 	public void addNewUserName(String userName) {
 		_userNameWaitingForTraceList.add(userName);
 		_waitingForTraceElmt = true;
-		
+
 	}
 
 
@@ -246,14 +256,15 @@ public class StateMemImpl extends Memory<StateMemory> implements StateMemory {
 	}
 
 
-
 	@Override
-	public void removeAction(String userName) {
-		_actionMap.remove(userName);
+	public ActionTrace getNextAction() {
+		ActionTrace action = _actionMap.remove(0);
 		
 		if(_actionMap.isEmpty()) {
 			_actionsToProcess = false;
 		}
+		
+		return action;
 	}
 
 

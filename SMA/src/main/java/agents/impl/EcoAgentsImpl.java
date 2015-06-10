@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import trace.Action;
+import trace.ActionTrace;
 import agents.impl.state.StateAgentCompImpl;
 import agents.impl.transition.TransAgentComplImpl;
 import agents.interfaces.AgentTrace;
@@ -87,8 +88,8 @@ public class EcoAgentsImpl extends EcoAgents implements AgentTrace{
 	}
 
 	@Override
-	protected TransitionAgent make_TransitionAgent(String id, Action action, String stateSourceId) {
-		TransAgentImpl agent = new TransAgentImpl(id, action, stateSourceId);
+	protected TransitionAgent make_TransitionAgent(String id, ActionTrace action) {
+		TransAgentImpl agent = new TransAgentImpl(id, action);
 		
 		synchronized (agentsMap) {
 			agentsMap.put(id, agent);
@@ -143,6 +144,11 @@ public class EcoAgentsImpl extends EcoAgents implements AgentTrace{
 			return this;
 		}
 
+		@Override
+		public void createNewTransition(String id, ActionTrace action) {
+			eco_requires().createAgent().createNewTransition("T"+nbTransAgentsCreated, action);
+		}
+
 	}
 
 	/**************************** Private Classes **************************/
@@ -150,10 +156,10 @@ public class EcoAgentsImpl extends EcoAgents implements AgentTrace{
 	private class TransAgentImpl extends TransitionAgent implements Runnable, ICreateAgent {
 
 		private String id; 
-		private Action action;
+		private ActionTrace action;
 		private String stateSource;
 
-		public TransAgentImpl(String id, Action action, String stateSource) {
+		public TransAgentImpl(String id, ActionTrace action) {
 			this.id = id;
 			this.action = action;
 			this.stateSource = stateSource;
@@ -187,6 +193,7 @@ public class EcoAgentsImpl extends EcoAgents implements AgentTrace{
 
 		@Override
 		public void createNewState(String id, boolean isRoot) {
+			
 			eco_requires().createAgent().createNewState("S"+nbStateAgentsCreated, isRoot);
 		}
 
@@ -194,6 +201,12 @@ public class EcoAgentsImpl extends EcoAgents implements AgentTrace{
 		public void createNewTransition(String id, Action action,
 				String sourceStateId) {
 			eco_requires().createAgent().createNewTransition("T"+nbTransAgentsCreated, action, sourceStateId);
+		}
+
+		@Override
+		public void createNewTransition(String id, ActionTrace action) {
+			eco_requires().createAgent().createNewTransition("T"+nbTransAgentsCreated, action);
+			
 		}
 
 	}

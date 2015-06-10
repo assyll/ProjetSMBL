@@ -15,7 +15,7 @@ import general.Agent;
 import generalStructure.interfaces.CycleAlert;
 import generalStructure.interfaces.ICreateAgent;
 import generalStructure.interfaces.ILog;
-import trace.Action;
+import trace.ActionTrace;
 
 @SuppressWarnings("all")
 public abstract class EcoAgents {
@@ -765,14 +765,14 @@ public abstract class EcoAgents {
    * This should be overridden by the implementation to instantiate the implementation of the species.
    * 
    */
-  protected abstract EcoAgents.TransitionAgent make_TransitionAgent(final String id, final Action action, final String stateSource);
+  protected abstract EcoAgents.TransitionAgent make_TransitionAgent(final String id, final ActionTrace action);
   
   /**
    * Do not call, used by generated code.
    * 
    */
-  public EcoAgents.TransitionAgent _createImplementationOfTransitionAgent(final String id, final Action action, final String stateSource) {
-    EcoAgents.TransitionAgent implem = make_TransitionAgent(id,action,stateSource);
+  public EcoAgents.TransitionAgent _createImplementationOfTransitionAgent(final String id, final ActionTrace action) {
+    EcoAgents.TransitionAgent implem = make_TransitionAgent(id,action);
     if (implem == null) {
     	throw new RuntimeException("make_TransitionAgent() in general.EcoAgents should not return null.");
     }

@@ -19,7 +19,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 
 public class TraceElementEaterImpl extends TraceElementEater implements Runnable, ITakeAction{
-	private Map<String, List<Action>> actionsByUserMap = new HashMap<>();
+	private Map<String, List<ActionTrace>> actionsByUserMap = new HashMap<>();
 	private List<String> newUsersList = new LinkedList<String>();
 
 	@Override
@@ -34,12 +34,12 @@ public class TraceElementEaterImpl extends TraceElementEater implements Runnable
 
 				while(action != null) {
 					if (!actionsByUserMap.containsKey(action.getUserName())) {
-						List<Action> queue = new LinkedList<>();
-						queue.add(action.getAction());
+						List<ActionTrace> queue = new LinkedList<>();
+						queue.add(action);
 						actionsByUserMap.put(action.getUserName(), queue);
 						newUsersList.add(action.getUserName());
 					} else {
-						actionsByUserMap.get(action.getUserName()).add(action.getAction());
+						actionsByUserMap.get(action.getUserName()).add(action);
 					}
 
 					action = (ActionTrace) TraceElementEaterImpl.this.requires().traceElement().getNextElement();
@@ -62,11 +62,11 @@ public class TraceElementEaterImpl extends TraceElementEater implements Runnable
 	}
 
 	@Override
-	public Action getActionTrace(String userName) {
+	public ActionTrace getActionTrace(String userName) {
 		if(!actionsByUserMap.containsKey(userName) || (actionsByUserMap.get(userName).isEmpty()))
 			return null;
 		else{
-			Action action = actionsByUserMap.get(userName).get(0);
+			ActionTrace action = actionsByUserMap.get(userName).get(0);
 			actionsByUserMap.get(userName).remove(0);
 			return  action;
 		}
@@ -78,7 +78,7 @@ public class TraceElementEaterImpl extends TraceElementEater implements Runnable
 		
 		for(int i = 0; i < newUsersList.size(); i++) {
 			String user = newUsersList.get(i);
-			actionTraceList.add(new ActionTrace(user, actionsByUserMap.get(user).get(0)));
+			actionTraceList.add(actionsByUserMap.get(user).get(0));
 			actionsByUserMap.get(user).remove(0);
 		}
 		

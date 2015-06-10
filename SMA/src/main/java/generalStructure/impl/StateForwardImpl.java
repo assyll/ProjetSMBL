@@ -91,7 +91,7 @@ implements CycleAlert, ContextInfos, EnvUpdate, SendMessage, PullMessage, ILog {
 	}
 
 	@Override
-	public Action getActionTrace(String userName) {
+	public ActionTrace getActionTrace(String userName) {
 		return eco_requires().j().getActionTrace(userName);
 	}
 

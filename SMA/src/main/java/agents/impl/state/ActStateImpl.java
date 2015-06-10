@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import trace.Action;
+import trace.ActionTrace;
 import agents.impl.AbstractAct;
 import agents.interfaces.SendMessage;
 import agents.interfaces.StateAction;
@@ -67,6 +68,17 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 		}
 		
 		requires().finishedCycleForLog().ecrire(informations);
+	}
+
+	@Override
+	public void createTransitionAgent(String id, ActionTrace action) {
+		this.requires().create().createNewTransition(id, action);
+		
+	}
+
+	@Override
+	public void doNothing() {
+		this.requires().finishedCycle().endOfCycleAlert(id);
 	}
 
 }

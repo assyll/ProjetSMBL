@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import trace.Action;
+import trace.ActionTrace;
 import agents.impl.RequestMessage;
 import agents.impl.ResponseMessage;
 
@@ -26,13 +27,13 @@ public interface StateMemory {
 	public boolean isRoot(); // récupération de l'information (est racine)
 	public boolean hasActionToProcess();
 	
-	public void removeAction(String userName); // On a fini de traiter l'action de l'utilisateur avec nom userName
 	public void addNewUserName(String userName); // le nom de l'utilisateur dont on attend la prochaine trace (on est plus en attente d'une autre trace de lui)
 	public void removeUserName(String userName); // le nom de l'utilisateur dont on a récupérer la prochaine trace (on est plus en attente d'une autre trace de lui)
 	public String getNextUserNameWaitingForAction(); // renvoi le nom de d'un utilisateur dont en est en attente d'éléments de trace
 	public List<String> getUserNameWaitingForTraceList();
-	public void addAction(String userName, Action newAction); // ajout d'une action en attente de traitement relative à une trace d'un utilisateur donnée
-	public Map<String,Action> getActionMap(); // récupération de la map des actions en attente de traitment par user
+	public boolean addAction(ActionTrace newAction); // ajout d'une action en attente de traitement relative à une trace d'un utilisateur donnée
+	public List<ActionTrace> getActionList(); // récupération de la map des actions en attente de traitment par user
+	public ActionTrace getNextAction();
 	
 	public boolean gotTransitionWithAction(Action action);
 	public String getTransitionWithAction(Action action); 

@@ -1,16 +1,16 @@
 import agents.interfaces.Callable
 import agents.interfaces.IGetThread
-import generalStructure.interfaces.CycleAlert
-import generalStructure.interfaces.ICreateAgent
-import trace.Action
-import trace.interfaces.ITakeAction
+import agents.interfaces.PullMessage
+import agents.interfaces.SendMessage
 import environnement.interfaces.ContextInfos
 import environnement.interfaces.EnvInfos
 import environnement.interfaces.EnvUpdate
-import agents.interfaces.SendMessage
-import agents.interfaces.PullMessage
+import generalStructure.interfaces.CycleAlert
+import generalStructure.interfaces.ICreateAgent
 import generalStructure.interfaces.ILog
 import generalStructure.interfaces.IStop
+import trace.ActionTrace
+import trace.interfaces.ITakeAction
 
 namespace general{
 	
@@ -48,8 +48,8 @@ namespace general{
 		
 		part envEco: Environnement[EnvInfos, EnvUpdate]
 		
-		species DynamicAssemblyAgentTransition(id: String, action:Action, stateSourceId:String) {
-			use agentT: ecoAE.TransitionAgent(id, action, stateSourceId) {
+		species DynamicAssemblyAgentTransition(id: String, action:ActionTrace) {
+			use agentT: ecoAE.TransitionAgent(id, action) {
 				bind finishedCycle to aFW.a
 				bind getContext to aFW.b
 				bind setContext to aFW.c

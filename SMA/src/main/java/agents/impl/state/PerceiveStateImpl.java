@@ -26,8 +26,7 @@ public class PerceiveStateImpl extends AbstractPerceive<ContextInfos, StateMemor
 			//J'essai de récupérer la prochaine trace via le forward et de la mettre dans la mémoire de l'agent
 			List<String> userNameList = requires().memory().getUserNameWaitingForTraceList();
 			int i = 0;
-			boolean oneTraceFound = false;
-			Action action = null;
+			ActionTrace action = null;
 			
 			while( (i < userNameList.size()) && (action == null) ) {
 				action = requires().getContext().getActionTrace(userNameList.get(i));
@@ -36,16 +35,17 @@ public class PerceiveStateImpl extends AbstractPerceive<ContextInfos, StateMemor
 			
 			if(action != null) {
 				i--;
-				requires().memory().addAction(userNameList.get(i), action);
+				requires().memory().addAction(action);
 			}
 		}
 		
-		//Si je suis racine, je regarde si il y a un nouveau nom d'utilisateur non encore rencontrés jusqu'ici
+		//Si je suis racine, je regarde si il y a de nouveaux noms d'utilisateurs non encore rencontrés jusqu'ici
 		if(requires().memory().isRoot()) {
 			List<ActionTrace> userNameList = requires().getContext().newUsersTraceList();
 			
 			for(int i = 0; i < userNameList.size(); i++) {
-				//this.
+				ActionTrace action = userNameList.get(i);
+				requires().memory().addAction(action);
 			}
 		}
 		

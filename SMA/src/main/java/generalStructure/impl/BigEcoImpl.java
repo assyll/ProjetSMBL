@@ -16,6 +16,7 @@ import general.LogComp;
 import generalStructure.interfaces.CycleAlert;
 import generalStructure.interfaces.ICreateAgent;
 import trace.Action;
+import trace.ActionTrace;
 import trace.impl.ActionProviderImpl;
 import trace.interfaces.ITakeAction;
 import agents.impl.EcoAgentsImpl;
@@ -78,12 +79,17 @@ public class BigEcoImpl extends BigEco implements ICreateAgent{
 
 	@Override
 	public void createNewTransition(String id, Action action, String stateSourceId) {
-		newDynamicAssemblyAgentTransition(id, action, stateSourceId);
+		//newDynamicAssemblyAgentTransition(id, action, stateSourceId);
 	}
 
 	@Override
 	protected LogComp make_logComp() {
 		return new LogCompImpl("target" + File.separator + "log.txt");
+	}
+
+	@Override
+	public void createNewTransition(String id, ActionTrace action) {
+		newDynamicAssemblyAgentTransition(id, action);
 	}
 }
 

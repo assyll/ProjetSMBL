@@ -1,5 +1,8 @@
 package agents.impl.state;
 
+import java.util.List;
+
+import trace.ActionTrace;
 import agents.impl.AbstractDecide;
 import agents.interfaces.StateAction;
 import agents.interfaces.StateMemory;
@@ -16,7 +19,14 @@ public class DecideStateImpl extends AbstractDecide<StateAction, StateMemory> {
 	public void makeDecision() {
 		System.out.println("Decision de " + id);
 
-		this.requires().action().addStateAgent(id);
+		//Si j'ai une action en attente de traitement
+		
+		if(requires().memory().hasActionToProcess()) {
+			ActionTrace action = requires().memory().getNextAction();
+			this.requires().action().createTransitionAgent("", action);
+		}else {
+			
+		}
 	}
 
 }
