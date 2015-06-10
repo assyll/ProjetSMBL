@@ -1,6 +1,7 @@
 package general;
 
 import generalStructure.interfaces.ILog;
+import generalStructure.interfaces.IStop;
 
 @SuppressWarnings("all")
 public abstract class Forward<CycleAlert, ContextSA, ContextTA, ContextUpdate, Push, Pull, ActionGetter> {
@@ -45,6 +46,12 @@ public abstract class Forward<CycleAlert, ContextSA, ContextTA, ContextUpdate, P
      * 
      */
     public Push l();
+    
+    /**
+     * This can be called to access the provided port.
+     * 
+     */
+    public IStop stopProcessus();
   }
   
   public interface Parts<CycleAlert, ContextSA, ContextTA, ContextUpdate, Push, Pull, ActionGetter> {
@@ -72,8 +79,17 @@ public abstract class Forward<CycleAlert, ContextSA, ContextTA, ContextUpdate, P
       }
     }
     
+    private void init_stopProcessus() {
+      assert this.stopProcessus == null: "This is a bug.";
+      this.stopProcessus = this.implementation.make_stopProcessus();
+      if (this.stopProcessus == null) {
+      	throw new RuntimeException("make_stopProcessus() in general.Forward<CycleAlert, ContextSA, ContextTA, ContextUpdate, Push, Pull, ActionGetter> should not return null.");
+      }
+    }
+    
     protected void initProvidedPorts() {
       init_l();
+      init_stopProcessus();
     }
     
     public ComponentImpl(final Forward<CycleAlert, ContextSA, ContextTA, ContextUpdate, Push, Pull, ActionGetter> implem, final Forward.Requires<CycleAlert, ContextSA, ContextTA, ContextUpdate, Push, Pull, ActionGetter> b, final boolean doInits) {
@@ -96,6 +112,12 @@ public abstract class Forward<CycleAlert, ContextSA, ContextTA, ContextUpdate, P
     
     public Push l() {
       return this.l;
+    }
+    
+    private IStop stopProcessus;
+    
+    public IStop stopProcessus() {
+      return this.stopProcessus;
     }
   }
   
@@ -790,6 +812,13 @@ public abstract class Forward<CycleAlert, ContextSA, ContextTA, ContextUpdate, P
    * 
    */
   protected abstract Push make_l();
+  
+  /**
+   * This should be overridden by the implementation to define the provided port.
+   * This will be called once during the construction of the component to initialize the port.
+   * 
+   */
+  protected abstract IStop make_stopProcessus();
   
   /**
    * This can be called by the implementation to access the required ports.

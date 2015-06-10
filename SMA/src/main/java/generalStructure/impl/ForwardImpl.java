@@ -6,6 +6,7 @@ import environnement.interfaces.EnvUpdate;
 import general.Forward;
 import generalStructure.interfaces.CycleAlert;
 import generalStructure.interfaces.ICreateAgent;
+import generalStructure.interfaces.IStop;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,7 +19,7 @@ import agents.interfaces.PullMessage;
 import agents.interfaces.SendMessage;
 
 
-public class ForwardImpl extends Forward<CycleAlert, ContextInfos,EnvInfos,  EnvUpdate, SendMessage, PullMessage, ITakeAction> implements SendMessage {
+public class ForwardImpl extends Forward<CycleAlert, ContextInfos,EnvInfos,  EnvUpdate, SendMessage, PullMessage, ITakeAction> implements SendMessage, IStop {
 
 	private int nbState;
 	private int nbTrans;
@@ -57,6 +58,16 @@ public class ForwardImpl extends Forward<CycleAlert, ContextInfos,EnvInfos,  Env
 		TransForwardImpl a = new TransForwardImpl(id);
 		transFwList.put(id, a);
 		return a;
+	}
+
+	@Override
+	public void notifyStop() {
+		requires().log().closeFile();
+	}
+
+	@Override
+	protected IStop make_stopProcessus() {
+		return this;
 	}
 
 }

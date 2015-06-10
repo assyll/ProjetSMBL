@@ -10,6 +10,7 @@ import environnement.interfaces.EnvUpdate
 import agents.interfaces.SendMessage
 import agents.interfaces.PullMessage
 import generalStructure.interfaces.ILog
+import generalStructure.interfaces.IStop
 
 namespace general{
 	
@@ -17,6 +18,7 @@ namespace general{
 		provides call: Callable
 		provides finishedCycle: CycleAlert
 		provides threads: IGetThread
+		requires stopProcessus: IStop
 	}
 	
 	ecosystem BigEco {
@@ -40,7 +42,9 @@ namespace general{
 		
 		part actionProvider: ActionProvider 
 		
-		part launcher: Launcher
+		part launcher: Launcher {
+			bind stopProcessus to fw.stopProcessus
+		}
 		
 		part envEco: Environnement[EnvInfos, EnvUpdate]
 		
@@ -96,6 +100,7 @@ namespace general{
 		 requires k: ContextUpdate
 		 provides l: Push
 		 requires log: ILog
+		 provides stopProcessus: IStop
 	}
 	
 	component LogComp {

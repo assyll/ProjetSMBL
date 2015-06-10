@@ -5,9 +5,11 @@ import environnement.interfaces.EnvInfos;
 import environnement.interfaces.EnvUpdate;
 import general.Forward.StateForward;
 import generalStructure.interfaces.CycleAlert;
+import generalStructure.interfaces.ILog;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import trace.Action;
 import trace.ActionTrace;
@@ -18,7 +20,7 @@ import agents.interfaces.PullMessage;
 import agents.interfaces.SendMessage;
 
 public class StateForwardImpl extends StateForward<CycleAlert, ContextInfos, EnvInfos, EnvUpdate, SendMessage, PullMessage, ITakeAction>
-implements CycleAlert, ContextInfos, EnvUpdate, SendMessage, PullMessage {
+implements CycleAlert, ContextInfos, EnvUpdate, SendMessage, PullMessage, ILog {
 
 	private List<RequestMessage> requestMessagesQueue;
 	private List<ResponseMessage> responseMessagesQueue;
@@ -97,5 +99,20 @@ implements CycleAlert, ContextInfos, EnvUpdate, SendMessage, PullMessage {
 	public ActionTrace newUserTrace() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	protected ILog make_finishedCycleForLog() {
+		return this;
+	}
+
+	@Override
+	public void ecrire(Map<String, String> informations) {
+		eco_requires().log().ecrire(informations);
+	}
+
+	@Override
+	public void closeFile() {
+		eco_requires().log().closeFile();
 	}
 }

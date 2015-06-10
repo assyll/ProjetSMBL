@@ -79,7 +79,7 @@ public class BigEcoImpl extends BigEco implements ICreateAgent{
 
 	@Override
 	protected LogComp make_logComp() {
-		return new LogCompImpl();
+		return new LogCompImpl("target/log.txt");
 	}
 }
 

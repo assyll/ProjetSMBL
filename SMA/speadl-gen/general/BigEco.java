@@ -15,6 +15,7 @@ import general.LogComp;
 import generalStructure.interfaces.CycleAlert;
 import generalStructure.interfaces.ICreateAgent;
 import generalStructure.interfaces.ILog;
+import generalStructure.interfaces.IStop;
 import trace.Action;
 import trace.interfaces.ITakeAction;
 
@@ -284,6 +285,9 @@ public abstract class BigEco {
     private Launcher implem_launcher;
     
     private final class BridgeImpl_launcher implements Launcher.Requires {
+      public final IStop stopProcessus() {
+        return BigEco.ComponentImpl.this.fw().stopProcessus();
+      }
     }
     
     public final Launcher.Component launcher() {

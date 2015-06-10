@@ -1,6 +1,8 @@
 package agents.impl.state;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import trace.Action;
 import agents.impl.AbstractAct;
@@ -23,30 +25,48 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 			Action newAction) {
 		// TODO Auto-generated method stub
 		
-		
+		logger("add new action", "action added", newAction.toString());
 	}
 
 	@Override
 	public void addStateAgent(String id) {
 		System.out.println("Action de " + id);
 		this.requires().finishedCycle().endOfCycleAlert(id);
+		
+		logger("create a new state agent", "created agent id", "?");
 	}
 
 	@Override
 	public void addStateAgent(String id, List<Action> actions) {
 		// TODO Auto-generated method stub
 		
+		logger("create a new state agent", "created agent id", "?");
 	}
 
 	@Override
 	public void removeAgent(String id, List<Action> actions) {
 		// TODO Auto-generated method stub
 		
+		logger("remove a agent", "removed agent id", "?");
 	}
 
 	@Override
 	protected StateAction make_action() {
 		return this;
+	}
+	
+	private void logger(String ... dones) {
+		Map<String, String> informations = new HashMap<>();
+		
+		informations.put("id", id);
+		informations.put("agentType", "state");
+		informations.put("done", dones[0]);
+		
+		for (int i = 1; i < dones.length;) {
+			informations.put(dones[i++], dones[i++]);
+		}
+		
+		requires().finishedCycleForLog().ecrire(informations);
 	}
 
 }
