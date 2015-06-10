@@ -1,5 +1,7 @@
 package generalStructure.impl;
 
+import java.io.File;
+
 import environnement.impl.EnvironnementImpl;
 import environnement.interfaces.ContextInfos;
 import environnement.interfaces.EnvInfos;
@@ -50,6 +52,8 @@ public class BigEcoImpl extends BigEco implements ICreateAgent{
 	protected void start() {
 		super.start();
 
+		newDynamicAssemblyAgentEtat("user1", true);
+		
 	}
 
 	@Override
@@ -79,7 +83,7 @@ public class BigEcoImpl extends BigEco implements ICreateAgent{
 
 	@Override
 	protected LogComp make_logComp() {
-		return new LogCompImpl("target/log.txt");
+		return new LogCompImpl("target" + File.separator + "log.txt");
 	}
 }
 

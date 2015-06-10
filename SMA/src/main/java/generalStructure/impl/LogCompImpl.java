@@ -44,7 +44,7 @@ public class LogCompImpl extends LogComp implements ILog {
 			contenu += "\"" + e.getValue() + "\",";
 		}
 		contenu = contenu.substring(0, contenu.length() - 1);
-		contenu += "}";
+		contenu += "}\n";
 		
 		writeToFile(contenu);
 	}
@@ -62,6 +62,7 @@ public class LogCompImpl extends LogComp implements ILog {
 	private void writeToFile(String contenu) {
 		try {
 			_writer.write(contenu);
+			_writer.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -30,8 +30,8 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 
 	@Override
 	public void addStateAgent(String id) {
-		System.out.println("Action de " + id);
-		this.requires().finishedCycle().endOfCycleAlert(id);
+		System.out.println("Action de " + this.id);
+		this.requires().finishedCycle().endOfCycleAlert(this.id);
 		
 		logger("create a new state agent", "created agent id", "?");
 	}
