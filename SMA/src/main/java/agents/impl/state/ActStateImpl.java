@@ -8,8 +8,9 @@ import agents.interfaces.SendMessage;
 import agents.interfaces.StateAction;
 import agents.interfaces.StateMemory;
 import environnement.interfaces.EnvUpdate;
+import generalStructure.interfaces.ICreateAgent;
 
-public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemory, SendMessage> implements StateAction {
+public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemory, ICreateAgent, SendMessage> implements StateAction {
 
 	private String id;
 	

@@ -3,8 +3,8 @@ package general;
 import generalStructure.interfaces.CycleAlert;
 
 @SuppressWarnings("all")
-public abstract class Act<Actionable, ContextUpdate, SharedMemory, Push> {
-  public interface Requires<Actionable, ContextUpdate, SharedMemory, Push> {
+public abstract class Act<Actionable, ContextUpdate, SharedMemory, CreateAgent, Push> {
+  public interface Requires<Actionable, ContextUpdate, SharedMemory, CreateAgent, Push> {
     /**
      * This can be called by the implementation to access this required port.
      * 
@@ -22,12 +22,18 @@ public abstract class Act<Actionable, ContextUpdate, SharedMemory, Push> {
      * 
      */
     public SharedMemory memory();
+    
+    /**
+     * This can be called by the implementation to access this required port.
+     * 
+     */
+    public CreateAgent create();
   }
   
-  public interface Component<Actionable, ContextUpdate, SharedMemory, Push> extends Act.Provides<Actionable, ContextUpdate, SharedMemory, Push> {
+  public interface Component<Actionable, ContextUpdate, SharedMemory, CreateAgent, Push> extends Act.Provides<Actionable, ContextUpdate, SharedMemory, CreateAgent, Push> {
   }
   
-  public interface Provides<Actionable, ContextUpdate, SharedMemory, Push> {
+  public interface Provides<Actionable, ContextUpdate, SharedMemory, CreateAgent, Push> {
     /**
      * This can be called to access the provided port.
      * 
@@ -35,13 +41,13 @@ public abstract class Act<Actionable, ContextUpdate, SharedMemory, Push> {
     public Actionable action();
   }
   
-  public interface Parts<Actionable, ContextUpdate, SharedMemory, Push> {
+  public interface Parts<Actionable, ContextUpdate, SharedMemory, CreateAgent, Push> {
   }
   
-  public static class ComponentImpl<Actionable, ContextUpdate, SharedMemory, Push> implements Act.Component<Actionable, ContextUpdate, SharedMemory, Push>, Act.Parts<Actionable, ContextUpdate, SharedMemory, Push> {
-    private final Act.Requires<Actionable, ContextUpdate, SharedMemory, Push> bridge;
+  public static class ComponentImpl<Actionable, ContextUpdate, SharedMemory, CreateAgent, Push> implements Act.Component<Actionable, ContextUpdate, SharedMemory, CreateAgent, Push>, Act.Parts<Actionable, ContextUpdate, SharedMemory, CreateAgent, Push> {
+    private final Act.Requires<Actionable, ContextUpdate, SharedMemory, CreateAgent, Push> bridge;
     
-    private final Act<Actionable, ContextUpdate, SharedMemory, Push> implementation;
+    private final Act<Actionable, ContextUpdate, SharedMemory, CreateAgent, Push> implementation;
     
     public void start() {
       this.implementation.start();
@@ -56,7 +62,7 @@ public abstract class Act<Actionable, ContextUpdate, SharedMemory, Push> {
       assert this.action == null: "This is a bug.";
       this.action = this.implementation.make_action();
       if (this.action == null) {
-      	throw new RuntimeException("make_action() in general.Act<Actionable, ContextUpdate, SharedMemory, Push> should not return null.");
+      	throw new RuntimeException("make_action() in general.Act<Actionable, ContextUpdate, SharedMemory, CreateAgent, Push> should not return null.");
       }
     }
     
@@ -64,7 +70,7 @@ public abstract class Act<Actionable, ContextUpdate, SharedMemory, Push> {
       init_action();
     }
     
-    public ComponentImpl(final Act<Actionable, ContextUpdate, SharedMemory, Push> implem, final Act.Requires<Actionable, ContextUpdate, SharedMemory, Push> b, final boolean doInits) {
+    public ComponentImpl(final Act<Actionable, ContextUpdate, SharedMemory, CreateAgent, Push> implem, final Act.Requires<Actionable, ContextUpdate, SharedMemory, CreateAgent, Push> b, final boolean doInits) {
       this.bridge = b;
       this.implementation = implem;
       
@@ -101,7 +107,7 @@ public abstract class Act<Actionable, ContextUpdate, SharedMemory, Push> {
    */
   private boolean started = false;;
   
-  private Act.ComponentImpl<Actionable, ContextUpdate, SharedMemory, Push> selfComponent;
+  private Act.ComponentImpl<Actionable, ContextUpdate, SharedMemory, CreateAgent, Push> selfComponent;
   
   /**
    * Can be overridden by the implementation.
@@ -118,7 +124,7 @@ public abstract class Act<Actionable, ContextUpdate, SharedMemory, Push> {
    * This can be called by the implementation to access the provided ports.
    * 
    */
-  protected Act.Provides<Actionable, ContextUpdate, SharedMemory, Push> provides() {
+  protected Act.Provides<Actionable, ContextUpdate, SharedMemory, CreateAgent, Push> provides() {
     assert this.selfComponent != null: "This is a bug.";
     if (!this.init) {
     	throw new RuntimeException("provides() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if provides() is needed to initialise the component.");
@@ -137,7 +143,7 @@ public abstract class Act<Actionable, ContextUpdate, SharedMemory, Push> {
    * This can be called by the implementation to access the required ports.
    * 
    */
-  protected Act.Requires<Actionable, ContextUpdate, SharedMemory, Push> requires() {
+  protected Act.Requires<Actionable, ContextUpdate, SharedMemory, CreateAgent, Push> requires() {
     assert this.selfComponent != null: "This is a bug.";
     if (!this.init) {
     	throw new RuntimeException("requires() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if requires() is needed to initialise the component.");
@@ -149,7 +155,7 @@ public abstract class Act<Actionable, ContextUpdate, SharedMemory, Push> {
    * This can be called by the implementation to access the parts and their provided ports.
    * 
    */
-  protected Act.Parts<Actionable, ContextUpdate, SharedMemory, Push> parts() {
+  protected Act.Parts<Actionable, ContextUpdate, SharedMemory, CreateAgent, Push> parts() {
     assert this.selfComponent != null: "This is a bug.";
     if (!this.init) {
     	throw new RuntimeException("parts() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if parts() is needed to initialise the component.");
@@ -161,12 +167,12 @@ public abstract class Act<Actionable, ContextUpdate, SharedMemory, Push> {
    * Not meant to be used to manually instantiate components (except for testing).
    * 
    */
-  public synchronized Act.Component<Actionable, ContextUpdate, SharedMemory, Push> _newComponent(final Act.Requires<Actionable, ContextUpdate, SharedMemory, Push> b, final boolean start) {
+  public synchronized Act.Component<Actionable, ContextUpdate, SharedMemory, CreateAgent, Push> _newComponent(final Act.Requires<Actionable, ContextUpdate, SharedMemory, CreateAgent, Push> b, final boolean start) {
     if (this.init) {
     	throw new RuntimeException("This instance of Act has already been used to create a component, use another one.");
     }
     this.init = true;
-    Act.ComponentImpl<Actionable, ContextUpdate, SharedMemory, Push>  _comp = new Act.ComponentImpl<Actionable, ContextUpdate, SharedMemory, Push>(this, b, true);
+    Act.ComponentImpl<Actionable, ContextUpdate, SharedMemory, CreateAgent, Push>  _comp = new Act.ComponentImpl<Actionable, ContextUpdate, SharedMemory, CreateAgent, Push>(this, b, true);
     if (start) {
     	_comp.start();
     }

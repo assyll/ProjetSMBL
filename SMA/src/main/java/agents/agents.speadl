@@ -1,29 +1,40 @@
 import agents.interfaces.Do
 import agents.interfaces.IGetThread
+import agents.interfaces.PullMessage
+import agents.interfaces.SendMessage
+import agents.interfaces.StateAction
+import agents.interfaces.StateMemory
+import environnement.interfaces.ContextInfos
+import environnement.interfaces.EnvUpdate
 import generalStructure.interfaces.CycleAlert
 import generalStructure.interfaces.ICreateAgent
 import trace.Action
+import environnement.interfaces.EnvInfos
+import agents.interfaces.TransAction
+import agents.interfaces.TransMemory
 
 namespace general{
 
-	ecosystem EcoAgents[ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, Push, Pull] {
+	ecosystem EcoAgents/*[ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, Push, Pull] */{
 		requires threads: IGetThread
 		requires createAgent: ICreateAgent
 		
 		species StateAgent (id: String) {
 			provides cycle: Do = agentComponent.cycle
-			requires getContext: ContextSA
-			requires setContext: ContextUpdate
+			requires getContext: ContextInfos
+			requires setContext: EnvUpdate
 			requires finishedCycle: CycleAlert
-			requires push: Push
-			requires pull: Pull
+			requires push: SendMessage
+			requires pull: PullMessage
+			provides create: ICreateAgent
 			
-			 part agentComponent: Agent[ContextSA, ContextUpdate, ActionableState, StateSharedMemory, Push, Pull] {
+			 part agentComponent: Agent[ContextInfos, EnvUpdate, StateAction, StateMemory, ICreateAgent, SendMessage, PullMessage] {
 			 	bind getContext to getContext
 			 	bind setContext to setContext
 			 	bind finishedCycle to finishedCycle
 			 	bind push to push
 			 	bind pull to pull
+			 	bind create to create
 			 }
 						
 			//requires getTraceElement: IGetAction
@@ -32,23 +43,26 @@ namespace general{
 		species TransitionAgent(id:String, action:Action , stateSource:String) {
 			
 			provides cycle: Do = agentComponent.cycle
-			requires getContext: ContextTA
-			requires setContext: ContextUpdate
+			requires getContext: EnvInfos
+			requires setContext: EnvUpdate
 			requires finishedCycle: CycleAlert
-			requires push: Push
-			requires pull: Pull
+			requires push: SendMessage
+			requires pull: PullMessage
+			provides create: ICreateAgent
 			
-			part agentComponent: Agent[ContextTA, ContextUpdate, ActionableTransition, TransSharedMemory, Push, Pull] {
+			part agentComponent: Agent[EnvInfos, EnvUpdate, TransAction, TransMemory, ICreateAgent, SendMessage, PullMessage] {
 				bind getContext to getContext
 			 	bind setContext to setContext
 			 	bind finishedCycle to finishedCycle
 			 	bind push to push
 			 	bind pull to pull
+			 	bind create to create
 			}
 		}
 	}
 	
-	component Agent[Context, ContextUpdate, Actionable, SharedMemory, Push, Pull] {
+	component Agent[Context, ContextUpdate, Actionable, SharedMemory, CreateAgent, Push, Pull] {
+
 		part memory: Memory[SharedMemory]
 		
 		part perceive: Perceive[Context, SharedMemory, Pull] {
@@ -62,10 +76,11 @@ namespace general{
 			bind memory to memory.infos
 		}
 	
-		part act: Act[Actionable,ContextUpdate, SharedMemory, Push] {
+		part act: Act[Actionable,ContextUpdate, SharedMemory, CreateAgent, Push] {
 			bind finishedCycle to finishedCycle
 			bind setContext to setContext
 			bind memory to memory.infos
+			bind create to create
 		}
 		
 		provides cycle: Do = perceive.perception
@@ -74,6 +89,7 @@ namespace general{
 		requires finishedCycle: CycleAlert
 		requires push: Push
 		requires pull: Pull
+		requires create: CreateAgent
 	}
 	
 	component Perceive[Context, SharedMemory, Pull] {
@@ -89,11 +105,12 @@ namespace general{
 		requires memory: SharedMemory
 	}
 	
-	component Act[Actionable, ContextUpdate, SharedMemory, Push] {
+	component Act[Actionable, ContextUpdate, SharedMemory, CreateAgent, Push] {
 		provides action: Actionable
 		requires finishedCycle: CycleAlert
 		requires setContext: ContextUpdate
 		requires memory: SharedMemory
+		requires create: CreateAgent
 	}
 		
 	component Memory[SharedMemory] {

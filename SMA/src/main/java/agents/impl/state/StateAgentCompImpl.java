@@ -12,8 +12,9 @@ import general.Agent;
 import general.Decide;
 import general.Memory;
 import general.Perceive;
+import generalStructure.interfaces.ICreateAgent;
 
-public class StateAgentCompImpl extends Agent<ContextInfos, EnvUpdate, StateAction, StateMemory, SendMessage, PullMessage> {
+public class StateAgentCompImpl extends Agent<ContextInfos, EnvUpdate, StateAction, StateMemory, ICreateAgent, SendMessage, PullMessage> {
 
 	private String id;
 	
@@ -37,7 +38,7 @@ public class StateAgentCompImpl extends Agent<ContextInfos, EnvUpdate, StateActi
 	}
 
 	@Override
-	protected Act<StateAction, EnvUpdate, StateMemory, SendMessage> make_act() {
+	protected Act<StateAction, EnvUpdate, StateMemory, ICreateAgent, SendMessage> make_act() {
 		return new ActStateImpl(id);
 	}
 

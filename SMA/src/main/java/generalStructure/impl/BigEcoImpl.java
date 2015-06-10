@@ -23,8 +23,7 @@ import agents.interfaces.StateMemory;
 import agents.interfaces.TransAction;
 import agents.interfaces.TransMemory;
 
-public class BigEcoImpl extends BigEco<StateAction, TransAction, ContextInfos, EnvInfos,
-EnvUpdate, StateMemory, TransMemory, ITakeAction, SendMessage, PullMessage> implements ICreateAgent{
+public class BigEcoImpl extends BigEco implements ICreateAgent{
 
 	private final String path;
 
@@ -35,8 +34,7 @@ EnvUpdate, StateMemory, TransMemory, ITakeAction, SendMessage, PullMessage> impl
 	}
 
 	@Override
-	protected EcoAgents<StateAction, TransAction, ContextInfos, EnvInfos,
-	EnvUpdate, StateMemory, TransMemory, SendMessage, PullMessage> make_ecoAE() {
+	protected EcoAgents make_ecoAE() {
 		return new EcoAgentsImpl();
 	}
 
@@ -63,7 +61,7 @@ EnvUpdate, StateMemory, TransMemory, ITakeAction, SendMessage, PullMessage> impl
 	}
 
 	@Override
-	protected ActionProvider<ITakeAction> make_actionProvider() {
+	protected ActionProvider make_actionProvider() {
 		return new ActionProviderImpl(path);
 	}
 

@@ -9,7 +9,7 @@ import java.io.FileNotFoundException;
 
 import trace.interfaces.ITakeAction;
 
-public class ActionProviderImpl extends ActionProvider<ITakeAction> {
+public class ActionProviderImpl extends ActionProvider {
 
 	private String path;
 	
@@ -27,7 +27,7 @@ public class ActionProviderImpl extends ActionProvider<ITakeAction> {
 	}
 
 	@Override
-	protected TraceElementEater<ITakeAction> make_tee() {
+	protected TraceElementEater make_tee() {
 		return new TraceElementEaterImpl();
 	}
 

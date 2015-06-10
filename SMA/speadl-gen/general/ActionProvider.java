@@ -3,25 +3,26 @@ package general;
 import general.FET;
 import general.TraceActionParser;
 import general.TraceElementEater;
+import trace.interfaces.ITakeAction;
 import trace.interfaces.TraceElement;
 
 @SuppressWarnings("all")
-public abstract class ActionProvider<ActionGetter> {
-  public interface Requires<ActionGetter> {
+public abstract class ActionProvider {
+  public interface Requires {
   }
   
-  public interface Component<ActionGetter> extends ActionProvider.Provides<ActionGetter> {
+  public interface Component extends ActionProvider.Provides {
   }
   
-  public interface Provides<ActionGetter> {
+  public interface Provides {
     /**
      * This can be called to access the provided port.
      * 
      */
-    public ActionGetter actionGetter();
+    public ITakeAction actionGetter();
   }
   
-  public interface Parts<ActionGetter> {
+  public interface Parts {
     /**
      * This can be called by the implementation to access the part and its provided ports.
      * It will be initialized after the required ports are initialized and before the provided ports are initialized.
@@ -41,13 +42,13 @@ public abstract class ActionProvider<ActionGetter> {
      * It will be initialized after the required ports are initialized and before the provided ports are initialized.
      * 
      */
-    public TraceElementEater.Component<ActionGetter> tee();
+    public TraceElementEater.Component tee();
   }
   
-  public static class ComponentImpl<ActionGetter> implements ActionProvider.Component<ActionGetter>, ActionProvider.Parts<ActionGetter> {
-    private final ActionProvider.Requires<ActionGetter> bridge;
+  public static class ComponentImpl implements ActionProvider.Component, ActionProvider.Parts {
+    private final ActionProvider.Requires bridge;
     
-    private final ActionProvider<ActionGetter> implementation;
+    private final ActionProvider implementation;
     
     public void start() {
       assert this.fet != null: "This is a bug.";
@@ -55,7 +56,7 @@ public abstract class ActionProvider<ActionGetter> {
       assert this.traceParser != null: "This is a bug.";
       ((TraceActionParser.ComponentImpl) this.traceParser).start();
       assert this.tee != null: "This is a bug.";
-      ((TraceElementEater.ComponentImpl<ActionGetter>) this.tee).start();
+      ((TraceElementEater.ComponentImpl) this.tee).start();
       this.implementation.start();
       this.implementation.started = true;
     }
@@ -65,7 +66,7 @@ public abstract class ActionProvider<ActionGetter> {
       assert this.implem_fet == null: "This is a bug.";
       this.implem_fet = this.implementation.make_fet();
       if (this.implem_fet == null) {
-      	throw new RuntimeException("make_fet() in general.ActionProvider<ActionGetter> should not return null.");
+      	throw new RuntimeException("make_fet() in general.ActionProvider should not return null.");
       }
       this.fet = this.implem_fet._newComponent(new BridgeImpl_fet(), false);
       
@@ -76,7 +77,7 @@ public abstract class ActionProvider<ActionGetter> {
       assert this.implem_traceParser == null: "This is a bug.";
       this.implem_traceParser = this.implementation.make_traceParser();
       if (this.implem_traceParser == null) {
-      	throw new RuntimeException("make_traceParser() in general.ActionProvider<ActionGetter> should not return null.");
+      	throw new RuntimeException("make_traceParser() in general.ActionProvider should not return null.");
       }
       this.traceParser = this.implem_traceParser._newComponent(new BridgeImpl_traceParser(), false);
       
@@ -87,7 +88,7 @@ public abstract class ActionProvider<ActionGetter> {
       assert this.implem_tee == null: "This is a bug.";
       this.implem_tee = this.implementation.make_tee();
       if (this.implem_tee == null) {
-      	throw new RuntimeException("make_tee() in general.ActionProvider<ActionGetter> should not return null.");
+      	throw new RuntimeException("make_tee() in general.ActionProvider should not return null.");
       }
       this.tee = this.implem_tee._newComponent(new BridgeImpl_tee(), false);
       
@@ -103,7 +104,7 @@ public abstract class ActionProvider<ActionGetter> {
       
     }
     
-    public ComponentImpl(final ActionProvider<ActionGetter> implem, final ActionProvider.Requires<ActionGetter> b, final boolean doInits) {
+    public ComponentImpl(final ActionProvider implem, final ActionProvider.Requires b, final boolean doInits) {
       this.bridge = b;
       this.implementation = implem;
       
@@ -119,7 +120,7 @@ public abstract class ActionProvider<ActionGetter> {
       }
     }
     
-    public ActionGetter actionGetter() {
+    public ITakeAction actionGetter() {
       return this.tee().actionGetter();
     }
     
@@ -148,17 +149,17 @@ public abstract class ActionProvider<ActionGetter> {
       return this.traceParser;
     }
     
-    private TraceElementEater.Component<ActionGetter> tee;
+    private TraceElementEater.Component tee;
     
-    private TraceElementEater<ActionGetter> implem_tee;
+    private TraceElementEater implem_tee;
     
-    private final class BridgeImpl_tee implements TraceElementEater.Requires<ActionGetter> {
+    private final class BridgeImpl_tee implements TraceElementEater.Requires {
       public final TraceElement traceElement() {
         return ActionProvider.ComponentImpl.this.traceParser().actionTrace();
       }
     }
     
-    public final TraceElementEater.Component<ActionGetter> tee() {
+    public final TraceElementEater.Component tee() {
       return this.tee;
     }
   }
@@ -177,7 +178,7 @@ public abstract class ActionProvider<ActionGetter> {
    */
   private boolean started = false;;
   
-  private ActionProvider.ComponentImpl<ActionGetter> selfComponent;
+  private ActionProvider.ComponentImpl selfComponent;
   
   /**
    * Can be overridden by the implementation.
@@ -194,7 +195,7 @@ public abstract class ActionProvider<ActionGetter> {
    * This can be called by the implementation to access the provided ports.
    * 
    */
-  protected ActionProvider.Provides<ActionGetter> provides() {
+  protected ActionProvider.Provides provides() {
     assert this.selfComponent != null: "This is a bug.";
     if (!this.init) {
     	throw new RuntimeException("provides() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if provides() is needed to initialise the component.");
@@ -206,7 +207,7 @@ public abstract class ActionProvider<ActionGetter> {
    * This can be called by the implementation to access the required ports.
    * 
    */
-  protected ActionProvider.Requires<ActionGetter> requires() {
+  protected ActionProvider.Requires requires() {
     assert this.selfComponent != null: "This is a bug.";
     if (!this.init) {
     	throw new RuntimeException("requires() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if requires() is needed to initialise the component.");
@@ -218,7 +219,7 @@ public abstract class ActionProvider<ActionGetter> {
    * This can be called by the implementation to access the parts and their provided ports.
    * 
    */
-  protected ActionProvider.Parts<ActionGetter> parts() {
+  protected ActionProvider.Parts parts() {
     assert this.selfComponent != null: "This is a bug.";
     if (!this.init) {
     	throw new RuntimeException("parts() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if parts() is needed to initialise the component.");
@@ -245,18 +246,18 @@ public abstract class ActionProvider<ActionGetter> {
    * This will be called once during the construction of the component to initialize this sub-component.
    * 
    */
-  protected abstract TraceElementEater<ActionGetter> make_tee();
+  protected abstract TraceElementEater make_tee();
   
   /**
    * Not meant to be used to manually instantiate components (except for testing).
    * 
    */
-  public synchronized ActionProvider.Component<ActionGetter> _newComponent(final ActionProvider.Requires<ActionGetter> b, final boolean start) {
+  public synchronized ActionProvider.Component _newComponent(final ActionProvider.Requires b, final boolean start) {
     if (this.init) {
     	throw new RuntimeException("This instance of ActionProvider has already been used to create a component, use another one.");
     }
     this.init = true;
-    ActionProvider.ComponentImpl<ActionGetter>  _comp = new ActionProvider.ComponentImpl<ActionGetter>(this, b, true);
+    ActionProvider.ComponentImpl  _comp = new ActionProvider.ComponentImpl(this, b, true);
     if (start) {
     	_comp.start();
     }
@@ -267,7 +268,7 @@ public abstract class ActionProvider<ActionGetter> {
    * Use to instantiate a component from this implementation.
    * 
    */
-  public ActionProvider.Component<ActionGetter> newComponent() {
-    return this._newComponent(new ActionProvider.Requires<ActionGetter>() {}, true);
+  public ActionProvider.Component newComponent() {
+    return this._newComponent(new ActionProvider.Requires() {}, true);
   }
 }

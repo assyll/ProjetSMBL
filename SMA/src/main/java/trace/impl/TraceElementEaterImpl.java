@@ -17,7 +17,7 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 
-public class TraceElementEaterImpl extends TraceElementEater<ITakeAction> implements Runnable, ITakeAction{
+public class TraceElementEaterImpl extends TraceElementEater implements Runnable, ITakeAction{
 	private Map<String, List<Action>> actionsByUserMap = new HashMap<>();
 
 	@Override

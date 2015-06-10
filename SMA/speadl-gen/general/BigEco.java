@@ -1,6 +1,11 @@
 package general;
 
 import agents.interfaces.IGetThread;
+import agents.interfaces.PullMessage;
+import agents.interfaces.SendMessage;
+import environnement.interfaces.ContextInfos;
+import environnement.interfaces.EnvInfos;
+import environnement.interfaces.EnvUpdate;
 import general.ActionProvider;
 import general.EcoAgents;
 import general.Environnement;
@@ -9,16 +14,17 @@ import general.Launcher;
 import generalStructure.interfaces.CycleAlert;
 import generalStructure.interfaces.ICreateAgent;
 import trace.Action;
+import trace.interfaces.ITakeAction;
 
 @SuppressWarnings("all")
-public abstract class BigEco<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> {
-  public interface Requires<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> {
+public abstract class BigEco {
+  public interface Requires {
   }
   
-  public interface Component<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> extends BigEco.Provides<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> {
+  public interface Component extends BigEco.Provides {
   }
   
-  public interface Provides<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> {
+  public interface Provides {
     /**
      * This can be called to access the provided port.
      * 
@@ -26,27 +32,27 @@ public abstract class BigEco<ActionableState, ActionableTransition, ContextSA, C
     public ICreateAgent creatAgent();
   }
   
-  public interface Parts<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> {
+  public interface Parts {
     /**
      * This can be called by the implementation to access the part and its provided ports.
      * It will be initialized after the required ports are initialized and before the provided ports are initialized.
      * 
      */
-    public EcoAgents.Component<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, Push, Pull> ecoAE();
+    public EcoAgents.Component ecoAE();
     
     /**
      * This can be called by the implementation to access the part and its provided ports.
      * It will be initialized after the required ports are initialized and before the provided ports are initialized.
      * 
      */
-    public Forward.Component<CycleAlert, ContextSA, ContextTA, ContextUpdate, Push, Pull, ActionGetter> fw();
+    public Forward.Component<CycleAlert, ContextInfos, EnvInfos, EnvUpdate, SendMessage, PullMessage, ITakeAction> fw();
     
     /**
      * This can be called by the implementation to access the part and its provided ports.
      * It will be initialized after the required ports are initialized and before the provided ports are initialized.
      * 
      */
-    public ActionProvider.Component<ActionGetter> actionProvider();
+    public ActionProvider.Component actionProvider();
     
     /**
      * This can be called by the implementation to access the part and its provided ports.
@@ -60,25 +66,25 @@ public abstract class BigEco<ActionableState, ActionableTransition, ContextSA, C
      * It will be initialized after the required ports are initialized and before the provided ports are initialized.
      * 
      */
-    public Environnement.Component<ContextTA, ContextUpdate> envEco();
+    public Environnement.Component<EnvInfos, EnvUpdate> envEco();
   }
   
-  public static class ComponentImpl<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> implements BigEco.Component<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull>, BigEco.Parts<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> {
-    private final BigEco.Requires<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> bridge;
+  public static class ComponentImpl implements BigEco.Component, BigEco.Parts {
+    private final BigEco.Requires bridge;
     
-    private final BigEco<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> implementation;
+    private final BigEco implementation;
     
     public void start() {
       assert this.ecoAE != null: "This is a bug.";
-      ((EcoAgents.ComponentImpl<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, Push, Pull>) this.ecoAE).start();
+      ((EcoAgents.ComponentImpl) this.ecoAE).start();
       assert this.fw != null: "This is a bug.";
-      ((Forward.ComponentImpl<CycleAlert, ContextSA, ContextTA, ContextUpdate, Push, Pull, ActionGetter>) this.fw).start();
+      ((Forward.ComponentImpl<CycleAlert, ContextInfos, EnvInfos, EnvUpdate, SendMessage, PullMessage, ITakeAction>) this.fw).start();
       assert this.actionProvider != null: "This is a bug.";
-      ((ActionProvider.ComponentImpl<ActionGetter>) this.actionProvider).start();
+      ((ActionProvider.ComponentImpl) this.actionProvider).start();
       assert this.launcher != null: "This is a bug.";
       ((Launcher.ComponentImpl) this.launcher).start();
       assert this.envEco != null: "This is a bug.";
-      ((Environnement.ComponentImpl<ContextTA, ContextUpdate>) this.envEco).start();
+      ((Environnement.ComponentImpl<EnvInfos, EnvUpdate>) this.envEco).start();
       this.implementation.start();
       this.implementation.started = true;
     }
@@ -88,7 +94,7 @@ public abstract class BigEco<ActionableState, ActionableTransition, ContextSA, C
       assert this.implem_ecoAE == null: "This is a bug.";
       this.implem_ecoAE = this.implementation.make_ecoAE();
       if (this.implem_ecoAE == null) {
-      	throw new RuntimeException("make_ecoAE() in general.BigEco<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> should not return null.");
+      	throw new RuntimeException("make_ecoAE() in general.BigEco should not return null.");
       }
       this.ecoAE = this.implem_ecoAE._newComponent(new BridgeImpl_ecoAE(), false);
       
@@ -99,7 +105,7 @@ public abstract class BigEco<ActionableState, ActionableTransition, ContextSA, C
       assert this.implem_fw == null: "This is a bug.";
       this.implem_fw = this.implementation.make_fw();
       if (this.implem_fw == null) {
-      	throw new RuntimeException("make_fw() in general.BigEco<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> should not return null.");
+      	throw new RuntimeException("make_fw() in general.BigEco should not return null.");
       }
       this.fw = this.implem_fw._newComponent(new BridgeImpl_fw(), false);
       
@@ -110,7 +116,7 @@ public abstract class BigEco<ActionableState, ActionableTransition, ContextSA, C
       assert this.implem_actionProvider == null: "This is a bug.";
       this.implem_actionProvider = this.implementation.make_actionProvider();
       if (this.implem_actionProvider == null) {
-      	throw new RuntimeException("make_actionProvider() in general.BigEco<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> should not return null.");
+      	throw new RuntimeException("make_actionProvider() in general.BigEco should not return null.");
       }
       this.actionProvider = this.implem_actionProvider._newComponent(new BridgeImpl_actionProvider(), false);
       
@@ -121,7 +127,7 @@ public abstract class BigEco<ActionableState, ActionableTransition, ContextSA, C
       assert this.implem_launcher == null: "This is a bug.";
       this.implem_launcher = this.implementation.make_launcher();
       if (this.implem_launcher == null) {
-      	throw new RuntimeException("make_launcher() in general.BigEco<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> should not return null.");
+      	throw new RuntimeException("make_launcher() in general.BigEco should not return null.");
       }
       this.launcher = this.implem_launcher._newComponent(new BridgeImpl_launcher(), false);
       
@@ -132,7 +138,7 @@ public abstract class BigEco<ActionableState, ActionableTransition, ContextSA, C
       assert this.implem_envEco == null: "This is a bug.";
       this.implem_envEco = this.implementation.make_envEco();
       if (this.implem_envEco == null) {
-      	throw new RuntimeException("make_envEco() in general.BigEco<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> should not return null.");
+      	throw new RuntimeException("make_envEco() in general.BigEco should not return null.");
       }
       this.envEco = this.implem_envEco._newComponent(new BridgeImpl_envEco(), false);
       
@@ -150,7 +156,7 @@ public abstract class BigEco<ActionableState, ActionableTransition, ContextSA, C
       assert this.creatAgent == null: "This is a bug.";
       this.creatAgent = this.implementation.make_creatAgent();
       if (this.creatAgent == null) {
-      	throw new RuntimeException("make_creatAgent() in general.BigEco<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> should not return null.");
+      	throw new RuntimeException("make_creatAgent() in general.BigEco should not return null.");
       }
     }
     
@@ -158,7 +164,7 @@ public abstract class BigEco<ActionableState, ActionableTransition, ContextSA, C
       init_creatAgent();
     }
     
-    public ComponentImpl(final BigEco<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> implem, final BigEco.Requires<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> b, final boolean doInits) {
+    public ComponentImpl(final BigEco implem, final BigEco.Requires b, final boolean doInits) {
       this.bridge = b;
       this.implementation = implem;
       
@@ -180,11 +186,11 @@ public abstract class BigEco<ActionableState, ActionableTransition, ContextSA, C
       return this.creatAgent;
     }
     
-    private EcoAgents.Component<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, Push, Pull> ecoAE;
+    private EcoAgents.Component ecoAE;
     
-    private EcoAgents<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, Push, Pull> implem_ecoAE;
+    private EcoAgents implem_ecoAE;
     
-    private final class BridgeImpl_ecoAE implements EcoAgents.Requires<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, Push, Pull> {
+    private final class BridgeImpl_ecoAE implements EcoAgents.Requires {
       public final IGetThread threads() {
         return BigEco.ComponentImpl.this.launcher().threads();
       }
@@ -194,44 +200,44 @@ public abstract class BigEco<ActionableState, ActionableTransition, ContextSA, C
       }
     }
     
-    public final EcoAgents.Component<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, Push, Pull> ecoAE() {
+    public final EcoAgents.Component ecoAE() {
       return this.ecoAE;
     }
     
-    private Forward.Component<CycleAlert, ContextSA, ContextTA, ContextUpdate, Push, Pull, ActionGetter> fw;
+    private Forward.Component<CycleAlert, ContextInfos, EnvInfos, EnvUpdate, SendMessage, PullMessage, ITakeAction> fw;
     
-    private Forward<CycleAlert, ContextSA, ContextTA, ContextUpdate, Push, Pull, ActionGetter> implem_fw;
+    private Forward<CycleAlert, ContextInfos, EnvInfos, EnvUpdate, SendMessage, PullMessage, ITakeAction> implem_fw;
     
-    private final class BridgeImpl_fw implements Forward.Requires<CycleAlert, ContextSA, ContextTA, ContextUpdate, Push, Pull, ActionGetter> {
+    private final class BridgeImpl_fw implements Forward.Requires<CycleAlert, ContextInfos, EnvInfos, EnvUpdate, SendMessage, PullMessage, ITakeAction> {
       public final CycleAlert i() {
         return BigEco.ComponentImpl.this.launcher().finishedCycle();
       }
       
-      public final ContextTA h() {
+      public final EnvInfos h() {
         return BigEco.ComponentImpl.this.envEco().envInfos();
       }
       
-      public final ContextUpdate k() {
+      public final EnvUpdate k() {
         return BigEco.ComponentImpl.this.envEco().envUpdate();
       }
       
-      public final ActionGetter j() {
+      public final ITakeAction j() {
         return BigEco.ComponentImpl.this.actionProvider().actionGetter();
       }
     }
     
-    public final Forward.Component<CycleAlert, ContextSA, ContextTA, ContextUpdate, Push, Pull, ActionGetter> fw() {
+    public final Forward.Component<CycleAlert, ContextInfos, EnvInfos, EnvUpdate, SendMessage, PullMessage, ITakeAction> fw() {
       return this.fw;
     }
     
-    private ActionProvider.Component<ActionGetter> actionProvider;
+    private ActionProvider.Component actionProvider;
     
-    private ActionProvider<ActionGetter> implem_actionProvider;
+    private ActionProvider implem_actionProvider;
     
-    private final class BridgeImpl_actionProvider implements ActionProvider.Requires<ActionGetter> {
+    private final class BridgeImpl_actionProvider implements ActionProvider.Requires {
     }
     
-    public final ActionProvider.Component<ActionGetter> actionProvider() {
+    public final ActionProvider.Component actionProvider() {
       return this.actionProvider;
     }
     
@@ -246,54 +252,54 @@ public abstract class BigEco<ActionableState, ActionableTransition, ContextSA, C
       return this.launcher;
     }
     
-    private Environnement.Component<ContextTA, ContextUpdate> envEco;
+    private Environnement.Component<EnvInfos, EnvUpdate> envEco;
     
-    private Environnement<ContextTA, ContextUpdate> implem_envEco;
+    private Environnement<EnvInfos, EnvUpdate> implem_envEco;
     
-    private final class BridgeImpl_envEco implements Environnement.Requires<ContextTA, ContextUpdate> {
+    private final class BridgeImpl_envEco implements Environnement.Requires<EnvInfos, EnvUpdate> {
     }
     
-    public final Environnement.Component<ContextTA, ContextUpdate> envEco() {
+    public final Environnement.Component<EnvInfos, EnvUpdate> envEco() {
       return this.envEco;
     }
   }
   
-  public static class DynamicAssemblyAgentTransition<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> {
-    public interface Requires<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> {
+  public static class DynamicAssemblyAgentTransition {
+    public interface Requires {
     }
     
-    public interface Component<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> extends BigEco.DynamicAssemblyAgentTransition.Provides<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> {
+    public interface Component extends BigEco.DynamicAssemblyAgentTransition.Provides {
     }
     
-    public interface Provides<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> {
+    public interface Provides {
     }
     
-    public interface Parts<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> {
+    public interface Parts {
       /**
        * This can be called by the implementation to access the part and its provided ports.
        * It will be initialized after the required ports are initialized and before the provided ports are initialized.
        * 
        */
-      public EcoAgents.TransitionAgent.Component<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, Push, Pull> agentT();
+      public EcoAgents.TransitionAgent.Component agentT();
       
       /**
        * This can be called by the implementation to access the part and its provided ports.
        * It will be initialized after the required ports are initialized and before the provided ports are initialized.
        * 
        */
-      public Forward.TransForward.Component<CycleAlert, ContextSA, ContextTA, ContextUpdate, Push, Pull, ActionGetter> aFW();
+      public Forward.TransForward.Component<CycleAlert, ContextInfos, EnvInfos, EnvUpdate, SendMessage, PullMessage, ITakeAction> aFW();
     }
     
-    public static class ComponentImpl<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> implements BigEco.DynamicAssemblyAgentTransition.Component<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull>, BigEco.DynamicAssemblyAgentTransition.Parts<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> {
-      private final BigEco.DynamicAssemblyAgentTransition.Requires<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> bridge;
+    public static class ComponentImpl implements BigEco.DynamicAssemblyAgentTransition.Component, BigEco.DynamicAssemblyAgentTransition.Parts {
+      private final BigEco.DynamicAssemblyAgentTransition.Requires bridge;
       
-      private final BigEco.DynamicAssemblyAgentTransition<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> implementation;
+      private final BigEco.DynamicAssemblyAgentTransition implementation;
       
       public void start() {
         assert this.agentT != null: "This is a bug.";
-        ((EcoAgents.TransitionAgent.ComponentImpl<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, Push, Pull>) this.agentT).start();
+        ((EcoAgents.TransitionAgent.ComponentImpl) this.agentT).start();
         assert this.aFW != null: "This is a bug.";
-        ((Forward.TransForward.ComponentImpl<CycleAlert, ContextSA, ContextTA, ContextUpdate, Push, Pull, ActionGetter>) this.aFW).start();
+        ((Forward.TransForward.ComponentImpl<CycleAlert, ContextInfos, EnvInfos, EnvUpdate, SendMessage, PullMessage, ITakeAction>) this.aFW).start();
         this.implementation.start();
         this.implementation.started = true;
       }
@@ -321,7 +327,7 @@ public abstract class BigEco<ActionableState, ActionableTransition, ContextSA, C
         
       }
       
-      public ComponentImpl(final BigEco.DynamicAssemblyAgentTransition<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> implem, final BigEco.DynamicAssemblyAgentTransition.Requires<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> b, final boolean doInits) {
+      public ComponentImpl(final BigEco.DynamicAssemblyAgentTransition implem, final BigEco.DynamicAssemblyAgentTransition.Requires b, final boolean doInits) {
         this.bridge = b;
         this.implementation = implem;
         
@@ -337,40 +343,40 @@ public abstract class BigEco<ActionableState, ActionableTransition, ContextSA, C
         }
       }
       
-      private EcoAgents.TransitionAgent.Component<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, Push, Pull> agentT;
+      private EcoAgents.TransitionAgent.Component agentT;
       
-      private final class BridgeImpl_ecoAE_agentT implements EcoAgents.TransitionAgent.Requires<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, Push, Pull> {
+      private final class BridgeImpl_ecoAE_agentT implements EcoAgents.TransitionAgent.Requires {
         public final CycleAlert finishedCycle() {
           return BigEco.DynamicAssemblyAgentTransition.ComponentImpl.this.aFW().a();
         }
         
-        public final ContextTA getContext() {
+        public final EnvInfos getContext() {
           return BigEco.DynamicAssemblyAgentTransition.ComponentImpl.this.aFW().b();
         }
         
-        public final ContextUpdate setContext() {
+        public final EnvUpdate setContext() {
           return BigEco.DynamicAssemblyAgentTransition.ComponentImpl.this.aFW().c();
         }
         
-        public final Push push() {
+        public final SendMessage push() {
           return BigEco.DynamicAssemblyAgentTransition.ComponentImpl.this.aFW().d();
         }
         
-        public final Pull pull() {
+        public final PullMessage pull() {
           return BigEco.DynamicAssemblyAgentTransition.ComponentImpl.this.aFW().e();
         }
       }
       
-      public final EcoAgents.TransitionAgent.Component<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, Push, Pull> agentT() {
+      public final EcoAgents.TransitionAgent.Component agentT() {
         return this.agentT;
       }
       
-      private Forward.TransForward.Component<CycleAlert, ContextSA, ContextTA, ContextUpdate, Push, Pull, ActionGetter> aFW;
+      private Forward.TransForward.Component<CycleAlert, ContextInfos, EnvInfos, EnvUpdate, SendMessage, PullMessage, ITakeAction> aFW;
       
-      private final class BridgeImpl_fw_aFW implements Forward.TransForward.Requires<CycleAlert, ContextSA, ContextTA, ContextUpdate, Push, Pull, ActionGetter> {
+      private final class BridgeImpl_fw_aFW implements Forward.TransForward.Requires<CycleAlert, ContextInfos, EnvInfos, EnvUpdate, SendMessage, PullMessage, ITakeAction> {
       }
       
-      public final Forward.TransForward.Component<CycleAlert, ContextSA, ContextTA, ContextUpdate, Push, Pull, ActionGetter> aFW() {
+      public final Forward.TransForward.Component<CycleAlert, ContextInfos, EnvInfos, EnvUpdate, SendMessage, PullMessage, ITakeAction> aFW() {
         return this.aFW;
       }
     }
@@ -389,7 +395,7 @@ public abstract class BigEco<ActionableState, ActionableTransition, ContextSA, C
      */
     private boolean started = false;;
     
-    private BigEco.DynamicAssemblyAgentTransition.ComponentImpl<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> selfComponent;
+    private BigEco.DynamicAssemblyAgentTransition.ComponentImpl selfComponent;
     
     /**
      * Can be overridden by the implementation.
@@ -406,7 +412,7 @@ public abstract class BigEco<ActionableState, ActionableTransition, ContextSA, C
      * This can be called by the implementation to access the provided ports.
      * 
      */
-    protected BigEco.DynamicAssemblyAgentTransition.Provides<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> provides() {
+    protected BigEco.DynamicAssemblyAgentTransition.Provides provides() {
       assert this.selfComponent != null: "This is a bug.";
       if (!this.init) {
       	throw new RuntimeException("provides() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if provides() is needed to initialise the component.");
@@ -418,7 +424,7 @@ public abstract class BigEco<ActionableState, ActionableTransition, ContextSA, C
      * This can be called by the implementation to access the required ports.
      * 
      */
-    protected BigEco.DynamicAssemblyAgentTransition.Requires<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> requires() {
+    protected BigEco.DynamicAssemblyAgentTransition.Requires requires() {
       assert this.selfComponent != null: "This is a bug.";
       if (!this.init) {
       	throw new RuntimeException("requires() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if requires() is needed to initialise the component.");
@@ -430,7 +436,7 @@ public abstract class BigEco<ActionableState, ActionableTransition, ContextSA, C
      * This can be called by the implementation to access the parts and their provided ports.
      * 
      */
-    protected BigEco.DynamicAssemblyAgentTransition.Parts<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> parts() {
+    protected BigEco.DynamicAssemblyAgentTransition.Parts parts() {
       assert this.selfComponent != null: "This is a bug.";
       if (!this.init) {
       	throw new RuntimeException("parts() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if parts() is needed to initialise the component.");
@@ -438,33 +444,33 @@ public abstract class BigEco<ActionableState, ActionableTransition, ContextSA, C
       return this.selfComponent;
     }
     
-    private EcoAgents.TransitionAgent<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, Push, Pull> use_agentT;
+    private EcoAgents.TransitionAgent use_agentT;
     
-    private Forward.TransForward<CycleAlert, ContextSA, ContextTA, ContextUpdate, Push, Pull, ActionGetter> use_aFW;
+    private Forward.TransForward<CycleAlert, ContextInfos, EnvInfos, EnvUpdate, SendMessage, PullMessage, ITakeAction> use_aFW;
     
     /**
      * Not meant to be used to manually instantiate components (except for testing).
      * 
      */
-    public synchronized BigEco.DynamicAssemblyAgentTransition.Component<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> _newComponent(final BigEco.DynamicAssemblyAgentTransition.Requires<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> b, final boolean start) {
+    public synchronized BigEco.DynamicAssemblyAgentTransition.Component _newComponent(final BigEco.DynamicAssemblyAgentTransition.Requires b, final boolean start) {
       if (this.init) {
       	throw new RuntimeException("This instance of DynamicAssemblyAgentTransition has already been used to create a component, use another one.");
       }
       this.init = true;
-      BigEco.DynamicAssemblyAgentTransition.ComponentImpl<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull>  _comp = new BigEco.DynamicAssemblyAgentTransition.ComponentImpl<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull>(this, b, true);
+      BigEco.DynamicAssemblyAgentTransition.ComponentImpl  _comp = new BigEco.DynamicAssemblyAgentTransition.ComponentImpl(this, b, true);
       if (start) {
       	_comp.start();
       }
       return _comp;
     }
     
-    private BigEco.ComponentImpl<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> ecosystemComponent;
+    private BigEco.ComponentImpl ecosystemComponent;
     
     /**
      * This can be called by the species implementation to access the provided ports of its ecosystem.
      * 
      */
-    protected BigEco.Provides<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> eco_provides() {
+    protected BigEco.Provides eco_provides() {
       assert this.ecosystemComponent != null: "This is a bug.";
       return this.ecosystemComponent;
     }
@@ -473,7 +479,7 @@ public abstract class BigEco<ActionableState, ActionableTransition, ContextSA, C
      * This can be called by the species implementation to access the required ports of its ecosystem.
      * 
      */
-    protected BigEco.Requires<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> eco_requires() {
+    protected BigEco.Requires eco_requires() {
       assert this.ecosystemComponent != null: "This is a bug.";
       return this.ecosystemComponent.bridge;
     }
@@ -482,48 +488,48 @@ public abstract class BigEco<ActionableState, ActionableTransition, ContextSA, C
      * This can be called by the species implementation to access the parts of its ecosystem and their provided ports.
      * 
      */
-    protected BigEco.Parts<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> eco_parts() {
+    protected BigEco.Parts eco_parts() {
       assert this.ecosystemComponent != null: "This is a bug.";
       return this.ecosystemComponent;
     }
   }
   
-  public static class DynamicAssemblyAgentEtat<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> {
-    public interface Requires<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> {
+  public static class DynamicAssemblyAgentEtat {
+    public interface Requires {
     }
     
-    public interface Component<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> extends BigEco.DynamicAssemblyAgentEtat.Provides<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> {
+    public interface Component extends BigEco.DynamicAssemblyAgentEtat.Provides {
     }
     
-    public interface Provides<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> {
+    public interface Provides {
     }
     
-    public interface Parts<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> {
+    public interface Parts {
       /**
        * This can be called by the implementation to access the part and its provided ports.
        * It will be initialized after the required ports are initialized and before the provided ports are initialized.
        * 
        */
-      public EcoAgents.StateAgent.Component<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, Push, Pull> agentE();
+      public EcoAgents.StateAgent.Component agentE();
       
       /**
        * This can be called by the implementation to access the part and its provided ports.
        * It will be initialized after the required ports are initialized and before the provided ports are initialized.
        * 
        */
-      public Forward.StateForward.Component<CycleAlert, ContextSA, ContextTA, ContextUpdate, Push, Pull, ActionGetter> aFW();
+      public Forward.StateForward.Component<CycleAlert, ContextInfos, EnvInfos, EnvUpdate, SendMessage, PullMessage, ITakeAction> aFW();
     }
     
-    public static class ComponentImpl<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> implements BigEco.DynamicAssemblyAgentEtat.Component<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull>, BigEco.DynamicAssemblyAgentEtat.Parts<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> {
-      private final BigEco.DynamicAssemblyAgentEtat.Requires<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> bridge;
+    public static class ComponentImpl implements BigEco.DynamicAssemblyAgentEtat.Component, BigEco.DynamicAssemblyAgentEtat.Parts {
+      private final BigEco.DynamicAssemblyAgentEtat.Requires bridge;
       
-      private final BigEco.DynamicAssemblyAgentEtat<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> implementation;
+      private final BigEco.DynamicAssemblyAgentEtat implementation;
       
       public void start() {
         assert this.agentE != null: "This is a bug.";
-        ((EcoAgents.StateAgent.ComponentImpl<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, Push, Pull>) this.agentE).start();
+        ((EcoAgents.StateAgent.ComponentImpl) this.agentE).start();
         assert this.aFW != null: "This is a bug.";
-        ((Forward.StateForward.ComponentImpl<CycleAlert, ContextSA, ContextTA, ContextUpdate, Push, Pull, ActionGetter>) this.aFW).start();
+        ((Forward.StateForward.ComponentImpl<CycleAlert, ContextInfos, EnvInfos, EnvUpdate, SendMessage, PullMessage, ITakeAction>) this.aFW).start();
         this.implementation.start();
         this.implementation.started = true;
       }
@@ -551,7 +557,7 @@ public abstract class BigEco<ActionableState, ActionableTransition, ContextSA, C
         
       }
       
-      public ComponentImpl(final BigEco.DynamicAssemblyAgentEtat<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> implem, final BigEco.DynamicAssemblyAgentEtat.Requires<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> b, final boolean doInits) {
+      public ComponentImpl(final BigEco.DynamicAssemblyAgentEtat implem, final BigEco.DynamicAssemblyAgentEtat.Requires b, final boolean doInits) {
         this.bridge = b;
         this.implementation = implem;
         
@@ -567,40 +573,40 @@ public abstract class BigEco<ActionableState, ActionableTransition, ContextSA, C
         }
       }
       
-      private EcoAgents.StateAgent.Component<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, Push, Pull> agentE;
+      private EcoAgents.StateAgent.Component agentE;
       
-      private final class BridgeImpl_ecoAE_agentE implements EcoAgents.StateAgent.Requires<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, Push, Pull> {
+      private final class BridgeImpl_ecoAE_agentE implements EcoAgents.StateAgent.Requires {
         public final CycleAlert finishedCycle() {
           return BigEco.DynamicAssemblyAgentEtat.ComponentImpl.this.aFW().a();
         }
         
-        public final ContextSA getContext() {
+        public final ContextInfos getContext() {
           return BigEco.DynamicAssemblyAgentEtat.ComponentImpl.this.aFW().b();
         }
         
-        public final ContextUpdate setContext() {
+        public final EnvUpdate setContext() {
           return BigEco.DynamicAssemblyAgentEtat.ComponentImpl.this.aFW().c();
         }
         
-        public final Push push() {
+        public final SendMessage push() {
           return BigEco.DynamicAssemblyAgentEtat.ComponentImpl.this.aFW().d();
         }
         
-        public final Pull pull() {
+        public final PullMessage pull() {
           return BigEco.DynamicAssemblyAgentEtat.ComponentImpl.this.aFW().e();
         }
       }
       
-      public final EcoAgents.StateAgent.Component<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, Push, Pull> agentE() {
+      public final EcoAgents.StateAgent.Component agentE() {
         return this.agentE;
       }
       
-      private Forward.StateForward.Component<CycleAlert, ContextSA, ContextTA, ContextUpdate, Push, Pull, ActionGetter> aFW;
+      private Forward.StateForward.Component<CycleAlert, ContextInfos, EnvInfos, EnvUpdate, SendMessage, PullMessage, ITakeAction> aFW;
       
-      private final class BridgeImpl_fw_aFW implements Forward.StateForward.Requires<CycleAlert, ContextSA, ContextTA, ContextUpdate, Push, Pull, ActionGetter> {
+      private final class BridgeImpl_fw_aFW implements Forward.StateForward.Requires<CycleAlert, ContextInfos, EnvInfos, EnvUpdate, SendMessage, PullMessage, ITakeAction> {
       }
       
-      public final Forward.StateForward.Component<CycleAlert, ContextSA, ContextTA, ContextUpdate, Push, Pull, ActionGetter> aFW() {
+      public final Forward.StateForward.Component<CycleAlert, ContextInfos, EnvInfos, EnvUpdate, SendMessage, PullMessage, ITakeAction> aFW() {
         return this.aFW;
       }
     }
@@ -619,7 +625,7 @@ public abstract class BigEco<ActionableState, ActionableTransition, ContextSA, C
      */
     private boolean started = false;;
     
-    private BigEco.DynamicAssemblyAgentEtat.ComponentImpl<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> selfComponent;
+    private BigEco.DynamicAssemblyAgentEtat.ComponentImpl selfComponent;
     
     /**
      * Can be overridden by the implementation.
@@ -636,7 +642,7 @@ public abstract class BigEco<ActionableState, ActionableTransition, ContextSA, C
      * This can be called by the implementation to access the provided ports.
      * 
      */
-    protected BigEco.DynamicAssemblyAgentEtat.Provides<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> provides() {
+    protected BigEco.DynamicAssemblyAgentEtat.Provides provides() {
       assert this.selfComponent != null: "This is a bug.";
       if (!this.init) {
       	throw new RuntimeException("provides() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if provides() is needed to initialise the component.");
@@ -648,7 +654,7 @@ public abstract class BigEco<ActionableState, ActionableTransition, ContextSA, C
      * This can be called by the implementation to access the required ports.
      * 
      */
-    protected BigEco.DynamicAssemblyAgentEtat.Requires<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> requires() {
+    protected BigEco.DynamicAssemblyAgentEtat.Requires requires() {
       assert this.selfComponent != null: "This is a bug.";
       if (!this.init) {
       	throw new RuntimeException("requires() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if requires() is needed to initialise the component.");
@@ -660,7 +666,7 @@ public abstract class BigEco<ActionableState, ActionableTransition, ContextSA, C
      * This can be called by the implementation to access the parts and their provided ports.
      * 
      */
-    protected BigEco.DynamicAssemblyAgentEtat.Parts<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> parts() {
+    protected BigEco.DynamicAssemblyAgentEtat.Parts parts() {
       assert this.selfComponent != null: "This is a bug.";
       if (!this.init) {
       	throw new RuntimeException("parts() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if parts() is needed to initialise the component.");
@@ -668,33 +674,33 @@ public abstract class BigEco<ActionableState, ActionableTransition, ContextSA, C
       return this.selfComponent;
     }
     
-    private EcoAgents.StateAgent<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, Push, Pull> use_agentE;
+    private EcoAgents.StateAgent use_agentE;
     
-    private Forward.StateForward<CycleAlert, ContextSA, ContextTA, ContextUpdate, Push, Pull, ActionGetter> use_aFW;
+    private Forward.StateForward<CycleAlert, ContextInfos, EnvInfos, EnvUpdate, SendMessage, PullMessage, ITakeAction> use_aFW;
     
     /**
      * Not meant to be used to manually instantiate components (except for testing).
      * 
      */
-    public synchronized BigEco.DynamicAssemblyAgentEtat.Component<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> _newComponent(final BigEco.DynamicAssemblyAgentEtat.Requires<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> b, final boolean start) {
+    public synchronized BigEco.DynamicAssemblyAgentEtat.Component _newComponent(final BigEco.DynamicAssemblyAgentEtat.Requires b, final boolean start) {
       if (this.init) {
       	throw new RuntimeException("This instance of DynamicAssemblyAgentEtat has already been used to create a component, use another one.");
       }
       this.init = true;
-      BigEco.DynamicAssemblyAgentEtat.ComponentImpl<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull>  _comp = new BigEco.DynamicAssemblyAgentEtat.ComponentImpl<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull>(this, b, true);
+      BigEco.DynamicAssemblyAgentEtat.ComponentImpl  _comp = new BigEco.DynamicAssemblyAgentEtat.ComponentImpl(this, b, true);
       if (start) {
       	_comp.start();
       }
       return _comp;
     }
     
-    private BigEco.ComponentImpl<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> ecosystemComponent;
+    private BigEco.ComponentImpl ecosystemComponent;
     
     /**
      * This can be called by the species implementation to access the provided ports of its ecosystem.
      * 
      */
-    protected BigEco.Provides<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> eco_provides() {
+    protected BigEco.Provides eco_provides() {
       assert this.ecosystemComponent != null: "This is a bug.";
       return this.ecosystemComponent;
     }
@@ -703,7 +709,7 @@ public abstract class BigEco<ActionableState, ActionableTransition, ContextSA, C
      * This can be called by the species implementation to access the required ports of its ecosystem.
      * 
      */
-    protected BigEco.Requires<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> eco_requires() {
+    protected BigEco.Requires eco_requires() {
       assert this.ecosystemComponent != null: "This is a bug.";
       return this.ecosystemComponent.bridge;
     }
@@ -712,7 +718,7 @@ public abstract class BigEco<ActionableState, ActionableTransition, ContextSA, C
      * This can be called by the species implementation to access the parts of its ecosystem and their provided ports.
      * 
      */
-    protected BigEco.Parts<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> eco_parts() {
+    protected BigEco.Parts eco_parts() {
       assert this.ecosystemComponent != null: "This is a bug.";
       return this.ecosystemComponent;
     }
@@ -732,7 +738,7 @@ public abstract class BigEco<ActionableState, ActionableTransition, ContextSA, C
    */
   private boolean started = false;;
   
-  private BigEco.ComponentImpl<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> selfComponent;
+  private BigEco.ComponentImpl selfComponent;
   
   /**
    * Can be overridden by the implementation.
@@ -749,7 +755,7 @@ public abstract class BigEco<ActionableState, ActionableTransition, ContextSA, C
    * This can be called by the implementation to access the provided ports.
    * 
    */
-  protected BigEco.Provides<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> provides() {
+  protected BigEco.Provides provides() {
     assert this.selfComponent != null: "This is a bug.";
     if (!this.init) {
     	throw new RuntimeException("provides() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if provides() is needed to initialise the component.");
@@ -768,7 +774,7 @@ public abstract class BigEco<ActionableState, ActionableTransition, ContextSA, C
    * This can be called by the implementation to access the required ports.
    * 
    */
-  protected BigEco.Requires<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> requires() {
+  protected BigEco.Requires requires() {
     assert this.selfComponent != null: "This is a bug.";
     if (!this.init) {
     	throw new RuntimeException("requires() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if requires() is needed to initialise the component.");
@@ -780,7 +786,7 @@ public abstract class BigEco<ActionableState, ActionableTransition, ContextSA, C
    * This can be called by the implementation to access the parts and their provided ports.
    * 
    */
-  protected BigEco.Parts<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> parts() {
+  protected BigEco.Parts parts() {
     assert this.selfComponent != null: "This is a bug.";
     if (!this.init) {
     	throw new RuntimeException("parts() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if parts() is needed to initialise the component.");
@@ -793,21 +799,21 @@ public abstract class BigEco<ActionableState, ActionableTransition, ContextSA, C
    * This will be called once during the construction of the component to initialize this sub-component.
    * 
    */
-  protected abstract EcoAgents<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, Push, Pull> make_ecoAE();
+  protected abstract EcoAgents make_ecoAE();
   
   /**
    * This should be overridden by the implementation to define how to create this sub-component.
    * This will be called once during the construction of the component to initialize this sub-component.
    * 
    */
-  protected abstract Forward<CycleAlert, ContextSA, ContextTA, ContextUpdate, Push, Pull, ActionGetter> make_fw();
+  protected abstract Forward<CycleAlert, ContextInfos, EnvInfos, EnvUpdate, SendMessage, PullMessage, ITakeAction> make_fw();
   
   /**
    * This should be overridden by the implementation to define how to create this sub-component.
    * This will be called once during the construction of the component to initialize this sub-component.
    * 
    */
-  protected abstract ActionProvider<ActionGetter> make_actionProvider();
+  protected abstract ActionProvider make_actionProvider();
   
   /**
    * This should be overridden by the implementation to define how to create this sub-component.
@@ -821,18 +827,18 @@ public abstract class BigEco<ActionableState, ActionableTransition, ContextSA, C
    * This will be called once during the construction of the component to initialize this sub-component.
    * 
    */
-  protected abstract Environnement<ContextTA, ContextUpdate> make_envEco();
+  protected abstract Environnement<EnvInfos, EnvUpdate> make_envEco();
   
   /**
    * Not meant to be used to manually instantiate components (except for testing).
    * 
    */
-  public synchronized BigEco.Component<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> _newComponent(final BigEco.Requires<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> b, final boolean start) {
+  public synchronized BigEco.Component _newComponent(final BigEco.Requires b, final boolean start) {
     if (this.init) {
     	throw new RuntimeException("This instance of BigEco has already been used to create a component, use another one.");
     }
     this.init = true;
-    BigEco.ComponentImpl<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull>  _comp = new BigEco.ComponentImpl<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull>(this, b, true);
+    BigEco.ComponentImpl  _comp = new BigEco.ComponentImpl(this, b, true);
     if (start) {
     	_comp.start();
     }
@@ -843,16 +849,16 @@ public abstract class BigEco<ActionableState, ActionableTransition, ContextSA, C
    * This should be overridden by the implementation to instantiate the implementation of the species.
    * 
    */
-  protected BigEco.DynamicAssemblyAgentTransition<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> make_DynamicAssemblyAgentTransition(final String id, final Action action, final String stateSourceId) {
-    return new BigEco.DynamicAssemblyAgentTransition<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull>();
+  protected BigEco.DynamicAssemblyAgentTransition make_DynamicAssemblyAgentTransition(final String id, final Action action, final String stateSourceId) {
+    return new BigEco.DynamicAssemblyAgentTransition();
   }
   
   /**
    * Do not call, used by generated code.
    * 
    */
-  public BigEco.DynamicAssemblyAgentTransition<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> _createImplementationOfDynamicAssemblyAgentTransition(final String id, final Action action, final String stateSourceId) {
-    BigEco.DynamicAssemblyAgentTransition<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> implem = make_DynamicAssemblyAgentTransition(id,action,stateSourceId);
+  public BigEco.DynamicAssemblyAgentTransition _createImplementationOfDynamicAssemblyAgentTransition(final String id, final Action action, final String stateSourceId) {
+    BigEco.DynamicAssemblyAgentTransition implem = make_DynamicAssemblyAgentTransition(id,action,stateSourceId);
     if (implem == null) {
     	throw new RuntimeException("make_DynamicAssemblyAgentTransition() in general.BigEco should not return null.");
     }
@@ -872,25 +878,25 @@ public abstract class BigEco<ActionableState, ActionableTransition, ContextSA, C
    * This can be called to create an instance of the species from inside the implementation of the ecosystem.
    * 
    */
-  protected BigEco.DynamicAssemblyAgentTransition.Component<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> newDynamicAssemblyAgentTransition(final String id, final Action action, final String stateSourceId) {
-    BigEco.DynamicAssemblyAgentTransition<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> _implem = _createImplementationOfDynamicAssemblyAgentTransition(id,action,stateSourceId);
-    return _implem._newComponent(new BigEco.DynamicAssemblyAgentTransition.Requires<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull>() {},true);
+  protected BigEco.DynamicAssemblyAgentTransition.Component newDynamicAssemblyAgentTransition(final String id, final Action action, final String stateSourceId) {
+    BigEco.DynamicAssemblyAgentTransition _implem = _createImplementationOfDynamicAssemblyAgentTransition(id,action,stateSourceId);
+    return _implem._newComponent(new BigEco.DynamicAssemblyAgentTransition.Requires() {},true);
   }
   
   /**
    * This should be overridden by the implementation to instantiate the implementation of the species.
    * 
    */
-  protected BigEco.DynamicAssemblyAgentEtat<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> make_DynamicAssemblyAgentEtat(final String id) {
-    return new BigEco.DynamicAssemblyAgentEtat<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull>();
+  protected BigEco.DynamicAssemblyAgentEtat make_DynamicAssemblyAgentEtat(final String id) {
+    return new BigEco.DynamicAssemblyAgentEtat();
   }
   
   /**
    * Do not call, used by generated code.
    * 
    */
-  public BigEco.DynamicAssemblyAgentEtat<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> _createImplementationOfDynamicAssemblyAgentEtat(final String id) {
-    BigEco.DynamicAssemblyAgentEtat<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> implem = make_DynamicAssemblyAgentEtat(id);
+  public BigEco.DynamicAssemblyAgentEtat _createImplementationOfDynamicAssemblyAgentEtat(final String id) {
+    BigEco.DynamicAssemblyAgentEtat implem = make_DynamicAssemblyAgentEtat(id);
     if (implem == null) {
     	throw new RuntimeException("make_DynamicAssemblyAgentEtat() in general.BigEco should not return null.");
     }
@@ -910,16 +916,16 @@ public abstract class BigEco<ActionableState, ActionableTransition, ContextSA, C
    * This can be called to create an instance of the species from inside the implementation of the ecosystem.
    * 
    */
-  protected BigEco.DynamicAssemblyAgentEtat.Component<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> newDynamicAssemblyAgentEtat(final String id) {
-    BigEco.DynamicAssemblyAgentEtat<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> _implem = _createImplementationOfDynamicAssemblyAgentEtat(id);
-    return _implem._newComponent(new BigEco.DynamicAssemblyAgentEtat.Requires<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull>() {},true);
+  protected BigEco.DynamicAssemblyAgentEtat.Component newDynamicAssemblyAgentEtat(final String id) {
+    BigEco.DynamicAssemblyAgentEtat _implem = _createImplementationOfDynamicAssemblyAgentEtat(id);
+    return _implem._newComponent(new BigEco.DynamicAssemblyAgentEtat.Requires() {},true);
   }
   
   /**
    * Use to instantiate a component from this implementation.
    * 
    */
-  public BigEco.Component<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> newComponent() {
-    return this._newComponent(new BigEco.Requires<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull>() {}, true);
+  public BigEco.Component newComponent() {
+    return this._newComponent(new BigEco.Requires() {}, true);
   }
 }

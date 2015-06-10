@@ -8,8 +8,8 @@ import general.Perceive;
 import generalStructure.interfaces.CycleAlert;
 
 @SuppressWarnings("all")
-public abstract class Agent<Context, ContextUpdate, Actionable, SharedMemory, Push, Pull> {
-  public interface Requires<Context, ContextUpdate, Actionable, SharedMemory, Push, Pull> {
+public abstract class Agent<Context, ContextUpdate, Actionable, SharedMemory, CreateAgent, Push, Pull> {
+  public interface Requires<Context, ContextUpdate, Actionable, SharedMemory, CreateAgent, Push, Pull> {
     /**
      * This can be called by the implementation to access this required port.
      * 
@@ -39,12 +39,18 @@ public abstract class Agent<Context, ContextUpdate, Actionable, SharedMemory, Pu
      * 
      */
     public Pull pull();
+    
+    /**
+     * This can be called by the implementation to access this required port.
+     * 
+     */
+    public CreateAgent create();
   }
   
-  public interface Component<Context, ContextUpdate, Actionable, SharedMemory, Push, Pull> extends Agent.Provides<Context, ContextUpdate, Actionable, SharedMemory, Push, Pull> {
+  public interface Component<Context, ContextUpdate, Actionable, SharedMemory, CreateAgent, Push, Pull> extends Agent.Provides<Context, ContextUpdate, Actionable, SharedMemory, CreateAgent, Push, Pull> {
   }
   
-  public interface Provides<Context, ContextUpdate, Actionable, SharedMemory, Push, Pull> {
+  public interface Provides<Context, ContextUpdate, Actionable, SharedMemory, CreateAgent, Push, Pull> {
     /**
      * This can be called to access the provided port.
      * 
@@ -52,7 +58,7 @@ public abstract class Agent<Context, ContextUpdate, Actionable, SharedMemory, Pu
     public Do cycle();
   }
   
-  public interface Parts<Context, ContextUpdate, Actionable, SharedMemory, Push, Pull> {
+  public interface Parts<Context, ContextUpdate, Actionable, SharedMemory, CreateAgent, Push, Pull> {
     /**
      * This can be called by the implementation to access the part and its provided ports.
      * It will be initialized after the required ports are initialized and before the provided ports are initialized.
@@ -79,13 +85,13 @@ public abstract class Agent<Context, ContextUpdate, Actionable, SharedMemory, Pu
      * It will be initialized after the required ports are initialized and before the provided ports are initialized.
      * 
      */
-    public Act.Component<Actionable, ContextUpdate, SharedMemory, Push> act();
+    public Act.Component<Actionable, ContextUpdate, SharedMemory, CreateAgent, Push> act();
   }
   
-  public static class ComponentImpl<Context, ContextUpdate, Actionable, SharedMemory, Push, Pull> implements Agent.Component<Context, ContextUpdate, Actionable, SharedMemory, Push, Pull>, Agent.Parts<Context, ContextUpdate, Actionable, SharedMemory, Push, Pull> {
-    private final Agent.Requires<Context, ContextUpdate, Actionable, SharedMemory, Push, Pull> bridge;
+  public static class ComponentImpl<Context, ContextUpdate, Actionable, SharedMemory, CreateAgent, Push, Pull> implements Agent.Component<Context, ContextUpdate, Actionable, SharedMemory, CreateAgent, Push, Pull>, Agent.Parts<Context, ContextUpdate, Actionable, SharedMemory, CreateAgent, Push, Pull> {
+    private final Agent.Requires<Context, ContextUpdate, Actionable, SharedMemory, CreateAgent, Push, Pull> bridge;
     
-    private final Agent<Context, ContextUpdate, Actionable, SharedMemory, Push, Pull> implementation;
+    private final Agent<Context, ContextUpdate, Actionable, SharedMemory, CreateAgent, Push, Pull> implementation;
     
     public void start() {
       assert this.memory != null: "This is a bug.";
@@ -95,7 +101,7 @@ public abstract class Agent<Context, ContextUpdate, Actionable, SharedMemory, Pu
       assert this.decide != null: "This is a bug.";
       ((Decide.ComponentImpl<Actionable, SharedMemory>) this.decide).start();
       assert this.act != null: "This is a bug.";
-      ((Act.ComponentImpl<Actionable, ContextUpdate, SharedMemory, Push>) this.act).start();
+      ((Act.ComponentImpl<Actionable, ContextUpdate, SharedMemory, CreateAgent, Push>) this.act).start();
       this.implementation.start();
       this.implementation.started = true;
     }
@@ -105,7 +111,7 @@ public abstract class Agent<Context, ContextUpdate, Actionable, SharedMemory, Pu
       assert this.implem_memory == null: "This is a bug.";
       this.implem_memory = this.implementation.make_memory();
       if (this.implem_memory == null) {
-      	throw new RuntimeException("make_memory() in general.Agent<Context, ContextUpdate, Actionable, SharedMemory, Push, Pull> should not return null.");
+      	throw new RuntimeException("make_memory() in general.Agent<Context, ContextUpdate, Actionable, SharedMemory, CreateAgent, Push, Pull> should not return null.");
       }
       this.memory = this.implem_memory._newComponent(new BridgeImpl_memory(), false);
       
@@ -116,7 +122,7 @@ public abstract class Agent<Context, ContextUpdate, Actionable, SharedMemory, Pu
       assert this.implem_perceive == null: "This is a bug.";
       this.implem_perceive = this.implementation.make_perceive();
       if (this.implem_perceive == null) {
-      	throw new RuntimeException("make_perceive() in general.Agent<Context, ContextUpdate, Actionable, SharedMemory, Push, Pull> should not return null.");
+      	throw new RuntimeException("make_perceive() in general.Agent<Context, ContextUpdate, Actionable, SharedMemory, CreateAgent, Push, Pull> should not return null.");
       }
       this.perceive = this.implem_perceive._newComponent(new BridgeImpl_perceive(), false);
       
@@ -127,7 +133,7 @@ public abstract class Agent<Context, ContextUpdate, Actionable, SharedMemory, Pu
       assert this.implem_decide == null: "This is a bug.";
       this.implem_decide = this.implementation.make_decide();
       if (this.implem_decide == null) {
-      	throw new RuntimeException("make_decide() in general.Agent<Context, ContextUpdate, Actionable, SharedMemory, Push, Pull> should not return null.");
+      	throw new RuntimeException("make_decide() in general.Agent<Context, ContextUpdate, Actionable, SharedMemory, CreateAgent, Push, Pull> should not return null.");
       }
       this.decide = this.implem_decide._newComponent(new BridgeImpl_decide(), false);
       
@@ -138,7 +144,7 @@ public abstract class Agent<Context, ContextUpdate, Actionable, SharedMemory, Pu
       assert this.implem_act == null: "This is a bug.";
       this.implem_act = this.implementation.make_act();
       if (this.implem_act == null) {
-      	throw new RuntimeException("make_act() in general.Agent<Context, ContextUpdate, Actionable, SharedMemory, Push, Pull> should not return null.");
+      	throw new RuntimeException("make_act() in general.Agent<Context, ContextUpdate, Actionable, SharedMemory, CreateAgent, Push, Pull> should not return null.");
       }
       this.act = this.implem_act._newComponent(new BridgeImpl_act(), false);
       
@@ -155,7 +161,7 @@ public abstract class Agent<Context, ContextUpdate, Actionable, SharedMemory, Pu
       
     }
     
-    public ComponentImpl(final Agent<Context, ContextUpdate, Actionable, SharedMemory, Push, Pull> implem, final Agent.Requires<Context, ContextUpdate, Actionable, SharedMemory, Push, Pull> b, final boolean doInits) {
+    public ComponentImpl(final Agent<Context, ContextUpdate, Actionable, SharedMemory, CreateAgent, Push, Pull> implem, final Agent.Requires<Context, ContextUpdate, Actionable, SharedMemory, CreateAgent, Push, Pull> b, final boolean doInits) {
       this.bridge = b;
       this.implementation = implem;
       
@@ -226,11 +232,11 @@ public abstract class Agent<Context, ContextUpdate, Actionable, SharedMemory, Pu
       return this.decide;
     }
     
-    private Act.Component<Actionable, ContextUpdate, SharedMemory, Push> act;
+    private Act.Component<Actionable, ContextUpdate, SharedMemory, CreateAgent, Push> act;
     
-    private Act<Actionable, ContextUpdate, SharedMemory, Push> implem_act;
+    private Act<Actionable, ContextUpdate, SharedMemory, CreateAgent, Push> implem_act;
     
-    private final class BridgeImpl_act implements Act.Requires<Actionable, ContextUpdate, SharedMemory, Push> {
+    private final class BridgeImpl_act implements Act.Requires<Actionable, ContextUpdate, SharedMemory, CreateAgent, Push> {
       public final CycleAlert finishedCycle() {
         return Agent.ComponentImpl.this.bridge.finishedCycle();
       }
@@ -242,9 +248,13 @@ public abstract class Agent<Context, ContextUpdate, Actionable, SharedMemory, Pu
       public final SharedMemory memory() {
         return Agent.ComponentImpl.this.memory().infos();
       }
+      
+      public final CreateAgent create() {
+        return Agent.ComponentImpl.this.bridge.create();
+      }
     }
     
-    public final Act.Component<Actionable, ContextUpdate, SharedMemory, Push> act() {
+    public final Act.Component<Actionable, ContextUpdate, SharedMemory, CreateAgent, Push> act() {
       return this.act;
     }
   }
@@ -263,7 +273,7 @@ public abstract class Agent<Context, ContextUpdate, Actionable, SharedMemory, Pu
    */
   private boolean started = false;;
   
-  private Agent.ComponentImpl<Context, ContextUpdate, Actionable, SharedMemory, Push, Pull> selfComponent;
+  private Agent.ComponentImpl<Context, ContextUpdate, Actionable, SharedMemory, CreateAgent, Push, Pull> selfComponent;
   
   /**
    * Can be overridden by the implementation.
@@ -280,7 +290,7 @@ public abstract class Agent<Context, ContextUpdate, Actionable, SharedMemory, Pu
    * This can be called by the implementation to access the provided ports.
    * 
    */
-  protected Agent.Provides<Context, ContextUpdate, Actionable, SharedMemory, Push, Pull> provides() {
+  protected Agent.Provides<Context, ContextUpdate, Actionable, SharedMemory, CreateAgent, Push, Pull> provides() {
     assert this.selfComponent != null: "This is a bug.";
     if (!this.init) {
     	throw new RuntimeException("provides() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if provides() is needed to initialise the component.");
@@ -292,7 +302,7 @@ public abstract class Agent<Context, ContextUpdate, Actionable, SharedMemory, Pu
    * This can be called by the implementation to access the required ports.
    * 
    */
-  protected Agent.Requires<Context, ContextUpdate, Actionable, SharedMemory, Push, Pull> requires() {
+  protected Agent.Requires<Context, ContextUpdate, Actionable, SharedMemory, CreateAgent, Push, Pull> requires() {
     assert this.selfComponent != null: "This is a bug.";
     if (!this.init) {
     	throw new RuntimeException("requires() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if requires() is needed to initialise the component.");
@@ -304,7 +314,7 @@ public abstract class Agent<Context, ContextUpdate, Actionable, SharedMemory, Pu
    * This can be called by the implementation to access the parts and their provided ports.
    * 
    */
-  protected Agent.Parts<Context, ContextUpdate, Actionable, SharedMemory, Push, Pull> parts() {
+  protected Agent.Parts<Context, ContextUpdate, Actionable, SharedMemory, CreateAgent, Push, Pull> parts() {
     assert this.selfComponent != null: "This is a bug.";
     if (!this.init) {
     	throw new RuntimeException("parts() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if parts() is needed to initialise the component.");
@@ -338,18 +348,18 @@ public abstract class Agent<Context, ContextUpdate, Actionable, SharedMemory, Pu
    * This will be called once during the construction of the component to initialize this sub-component.
    * 
    */
-  protected abstract Act<Actionable, ContextUpdate, SharedMemory, Push> make_act();
+  protected abstract Act<Actionable, ContextUpdate, SharedMemory, CreateAgent, Push> make_act();
   
   /**
    * Not meant to be used to manually instantiate components (except for testing).
    * 
    */
-  public synchronized Agent.Component<Context, ContextUpdate, Actionable, SharedMemory, Push, Pull> _newComponent(final Agent.Requires<Context, ContextUpdate, Actionable, SharedMemory, Push, Pull> b, final boolean start) {
+  public synchronized Agent.Component<Context, ContextUpdate, Actionable, SharedMemory, CreateAgent, Push, Pull> _newComponent(final Agent.Requires<Context, ContextUpdate, Actionable, SharedMemory, CreateAgent, Push, Pull> b, final boolean start) {
     if (this.init) {
     	throw new RuntimeException("This instance of Agent has already been used to create a component, use another one.");
     }
     this.init = true;
-    Agent.ComponentImpl<Context, ContextUpdate, Actionable, SharedMemory, Push, Pull>  _comp = new Agent.ComponentImpl<Context, ContextUpdate, Actionable, SharedMemory, Push, Pull>(this, b, true);
+    Agent.ComponentImpl<Context, ContextUpdate, Actionable, SharedMemory, CreateAgent, Push, Pull>  _comp = new Agent.ComponentImpl<Context, ContextUpdate, Actionable, SharedMemory, CreateAgent, Push, Pull>(this, b, true);
     if (start) {
     	_comp.start();
     }

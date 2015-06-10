@@ -5,6 +5,7 @@ import environnement.interfaces.EnvInfos;
 import environnement.interfaces.EnvUpdate;
 import general.Agent;
 import general.EcoAgents;
+import generalStructure.interfaces.ICreateAgent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,20 +23,24 @@ import agents.interfaces.StateMemory;
 import agents.interfaces.TransAction;
 import agents.interfaces.TransMemory;
 
-public class EcoAgentsImpl extends EcoAgents <StateAction, TransAction, ContextInfos , EnvInfos, EnvUpdate, StateMemory, TransMemory, SendMessage, PullMessage> implements AgentTrace{
+public class EcoAgentsImpl extends EcoAgents implements AgentTrace{
 
 	private Map<String,String> currentAgentsMap; // map<username, idAgent>
 	private Map<String,Runnable> agentsMap;
 	private  List<Runnable> listRunnable;
+	private int nbStateAgentsCreated;
+	private int nbTransAgentsCreated;
 
 	public EcoAgentsImpl(){
 		currentAgentsMap = new HashMap<String,String>();
 		agentsMap = new HashMap<String,Runnable>();
 		listRunnable = new ArrayList<Runnable>();
+		nbStateAgentsCreated = 0;
+		nbTransAgentsCreated = 0;
 	}
 
 	@Override
-	protected StateAgent<StateAction, TransAction, ContextInfos , EnvInfos, EnvUpdate,  StateMemory, TransMemory, SendMessage, PullMessage> make_StateAgent(String id) {
+	protected StateAgent make_StateAgent(String id) {
 		StateAgentImpl agent = new StateAgentImpl(id);
 
 		synchronized (agentsMap) {
@@ -69,7 +74,7 @@ public class EcoAgentsImpl extends EcoAgents <StateAction, TransAction, ContextI
 	}
 
 	@Override
-	protected TransitionAgent<StateAction, TransAction, ContextInfos, EnvInfos, EnvUpdate, StateMemory, TransMemory, SendMessage, PullMessage> make_TransitionAgent(String id, Action action, String stateSourceId) {
+	protected TransitionAgent make_TransitionAgent(String id, Action action, String stateSourceId) {
 		TransAgentImpl agent = new TransAgentImpl(id, action, stateSourceId);
 		
 		synchronized (agentsMap) {
@@ -81,7 +86,7 @@ public class EcoAgentsImpl extends EcoAgents <StateAction, TransAction, ContextI
 
 	/**************************** Private Classes **************************/
 
-	private class StateAgentImpl extends StateAgent<StateAction, TransAction, ContextInfos, EnvInfos, EnvUpdate, StateMemory, TransMemory, SendMessage, PullMessage> implements Runnable {
+	private class StateAgentImpl extends StateAgent implements Runnable, ICreateAgent {
 
 		String id; 
 
@@ -102,15 +107,34 @@ public class EcoAgentsImpl extends EcoAgents <StateAction, TransAction, ContextI
 		}
 
 		@Override
-		protected Agent<ContextInfos, EnvUpdate, StateAction, StateMemory, SendMessage, PullMessage> make_agentComponent() {
+		protected Agent<ContextInfos, EnvUpdate, StateAction, StateMemory, ICreateAgent, SendMessage, PullMessage> make_agentComponent() {
 			return new StateAgentCompImpl(id);
+		}
+
+		@Override
+		public void createNewState(String id) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void createNewTransition(String id, Action action,
+				String sourceStateId) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		protected ICreateAgent make_create() {
+			// TODO Auto-generated method stub
+			return this;
 		}
 
 	}
 
 	/**************************** Private Classes **************************/
 
-	private class TransAgentImpl extends TransitionAgent<StateAction, TransAction, ContextInfos, EnvInfos, EnvUpdate, StateMemory, TransMemory, SendMessage, PullMessage> implements Runnable {
+	private class TransAgentImpl extends TransitionAgent implements Runnable, ICreateAgent {
 
 		private String id; 
 		private Action action;
@@ -137,17 +161,30 @@ public class EcoAgentsImpl extends EcoAgents <StateAction, TransAction, ContextI
 		}
 
 		@Override
-		protected Agent<EnvInfos, EnvUpdate, TransAction, TransMemory, SendMessage, PullMessage> make_agentComponent() {
+		protected Agent<EnvInfos, EnvUpdate, TransAction, TransMemory, ICreateAgent, SendMessage, PullMessage> make_agentComponent() {
 			Map<String,String>  map = new HashMap<String, String>();
 			map.put("action", "Action");
 			return new TransAgentComplImpl(id, new Action(), stateSource);
 		}
 
+		@Override
+		protected ICreateAgent make_create() {
+			return this;
+		}
+
+		@Override
+		public void createNewState(String id) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void createNewTransition(String id, Action action,
+				String sourceStateId) {
+			// TODO Auto-generated method stub
+			
+		}
+
 	}
-
-
-
-
-
 
 }

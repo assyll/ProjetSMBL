@@ -3,6 +3,12 @@ import agents.interfaces.IGetThread
 import generalStructure.interfaces.CycleAlert
 import generalStructure.interfaces.ICreateAgent
 import trace.Action
+import trace.interfaces.ITakeAction
+import environnement.interfaces.ContextInfos
+import environnement.interfaces.EnvInfos
+import environnement.interfaces.EnvUpdate
+import agents.interfaces.SendMessage
+import agents.interfaces.PullMessage
 
 namespace general{
 	
@@ -12,28 +18,27 @@ namespace general{
 		provides threads: IGetThread
 	}
 	
-	ecosystem BigEco[ActionableState, ActionableTransition, ContextSA, ContextTA, 
-		ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull] {
+	ecosystem BigEco {
 		
 		provides creatAgent : ICreateAgent
 			
-		part ecoAE: EcoAgents[ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, Push, Pull] {
+		part ecoAE: EcoAgents {
 			bind threads to launcher.threads
 			bind createAgent to creatAgent
 		}
 		
-		part fw: Forward[CycleAlert, ContextSA, ContextTA, ContextUpdate, Push, Pull, ActionGetter] {
+		part fw: Forward[CycleAlert, ContextInfos, EnvInfos, EnvUpdate, SendMessage, PullMessage, ITakeAction] {
 			bind i to launcher.finishedCycle
 			bind h to envEco.envInfos
 			bind k to envEco.envUpdate
 			bind j to actionProvider.actionGetter
 		}
 		
-		part actionProvider: ActionProvider[ActionGetter]
+		part actionProvider: ActionProvider
 		
 		part launcher: Launcher
 		
-		part envEco: Environnement[ContextTA, ContextUpdate]
+		part envEco: Environnement[EnvInfos, EnvUpdate]
 		
 		species DynamicAssemblyAgentTransition(id: String, action:Action, stateSourceId:String) {
 			use agentT: ecoAE.TransitionAgent(id, action, stateSourceId) {

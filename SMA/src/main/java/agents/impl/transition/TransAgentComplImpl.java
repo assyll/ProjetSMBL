@@ -8,13 +8,14 @@ import general.Agent;
 import general.Decide;
 import general.Memory;
 import general.Perceive;
+import generalStructure.interfaces.ICreateAgent;
 import agents.interfaces.PullMessage;
 import agents.interfaces.SendMessage;
 import agents.interfaces.TransAction;
 import agents.interfaces.TransMemory;
 
 
-public class TransAgentComplImpl extends Agent<EnvInfos, EnvUpdate, TransAction, TransMemory, SendMessage, PullMessage> {
+public class TransAgentComplImpl extends Agent<EnvInfos, EnvUpdate, TransAction, TransMemory, ICreateAgent, SendMessage, PullMessage> {
 
 	private String id;
 	private Action action;
@@ -53,7 +54,7 @@ public class TransAgentComplImpl extends Agent<EnvInfos, EnvUpdate, TransAction,
 	}
 
 	@Override
-	protected Act<TransAction, EnvUpdate, TransMemory, SendMessage> make_act() {
+	protected Act<TransAction, EnvUpdate, TransMemory, ICreateAgent, SendMessage> make_act() {
 		return new ActTransImpl();
 	}
 
