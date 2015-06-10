@@ -11,7 +11,10 @@ import trace.Action;
 public class MainClass {
 
 	public static void main(String[] args) {
-		new BigEcoImpl("target" + File.separator + "test1.txt").newComponent();
+		new BigEcoImpl("src" + File.separator
+				     + "main" + File.separator
+				     + "resources" + File.separator
+				     + "test1.txt").newComponent();
 		
 		/*Map<String,String> actions = new HashMap<>();
 		actions.put("action1", "A1");

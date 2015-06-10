@@ -23,30 +23,30 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 	@Override
 	public void move(String id, List<Action> currentPositionActions,
 			Action newAction) {
-		// TODO Auto-generated method stub
-		
+		requires().setContext().move(id, currentPositionActions, newAction);
+		requires().finishedCycle().endOfCycleAlert(id);
 		logger("add new action", "action added", newAction.toString());
 	}
 
 	@Override
 	public void addStateAgent(String id) {
-		System.out.println("Action de " + this.id);
-		this.requires().finishedCycle().endOfCycleAlert(this.id);
-		
+		System.out.println("Action de " + id);
+		requires().setContext().addStateAgent(id);
+		requires().finishedCycle().endOfCycleAlert(id);
 		logger("create a new state agent", "created agent id", "?");
 	}
 
 	@Override
 	public void addStateAgent(String id, List<Action> actions) {
-		// TODO Auto-generated method stub
-		
+		requires().setContext().addStateAgent(id, actions);
+		requires().finishedCycle().endOfCycleAlert(id);
 		logger("create a new state agent", "created agent id", "?");
 	}
 
 	@Override
 	public void removeAgent(String id, List<Action> actions) {
-		// TODO Auto-generated method stub
-		
+		requires().setContext().removeAgent(id, actions);
+		requires().finishedCycle().endOfCycleAlert(id);
 		logger("remove a agent", "removed agent id", "?");
 	}
 
