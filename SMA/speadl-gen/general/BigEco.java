@@ -232,10 +232,6 @@ public abstract class BigEco {
       public final ICreateAgent createAgent() {
         return BigEco.ComponentImpl.this.creatAgent();
       }
-      
-      public final ILog finishedCycleForLog() {
-        return BigEco.ComponentImpl.this.logComp().log();
-      }
     }
     
     public final EcoAgents.Component ecoAE() {
@@ -261,6 +257,10 @@ public abstract class BigEco {
       
       public final ITakeAction j() {
         return BigEco.ComponentImpl.this.actionProvider().actionGetter();
+      }
+      
+      public final ILog log() {
+        return BigEco.ComponentImpl.this.logComp().log();
       }
     }
     
@@ -402,6 +402,10 @@ public abstract class BigEco {
         
         public final PullMessage pull() {
           return BigEco.DynamicAssemblyAgentTransition.ComponentImpl.this.aFW().e();
+        }
+        
+        public final ILog finishedCycleForLog() {
+          return BigEco.DynamicAssemblyAgentTransition.ComponentImpl.this.aFW().finishedCycleForLog();
         }
       }
       
@@ -632,6 +636,10 @@ public abstract class BigEco {
         
         public final PullMessage pull() {
           return BigEco.DynamicAssemblyAgentEtat.ComponentImpl.this.aFW().e();
+        }
+        
+        public final ILog finishedCycleForLog() {
+          return BigEco.DynamicAssemblyAgentEtat.ComponentImpl.this.aFW().finishedCycleForLog();
         }
       }
       

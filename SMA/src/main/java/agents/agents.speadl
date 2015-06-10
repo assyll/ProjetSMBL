@@ -19,7 +19,6 @@ namespace general{
 	ecosystem EcoAgents/*[ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, Push, Pull] */{
 		requires threads: IGetThread
 		requires createAgent: ICreateAgent
-		requires finishedCycleForLog: ILog
 		
 		species StateAgent (id: String, isRoot: boolean) {
 			provides cycle: Do = agentComponent.cycle
@@ -29,6 +28,7 @@ namespace general{
 			requires finishedCycle: CycleAlert
 			requires push: SendMessage
 			requires pull: PullMessage
+			requires finishedCycleForLog: ILog
 			
 			 part agentComponent: Agent[ContextInfos, EnvUpdate, StateAction, StateMemory, ICreateAgent, SendMessage, PullMessage] {
 			 	bind getContext to getContext
@@ -37,6 +37,7 @@ namespace general{
 			 	bind push to push
 			 	bind pull to pull
 			 	bind create to create
+			 	bind finishedCycleForLog to finishedCycleForLog
 			 }
 						
 			//requires getTraceElement: IGetAction
@@ -51,6 +52,7 @@ namespace general{
 			requires finishedCycle: CycleAlert
 			requires push: SendMessage
 			requires pull: PullMessage
+			requires finishedCycleForLog: ILog
 			
 			part agentComponent: Agent[EnvInfos, EnvUpdate, TransAction, TransMemory, ICreateAgent, SendMessage, PullMessage] {
 				bind getContext to getContext
@@ -59,6 +61,7 @@ namespace general{
 			 	bind push to push
 			 	bind pull to pull
 			 	bind create to create
+			 	bind finishedCycleForLog to finishedCycleForLog
 			}
 		}
 	}
@@ -83,6 +86,7 @@ namespace general{
 			bind setContext to setContext
 			bind memory to memory.infos
 			bind create to create
+			bind finishedCycleForLog to finishedCycleForLog
 		}
 		
 		provides cycle: Do = perceive.perception
@@ -92,6 +96,7 @@ namespace general{
 		requires push: Push
 		requires pull: Pull
 		requires create: CreateAgent
+		requires finishedCycleForLog: ILog
 	}
 	
 	component Perceive[Context, SharedMemory, Pull] {
@@ -113,6 +118,7 @@ namespace general{
 		requires setContext: ContextUpdate
 		requires memory: SharedMemory
 		requires create: CreateAgent
+		requires finishedCycleForLog: ILog
 	}
 		
 	component Memory[SharedMemory] {

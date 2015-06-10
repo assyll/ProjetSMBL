@@ -1,6 +1,7 @@
 package general;
 
 import generalStructure.interfaces.CycleAlert;
+import generalStructure.interfaces.ILog;
 
 @SuppressWarnings("all")
 public abstract class Act<Actionable, ContextUpdate, SharedMemory, CreateAgent, Push> {
@@ -28,6 +29,12 @@ public abstract class Act<Actionable, ContextUpdate, SharedMemory, CreateAgent, 
      * 
      */
     public CreateAgent create();
+    
+    /**
+     * This can be called by the implementation to access this required port.
+     * 
+     */
+    public ILog finishedCycleForLog();
   }
   
   public interface Component<Actionable, ContextUpdate, SharedMemory, CreateAgent, Push> extends Act.Provides<Actionable, ContextUpdate, SharedMemory, CreateAgent, Push> {

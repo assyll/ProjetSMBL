@@ -23,6 +23,7 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 			Action newAction) {
 		// TODO Auto-generated method stub
 		
+		
 	}
 
 	@Override
