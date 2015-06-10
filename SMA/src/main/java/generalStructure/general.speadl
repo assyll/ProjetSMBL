@@ -9,6 +9,7 @@ import environnement.interfaces.EnvInfos
 import environnement.interfaces.EnvUpdate
 import agents.interfaces.SendMessage
 import agents.interfaces.PullMessage
+import generalStructure.interfaces.ILog
 
 namespace general{
 	
@@ -22,9 +23,12 @@ namespace general{
 		
 		provides creatAgent : ICreateAgent
 			
+		part logComp: LogComp
+		
 		part ecoAE: EcoAgents {
 			bind threads to launcher.threads
 			bind createAgent to creatAgent
+			bind finishedCycleForLog to logComp.log
 		}
 		
 		part fw: Forward[CycleAlert, ContextInfos, EnvInfos, EnvUpdate, SendMessage, PullMessage, ITakeAction] {
@@ -87,6 +91,10 @@ namespace general{
 		 requires h: ContextTA
 		 requires k: ContextUpdate
 		 provides l: Push
+	}
+	
+	component LogComp {
+		provides log: ILog
 	}
 	
 	

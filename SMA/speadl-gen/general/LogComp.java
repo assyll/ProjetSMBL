@@ -1,53 +1,30 @@
 package general;
 
-import generalStructure.interfaces.CycleAlert;
+import generalStructure.interfaces.ILog;
 
 @SuppressWarnings("all")
-public abstract class Act<Actionable, ContextUpdate, SharedMemory, CreateAgent, Push> {
-  public interface Requires<Actionable, ContextUpdate, SharedMemory, CreateAgent, Push> {
-    /**
-     * This can be called by the implementation to access this required port.
-     * 
-     */
-    public CycleAlert finishedCycle();
-    
-    /**
-     * This can be called by the implementation to access this required port.
-     * 
-     */
-    public ContextUpdate setContext();
-    
-    /**
-     * This can be called by the implementation to access this required port.
-     * 
-     */
-    public SharedMemory memory();
-    
-    /**
-     * This can be called by the implementation to access this required port.
-     * 
-     */
-    public CreateAgent create();
+public abstract class LogComp {
+  public interface Requires {
   }
   
-  public interface Component<Actionable, ContextUpdate, SharedMemory, CreateAgent, Push> extends Act.Provides<Actionable, ContextUpdate, SharedMemory, CreateAgent, Push> {
+  public interface Component extends LogComp.Provides {
   }
   
-  public interface Provides<Actionable, ContextUpdate, SharedMemory, CreateAgent, Push> {
+  public interface Provides {
     /**
      * This can be called to access the provided port.
      * 
      */
-    public Actionable action();
+    public ILog log();
   }
   
-  public interface Parts<Actionable, ContextUpdate, SharedMemory, CreateAgent, Push> {
+  public interface Parts {
   }
   
-  public static class ComponentImpl<Actionable, ContextUpdate, SharedMemory, CreateAgent, Push> implements Act.Component<Actionable, ContextUpdate, SharedMemory, CreateAgent, Push>, Act.Parts<Actionable, ContextUpdate, SharedMemory, CreateAgent, Push> {
-    private final Act.Requires<Actionable, ContextUpdate, SharedMemory, CreateAgent, Push> bridge;
+  public static class ComponentImpl implements LogComp.Component, LogComp.Parts {
+    private final LogComp.Requires bridge;
     
-    private final Act<Actionable, ContextUpdate, SharedMemory, CreateAgent, Push> implementation;
+    private final LogComp implementation;
     
     public void start() {
       this.implementation.start();
@@ -58,19 +35,19 @@ public abstract class Act<Actionable, ContextUpdate, SharedMemory, CreateAgent, 
       
     }
     
-    private void init_action() {
-      assert this.action == null: "This is a bug.";
-      this.action = this.implementation.make_action();
-      if (this.action == null) {
-      	throw new RuntimeException("make_action() in general.Act<Actionable, ContextUpdate, SharedMemory, CreateAgent, Push> should not return null.");
+    private void init_log() {
+      assert this.log == null: "This is a bug.";
+      this.log = this.implementation.make_log();
+      if (this.log == null) {
+      	throw new RuntimeException("make_log() in general.LogComp should not return null.");
       }
     }
     
     protected void initProvidedPorts() {
-      init_action();
+      init_log();
     }
     
-    public ComponentImpl(final Act<Actionable, ContextUpdate, SharedMemory, CreateAgent, Push> implem, final Act.Requires<Actionable, ContextUpdate, SharedMemory, CreateAgent, Push> b, final boolean doInits) {
+    public ComponentImpl(final LogComp implem, final LogComp.Requires b, final boolean doInits) {
       this.bridge = b;
       this.implementation = implem;
       
@@ -86,10 +63,10 @@ public abstract class Act<Actionable, ContextUpdate, SharedMemory, CreateAgent, 
       }
     }
     
-    private Actionable action;
+    private ILog log;
     
-    public Actionable action() {
-      return this.action;
+    public ILog log() {
+      return this.log;
     }
   }
   
@@ -107,7 +84,7 @@ public abstract class Act<Actionable, ContextUpdate, SharedMemory, CreateAgent, 
    */
   private boolean started = false;;
   
-  private Act.ComponentImpl<Actionable, ContextUpdate, SharedMemory, CreateAgent, Push> selfComponent;
+  private LogComp.ComponentImpl selfComponent;
   
   /**
    * Can be overridden by the implementation.
@@ -124,7 +101,7 @@ public abstract class Act<Actionable, ContextUpdate, SharedMemory, CreateAgent, 
    * This can be called by the implementation to access the provided ports.
    * 
    */
-  protected Act.Provides<Actionable, ContextUpdate, SharedMemory, CreateAgent, Push> provides() {
+  protected LogComp.Provides provides() {
     assert this.selfComponent != null: "This is a bug.";
     if (!this.init) {
     	throw new RuntimeException("provides() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if provides() is needed to initialise the component.");
@@ -137,13 +114,13 @@ public abstract class Act<Actionable, ContextUpdate, SharedMemory, CreateAgent, 
    * This will be called once during the construction of the component to initialize the port.
    * 
    */
-  protected abstract Actionable make_action();
+  protected abstract ILog make_log();
   
   /**
    * This can be called by the implementation to access the required ports.
    * 
    */
-  protected Act.Requires<Actionable, ContextUpdate, SharedMemory, CreateAgent, Push> requires() {
+  protected LogComp.Requires requires() {
     assert this.selfComponent != null: "This is a bug.";
     if (!this.init) {
     	throw new RuntimeException("requires() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if requires() is needed to initialise the component.");
@@ -155,7 +132,7 @@ public abstract class Act<Actionable, ContextUpdate, SharedMemory, CreateAgent, 
    * This can be called by the implementation to access the parts and their provided ports.
    * 
    */
-  protected Act.Parts<Actionable, ContextUpdate, SharedMemory, CreateAgent, Push> parts() {
+  protected LogComp.Parts parts() {
     assert this.selfComponent != null: "This is a bug.";
     if (!this.init) {
     	throw new RuntimeException("parts() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if parts() is needed to initialise the component.");
@@ -167,15 +144,23 @@ public abstract class Act<Actionable, ContextUpdate, SharedMemory, CreateAgent, 
    * Not meant to be used to manually instantiate components (except for testing).
    * 
    */
-  public synchronized Act.Component<Actionable, ContextUpdate, SharedMemory, CreateAgent, Push> _newComponent(final Act.Requires<Actionable, ContextUpdate, SharedMemory, CreateAgent, Push> b, final boolean start) {
+  public synchronized LogComp.Component _newComponent(final LogComp.Requires b, final boolean start) {
     if (this.init) {
-    	throw new RuntimeException("This instance of Act has already been used to create a component, use another one.");
+    	throw new RuntimeException("This instance of LogComp has already been used to create a component, use another one.");
     }
     this.init = true;
-    Act.ComponentImpl<Actionable, ContextUpdate, SharedMemory, CreateAgent, Push>  _comp = new Act.ComponentImpl<Actionable, ContextUpdate, SharedMemory, CreateAgent, Push>(this, b, true);
+    LogComp.ComponentImpl  _comp = new LogComp.ComponentImpl(this, b, true);
     if (start) {
     	_comp.start();
     }
     return _comp;
+  }
+  
+  /**
+   * Use to instantiate a component from this implementation.
+   * 
+   */
+  public LogComp.Component newComponent() {
+    return this._newComponent(new LogComp.Requires() {}, true);
   }
 }

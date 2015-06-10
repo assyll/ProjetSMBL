@@ -23,3 +23,6 @@
 /.ActionProvider.java._trace
 /.TraceParser.java._trace
 /.TraceActionParser.java._trace
+/ActionProvider.java
+/TraceActionParser.java
+/.LogComp.java._trace
