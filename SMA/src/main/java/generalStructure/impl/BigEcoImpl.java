@@ -88,8 +88,34 @@ public class BigEcoImpl extends BigEco implements ICreateAgent{
 	}
 
 	@Override
-	public void createNewTransition(String id, ActionTrace action) {
-		newDynamicAssemblyAgentTransition(id, action);
+	public void createNewTransition(String id, ActionTrace action, String idSource) {
+		newDynamicAssemblyAgentTransition(id, action, idSource);
+	}
+
+	@Override
+	public String createNewState(boolean isRoot) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String[] createNewTransition(ActionTrace action, String idSource) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void createNewTransition(ActionTrace action, String idSource,
+			String idCible) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void createNewTransition(String id, ActionTrace action,
+			String idSource, String idCible) {
+		// TODO Auto-generated method stub
+		
 	}
 }
 

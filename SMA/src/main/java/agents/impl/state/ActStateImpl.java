@@ -72,7 +72,7 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 
 	@Override
 	public void createTransitionAgent(String id, ActionTrace action) {
-		this.requires().create().createNewTransition(id, action);
+		this.requires().create().createNewTransition(id, action, this.id);
 		
 	}
 

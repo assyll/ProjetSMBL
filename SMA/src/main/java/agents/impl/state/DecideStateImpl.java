@@ -24,8 +24,9 @@ public class DecideStateImpl extends AbstractDecide<StateAction, StateMemory> {
 		if(requires().memory().hasActionToProcess()) {
 			ActionTrace action = requires().memory().getNextAction();
 			this.requires().action().createTransitionAgent("", action);
-		}else {
-			
+		} else {
+			// sinon je fais rien
+			requires().action().doNothing();
 		}
 	}
 

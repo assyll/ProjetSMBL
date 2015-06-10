@@ -1,7 +1,8 @@
 package agents.impl.transition;
 
-import trace.Action;
 import general.Memory;
+import trace.Action;
+import trace.ActionTrace;
 import agents.interfaces.TransMemory;
 
 public class TransMemImpl extends Memory<TransMemory> implements TransMemory{
@@ -9,7 +10,7 @@ public class TransMemImpl extends Memory<TransMemory> implements TransMemory{
 	private String transId;
 	private String stateSourceId;
 	private String stateCibleId;
-	private Action action;
+	private ActionTrace action;
 	
 	@Override
 	public String getStateCibleId() {
@@ -22,12 +23,12 @@ public class TransMemImpl extends Memory<TransMemory> implements TransMemory{
 	}
 
 	@Override
-	public Action getAction() {
+	public ActionTrace getAction() {
 		return action;
 	}
 
 	@Override
-	public void setAction(Action action) {
+	public void setAction(ActionTrace action) {
 		this.action = action;
 	}
 
@@ -48,14 +49,14 @@ public class TransMemImpl extends Memory<TransMemory> implements TransMemory{
 		this.stateCibleId = "";
 	}
 	
-	public TransMemImpl(String transId, Action action, String sourceId, String cibleId) {
+	public TransMemImpl(String transId, ActionTrace action, String sourceId, String cibleId) {
 		this.transId = transId;
 		this.action = action;
 		this.stateSourceId = sourceId;
 		this.stateCibleId = cibleId;
 	}
 	
-	public TransMemImpl(String transId, Action action, String sourceId) {
+	public TransMemImpl(String transId, ActionTrace action, String sourceId) {
 		this.transId = transId;
 		this.action = action;
 		this.stateSourceId = sourceId;

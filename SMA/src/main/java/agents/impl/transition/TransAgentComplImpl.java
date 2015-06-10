@@ -1,6 +1,5 @@
 package agents.impl.transition;
 
-import trace.Action;
 import environnement.interfaces.EnvInfos;
 import environnement.interfaces.EnvUpdate;
 import general.Act;
@@ -9,6 +8,7 @@ import general.Decide;
 import general.Memory;
 import general.Perceive;
 import generalStructure.interfaces.ICreateAgent;
+import trace.ActionTrace;
 import agents.interfaces.PullMessage;
 import agents.interfaces.SendMessage;
 import agents.interfaces.TransAction;
@@ -18,24 +18,24 @@ import agents.interfaces.TransMemory;
 public class TransAgentComplImpl extends Agent<EnvInfos, EnvUpdate, TransAction, TransMemory, ICreateAgent, SendMessage, PullMessage> {
 
 	private String id;
-	private Action action;
+	private ActionTrace action;
 	private String stateSourceId;
 	private String stateCibleId;
 	
-	public TransAgentComplImpl(String id, Action action, String stateSourceId) {
+	public TransAgentComplImpl(String id, ActionTrace action, String stateSourceId) {
 
 		System.out.println("-------------------------------");
 		this.id = id;
 		this.action = action;
 		this.stateSourceId = stateSourceId;
+		this.stateCibleId = requires().create().createNewState(false);
 	}
 	
-	public TransAgentComplImpl(String id, Action action, String stateSourceId, String stateCibleId) {
+	public TransAgentComplImpl(String id, ActionTrace action, String stateSourceId, String stateCibleId) {
 		this.id = id;
 		this.action = action;
 		this.stateSourceId = stateSourceId;
 		this.stateCibleId = stateCibleId;
-		
 	}
 	
 	@Override

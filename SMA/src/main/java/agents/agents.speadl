@@ -44,7 +44,7 @@ namespace general{
 			//requires getTraceElement: IGetAction
 		}
 		
-		species TransitionAgent(id:String, action:ActionTrace) {
+		species TransitionAgent(id:String, action:ActionTrace, idSource: String) {
 			
 			provides cycle: Do = agentComponent.cycle
 			provides create: ICreateAgent

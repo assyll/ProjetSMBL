@@ -5,7 +5,13 @@ import trace.ActionTrace;
 
 public interface ICreateAgent {
 
+	public String createNewState(boolean isRoot);
+	public String[] createNewTransition(ActionTrace action, String idSource);
+	public void createNewTransition(ActionTrace action, String idSource, String idCible);
+	public void createNewTransition(String id, ActionTrace action, String idSource, String idCible);
+
 	public void createNewState(String id, boolean isRoot);
 	public void createNewTransition(String id, Action action, String sourceStateId);
-	public void createNewTransition(String id, ActionTrace action);
+	public void createNewTransition(String id, ActionTrace action, String idSource);
+	
 }

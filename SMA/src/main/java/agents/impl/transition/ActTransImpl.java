@@ -9,6 +9,8 @@ import generalStructure.interfaces.ICreateAgent;
 
 public class ActTransImpl extends AbstractAct<TransAction, EnvUpdate, TransMemory, ICreateAgent, SendMessage> implements TransAction {
 
+	
+	
 	@Override
 	protected TransAction make_action() {
 		return this;

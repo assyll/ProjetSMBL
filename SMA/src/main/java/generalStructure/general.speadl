@@ -48,8 +48,8 @@ namespace general{
 		
 		part envEco: Environnement[EnvInfos, EnvUpdate]
 		
-		species DynamicAssemblyAgentTransition(id: String, action:ActionTrace) {
-			use agentT: ecoAE.TransitionAgent(id, action) {
+		species DynamicAssemblyAgentTransition(id: String, action:ActionTrace, idSource: String) {
+			use agentT: ecoAE.TransitionAgent(id, action, idSource) {
 				bind finishedCycle to aFW.a
 				bind getContext to aFW.b
 				bind setContext to aFW.c

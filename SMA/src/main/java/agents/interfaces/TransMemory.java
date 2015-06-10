@@ -1,6 +1,6 @@
 package agents.interfaces;
 
-import trace.Action;
+import trace.ActionTrace;
 
 public interface TransMemory {
 	
@@ -8,9 +8,9 @@ public interface TransMemory {
 
 	public void setStateCibleId(String stateCibleId);
 
-	public Action getAction();
+	public ActionTrace getAction();
 	
-	public void setAction(Action action);
+	public void setAction(ActionTrace action);
 
 	public String getTransId();
 
