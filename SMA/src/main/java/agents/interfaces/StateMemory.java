@@ -1,6 +1,6 @@
 package agents.interfaces;
 
-import java.util.List;
+import java.util.Map;
 
 import trace.Action;
 import agents.impl.RequestMessage;
@@ -20,6 +20,8 @@ public interface StateMemory {
 	public boolean isWaitingForResponse();
 	public RequestMessage getRequestMessage();
 	public ResponseMessage getResponseMessage();
-	public void addAction(Action newAction);
-	public List<Action> getActionList();
+	public void addAction(String userName, Action newAction);
+	public Map<String,Action> getActionMap();
+	public boolean isRoot();
+	public void setIsRoot(boolean isRoot);
 }

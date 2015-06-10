@@ -3,7 +3,9 @@ package agents.impl.state;
 import general.Memory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import trace.Action;
 import agents.impl.RequestMessage;
@@ -15,7 +17,7 @@ public class StateMemImpl extends Memory<StateMemory> implements StateMemory {
 	private String stateId;
 	private boolean waitingForTraceElmt, gotRequest, waitingForResponse, gotResponse;
 	private List<String> userNameList;
-	private List<Action> actionList;
+	private Map<String,Action> actionMap;
 	private RequestMessage requestMsg;
 	private ResponseMessage responseMsg;
 	private boolean isRoot;
@@ -27,7 +29,7 @@ public class StateMemImpl extends Memory<StateMemory> implements StateMemory {
 		gotRequest = false;
 		waitingForResponse = false;
 		userNameList = new ArrayList<String>();
-		actionList = new ArrayList<Action>();
+		actionMap = new HashMap<String,Action>();
 		requestMsg = null;
 		responseMsg = null;
 		gotResponse = false;
@@ -113,15 +115,15 @@ public class StateMemImpl extends Memory<StateMemory> implements StateMemory {
 
 
 	@Override
-	public void addAction(Action newAction) {
-		actionList.add(newAction);
+	public void addAction(String userName, Action newAction) {
+		actionMap.put(userName, newAction);
 	}
 
 
 
 	@Override
-	public List<Action> getActionList() {
-		return actionList;
+	public Map<String,Action> getActionMap() {
+		return actionMap;
 	}
 
 
@@ -136,6 +138,20 @@ public class StateMemImpl extends Memory<StateMemory> implements StateMemory {
 	@Override
 	public boolean hasGotResponseMessage() {
 		return gotResponse;
+	}
+
+
+
+	@Override
+	public boolean isRoot() {
+		return isRoot;
+	}
+
+
+
+	@Override
+	public void setIsRoot(boolean isRoot) {
+		this.isRoot = isRoot;
 	}
 
 

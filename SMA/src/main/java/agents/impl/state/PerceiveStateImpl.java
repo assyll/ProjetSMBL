@@ -16,6 +16,8 @@ public class PerceiveStateImpl extends AbstractPerceive<ContextInfos, StateMemor
 	@Override
 	public void makePerception() {
 		System.out.println("Perception de " + id);
+		
+		
 	}
 
 }

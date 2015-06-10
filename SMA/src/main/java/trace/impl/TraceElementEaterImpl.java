@@ -32,10 +32,11 @@ public class TraceElementEaterImpl extends TraceElementEater implements Runnable
 				ActionTrace action = (ActionTrace) TraceElementEaterImpl.this.requires().traceElement().getNextElement();
 
 				while(action != null) {
-					if (actionsByUserMap.get(action.getUserName()) == null) {
+					if (!actionsByUserMap.containsKey(action.getUserName())) {
 						List<Action> queue = new LinkedList<>();
 						queue.add(action.getAction());
 						actionsByUserMap.put(action.getUserName(), queue);
+						newUserTrace.add(action.getUserName());
 					} else {
 						actionsByUserMap.get(action.getUserName()).add(action.getAction());
 					}
@@ -51,45 +52,6 @@ public class TraceElementEaterImpl extends TraceElementEater implements Runnable
 	protected void start(){
 		super.start();
 		this.run();
-
-	}
-
-
-	public ActionTrace getActionFromTraceElement(String traceElement) throws IOException
-	{
-		JsonParser parser = (new JsonFactory()).createParser(traceElement);
-		JsonToken token = null;
-		Map<String,String> actionFields = new HashMap<String,String>();
-		String userName = "";
-		ActionTrace actionTrace = null;
-		Action action = new Action(); 
-
-		while (!parser.isClosed()) {
-			token = parser.nextToken();
-
-			if(token==null){
-				break;
-			}
-
-			if(JsonToken.FIELD_NAME.equals(token)){
-				String tagName = parser.getCurrentName();
-				token = parser.nextToken();
-				String tagContent = parser.getText();
-
-				if("userName".equals(tagName)){
-					userName = tagContent;
-				} else if("action".equals(tagName)){
-					actionFields.put(tagName,tagContent);
-				}
-			}
-		}
-
-		if(!actionFields.isEmpty()){
-			action.setActionMap(actionFields);
-			actionTrace = new ActionTrace(userName, action);
-		}
-
-		return actionTrace;
 
 	}
 
@@ -111,8 +73,12 @@ public class TraceElementEaterImpl extends TraceElementEater implements Runnable
 
 	@Override
 	public ActionTrace newUserTrace() {
-	//	ActionTrace newUserActionTrace = new ActionTrace(newUserTrace.get(0), )
-		return null;
+		String user = newUserTrace.get(0);
+		Action action = actionsByUserMap.get(user).get(0);
+		ActionTrace newUserActionTrace = new ActionTrace(user, action);
+		newUserTrace.remove(0);
+		actionsByUserMap.get(user).remove(0);
+		return newUserActionTrace;
 	}
 
 
