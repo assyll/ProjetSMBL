@@ -3,10 +3,16 @@ package general;
 import agents.interfaces.Callable;
 import agents.interfaces.IGetThread;
 import generalStructure.interfaces.CycleAlert;
+import generalStructure.interfaces.IStop;
 
 @SuppressWarnings("all")
 public abstract class Launcher {
   public interface Requires {
+    /**
+     * This can be called by the implementation to access this required port.
+     * 
+     */
+    public IStop stopProcessus();
   }
   
   public interface Component extends Launcher.Provides {
@@ -212,13 +218,5 @@ public abstract class Launcher {
     	_comp.start();
     }
     return _comp;
-  }
-  
-  /**
-   * Use to instantiate a component from this implementation.
-   * 
-   */
-  public Launcher.Component newComponent() {
-    return this._newComponent(new Launcher.Requires() {}, true);
   }
 }

@@ -6,6 +6,7 @@ import general.Decide;
 import general.Memory;
 import general.Perceive;
 import generalStructure.interfaces.CycleAlert;
+import generalStructure.interfaces.ILog;
 
 @SuppressWarnings("all")
 public abstract class Agent<Context, ContextUpdate, Actionable, SharedMemory, CreateAgent, Push, Pull> {
@@ -45,6 +46,12 @@ public abstract class Agent<Context, ContextUpdate, Actionable, SharedMemory, Cr
      * 
      */
     public CreateAgent create();
+    
+    /**
+     * This can be called by the implementation to access this required port.
+     * 
+     */
+    public ILog finishedCycleForLog();
   }
   
   public interface Component<Context, ContextUpdate, Actionable, SharedMemory, CreateAgent, Push, Pull> extends Agent.Provides<Context, ContextUpdate, Actionable, SharedMemory, CreateAgent, Push, Pull> {
@@ -251,6 +258,10 @@ public abstract class Agent<Context, ContextUpdate, Actionable, SharedMemory, Cr
       
       public final CreateAgent create() {
         return Agent.ComponentImpl.this.bridge.create();
+      }
+      
+      public final ILog finishedCycleForLog() {
+        return Agent.ComponentImpl.this.bridge.finishedCycleForLog();
       }
     }
     

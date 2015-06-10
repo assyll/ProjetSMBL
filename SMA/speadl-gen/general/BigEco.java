@@ -15,6 +15,7 @@ import general.LogComp;
 import generalStructure.interfaces.CycleAlert;
 import generalStructure.interfaces.ICreateAgent;
 import generalStructure.interfaces.ILog;
+import generalStructure.interfaces.IStop;
 import trace.Action;
 import trace.interfaces.ITakeAction;
 
@@ -232,10 +233,6 @@ public abstract class BigEco {
       public final ICreateAgent createAgent() {
         return BigEco.ComponentImpl.this.creatAgent();
       }
-      
-      public final ILog finishedCycleForLog() {
-        return BigEco.ComponentImpl.this.logComp().log();
-      }
     }
     
     public final EcoAgents.Component ecoAE() {
@@ -262,6 +259,10 @@ public abstract class BigEco {
       public final ITakeAction j() {
         return BigEco.ComponentImpl.this.actionProvider().actionGetter();
       }
+      
+      public final ILog log() {
+        return BigEco.ComponentImpl.this.logComp().log();
+      }
     }
     
     public final Forward.Component<CycleAlert, ContextInfos, EnvInfos, EnvUpdate, SendMessage, PullMessage, ITakeAction> fw() {
@@ -284,6 +285,9 @@ public abstract class BigEco {
     private Launcher implem_launcher;
     
     private final class BridgeImpl_launcher implements Launcher.Requires {
+      public final IStop stopProcessus() {
+        return BigEco.ComponentImpl.this.fw().stopProcessus();
+      }
     }
     
     public final Launcher.Component launcher() {
@@ -402,6 +406,10 @@ public abstract class BigEco {
         
         public final PullMessage pull() {
           return BigEco.DynamicAssemblyAgentTransition.ComponentImpl.this.aFW().e();
+        }
+        
+        public final ILog finishedCycleForLog() {
+          return BigEco.DynamicAssemblyAgentTransition.ComponentImpl.this.aFW().finishedCycleForLog();
         }
       }
       
@@ -632,6 +640,10 @@ public abstract class BigEco {
         
         public final PullMessage pull() {
           return BigEco.DynamicAssemblyAgentEtat.ComponentImpl.this.aFW().e();
+        }
+        
+        public final ILog finishedCycleForLog() {
+          return BigEco.DynamicAssemblyAgentEtat.ComponentImpl.this.aFW().finishedCycleForLog();
         }
       }
       

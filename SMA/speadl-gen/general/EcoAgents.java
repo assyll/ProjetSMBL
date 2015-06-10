@@ -31,12 +31,6 @@ public abstract class EcoAgents {
      * 
      */
     public ICreateAgent createAgent();
-    
-    /**
-     * This can be called by the implementation to access this required port.
-     * 
-     */
-    public ILog finishedCycleForLog();
   }
   
   public interface Component extends EcoAgents.Provides {
@@ -114,6 +108,12 @@ public abstract class EcoAgents {
        * 
        */
       public PullMessage pull();
+      
+      /**
+       * This can be called by the implementation to access this required port.
+       * 
+       */
+      public ILog finishedCycleForLog();
     }
     
     public interface Component extends EcoAgents.StateAgent.Provides {
@@ -234,6 +234,10 @@ public abstract class EcoAgents {
         
         public final ICreateAgent create() {
           return EcoAgents.StateAgent.ComponentImpl.this.create();
+        }
+        
+        public final ILog finishedCycleForLog() {
+          return EcoAgents.StateAgent.ComponentImpl.this.bridge.finishedCycleForLog();
         }
       }
       
@@ -396,6 +400,12 @@ public abstract class EcoAgents {
        * 
        */
       public PullMessage pull();
+      
+      /**
+       * This can be called by the implementation to access this required port.
+       * 
+       */
+      public ILog finishedCycleForLog();
     }
     
     public interface Component extends EcoAgents.TransitionAgent.Provides {
@@ -516,6 +526,10 @@ public abstract class EcoAgents {
         
         public final ICreateAgent create() {
           return EcoAgents.TransitionAgent.ComponentImpl.this.create();
+        }
+        
+        public final ILog finishedCycleForLog() {
+          return EcoAgents.TransitionAgent.ComponentImpl.this.bridge.finishedCycleForLog();
         }
       }
       

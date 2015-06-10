@@ -10,6 +10,7 @@ import environnement.interfaces.EnvUpdate
 import agents.interfaces.SendMessage
 import agents.interfaces.PullMessage
 import generalStructure.interfaces.ILog
+import generalStructure.interfaces.IStop
 
 namespace general{
 	
@@ -17,6 +18,7 @@ namespace general{
 		provides call: Callable
 		provides finishedCycle: CycleAlert
 		provides threads: IGetThread
+		requires stopProcessus: IStop
 	}
 	
 	ecosystem BigEco {
@@ -28,7 +30,6 @@ namespace general{
 		part ecoAE: EcoAgents {
 			bind threads to launcher.threads
 			bind createAgent to creatAgent
-			bind finishedCycleForLog to logComp.log
 		}
 		
 		part fw: Forward[CycleAlert, ContextInfos, EnvInfos, EnvUpdate, SendMessage, PullMessage, ITakeAction] {
@@ -36,11 +37,14 @@ namespace general{
 			bind h to envEco.envInfos
 			bind k to envEco.envUpdate
 			bind j to actionProvider.actionGetter
+			bind log to logComp.log
 		}
 		
 		part actionProvider: ActionProvider 
 		
-		part launcher: Launcher
+		part launcher: Launcher {
+			bind stopProcessus to fw.stopProcessus
+		}
 		
 		part envEco: Environnement[EnvInfos, EnvUpdate]
 		
@@ -51,6 +55,7 @@ namespace general{
 				bind setContext to aFW.c
 				bind push to aFW.d
 				bind pull to aFW.e
+				bind finishedCycleForLog to aFW.finishedCycleForLog
 			}
 			use aFW: fw.TransForward(id)
 		}
@@ -63,6 +68,7 @@ namespace general{
 				bind setContext to aFW.c
 				bind push to aFW.d
 				bind pull to aFW.e
+				bind finishedCycleForLog to aFW.finishedCycleForLog
 			}
 			use aFW: fw.StateForward(id, isRoot)
 		}
@@ -76,6 +82,7 @@ namespace general{
 		 	provides c: ContextUpdate
 		 	provides d: Push
 		 	provides e: Pull
+		 	provides finishedCycleForLog: ILog
 		 }
 		 
 		  species TransForward (id: String) {
@@ -84,6 +91,7 @@ namespace general{
 		 	provides c: ContextUpdate
 		 	provides d: Push
 		 	provides e: Pull
+		 	provides finishedCycleForLog: ILog
 		 }
 		 
 		 requires i: CycleAlert
@@ -91,6 +99,8 @@ namespace general{
 		 requires h: ContextTA
 		 requires k: ContextUpdate
 		 provides l: Push
+		 requires log: ILog
+		 provides stopProcessus: IStop
 	}
 	
 	component LogComp {

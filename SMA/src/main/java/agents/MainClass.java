@@ -1,6 +1,7 @@
 package agents;
 import generalStructure.impl.BigEcoImpl;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,7 +11,7 @@ import trace.Action;
 public class MainClass {
 
 	public static void main(String[] args) {
-		new BigEcoImpl("C:\\Traces\\SMA\\test1.txt").newComponent();
+		new BigEcoImpl("target" + File.separator + "test1.txt").newComponent();
 		
 		/*Map<String,String> actions = new HashMap<>();
 		actions.put("action1", "A1");

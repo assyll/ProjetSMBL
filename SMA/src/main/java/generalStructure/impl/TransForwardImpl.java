@@ -5,8 +5,10 @@ import environnement.interfaces.EnvInfos;
 import environnement.interfaces.EnvUpdate;
 import general.Forward.TransForward;
 import generalStructure.interfaces.CycleAlert;
+import generalStructure.interfaces.ILog;
 
 import java.util.List;
+import java.util.Map;
 
 import trace.Action;
 import trace.interfaces.ITakeAction;
@@ -14,7 +16,7 @@ import agents.interfaces.PullMessage;
 import agents.interfaces.SendMessage;
 
 public class TransForwardImpl extends TransForward<CycleAlert, ContextInfos, EnvInfos, EnvUpdate, SendMessage, PullMessage, ITakeAction> 
-implements CycleAlert, EnvInfos, EnvUpdate, SendMessage, PullMessage {
+implements CycleAlert, EnvInfos, EnvUpdate, SendMessage, PullMessage, ILog {
 
 	private String id;
 	
@@ -75,5 +77,20 @@ implements CycleAlert, EnvInfos, EnvUpdate, SendMessage, PullMessage {
 	@Override
 	protected EnvInfos make_b() {
 		return this;
+	}
+
+	@Override
+	protected ILog make_finishedCycleForLog() {
+		return this;
+	}
+
+	@Override
+	public void ecrire(Map<String, String> informations) {
+		eco_requires().log().ecrire(informations);
+	}
+	
+	@Override
+	public void closeFile() {
+		eco_requires().log().closeFile();
 	}
 }
