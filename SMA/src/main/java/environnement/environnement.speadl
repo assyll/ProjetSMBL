@@ -12,7 +12,6 @@ namespace general{
 		
 		species Cell(actions : List[Action]) {
 			provides cellInfos: CellInfo
-			
 		}
 	}
 	

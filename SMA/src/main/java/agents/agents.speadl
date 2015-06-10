@@ -12,21 +12,23 @@ import trace.Action
 import environnement.interfaces.EnvInfos
 import agents.interfaces.TransAction
 import agents.interfaces.TransMemory
+import generalStructure.interfaces.ILog
 
 namespace general{
 
 	ecosystem EcoAgents/*[ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, Push, Pull] */{
 		requires threads: IGetThread
 		requires createAgent: ICreateAgent
+		requires finishedCycleForLog: ILog
 		
 		species StateAgent (id: String, isRoot: boolean) {
 			provides cycle: Do = agentComponent.cycle
+			provides create: ICreateAgent
 			requires getContext: ContextInfos
 			requires setContext: EnvUpdate
 			requires finishedCycle: CycleAlert
 			requires push: SendMessage
 			requires pull: PullMessage
-			provides create: ICreateAgent
 			
 			 part agentComponent: Agent[ContextInfos, EnvUpdate, StateAction, StateMemory, ICreateAgent, SendMessage, PullMessage] {
 			 	bind getContext to getContext
@@ -43,12 +45,12 @@ namespace general{
 		species TransitionAgent(id:String, action:Action , stateSource:String) {
 			
 			provides cycle: Do = agentComponent.cycle
+			provides create: ICreateAgent
 			requires getContext: EnvInfos
 			requires setContext: EnvUpdate
 			requires finishedCycle: CycleAlert
 			requires push: SendMessage
 			requires pull: PullMessage
-			provides create: ICreateAgent
 			
 			part agentComponent: Agent[EnvInfos, EnvUpdate, TransAction, TransMemory, ICreateAgent, SendMessage, PullMessage] {
 				bind getContext to getContext

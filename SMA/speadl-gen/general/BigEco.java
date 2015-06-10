@@ -11,8 +11,10 @@ import general.EcoAgents;
 import general.Environnement;
 import general.Forward;
 import general.Launcher;
+import general.LogComp;
 import generalStructure.interfaces.CycleAlert;
 import generalStructure.interfaces.ICreateAgent;
+import generalStructure.interfaces.ILog;
 import trace.Action;
 import trace.interfaces.ITakeAction;
 
@@ -33,6 +35,13 @@ public abstract class BigEco {
   }
   
   public interface Parts {
+    /**
+     * This can be called by the implementation to access the part and its provided ports.
+     * It will be initialized after the required ports are initialized and before the provided ports are initialized.
+     * 
+     */
+    public LogComp.Component logComp();
+    
     /**
      * This can be called by the implementation to access the part and its provided ports.
      * It will be initialized after the required ports are initialized and before the provided ports are initialized.
@@ -75,6 +84,8 @@ public abstract class BigEco {
     private final BigEco implementation;
     
     public void start() {
+      assert this.logComp != null: "This is a bug.";
+      ((LogComp.ComponentImpl) this.logComp).start();
       assert this.ecoAE != null: "This is a bug.";
       ((EcoAgents.ComponentImpl) this.ecoAE).start();
       assert this.fw != null: "This is a bug.";
@@ -87,6 +98,17 @@ public abstract class BigEco {
       ((Environnement.ComponentImpl<EnvInfos, EnvUpdate>) this.envEco).start();
       this.implementation.start();
       this.implementation.started = true;
+    }
+    
+    private void init_logComp() {
+      assert this.logComp == null: "This is a bug.";
+      assert this.implem_logComp == null: "This is a bug.";
+      this.implem_logComp = this.implementation.make_logComp();
+      if (this.implem_logComp == null) {
+      	throw new RuntimeException("make_logComp() in general.BigEco should not return null.");
+      }
+      this.logComp = this.implem_logComp._newComponent(new BridgeImpl_logComp(), false);
+      
     }
     
     private void init_ecoAE() {
@@ -145,6 +167,7 @@ public abstract class BigEco {
     }
     
     protected void initParts() {
+      init_logComp();
       init_ecoAE();
       init_fw();
       init_actionProvider();
@@ -186,6 +209,17 @@ public abstract class BigEco {
       return this.creatAgent;
     }
     
+    private LogComp.Component logComp;
+    
+    private LogComp implem_logComp;
+    
+    private final class BridgeImpl_logComp implements LogComp.Requires {
+    }
+    
+    public final LogComp.Component logComp() {
+      return this.logComp;
+    }
+    
     private EcoAgents.Component ecoAE;
     
     private EcoAgents implem_ecoAE;
@@ -197,6 +231,10 @@ public abstract class BigEco {
       
       public final ICreateAgent createAgent() {
         return BigEco.ComponentImpl.this.creatAgent();
+      }
+      
+      public final ILog finishedCycleForLog() {
+        return BigEco.ComponentImpl.this.logComp().log();
       }
     }
     
@@ -793,6 +831,13 @@ public abstract class BigEco {
     }
     return this.selfComponent;
   }
+  
+  /**
+   * This should be overridden by the implementation to define how to create this sub-component.
+   * This will be called once during the construction of the component to initialize this sub-component.
+   * 
+   */
+  protected abstract LogComp make_logComp();
   
   /**
    * This should be overridden by the implementation to define how to create this sub-component.

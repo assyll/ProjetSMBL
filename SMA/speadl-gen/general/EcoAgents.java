@@ -14,6 +14,7 @@ import environnement.interfaces.EnvUpdate;
 import general.Agent;
 import generalStructure.interfaces.CycleAlert;
 import generalStructure.interfaces.ICreateAgent;
+import generalStructure.interfaces.ILog;
 import trace.Action;
 
 @SuppressWarnings("all")
@@ -30,6 +31,12 @@ public abstract class EcoAgents {
      * 
      */
     public ICreateAgent createAgent();
+    
+    /**
+     * This can be called by the implementation to access this required port.
+     * 
+     */
+    public ILog finishedCycleForLog();
   }
   
   public interface Component extends EcoAgents.Provides {
