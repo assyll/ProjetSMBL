@@ -94,8 +94,7 @@ implements CycleAlert, ContextInfos, EnvUpdate, SendMessage, PullMessage {
 	}
 
 	@Override
-	public ActionTrace newUserTrace() {
-		// TODO Auto-generated method stub
-		return null;
+	public List<ActionTrace> newUsersTraceList() {
+		return eco_requires().j().newUsersTraceList();
 	}
 }

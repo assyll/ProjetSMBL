@@ -14,25 +14,32 @@ import agents.interfaces.StateMemory;
 
 public class StateMemImpl extends Memory<StateMemory> implements StateMemory {
 
-	private String stateId;
-	private boolean waitingForTraceElmt, gotRequest, waitingForResponse, gotResponse;
-	private List<String> userNameList;
-	private Map<String,Action> actionMap;
-	private RequestMessage requestMsg;
-	private ResponseMessage responseMsg;
-	private boolean isRoot;
-	
+	private String _stateId;
+	private boolean _waitingForTraceElmt, _gotRequest, _waitingForResponse, _gotResponse, _actionsToProcess;
+	private List<String> _userNameWaitingForTraceList;
+	private Map<String,Action> _actionMap;
+	private RequestMessage _requestMsg;
+	private ResponseMessage _responseMsg;
+	private boolean _isRoot;
+	private Map<Action,String> _inputTransitionIdByAction;
+	private Map<String,String> _stateChildIdByTransId;
+	private int _userNameIndex;
+
 	public StateMemImpl(String id, boolean isRoot) {
-		stateId = id;
-		this.isRoot = isRoot;
-		waitingForTraceElmt = false;
-		gotRequest = false;
-		waitingForResponse = false;
-		userNameList = new ArrayList<String>();
-		actionMap = new HashMap<String,Action>();
-		requestMsg = null;
-		responseMsg = null;
-		gotResponse = false;
+		_stateId = id;
+		this._isRoot = isRoot;
+		_waitingForTraceElmt = false;
+		_gotRequest = false;
+		_waitingForResponse = false;
+		_userNameWaitingForTraceList = new ArrayList<String>();
+		_actionMap = new HashMap<String,Action>();
+		_requestMsg = null;
+		_responseMsg = null;
+		_gotResponse = false;
+		_stateChildIdByTransId = new HashMap<String, String>();
+		_inputTransitionIdByAction = new HashMap<Action, String>();
+		_actionsToProcess = false;
+		_userNameIndex = 0;
 	}
 	
 
@@ -46,112 +53,207 @@ public class StateMemImpl extends Memory<StateMemory> implements StateMemory {
 
 	@Override
 	public void setNextTraceElmtUserName(String userName) {
-		userNameList.add(userName);
+		_userNameWaitingForTraceList.add(userName);
 	}
 
 
 
 	@Override
 	public void setRequestMessage(RequestMessage msg) {
-		gotRequest = true;
-		requestMsg = msg;
+		_gotRequest = true;
+		_requestMsg = msg;
 	}
 
 
 
 	@Override
 	public void setResponseMessage(ResponseMessage msg) {
-		gotResponse = true;
-		responseMsg = msg;
+		_gotResponse = true;
+		_responseMsg = msg;
 	}
 
 
 
 	@Override
 	public void removeUserName(String userName) {
-		userNameList.remove(userName);
+		_userNameWaitingForTraceList.remove(userName);
+		
+		if(_userNameWaitingForTraceList.isEmpty()) {
+			_waitingForTraceElmt = false;
+		}
 	}
 
 
 
 	@Override
 	public void setWaitingForTraceElmt(boolean b) {
-		waitingForTraceElmt = b;
+		_waitingForTraceElmt = b;
 	}
 
 
 
 	@Override
 	public void setWaitingForResponse(boolean b) {
-		waitingForResponse = b;
+		_waitingForResponse = b;
 	}
 
 
 
 	@Override
 	public boolean isWaitingForTraceElmt() {
-		return waitingForTraceElmt;
+		return _waitingForTraceElmt;
 	}
 
 	@Override
 	public boolean isWaitingForResponse() {
-		return waitingForResponse;
+		return _waitingForResponse;
 	}
 
 
 
 	@Override
 	public RequestMessage getRequestMessage() {
-		return requestMsg;
+		return _requestMsg;
 	}
 
 
 
 	@Override
 	public ResponseMessage getResponseMessage() {
-		return responseMsg;
+		return _responseMsg;
 	}
 
 
 
 	@Override
 	public void addAction(String userName, Action newAction) {
-		actionMap.put(userName, newAction);
+		_actionMap.put(userName, newAction);
+		_userNameWaitingForTraceList.remove(userName);
+		_actionsToProcess = true;
+		
+		if(_userNameWaitingForTraceList.isEmpty()) {
+			_waitingForTraceElmt = false;
+		}
 	}
 
 
 
 	@Override
 	public Map<String,Action> getActionMap() {
-		return actionMap;
+		return _actionMap;
 	}
 
 
 
 	@Override
 	public boolean hasGotRequestMessage() {
-		return gotRequest;
+		return _gotRequest;
 	}
 
 
 
 	@Override
 	public boolean hasGotResponseMessage() {
-		return gotResponse;
+		return _gotResponse;
 	}
 
 
 
 	@Override
 	public boolean isRoot() {
-		return isRoot;
+		return _isRoot;
 	}
 
 
 
 	@Override
 	public void setIsRoot(boolean isRoot) {
-		this.isRoot = isRoot;
+		this._isRoot = isRoot;
+	}
+
+
+
+	@Override
+	public boolean gotTransitionWithAction(Action action) {
+		return _inputTransitionIdByAction.containsKey(action);
+	}
+
+
+
+	@Override
+	public String getTransitionWithAction(Action action) {
+		return _inputTransitionIdByAction.get(action);
+	}
+
+
+
+	@Override
+	public Map<String,String> getChildren() {
+		return  _stateChildIdByTransId;
+	}
+
+
+
+	@Override
+	public String getChildByTransition(String transId) {
+		return _stateChildIdByTransId.get(transId);
+	}
+
+
+
+	@Override
+	public void addNewOutputTransition(String id, Action action) {
+		_inputTransitionIdByAction.put(action, id);
+	}
+
+
+
+	@Override
+	public void addChild(String stateId, String transId) {
+		_stateChildIdByTransId.put(transId, stateId);
+	}
+
+
+
+	@Override
+	public void addNewUserName(String userName) {
+		_userNameWaitingForTraceList.add(userName);
+		_waitingForTraceElmt = true;
+		
+	}
+
+
+
+	@Override
+	public String getNextUserNameWaitingForAction() {
+		String userName = _userNameWaitingForTraceList.get(_userNameIndex);
+		_userNameIndex = (++_userNameIndex) % _userNameWaitingForTraceList.size();
+		return null;
+	}
+
+
+
+	@Override
+	public List<String> getUserNameWaitingForTraceList() {
+		return _userNameWaitingForTraceList;
+	}
+
+
+
+	@Override
+	public boolean hasActionToProcess() {
+		return _actionsToProcess;
+	}
+
+
+
+	@Override
+	public void removeAction(String userName) {
+		_actionMap.remove(userName);
+		
+		if(_actionMap.isEmpty()) {
+			_actionsToProcess = false;
+		}
 	}
 
 

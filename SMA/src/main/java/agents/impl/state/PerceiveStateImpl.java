@@ -1,5 +1,9 @@
 package agents.impl.state;
 
+import java.util.List;
+
+import trace.Action;
+import trace.ActionTrace;
 import agents.impl.AbstractPerceive;
 import agents.interfaces.PullMessage;
 import agents.interfaces.StateMemory;
@@ -16,6 +20,34 @@ public class PerceiveStateImpl extends AbstractPerceive<ContextInfos, StateMemor
 	@Override
 	public void makePerception() {
 		System.out.println("Perception de " + id);
+		
+		//Je regarde si j'attend une prochaine transition d'un utilisateur
+		if(requires().memory().isWaitingForTraceElmt()) {
+			//J'essai de récupérer la prochaine trace via le forward et de la mettre dans la mémoire de l'agent
+			List<String> userNameList = requires().memory().getUserNameWaitingForTraceList();
+			int i = 0;
+			boolean oneTraceFound = false;
+			Action action = null;
+			
+			while( (i < userNameList.size()) && (action == null) ) {
+				action = requires().getContext().getActionTrace(userNameList.get(i));
+				i++;
+			}
+			
+			if(action != null) {
+				i--;
+				requires().memory().addAction(userNameList.get(i), action);
+			}
+		}
+		
+		//Si je suis racine, je regarde si il y a un nouveau nom d'utilisateur non encore rencontrés jusqu'ici
+		if(requires().memory().isRoot()) {
+			List<ActionTrace> userNameList = requires().getContext().newUsersTraceList();
+			
+			for(int i = 0; i < userNameList.size(); i++) {
+				//this.
+			}
+		}
 		
 		
 	}

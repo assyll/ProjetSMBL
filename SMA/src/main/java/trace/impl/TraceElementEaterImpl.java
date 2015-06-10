@@ -4,6 +4,7 @@ package trace.impl;
 import general.TraceElementEater;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -19,7 +20,7 @@ import com.fasterxml.jackson.core.JsonToken;
 
 public class TraceElementEaterImpl extends TraceElementEater implements Runnable, ITakeAction{
 	private Map<String, List<Action>> actionsByUserMap = new HashMap<>();
-	private List<String> newUserTrace = new LinkedList<String>();
+	private List<String> newUsersList = new LinkedList<String>();
 
 	@Override
 	public void run() {
@@ -36,7 +37,7 @@ public class TraceElementEaterImpl extends TraceElementEater implements Runnable
 						List<Action> queue = new LinkedList<>();
 						queue.add(action.getAction());
 						actionsByUserMap.put(action.getUserName(), queue);
-						newUserTrace.add(action.getUserName());
+						newUsersList.add(action.getUserName());
 					} else {
 						actionsByUserMap.get(action.getUserName()).add(action.getAction());
 					}
@@ -72,13 +73,17 @@ public class TraceElementEaterImpl extends TraceElementEater implements Runnable
 	}
 
 	@Override
-	public ActionTrace newUserTrace() {
-		String user = newUserTrace.get(0);
-		Action action = actionsByUserMap.get(user).get(0);
-		ActionTrace newUserActionTrace = new ActionTrace(user, action);
-		newUserTrace.remove(0);
-		actionsByUserMap.get(user).remove(0);
-		return newUserActionTrace;
+	public List<ActionTrace> newUsersTraceList() {
+		List<ActionTrace> actionTraceList = new ArrayList<ActionTrace>();
+		
+		for(int i = 0; i < newUsersList.size(); i++) {
+			String user = newUsersList.get(i);
+			actionTraceList.add(new ActionTrace(user, actionsByUserMap.get(user).get(0)));
+			actionsByUserMap.get(user).remove(0);
+		}
+		
+		newUsersList.clear();
+		return actionTraceList;
 	}
 
 
