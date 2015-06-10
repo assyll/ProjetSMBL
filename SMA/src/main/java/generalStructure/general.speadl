@@ -14,10 +14,12 @@ namespace general{
 	
 	ecosystem BigEco[ActionableState, ActionableTransition, ContextSA, ContextTA, 
 		ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull] {
+		
+		provides creatAgent : ICreateAgent
 			
 		part ecoAE: EcoAgents[ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, Push, Pull] {
 			bind threads to launcher.threads
-			bind createAgent to fw.creatAgent
+			bind createAgent to creatAgent
 		}
 		
 		part fw: Forward[CycleAlert, ContextSA, ContextTA, ContextUpdate, Push, Pull, ActionGetter] {
@@ -80,7 +82,6 @@ namespace general{
 		 requires h: ContextTA
 		 requires k: ContextUpdate
 		 provides l: Push
-		 provides creatAgent : ICreateAgent
 	}
 	
 	

@@ -19,6 +19,11 @@ public abstract class BigEco<ActionableState, ActionableTransition, ContextSA, C
   }
   
   public interface Provides<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> {
+    /**
+     * This can be called to access the provided port.
+     * 
+     */
+    public ICreateAgent creatAgent();
   }
   
   public interface Parts<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> {
@@ -141,8 +146,16 @@ public abstract class BigEco<ActionableState, ActionableTransition, ContextSA, C
       init_envEco();
     }
     
+    private void init_creatAgent() {
+      assert this.creatAgent == null: "This is a bug.";
+      this.creatAgent = this.implementation.make_creatAgent();
+      if (this.creatAgent == null) {
+      	throw new RuntimeException("make_creatAgent() in general.BigEco<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> should not return null.");
+      }
+    }
+    
     protected void initProvidedPorts() {
-      
+      init_creatAgent();
     }
     
     public ComponentImpl(final BigEco<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> implem, final BigEco.Requires<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, ActionGetter, Push, Pull> b, final boolean doInits) {
@@ -161,6 +174,12 @@ public abstract class BigEco<ActionableState, ActionableTransition, ContextSA, C
       }
     }
     
+    private ICreateAgent creatAgent;
+    
+    public ICreateAgent creatAgent() {
+      return this.creatAgent;
+    }
+    
     private EcoAgents.Component<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, Push, Pull> ecoAE;
     
     private EcoAgents<ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, Push, Pull> implem_ecoAE;
@@ -171,7 +190,7 @@ public abstract class BigEco<ActionableState, ActionableTransition, ContextSA, C
       }
       
       public final ICreateAgent createAgent() {
-        return BigEco.ComponentImpl.this.fw().creatAgent();
+        return BigEco.ComponentImpl.this.creatAgent();
       }
     }
     
@@ -737,6 +756,13 @@ public abstract class BigEco<ActionableState, ActionableTransition, ContextSA, C
     }
     return this.selfComponent;
   }
+  
+  /**
+   * This should be overridden by the implementation to define the provided port.
+   * This will be called once during the construction of the component to initialize the port.
+   * 
+   */
+  protected abstract ICreateAgent make_creatAgent();
   
   /**
    * This can be called by the implementation to access the required ports.

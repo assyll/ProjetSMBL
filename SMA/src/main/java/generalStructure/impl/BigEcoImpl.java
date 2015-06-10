@@ -14,6 +14,7 @@ import general.Environnement;
 import general.Forward;
 import general.Launcher;
 import generalStructure.interfaces.CycleAlert;
+import generalStructure.interfaces.ICreateAgent;
 import agents.impl.EcoAgentsImpl;
 import agents.interfaces.PullMessage;
 import agents.interfaces.SendMessage;
@@ -23,7 +24,7 @@ import agents.interfaces.TransAction;
 import agents.interfaces.TransMemory;
 
 public class BigEcoImpl extends BigEco<StateAction, TransAction, ContextInfos, EnvInfos,
-EnvUpdate, StateMemory, TransMemory, ITakeAction, SendMessage, PullMessage> {
+EnvUpdate, StateMemory, TransMemory, ITakeAction, SendMessage, PullMessage> implements ICreateAgent{
 
 	private final String path;
 
@@ -54,51 +55,6 @@ EnvUpdate, StateMemory, TransMemory, ITakeAction, SendMessage, PullMessage> {
 	protected void start() {
 		super.start();
 
-		newDynamicAssemblyAgentTransition("A", new Action(), "ST1");
-		//newDynamicAssemblyAgentEtat("Agent Etat 1");
-		/*this.newDynamicAssemblyAgentEtat("Agent Etat 1");
-		this.newDynamicAssemblyAgentEtat("Agent Etat 2");
-		this.newDynamicAssemblyAgentEtat("Agent Etat 3");
-		this.newDynamicAssemblyAgentEtat("Agent Etat 4");
-		System.out.println("Start BigEco");
-
-		t = new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-				try {
-					Thread.sleep(5000);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				System.out.println("debut ajout");
-				BigEcoImpl.this.newDynamicAssemblyAgentEtat("Agent Etat 4");
-				System.out.println("ajout");
-
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-
-					e.printStackTrace();
-				}
-
-				BigEcoImpl.this.newDynamicAssemblyAgentEtat("Agent Etat 5");
-				BigEcoImpl.this.newDynamicAssemblyAgentEtat("Agent Etat 6");
-
-				try {
-					Thread.sleep(5000);
-				} catch (InterruptedException e) {
-
-					e.printStackTrace();
-				}
-
-				//BigEcoImpl.this.parts().launcher().call().stop();
-			}
-
-		});
-		t.start();*/
-
 	}
 
 	@Override
@@ -110,5 +66,22 @@ EnvUpdate, StateMemory, TransMemory, ITakeAction, SendMessage, PullMessage> {
 	protected ActionProvider<ITakeAction> make_actionProvider() {
 		return new ActionProviderImpl(path);
 	}
+
+	@Override
+	protected ICreateAgent make_creatAgent() {
+		return this;
+	}
+
+	@Override
+	public void createNewState(String id) {
+		newDynamicAssemblyAgentEtat(id);
+	}
+
+	@Override
+	public void createNewTransition(String id, Action action, String stateSourceId) {
+		newDynamicAssemblyAgentTransition(id, action, stateSourceId);
+	}
 }
+
+
 

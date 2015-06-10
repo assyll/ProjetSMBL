@@ -16,7 +16,7 @@ import trace.interfaces.ITakeAction;
 import agents.interfaces.PullMessage;
 import agents.interfaces.SendMessage;
 
-public class ForwardImpl extends Forward<CycleAlert, ContextInfos,EnvInfos,  EnvUpdate, SendMessage, PullMessage, ITakeAction> implements SendMessage, ICreateAgent {
+public class ForwardImpl extends Forward<CycleAlert, ContextInfos,EnvInfos,  EnvUpdate, SendMessage, PullMessage, ITakeAction> implements SendMessage {
 
 	private int nbState;
 	private int nbTrans;
@@ -49,23 +49,5 @@ public class ForwardImpl extends Forward<CycleAlert, ContextInfos,EnvInfos,  Env
 		transFwList.put(id, a);
 		return a;
 	}
-
-	@Override
-	protected ICreateAgent make_creatAgent() {
-		return this;
-	}
-
-	@Override
-	public String createNewState() {
-		String id = "S"+ (nbState++);
-		newStateForward(id);
-		return id;
-	}
-
-	@Override
-	public String createNewTransition() {
-		String id = "T"+ (nbTrans++);
-		newTransForward(id);
-		return id;
-	}
+	
 }

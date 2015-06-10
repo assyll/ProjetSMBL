@@ -1,7 +1,5 @@
 package general;
 
-import generalStructure.interfaces.ICreateAgent;
-
 @SuppressWarnings("all")
 public abstract class Forward<CycleAlert, ContextSA, ContextTA, ContextUpdate, Push, Pull, ActionGetter> {
   public interface Requires<CycleAlert, ContextSA, ContextTA, ContextUpdate, Push, Pull, ActionGetter> {
@@ -39,12 +37,6 @@ public abstract class Forward<CycleAlert, ContextSA, ContextTA, ContextUpdate, P
      * 
      */
     public Push l();
-    
-    /**
-     * This can be called to access the provided port.
-     * 
-     */
-    public ICreateAgent creatAgent();
   }
   
   public interface Parts<CycleAlert, ContextSA, ContextTA, ContextUpdate, Push, Pull, ActionGetter> {
@@ -72,17 +64,8 @@ public abstract class Forward<CycleAlert, ContextSA, ContextTA, ContextUpdate, P
       }
     }
     
-    private void init_creatAgent() {
-      assert this.creatAgent == null: "This is a bug.";
-      this.creatAgent = this.implementation.make_creatAgent();
-      if (this.creatAgent == null) {
-      	throw new RuntimeException("make_creatAgent() in general.Forward<CycleAlert, ContextSA, ContextTA, ContextUpdate, Push, Pull, ActionGetter> should not return null.");
-      }
-    }
-    
     protected void initProvidedPorts() {
       init_l();
-      init_creatAgent();
     }
     
     public ComponentImpl(final Forward<CycleAlert, ContextSA, ContextTA, ContextUpdate, Push, Pull, ActionGetter> implem, final Forward.Requires<CycleAlert, ContextSA, ContextTA, ContextUpdate, Push, Pull, ActionGetter> b, final boolean doInits) {
@@ -105,12 +88,6 @@ public abstract class Forward<CycleAlert, ContextSA, ContextTA, ContextUpdate, P
     
     public Push l() {
       return this.l;
-    }
-    
-    private ICreateAgent creatAgent;
-    
-    public ICreateAgent creatAgent() {
-      return this.creatAgent;
     }
   }
   
@@ -749,13 +726,6 @@ public abstract class Forward<CycleAlert, ContextSA, ContextTA, ContextUpdate, P
    * 
    */
   protected abstract Push make_l();
-  
-  /**
-   * This should be overridden by the implementation to define the provided port.
-   * This will be called once during the construction of the component to initialize the port.
-   * 
-   */
-  protected abstract ICreateAgent make_creatAgent();
   
   /**
    * This can be called by the implementation to access the required ports.
