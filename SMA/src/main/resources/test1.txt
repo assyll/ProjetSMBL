@@ -1,0 +1,1321 @@
+{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}{
+	"action": "A1"
+}{
+	"action": "A2"
+}
