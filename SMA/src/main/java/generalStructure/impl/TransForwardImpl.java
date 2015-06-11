@@ -5,23 +5,32 @@ import environnement.interfaces.EnvInfos;
 import environnement.interfaces.EnvUpdate;
 import general.Forward.TransForward;
 import generalStructure.interfaces.CycleAlert;
+import generalStructure.interfaces.IGraph;
 import generalStructure.interfaces.ILog;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import trace.Action;
 import trace.interfaces.ITakeAction;
+import agents.impl.Message;
+import agents.impl.RequestMessage;
+import agents.impl.ResponseMessage;
 import agents.interfaces.PullMessage;
 import agents.interfaces.SendMessage;
 
 public class TransForwardImpl extends TransForward<CycleAlert, ContextInfos, EnvInfos, EnvUpdate, SendMessage, PullMessage, ITakeAction> 
-implements CycleAlert, EnvInfos, EnvUpdate, SendMessage, PullMessage, ILog {
+implements CycleAlert, EnvInfos, EnvUpdate, SendMessage, PullMessage, ILog, ILetterBox, IGraph {
 
 	private String id;
+	private List<RequestMessage> requestMessagesQueue;
+	private List<ResponseMessage> responseMessagesQueue;
 	
 	public TransForwardImpl(String id) {
 		this.id = id;
+		requestMessagesQueue = new LinkedList<>();
+		responseMessagesQueue = new LinkedList<>();
 	}
 	
 	@Override
@@ -92,5 +101,53 @@ implements CycleAlert, EnvInfos, EnvUpdate, SendMessage, PullMessage, ILog {
 	@Override
 	public void closeFile() {
 		eco_requires().log().closeFile();
+	}
+
+	@Override
+	public void sendRequestMessage(RequestMessage request) {
+		eco_provides().l().sendRequestMessage(request);
+	}
+
+	@Override
+	public RequestMessage pullRequestMessage() {
+		try {
+			return requestMessagesQueue.remove(0);
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	@Override
+	public ResponseMessage pullResponseMessage() {
+		try {
+			return responseMessagesQueue.remove(0);
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	@Override
+	public void pushRequestMessage(RequestMessage request) {
+		requestMessagesQueue.add(request);
+	}
+
+	@Override
+	public void pushResponseMessage(ResponseMessage response) {
+		responseMessagesQueue.add(response);
+	}
+
+	@Override
+	protected IGraph make_graph() {
+		return this;
+	}
+
+	@Override
+	public void majTransitionAgent() {
+		eco_requires().graph().majTransitionAgent();
+	}
+
+	@Override
+	public void majStateAgent() {
+		eco_requires().graph().majStateAgent();
 	}
 }

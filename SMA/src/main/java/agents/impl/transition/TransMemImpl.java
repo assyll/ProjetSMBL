@@ -5,7 +5,7 @@ import trace.Action;
 import trace.ActionTrace;
 import agents.interfaces.TransMemory;
 
-public class TransMemImpl extends Memory<TransMemory> implements TransMemory{
+public class TransMemImpl extends Memory<TransMemory> implements TransMemory {
 
 	private String transId;
 	private String stateSourceId;

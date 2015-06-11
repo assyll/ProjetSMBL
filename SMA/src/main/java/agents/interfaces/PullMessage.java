@@ -1,7 +1,9 @@
 package agents.interfaces;
 
-import trace.Action;
+import agents.impl.RequestMessage;
 
 public interface PullMessage {
 
+	public RequestMessage pullRequestMessage();
+	
 }

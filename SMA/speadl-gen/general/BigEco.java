@@ -10,10 +10,12 @@ import general.ActionProvider;
 import general.EcoAgents;
 import general.Environnement;
 import general.Forward;
+import general.GraphComp;
 import general.Launcher;
 import general.LogComp;
 import generalStructure.interfaces.CycleAlert;
 import generalStructure.interfaces.ICreateAgent;
+import generalStructure.interfaces.IGraph;
 import generalStructure.interfaces.ILog;
 import generalStructure.interfaces.IStop;
 import trace.ActionTrace;
@@ -42,6 +44,13 @@ public abstract class BigEco {
      * 
      */
     public LogComp.Component logComp();
+    
+    /**
+     * This can be called by the implementation to access the part and its provided ports.
+     * It will be initialized after the required ports are initialized and before the provided ports are initialized.
+     * 
+     */
+    public GraphComp.Component graphComp();
     
     /**
      * This can be called by the implementation to access the part and its provided ports.
@@ -87,6 +96,8 @@ public abstract class BigEco {
     public void start() {
       assert this.logComp != null: "This is a bug.";
       ((LogComp.ComponentImpl) this.logComp).start();
+      assert this.graphComp != null: "This is a bug.";
+      ((GraphComp.ComponentImpl) this.graphComp).start();
       assert this.ecoAE != null: "This is a bug.";
       ((EcoAgents.ComponentImpl) this.ecoAE).start();
       assert this.fw != null: "This is a bug.";
@@ -109,6 +120,17 @@ public abstract class BigEco {
       	throw new RuntimeException("make_logComp() in general.BigEco should not return null.");
       }
       this.logComp = this.implem_logComp._newComponent(new BridgeImpl_logComp(), false);
+      
+    }
+    
+    private void init_graphComp() {
+      assert this.graphComp == null: "This is a bug.";
+      assert this.implem_graphComp == null: "This is a bug.";
+      this.implem_graphComp = this.implementation.make_graphComp();
+      if (this.implem_graphComp == null) {
+      	throw new RuntimeException("make_graphComp() in general.BigEco should not return null.");
+      }
+      this.graphComp = this.implem_graphComp._newComponent(new BridgeImpl_graphComp(), false);
       
     }
     
@@ -169,6 +191,7 @@ public abstract class BigEco {
     
     protected void initParts() {
       init_logComp();
+      init_graphComp();
       init_ecoAE();
       init_fw();
       init_actionProvider();
@@ -221,6 +244,17 @@ public abstract class BigEco {
       return this.logComp;
     }
     
+    private GraphComp.Component graphComp;
+    
+    private GraphComp implem_graphComp;
+    
+    private final class BridgeImpl_graphComp implements GraphComp.Requires {
+    }
+    
+    public final GraphComp.Component graphComp() {
+      return this.graphComp;
+    }
+    
     private EcoAgents.Component ecoAE;
     
     private EcoAgents implem_ecoAE;
@@ -262,6 +296,10 @@ public abstract class BigEco {
       
       public final ILog log() {
         return BigEco.ComponentImpl.this.logComp().log();
+      }
+      
+      public final IGraph graph() {
+        return BigEco.ComponentImpl.this.graphComp().graph();
       }
     }
     
@@ -410,6 +448,10 @@ public abstract class BigEco {
         
         public final ILog finishedCycleForLog() {
           return BigEco.DynamicAssemblyAgentTransition.ComponentImpl.this.aFW().finishedCycleForLog();
+        }
+        
+        public final IGraph graph() {
+          return BigEco.DynamicAssemblyAgentTransition.ComponentImpl.this.aFW().graph();
         }
       }
       
@@ -645,6 +687,10 @@ public abstract class BigEco {
         public final ILog finishedCycleForLog() {
           return BigEco.DynamicAssemblyAgentEtat.ComponentImpl.this.aFW().finishedCycleForLog();
         }
+        
+        public final IGraph graph() {
+          return BigEco.DynamicAssemblyAgentEtat.ComponentImpl.this.aFW().graph();
+        }
       }
       
       public final EcoAgents.StateAgent.Component agentE() {
@@ -850,6 +896,13 @@ public abstract class BigEco {
    * 
    */
   protected abstract LogComp make_logComp();
+  
+  /**
+   * This should be overridden by the implementation to define how to create this sub-component.
+   * This will be called once during the construction of the component to initialize this sub-component.
+   * 
+   */
+  protected abstract GraphComp make_graphComp();
   
   /**
    * This should be overridden by the implementation to define how to create this sub-component.

@@ -9,6 +9,8 @@ import general.Memory;
 import general.Perceive;
 import generalStructure.interfaces.ICreateAgent;
 import trace.ActionTrace;
+import agents.impl.RequestMessage;
+import agents.impl.RequestType;
 import agents.interfaces.PullMessage;
 import agents.interfaces.SendMessage;
 import agents.interfaces.TransAction;
@@ -28,7 +30,15 @@ public class TransAgentComplImpl extends Agent<EnvInfos, EnvUpdate, TransAction,
 		this.id = id;
 		this.action = action;
 		this.stateSourceId = stateSourceId;
+		
+		// creer un nouvel agent etat
 		this.stateCibleId = requires().create().createNewState(false);
+		
+		// Transmet a lagent son id.
+		RequestMessage request = new RequestMessage(
+				id, stateCibleId, RequestType.ADD_FATHER_WITH_USERNAME,
+				action.getUserName());
+		requires().push().sendRequestMessage(request);
 	}
 	
 	public TransAgentComplImpl(String id, ActionTrace action, String stateSourceId, String stateCibleId) {
@@ -55,7 +65,7 @@ public class TransAgentComplImpl extends Agent<EnvInfos, EnvUpdate, TransAction,
 
 	@Override
 	protected Act<TransAction, EnvUpdate, TransMemory, ICreateAgent, SendMessage> make_act() {
-		return new ActTransImpl();
+		return new ActTransImpl(id);
 	}
 
 }

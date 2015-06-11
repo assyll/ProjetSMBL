@@ -1,5 +1,6 @@
 package general;
 
+import generalStructure.interfaces.IGraph;
 import generalStructure.interfaces.ILog;
 import generalStructure.interfaces.IStop;
 
@@ -35,6 +36,12 @@ public abstract class Forward<CycleAlert, ContextSA, ContextTA, ContextUpdate, P
      * 
      */
     public ILog log();
+    
+    /**
+     * This can be called by the implementation to access this required port.
+     * 
+     */
+    public IGraph graph();
   }
   
   public interface Component<CycleAlert, ContextSA, ContextTA, ContextUpdate, Push, Pull, ActionGetter> extends Forward.Provides<CycleAlert, ContextSA, ContextTA, ContextUpdate, Push, Pull, ActionGetter> {
@@ -164,6 +171,12 @@ public abstract class Forward<CycleAlert, ContextSA, ContextTA, ContextUpdate, P
        * 
        */
       public ILog finishedCycleForLog();
+      
+      /**
+       * This can be called to access the provided port.
+       * 
+       */
+      public IGraph graph();
     }
     
     public interface Parts<CycleAlert, ContextSA, ContextTA, ContextUpdate, Push, Pull, ActionGetter> {
@@ -231,6 +244,14 @@ public abstract class Forward<CycleAlert, ContextSA, ContextTA, ContextUpdate, P
         }
       }
       
+      private void init_graph() {
+        assert this.graph == null: "This is a bug.";
+        this.graph = this.implementation.make_graph();
+        if (this.graph == null) {
+        	throw new RuntimeException("make_graph() in general.Forward$StateForward<CycleAlert, ContextSA, ContextTA, ContextUpdate, Push, Pull, ActionGetter> should not return null.");
+        }
+      }
+      
       protected void initProvidedPorts() {
         init_a();
         init_b();
@@ -238,6 +259,7 @@ public abstract class Forward<CycleAlert, ContextSA, ContextTA, ContextUpdate, P
         init_d();
         init_e();
         init_finishedCycleForLog();
+        init_graph();
       }
       
       public ComponentImpl(final Forward.StateForward<CycleAlert, ContextSA, ContextTA, ContextUpdate, Push, Pull, ActionGetter> implem, final Forward.StateForward.Requires<CycleAlert, ContextSA, ContextTA, ContextUpdate, Push, Pull, ActionGetter> b, final boolean doInits) {
@@ -290,6 +312,12 @@ public abstract class Forward<CycleAlert, ContextSA, ContextTA, ContextUpdate, P
       
       public ILog finishedCycleForLog() {
         return this.finishedCycleForLog;
+      }
+      
+      private IGraph graph;
+      
+      public IGraph graph() {
+        return this.graph;
       }
     }
     
@@ -373,6 +401,13 @@ public abstract class Forward<CycleAlert, ContextSA, ContextTA, ContextUpdate, P
      * 
      */
     protected abstract ILog make_finishedCycleForLog();
+    
+    /**
+     * This should be overridden by the implementation to define the provided port.
+     * This will be called once during the construction of the component to initialize the port.
+     * 
+     */
+    protected abstract IGraph make_graph();
     
     /**
      * This can be called by the implementation to access the required ports.
@@ -487,6 +522,12 @@ public abstract class Forward<CycleAlert, ContextSA, ContextTA, ContextUpdate, P
        * 
        */
       public ILog finishedCycleForLog();
+      
+      /**
+       * This can be called to access the provided port.
+       * 
+       */
+      public IGraph graph();
     }
     
     public interface Parts<CycleAlert, ContextSA, ContextTA, ContextUpdate, Push, Pull, ActionGetter> {
@@ -554,6 +595,14 @@ public abstract class Forward<CycleAlert, ContextSA, ContextTA, ContextUpdate, P
         }
       }
       
+      private void init_graph() {
+        assert this.graph == null: "This is a bug.";
+        this.graph = this.implementation.make_graph();
+        if (this.graph == null) {
+        	throw new RuntimeException("make_graph() in general.Forward$TransForward<CycleAlert, ContextSA, ContextTA, ContextUpdate, Push, Pull, ActionGetter> should not return null.");
+        }
+      }
+      
       protected void initProvidedPorts() {
         init_a();
         init_b();
@@ -561,6 +610,7 @@ public abstract class Forward<CycleAlert, ContextSA, ContextTA, ContextUpdate, P
         init_d();
         init_e();
         init_finishedCycleForLog();
+        init_graph();
       }
       
       public ComponentImpl(final Forward.TransForward<CycleAlert, ContextSA, ContextTA, ContextUpdate, Push, Pull, ActionGetter> implem, final Forward.TransForward.Requires<CycleAlert, ContextSA, ContextTA, ContextUpdate, Push, Pull, ActionGetter> b, final boolean doInits) {
@@ -613,6 +663,12 @@ public abstract class Forward<CycleAlert, ContextSA, ContextTA, ContextUpdate, P
       
       public ILog finishedCycleForLog() {
         return this.finishedCycleForLog;
+      }
+      
+      private IGraph graph;
+      
+      public IGraph graph() {
+        return this.graph;
       }
     }
     
@@ -696,6 +752,13 @@ public abstract class Forward<CycleAlert, ContextSA, ContextTA, ContextUpdate, P
      * 
      */
     protected abstract ILog make_finishedCycleForLog();
+    
+    /**
+     * This should be overridden by the implementation to define the provided port.
+     * This will be called once during the construction of the component to initialize the port.
+     * 
+     */
+    protected abstract IGraph make_graph();
     
     /**
      * This can be called by the implementation to access the required ports.

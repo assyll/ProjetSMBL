@@ -7,6 +7,8 @@ import java.util.Map;
 import trace.Action;
 import trace.ActionTrace;
 import agents.impl.AbstractAct;
+import agents.impl.Message;
+import agents.impl.RequestMessage;
 import agents.interfaces.SendMessage;
 import agents.interfaces.StateAction;
 import agents.interfaces.StateMemory;
@@ -26,6 +28,7 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 			Action newAction) {
 		requires().setContext().move(id, currentPositionActions, newAction);
 		requires().finishedCycle().endOfCycleAlert(id);
+		
 		logger("add new action", "action added", newAction.toString());
 	}
 
@@ -67,18 +70,44 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 			informations.put(dones[i++], dones[i++]);
 		}
 		
+		majGraph();
 		requires().finishedCycleForLog().ecrire(informations);
+	}
+	
+	private void majGraph() {
+		requires().graph().majStateAgent();
 	}
 
 	@Override
 	public void createTransitionAgent(String id, ActionTrace action) {
 		this.requires().create().createNewTransition(id, action, this.id);
-		
 	}
 
 	@Override
 	public void doNothing() {
+		logger("do nothing");
 		this.requires().finishedCycle().endOfCycleAlert(id);
+	}
+
+	@Override
+	public void pullRequestMessage() {
+		RequestMessage request = requires().pull().pullRequestMessage();
+		if (request != null) {
+			requires().memory().setRequestMessage(request);
+		}
+	}
+
+	@Override
+	public void treatRequestMessage() {
+		RequestMessage request = requires().memory().getRequestMessage();
+		switch (request.getType()) {
+		case ADD_FATHER_WITH_USERNAME:
+			// Mettre a jour son agent transition pere
+			requires().memory().addFather(request.getSenderId());
+			// Deviens etat courant en mettant a jour son username
+			requires().memory().setNextTraceElmtUserName(
+					(String) request.getInformations());
+		}
 	}
 
 }

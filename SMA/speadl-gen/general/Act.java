@@ -1,6 +1,8 @@
 package general;
 
+import agents.interfaces.PullMessage;
 import generalStructure.interfaces.CycleAlert;
+import generalStructure.interfaces.IGraph;
 import generalStructure.interfaces.ILog;
 
 @SuppressWarnings("all")
@@ -35,6 +37,18 @@ public abstract class Act<Actionable, ContextUpdate, SharedMemory, CreateAgent, 
      * 
      */
     public ILog finishedCycleForLog();
+    
+    /**
+     * This can be called by the implementation to access this required port.
+     * 
+     */
+    public PullMessage pull();
+    
+    /**
+     * This can be called by the implementation to access this required port.
+     * 
+     */
+    public IGraph graph();
   }
   
   public interface Component<Actionable, ContextUpdate, SharedMemory, CreateAgent, Push> extends Act.Provides<Actionable, ContextUpdate, SharedMemory, CreateAgent, Push> {

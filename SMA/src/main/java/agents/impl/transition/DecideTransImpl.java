@@ -8,6 +8,7 @@ public class DecideTransImpl extends AbstractDecide<TransAction, TransMemory> {
 
 	@Override
 	public void makeDecision() {
+		requires().action().doNothing();
 	}
 
 }

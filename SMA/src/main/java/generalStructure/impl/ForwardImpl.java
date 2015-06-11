@@ -15,6 +15,7 @@ import java.util.Map;
 
 import trace.Action;
 import trace.interfaces.ITakeAction;
+import agents.impl.RequestMessage;
 import agents.interfaces.PullMessage;
 import agents.interfaces.SendMessage;
 
@@ -36,7 +37,10 @@ public class ForwardImpl extends Forward<CycleAlert, ContextInfos,EnvInfos,  Env
 	}
 	
 	@Override
-	protected StateForward<CycleAlert, ContextInfos, EnvInfos, EnvUpdate, SendMessage, PullMessage, ITakeAction> make_StateForward(String id, boolean isRoot){
+	protected StateForward <CycleAlert, ContextInfos, EnvInfos, EnvUpdate,
+	SendMessage, PullMessage, ITakeAction>
+	make_StateForward(String id, boolean isRoot) {
+		
 		StateForwardImpl a = new StateForwardImpl(id);
 		stateFwList.put(id, a);
 		
@@ -68,6 +72,26 @@ public class ForwardImpl extends Forward<CycleAlert, ContextInfos,EnvInfos,  Env
 	@Override
 	protected IStop make_stopProcessus() {
 		return this;
+	}
+
+	@Override
+	public void sendRequestMessage(RequestMessage request) {
+		// Recupere l'agent destinataire
+		String reveiverId = request.getReceiverId();
+		
+		// Recupere son forward
+		StateForwardImpl stateForward = stateFwList.get(reveiverId);
+		TransForwardImpl transForward = transFwList.get(reveiverId);
+		
+		// place le message dans la bonne <<boite aux lettres>>
+		if (stateForward != null) {
+			stateForward.pushRequestMessage(request);
+		} else if (transForward != null) {
+			transForward.pushRequestMessage(request);
+		} else {
+			// ERREUR -> le forward du destinataire nexiste pas !
+		}
+		
 	}
 
 }

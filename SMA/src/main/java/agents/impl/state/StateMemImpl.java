@@ -16,7 +16,7 @@ import agents.interfaces.StateMemory;
 
 public class StateMemImpl extends Memory<StateMemory> implements StateMemory {
 
-	private String _stateId;
+	private String _stateId, _fatherTransId;
 	private boolean _waitingForTraceElmt, _gotRequest, _waitingForResponse, _gotResponse, _actionsToProcess;
 	private List<String> _userNameWaitingForTraceList;
 	private List<ActionTrace> _actionMap;
@@ -57,8 +57,6 @@ public class StateMemImpl extends Memory<StateMemory> implements StateMemory {
 	public void setNextTraceElmtUserName(String userName) {
 		_userNameWaitingForTraceList.add(userName);
 	}
-
-
 
 	@Override
 	public void setRequestMessage(RequestMessage msg) {
@@ -265,6 +263,13 @@ public class StateMemImpl extends Memory<StateMemory> implements StateMemory {
 		}
 		
 		return action;
+	}
+
+
+
+	@Override
+	public void addFather(String transId) {
+		_fatherTransId = transId;
 	}
 
 

@@ -2,16 +2,30 @@ package agents.impl;
 
 import java.util.List;
 
-public class RequestMessage {
+public class RequestMessage extends Message {
 
-	private RequestType type;//MERGE, UNMERGE, TRY_TO_MERGE, ADD_CHILD, GET_NB_CHILD 
-	private String senderId;
-	private String receiverId;
 	private List<String> childrenWithActionsIds;
 	private int nbChildrenWithNoAction;
 
 
-	//Requête de fusion envoyée par le nouvel agent arrivé dans la cellule
+	/**
+	 * Requete permettant d'envoyer n'importe quelle informations.
+	 * @param senderId Id de l'agent expediteur
+	 * @param receiverId Id de l'agent destinataire
+	 * @param type Type du message
+	 * @param informations Informations transportees par le message.
+	 *                     Son typage varie selon le type de message.
+	 */
+	public RequestMessage(String senderId, String receiverId, RequestType type,
+			Object informations) {
+		
+		super.senderId = senderId;
+		super.receiverId = receiverId;
+		super.type = type;
+		super.informations = informations;
+	}
+	
+	//Requï¿½te de fusion envoyï¿½e par le nouvel agent arrivï¿½ dans la cellule
 	public RequestMessage(String senderId, String receiverId, int nbChildrenWithNoAction, List<String> childrenWithActions) {
 		this.senderId = senderId;
 		this.receiverId = receiverId;
@@ -19,8 +33,24 @@ public class RequestMessage {
 		childrenWithActionsIds = childrenWithActions;
 		this.nbChildrenWithNoAction = nbChildrenWithNoAction;
 	}
+	
+	public RequestType getType() {
+		return type;
+	}
+	
+	public String getSenderId() {
+		return senderId;
+	}
+	
+	public String getReceiverId() {
+		return receiverId;
+	}
+	
+	public Object getInformations() {
+		return informations;
+	}
 
-	//Requête de défusion envoyée par le père 
+	//Requï¿½te de dï¿½fusion envoyï¿½e par le pï¿½re 
 	/*public RequestMessage(String senderId, String receiverId, int nbChildrenWithNoAction, List<String> childrenWithActions) {
 		this.senderId = senderId;
 		this.receiverId = receiverId;

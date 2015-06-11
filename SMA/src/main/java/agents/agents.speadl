@@ -8,12 +8,12 @@ import environnement.interfaces.ContextInfos
 import environnement.interfaces.EnvUpdate
 import generalStructure.interfaces.CycleAlert
 import generalStructure.interfaces.ICreateAgent
-import trace.Action
 import environnement.interfaces.EnvInfos
 import agents.interfaces.TransAction
 import agents.interfaces.TransMemory
 import generalStructure.interfaces.ILog
 import trace.ActionTrace
+import generalStructure.interfaces.IGraph
 
 namespace general{
 
@@ -30,6 +30,7 @@ namespace general{
 			requires push: SendMessage
 			requires pull: PullMessage
 			requires finishedCycleForLog: ILog
+			requires graph: IGraph
 			
 			 part agentComponent: Agent[ContextInfos, EnvUpdate, StateAction, StateMemory, ICreateAgent, SendMessage, PullMessage] {
 			 	bind getContext to getContext
@@ -39,6 +40,7 @@ namespace general{
 			 	bind pull to pull
 			 	bind create to create
 			 	bind finishedCycleForLog to finishedCycleForLog
+			 	bind graph to graph
 			 }
 						
 			//requires getTraceElement: IGetAction
@@ -54,6 +56,7 @@ namespace general{
 			requires push: SendMessage
 			requires pull: PullMessage
 			requires finishedCycleForLog: ILog
+			requires graph: IGraph
 			
 			part agentComponent: Agent[EnvInfos, EnvUpdate, TransAction, TransMemory, ICreateAgent, SendMessage, PullMessage] {
 				bind getContext to getContext
@@ -63,6 +66,7 @@ namespace general{
 			 	bind pull to pull
 			 	bind create to create
 			 	bind finishedCycleForLog to finishedCycleForLog
+			 	bind graph to graph
 			}
 		}
 	}
@@ -88,6 +92,8 @@ namespace general{
 			bind memory to memory.infos
 			bind create to create
 			bind finishedCycleForLog to finishedCycleForLog
+			bind pull to pull
+			bind graph to graph
 		}
 		
 		provides cycle: Do = perceive.perception
@@ -95,9 +101,10 @@ namespace general{
 		requires setContext: ContextUpdate
 		requires finishedCycle: CycleAlert
 		requires push: Push
-		requires pull: Pull
+		requires pull: PullMessage
 		requires create: CreateAgent
 		requires finishedCycleForLog: ILog
+		requires graph: IGraph
 	}
 	
 	component Perceive[Context, SharedMemory, Pull] {
@@ -120,6 +127,8 @@ namespace general{
 		requires memory: SharedMemory
 		requires create: CreateAgent
 		requires finishedCycleForLog: ILog
+		requires pull: PullMessage
+		requires graph: IGraph
 	}
 		
 	component Memory[SharedMemory] {

@@ -11,6 +11,7 @@ import generalStructure.interfaces.ILog
 import generalStructure.interfaces.IStop
 import trace.ActionTrace
 import trace.interfaces.ITakeAction
+import generalStructure.interfaces.IGraph
 
 namespace general{
 	
@@ -27,6 +28,8 @@ namespace general{
 			
 		part logComp: LogComp
 		
+		part graphComp: GraphComp
+		
 		part ecoAE: EcoAgents {
 			bind threads to launcher.threads
 			bind createAgent to creatAgent
@@ -38,6 +41,7 @@ namespace general{
 			bind k to envEco.envUpdate
 			bind j to actionProvider.actionGetter
 			bind log to logComp.log
+			bind graph to graphComp.graph
 		}
 		
 		part actionProvider: ActionProvider 
@@ -56,6 +60,7 @@ namespace general{
 				bind push to aFW.d
 				bind pull to aFW.e
 				bind finishedCycleForLog to aFW.finishedCycleForLog
+				bind graph to aFW.graph
 			}
 			use aFW: fw.TransForward(id)
 		}
@@ -69,6 +74,7 @@ namespace general{
 				bind push to aFW.d
 				bind pull to aFW.e
 				bind finishedCycleForLog to aFW.finishedCycleForLog
+				bind graph to aFW.graph
 			}
 			use aFW: fw.StateForward(id, isRoot)
 		}
@@ -83,6 +89,7 @@ namespace general{
 		 	provides d: Push
 		 	provides e: Pull
 		 	provides finishedCycleForLog: ILog
+		 	provides graph: IGraph
 		 }
 		 
 		  species TransForward (id: String) {
@@ -92,6 +99,7 @@ namespace general{
 		 	provides d: Push
 		 	provides e: Pull
 		 	provides finishedCycleForLog: ILog
+		 	provides graph: IGraph
 		 }
 		 
 		 requires i: CycleAlert
@@ -100,11 +108,16 @@ namespace general{
 		 requires k: ContextUpdate
 		 provides l: Push
 		 requires log: ILog
+		 requires graph: IGraph
 		 provides stopProcessus: IStop
 	}
 	
 	component LogComp {
 		provides log: ILog
+	}
+	
+	component GraphComp {
+		provides graph: IGraph
 	}
 	
 	

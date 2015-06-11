@@ -14,6 +14,7 @@ import environnement.interfaces.EnvUpdate;
 import general.Agent;
 import generalStructure.interfaces.CycleAlert;
 import generalStructure.interfaces.ICreateAgent;
+import generalStructure.interfaces.IGraph;
 import generalStructure.interfaces.ILog;
 import trace.ActionTrace;
 
@@ -114,6 +115,12 @@ public abstract class EcoAgents {
        * 
        */
       public ILog finishedCycleForLog();
+      
+      /**
+       * This can be called by the implementation to access this required port.
+       * 
+       */
+      public IGraph graph();
     }
     
     public interface Component extends EcoAgents.StateAgent.Provides {
@@ -238,6 +245,10 @@ public abstract class EcoAgents {
         
         public final ILog finishedCycleForLog() {
           return EcoAgents.StateAgent.ComponentImpl.this.bridge.finishedCycleForLog();
+        }
+        
+        public final IGraph graph() {
+          return EcoAgents.StateAgent.ComponentImpl.this.bridge.graph();
         }
       }
       
@@ -406,6 +417,12 @@ public abstract class EcoAgents {
        * 
        */
       public ILog finishedCycleForLog();
+      
+      /**
+       * This can be called by the implementation to access this required port.
+       * 
+       */
+      public IGraph graph();
     }
     
     public interface Component extends EcoAgents.TransitionAgent.Provides {
@@ -530,6 +547,10 @@ public abstract class EcoAgents {
         
         public final ILog finishedCycleForLog() {
           return EcoAgents.TransitionAgent.ComponentImpl.this.bridge.finishedCycleForLog();
+        }
+        
+        public final IGraph graph() {
+          return EcoAgents.TransitionAgent.ComponentImpl.this.bridge.graph();
         }
       }
       

@@ -5,6 +5,7 @@ import environnement.interfaces.EnvInfos;
 import environnement.interfaces.EnvUpdate;
 import general.Forward.StateForward;
 import generalStructure.interfaces.CycleAlert;
+import generalStructure.interfaces.IGraph;
 import generalStructure.interfaces.ILog;
 
 import java.util.LinkedList;
@@ -20,7 +21,7 @@ import agents.interfaces.PullMessage;
 import agents.interfaces.SendMessage;
 
 public class StateForwardImpl extends StateForward<CycleAlert, ContextInfos, EnvInfos, EnvUpdate, SendMessage, PullMessage, ITakeAction>
-implements CycleAlert, ContextInfos, EnvUpdate, SendMessage, PullMessage, ILog {
+implements CycleAlert, ContextInfos, EnvUpdate, SendMessage, PullMessage, ILog, ILetterBox, IGraph {
 
 	private List<RequestMessage> requestMessagesQueue;
 	private List<ResponseMessage> responseMessagesQueue;
@@ -104,6 +105,11 @@ implements CycleAlert, ContextInfos, EnvUpdate, SendMessage, PullMessage, ILog {
 	protected ILog make_finishedCycleForLog() {
 		return this;
 	}
+	
+	@Override
+	protected IGraph make_graph() {
+		return this;
+	}
 
 	@Override
 	public void ecrire(Map<String, String> informations) {
@@ -113,5 +119,48 @@ implements CycleAlert, ContextInfos, EnvUpdate, SendMessage, PullMessage, ILog {
 	@Override
 	public void closeFile() {
 		eco_requires().log().closeFile();
+	}
+
+	@Override
+	public void sendRequestMessage(RequestMessage request) {
+		eco_provides().l().sendRequestMessage(request);
+	}
+	
+	@Override
+	public void majTransitionAgent() {
+		eco_requires().graph().majTransitionAgent();
+	}
+
+	@Override
+	public void majStateAgent() {
+		eco_requires().graph().majStateAgent();
+	}
+
+	@Override
+	public RequestMessage pullRequestMessage() {
+		try {
+			return requestMessagesQueue.remove(0);
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	@Override
+	public ResponseMessage pullResponseMessage() {
+		try {
+			return responseMessagesQueue.remove(0);
+		} catch (Exception e) {
+			return null;
+		}
+	}
+	
+	@Override
+	public void pushRequestMessage(RequestMessage request) {
+		requestMessagesQueue.add(request);
+	}
+
+	@Override
+	public void pushResponseMessage(ResponseMessage response) {
+		responseMessagesQueue.add(response);
 	}
 }

@@ -11,6 +11,7 @@ import general.BigEco;
 import general.EcoAgents;
 import general.Environnement;
 import general.Forward;
+import general.GraphComp;
 import general.Launcher;
 import general.LogComp;
 import generalStructure.interfaces.CycleAlert;
@@ -116,6 +117,11 @@ public class BigEcoImpl extends BigEco implements ICreateAgent{
 			String idSource, String idCible) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	protected GraphComp make_graphComp() {
+		return new GraphCompImpl();
 	}
 }
 

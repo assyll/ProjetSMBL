@@ -1,5 +1,5 @@
 package agents.impl;
 
-public class ResponseMessage {
+public class ResponseMessage extends Message {
 
 }

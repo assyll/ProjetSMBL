@@ -12,5 +12,6 @@ public interface StateAction {
 	public void createTransitionAgent(String id, ActionTrace action);
 	public void removeAgent(String id, List<Action> actions);
 	public void doNothing();
-
+	public void pullRequestMessage();
+	public void treatRequestMessage();
 }

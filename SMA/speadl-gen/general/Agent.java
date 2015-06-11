@@ -1,11 +1,13 @@
 package general;
 
 import agents.interfaces.Do;
+import agents.interfaces.PullMessage;
 import general.Act;
 import general.Decide;
 import general.Memory;
 import general.Perceive;
 import generalStructure.interfaces.CycleAlert;
+import generalStructure.interfaces.IGraph;
 import generalStructure.interfaces.ILog;
 
 @SuppressWarnings("all")
@@ -39,7 +41,7 @@ public abstract class Agent<Context, ContextUpdate, Actionable, SharedMemory, Cr
      * This can be called by the implementation to access this required port.
      * 
      */
-    public Pull pull();
+    public PullMessage pull();
     
     /**
      * This can be called by the implementation to access this required port.
@@ -52,6 +54,12 @@ public abstract class Agent<Context, ContextUpdate, Actionable, SharedMemory, Cr
      * 
      */
     public ILog finishedCycleForLog();
+    
+    /**
+     * This can be called by the implementation to access this required port.
+     * 
+     */
+    public IGraph graph();
   }
   
   public interface Component<Context, ContextUpdate, Actionable, SharedMemory, CreateAgent, Push, Pull> extends Agent.Provides<Context, ContextUpdate, Actionable, SharedMemory, CreateAgent, Push, Pull> {
@@ -262,6 +270,14 @@ public abstract class Agent<Context, ContextUpdate, Actionable, SharedMemory, Cr
       
       public final ILog finishedCycleForLog() {
         return Agent.ComponentImpl.this.bridge.finishedCycleForLog();
+      }
+      
+      public final PullMessage pull() {
+        return Agent.ComponentImpl.this.bridge.pull();
+      }
+      
+      public final IGraph graph() {
+        return Agent.ComponentImpl.this.bridge.graph();
       }
     }
     
