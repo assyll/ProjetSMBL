@@ -340,6 +340,11 @@ public class GeneratorGraph {
 		}
 	}
 	
+	/**
+	 * Choisis un noeud au hasard parmi une liste en filtrant les non finaux.
+	 * @param nodes Liste des noeuds
+	 * @return une des noeuds non final
+	 */
 	private NodeToCreate chooseRandom(List<NodeToCreate> nodes) {
 		List<NodeToCreate> nodesNoFinal = new ArrayList<NodeToCreate>();
 		for (NodeToCreate nodeToCreate: nodes) {

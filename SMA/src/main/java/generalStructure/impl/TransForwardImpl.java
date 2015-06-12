@@ -19,6 +19,8 @@ import agents.impl.RequestMessage;
 import agents.impl.ResponseMessage;
 import agents.interfaces.PullMessage;
 import agents.interfaces.SendMessage;
+import agents.interfaces.StateMemory;
+import agents.interfaces.TransMemory;
 
 public class TransForwardImpl extends TransForward<CycleAlert, ContextInfos, EnvInfos, EnvUpdate, SendMessage, PullMessage, ITakeAction> 
 implements CycleAlert, EnvInfos, EnvUpdate, SendMessage, PullMessage, ILog, ILetterBox, IGraph {
@@ -142,12 +144,12 @@ implements CycleAlert, EnvInfos, EnvUpdate, SendMessage, PullMessage, ILog, ILet
 	}
 
 	@Override
-	public void majTransitionAgent() {
-		eco_requires().graph().majTransitionAgent();
+	public void majTransitionAgent(String id, TransMemory memory) {
+		eco_requires().graph().majTransitionAgent(id, memory);
 	}
 
 	@Override
-	public void majStateAgent() {
-		eco_requires().graph().majStateAgent();
+	public void majStateAgent(String id, StateMemory memory) {
+		eco_requires().graph().majStateAgent(id, memory);
 	}
 }

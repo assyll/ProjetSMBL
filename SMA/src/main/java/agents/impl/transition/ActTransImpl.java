@@ -44,7 +44,7 @@ public class ActTransImpl extends AbstractAct<TransAction, EnvUpdate, TransMemor
 	}
 	
 	private void majGraph() {
-		requires().graph().majTransitionAgent();
+		requires().graph().majTransitionAgent(id, requires().memory());
 	}
 
 }

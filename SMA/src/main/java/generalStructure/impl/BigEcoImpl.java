@@ -26,12 +26,14 @@ import agents.interfaces.SendMessage;
 
 public class BigEcoImpl extends BigEco implements ICreateAgent{
 
-	private final String path;
+	private final String path_graph;
+	private final String path_traces;
 
 	private Thread t = null;
 
-	public BigEcoImpl(String path) {
-		this.path = path;
+	public BigEcoImpl(String path_traces, String path_graph) {
+		this.path_graph = path_graph;
+		this.path_traces = path_traces;
 	}
 
 	@Override
@@ -65,7 +67,7 @@ public class BigEcoImpl extends BigEco implements ICreateAgent{
 
 	@Override
 	protected ActionProvider make_actionProvider() {
-		return new ActionProviderImpl(path);
+		return new ActionProviderImpl(path_traces);
 	}
 
 	@Override
@@ -121,7 +123,7 @@ public class BigEcoImpl extends BigEco implements ICreateAgent{
 
 	@Override
 	protected GraphComp make_graphComp() {
-		return new GraphCompImpl();
+		return new GraphCompImpl(path_graph);
 	}
 }
 

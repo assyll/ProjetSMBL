@@ -10,11 +10,16 @@ import java.util.Map;
 import trace.Action;
 public class MainClass {
 
+	private final static String path_traces =
+			"src" + File.separator + "main" + File.separator
+			+ "resources" + File.separator + "test1.txt";
+	
+	private final static String path_graph =
+			"target" + File.separator + "generatedGraphDB";
+	
 	public static void main(String[] args) {
-		new BigEcoImpl("src" + File.separator
-				     + "main" + File.separator
-				     + "resources" + File.separator
-				     + "test1.txt").newComponent();
+		
+		new BigEcoImpl(path_traces, path_graph).newComponent();
 		
 		/*Map<String,String> actions = new HashMap<>();
 		actions.put("action1", "A1");

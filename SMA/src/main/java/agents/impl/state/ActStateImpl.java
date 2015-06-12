@@ -75,7 +75,7 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 	}
 	
 	private void majGraph() {
-		requires().graph().majStateAgent();
+		requires().graph().majStateAgent(id, requires().memory());
 	}
 
 	@Override

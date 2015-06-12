@@ -273,4 +273,11 @@ public class StateMemImpl extends Memory<StateMemory> implements StateMemory {
 	}
 
 
+
+	@Override
+	public boolean isFinal() {
+		return _stateChildIdByTransId.size() == 0;
+	}
+
+
 }

@@ -24,7 +24,6 @@ public interface StateMemory {
 	public boolean hasGotRequestMessage(); // R�cup�rer l'information "reception d'une requ�te en attente de traitement"
 	public boolean hasGotResponseMessage();// R�cup�rer l'information "reception d'une r�ponse en attente de traitement"
 	public boolean isWaitingForResponse();// R�cup�rer l'information "est en attente d'une r�ponse � une requ�te"
-	public boolean isRoot(); // r�cup�ration de l'information (est racine)
 	public boolean hasActionToProcess();
 	
 	public void addNewUserName(String userName); // le nom de l'utilisateur dont on attend la prochaine trace (on est plus en attente d'une autre trace de lui)
@@ -37,11 +36,14 @@ public interface StateMemory {
 	
 	public boolean gotTransitionWithAction(Action action);
 	public String getTransitionWithAction(Action action); 
-	public Map<String, String> getChildren();
 	public String getChildByTransition(String transId);
 	public void addNewOutputTransition(String id, Action action);
 	public void addChild(String stateId, String transId);
-	
 	public void addFather(String transId);
+	
+	// Utiles aussi pour creer le graphe
+	public boolean isRoot(); // recuperation de l'information (est racine)
+	public boolean isFinal();
+	public Map<String, String> getChildren();
 	
 }
