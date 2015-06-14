@@ -52,8 +52,8 @@ namespace general{
 		
 		part envEco: Environnement[EnvInfos, EnvUpdate]
 		
-		species DynamicAssemblyAgentTransition(id: String, action:ActionTrace, idSource: String) {
-			use agentT: ecoAE.TransitionAgent(id, action, idSource) {
+		species DynamicAssemblyAgentTransition(id: String, action:ActionTrace, idSource: String, idCible: String, createCible: boolean) {
+			use agentT: ecoAE.TransitionAgent(id, action, idSource, idCible, createCible) {
 				bind finishedCycle to aFW.a
 				bind getContext to aFW.b
 				bind setContext to aFW.c

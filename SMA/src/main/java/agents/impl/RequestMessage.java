@@ -6,7 +6,7 @@ public class RequestMessage extends Message {
 
 	private List<String> childrenWithActionsIds;
 	private int nbChildrenWithNoAction;
-
+	private String userName;
 
 	/**
 	 * Requete permettant d'envoyer n'importe quelle informations.
@@ -22,10 +22,10 @@ public class RequestMessage extends Message {
 		super.senderId = senderId;
 		super.receiverId = receiverId;
 		super.type = type;
-		super.informations = informations;
+		super.informations = informations;	
 	}
 	
-	//Requ�te de fusion envoy�e par le nouvel agent arriv� dans la cellule
+	//Requete de fusion envoyee par le nouvel agent arrive dans la cellule
 	public RequestMessage(String senderId, String receiverId, int nbChildrenWithNoAction, List<String> childrenWithActions) {
 		this.senderId = senderId;
 		this.receiverId = receiverId;

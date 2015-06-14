@@ -88,8 +88,8 @@ public class EcoAgentsImpl extends EcoAgents implements AgentTrace{
 	}
 
 	@Override
-	protected TransitionAgent make_TransitionAgent(String id, ActionTrace action, String idSource) {
-		TransAgentImpl agent = new TransAgentImpl(id, action, idSource);
+	protected TransitionAgent make_TransitionAgent(String id, ActionTrace action, String idSource, String idCible, boolean createCible) {
+		TransAgentImpl agent = new TransAgentImpl(id, action, idSource, idCible, createCible);
 		
 		synchronized (agentsMap) {
 			agentsMap.put(id, agent);
@@ -134,21 +134,10 @@ public class EcoAgentsImpl extends EcoAgents implements AgentTrace{
 		}
 
 		@Override
-		public void createNewTransition(String id, Action action,
-				String sourceStateId) {
-			eco_requires().createAgent().createNewTransition("T"+nbTransAgentsCreated, action, sourceStateId);
-		}
-
-		@Override
 		protected ICreateAgent make_create() {
 			return this;
 		}
-
-		@Override
-		public void createNewTransition(String id, ActionTrace action, String idSource) {
-			eco_requires().createAgent().createNewTransition("T"+nbTransAgentsCreated, action, idSource);
-		}
-
+		
 		@Override
 		public String createNewState(boolean isRoot) {
 			String id = "S"+nbStateAgentsCreated;
@@ -157,24 +146,18 @@ public class EcoAgentsImpl extends EcoAgents implements AgentTrace{
 		}
 
 		@Override
-		public void createNewTransition(ActionTrace action, String idSource, String idCible) {
-			eco_requires().createAgent().createNewTransition("T"+nbTransAgentsCreated, action, idSource, idCible);
-		}
-
-		@Override
 		public String[] createNewTransition(ActionTrace action, String idSource) {
 			String[] ids = new String[2];
 			ids[0] = "T"+ nbTransAgentsCreated++;
 			ids[1] = "S"+ nbStateAgentsCreated++;
-			eco_requires().createAgent().createNewTransition("T"+nbTransAgentsCreated, action, idSource);
+			eco_requires().createAgent().createNewTransition(ids[0], action, idSource, ids[1], true);
 			return ids;
 		}
 
 		@Override
 		public void createNewTransition(String id, ActionTrace action,
-				String idSource, String idCible) {
-			eco_requires().createAgent().createNewTransition(id,action, idSource, idCible);
-			
+				String idSource, String idCible, boolean createCible) {
+			eco_requires().createAgent().createNewTransition(id, action, idSource, idCible, createCible);
 		}
 
 	}
@@ -186,19 +169,27 @@ public class EcoAgentsImpl extends EcoAgents implements AgentTrace{
 		private String id; 
 		private ActionTrace action;
 		private String stateSource;
+		private String stateCible;
+		private boolean createCible;
 
-		public TransAgentImpl(String id, ActionTrace action, String idSource) {
+
+		public TransAgentImpl(String id, ActionTrace action, String idSource, String idCible, boolean createCible) {
+			System.out.println("Constructeur");
+
 			this.id = id;
 			this.action = action;
 			this.stateSource = idSource;
+			this.stateCible = idCible;
+			this.createCible = createCible;
 		}
 
 		@Override
 		protected void start() {
-
+			System.out.println("start");
+		
 			synchronized (agentsMap) {
 				eco_requires().threads().setAgentsMap(agentsMap);
-			}
+			}			
 
 		}
 
@@ -209,7 +200,7 @@ public class EcoAgentsImpl extends EcoAgents implements AgentTrace{
 
 		@Override
 		protected Agent<EnvInfos, EnvUpdate, TransAction, TransMemory, ICreateAgent, SendMessage, PullMessage> make_agentComponent() {
-			return new TransAgentComplImpl(id, action, stateSource);
+			return new TransAgentComplImpl(id, action, stateSource, stateCible, createCible);
 		}
 
 		@Override
@@ -223,18 +214,6 @@ public class EcoAgentsImpl extends EcoAgents implements AgentTrace{
 		}
 
 		@Override
-		public void createNewTransition(String id, Action action,
-				String sourceStateId) {
-			eco_requires().createAgent().createNewTransition("T"+nbTransAgentsCreated, action, sourceStateId);
-		}
-
-		@Override
-		public void createNewTransition(String id, ActionTrace action, String idSource) {
-			eco_requires().createAgent().createNewTransition("T"+nbTransAgentsCreated, action, idSource);
-			
-		}
-
-		@Override
 		public String createNewState(boolean isRoot) {
 			return null;
 		}
@@ -243,16 +222,12 @@ public class EcoAgentsImpl extends EcoAgents implements AgentTrace{
 		public String[] createNewTransition(ActionTrace action, String idSource) {
 			return null;
 		}
-
-		@Override
-		public void createNewTransition(ActionTrace action,
-				String idSource, String idCible) {
-
-		}
-
+		
 		@Override
 		public void createNewTransition(String id, ActionTrace action,
-				String idSource, String idCible) {			
+				String idSource, String idCible, boolean createCible) {
+			// TODO Auto-generated method stub
+			
 		}
 
 	}

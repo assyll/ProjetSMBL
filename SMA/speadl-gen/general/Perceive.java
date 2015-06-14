@@ -22,6 +22,12 @@ public abstract class Perceive<Context, SharedMemory, Pull> {
      * 
      */
     public SharedMemory memory();
+    
+    /**
+     * This can be called by the implementation to access this required port.
+     * 
+     */
+    public Pull getMessage();
   }
   
   public interface Component<Context, SharedMemory, Pull> extends Perceive.Provides<Context, SharedMemory, Pull> {

@@ -786,14 +786,14 @@ public abstract class EcoAgents {
    * This should be overridden by the implementation to instantiate the implementation of the species.
    * 
    */
-  protected abstract EcoAgents.TransitionAgent make_TransitionAgent(final String id, final ActionTrace action, final String idSource);
+  protected abstract EcoAgents.TransitionAgent make_TransitionAgent(final String id, final ActionTrace action, final String idSource, final String idCible, final boolean createCible);
   
   /**
    * Do not call, used by generated code.
    * 
    */
-  public EcoAgents.TransitionAgent _createImplementationOfTransitionAgent(final String id, final ActionTrace action, final String idSource) {
-    EcoAgents.TransitionAgent implem = make_TransitionAgent(id,action,idSource);
+  public EcoAgents.TransitionAgent _createImplementationOfTransitionAgent(final String id, final ActionTrace action, final String idSource, final String idCible, final boolean createCible) {
+    EcoAgents.TransitionAgent implem = make_TransitionAgent(id,action,idSource,idCible,createCible);
     if (implem == null) {
     	throw new RuntimeException("make_TransitionAgent() in general.EcoAgents should not return null.");
     }

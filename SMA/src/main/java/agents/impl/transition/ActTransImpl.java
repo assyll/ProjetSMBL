@@ -25,6 +25,7 @@ public class ActTransImpl extends AbstractAct<TransAction, EnvUpdate, TransMemor
 
 	@Override
 	public void doNothing() {
+		requires().finishedCycle().endOfCycleAlert(id);
 		logger("do nothing");
 	}
 	

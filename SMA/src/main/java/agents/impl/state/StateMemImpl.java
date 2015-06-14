@@ -56,6 +56,7 @@ public class StateMemImpl extends Memory<StateMemory> implements StateMemory {
 	@Override
 	public void setNextTraceElmtUserName(String userName) {
 		_userNameWaitingForTraceList.add(userName);
+		_waitingForTraceElmt = true;
 	}
 
 	@Override
@@ -127,12 +128,12 @@ public class StateMemImpl extends Memory<StateMemory> implements StateMemory {
 
 	@Override
 	public boolean addAction(ActionTrace newAction) {
+		_actionMap.add(newAction);
+		_actionsToProcess = true;
 		String user = newAction.getUserName();
+		
 		if(_userNameWaitingForTraceList.contains(user)) {
-
-			_actionMap.add(newAction);
-			_userNameWaitingForTraceList.remove(user);
-			_actionsToProcess = true;
+			_userNameWaitingForTraceList.remove(user);		
 
 			if(_userNameWaitingForTraceList.isEmpty()) {
 				_waitingForTraceElmt = false;
@@ -277,6 +278,22 @@ public class StateMemImpl extends Memory<StateMemory> implements StateMemory {
 	@Override
 	public boolean isFinal() {
 		return _stateChildIdByTransId.size() == 0;
+	}
+
+
+
+	@Override
+	public void removeRequestMsg() {
+		_requestMsg = null;
+		_gotRequest = false;
+	}
+
+
+
+	@Override
+	public void removeResponseMsg() {
+		_responseMsg = null;
+		_gotResponse = false;
 	}
 
 

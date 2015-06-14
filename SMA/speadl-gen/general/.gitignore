@@ -28,3 +28,16 @@
 /.LogComp.java._trace
 /LogComp.java
 /.GraphComp.java._trace
+/Act.java
+/Agent.java
+/BigEco.java
+/Decide.java
+/EcoAgents.java
+/Environnement.java
+/FET.java
+/Forward.java
+/GraphComp.java
+/Launcher.java
+/Memory.java
+/Perceive.java
+/TraceElementEater.java

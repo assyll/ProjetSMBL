@@ -7,8 +7,8 @@ import java.util.Map;
 import trace.Action;
 import trace.ActionTrace;
 import agents.impl.AbstractAct;
-import agents.impl.Message;
 import agents.impl.RequestMessage;
+import agents.impl.RequestType;
 import agents.interfaces.SendMessage;
 import agents.interfaces.StateAction;
 import agents.interfaces.StateMemory;
@@ -79,23 +79,23 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 	}
 
 	@Override
-	public void createTransitionAgent(String id, ActionTrace action) {
-		this.requires().create().createNewTransition(id, action, this.id);
+	public String[] createTransitionAgent(ActionTrace action) {
+		return this.requires().create().createNewTransition(action, this.id);
 	}
 
 	@Override
 	public void doNothing() {
 		logger("do nothing");
-		this.requires().finishedCycle().endOfCycleAlert(id);
+		endOfCycle();
 	}
 
-	@Override
+	/*@Override
 	public void pullRequestMessage() {
 		RequestMessage request = requires().pull().pullRequestMessage();
 		if (request != null) {
 			requires().memory().setRequestMessage(request);
 		}
-	}
+	}*/
 
 	@Override
 	public void treatRequestMessage() {
@@ -107,7 +107,27 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 			// Deviens etat courant en mettant a jour son username
 			requires().memory().setNextTraceElmtUserName(
 					(String) request.getInformations());
+			break;
+		
+		case  WAIT_FOR_NEXT_ACTION :
+			if(request.getType() == RequestType.WAIT_FOR_NEXT_ACTION) {
+				String user = (String) request.getInformations();
+				requires().memory().addNewUserName(user);
+			}
 		}
+		
+		requires().memory().removeRequestMsg();
+		endOfCycle();
+	}
+
+	@Override
+	public void sendRequestMessage(RequestMessage msg) {
+		this.requires().sendMessage().sendRequestMessage(msg);
+		endOfCycle();
+	}
+	
+	private void endOfCycle() {
+		this.requires().finishedCycle().endOfCycleAlert(id);
 	}
 
 }

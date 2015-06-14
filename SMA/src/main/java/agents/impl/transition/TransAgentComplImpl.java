@@ -23,22 +23,33 @@ public class TransAgentComplImpl extends Agent<EnvInfos, EnvUpdate, TransAction,
 	private ActionTrace action;
 	private String stateSourceId;
 	private String stateCibleId;
+	private boolean createCible;
 	
-	public TransAgentComplImpl(String id, ActionTrace action, String stateSourceId) {
+	public TransAgentComplImpl(String id, ActionTrace action, String stateSourceId, String idCible, boolean createCible) {
 
-		System.out.println("-------------------------------");
 		this.id = id;
 		this.action = action;
 		this.stateSourceId = stateSourceId;
 		
 		// creer un nouvel agent etat
-		this.stateCibleId = requires().create().createNewState(false);
+		this.stateCibleId = idCible;
+		this.createCible = createCible;
 		
-		// Transmet a lagent son id.
-		RequestMessage request = new RequestMessage(
-				id, stateCibleId, RequestType.ADD_FATHER_WITH_USERNAME,
-				action.getUserName());
-		requires().push().sendRequestMessage(request);
+	}
+	
+	@Override
+	protected void start() {
+		super.start();
+		if(createCible) {
+			// Transmet a lagent son id.
+			
+			this.requires().create().createNewState(stateCibleId, false);
+			RequestMessage request = new RequestMessage(
+					id, stateCibleId, RequestType.ADD_FATHER_WITH_USERNAME,
+					action.getUserName());
+			requires().push().sendRequestMessage(request);
+		}
+		
 	}
 	
 	public TransAgentComplImpl(String id, ActionTrace action, String stateSourceId, String stateCibleId) {

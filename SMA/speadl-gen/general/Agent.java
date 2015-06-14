@@ -1,7 +1,6 @@
 package general;
 
 import agents.interfaces.Do;
-import agents.interfaces.PullMessage;
 import general.Act;
 import general.Decide;
 import general.Memory;
@@ -41,7 +40,7 @@ public abstract class Agent<Context, ContextUpdate, Actionable, SharedMemory, Cr
      * This can be called by the implementation to access this required port.
      * 
      */
-    public PullMessage pull();
+    public Pull pull();
     
     /**
      * This can be called by the implementation to access this required port.
@@ -223,6 +222,10 @@ public abstract class Agent<Context, ContextUpdate, Actionable, SharedMemory, Cr
       public final SharedMemory memory() {
         return Agent.ComponentImpl.this.memory().infos();
       }
+      
+      public final Pull getMessage() {
+        return Agent.ComponentImpl.this.bridge.pull();
+      }
     }
     
     public final Perceive.Component<Context, SharedMemory, Pull> perceive() {
@@ -272,12 +275,12 @@ public abstract class Agent<Context, ContextUpdate, Actionable, SharedMemory, Cr
         return Agent.ComponentImpl.this.bridge.finishedCycleForLog();
       }
       
-      public final PullMessage pull() {
-        return Agent.ComponentImpl.this.bridge.pull();
-      }
-      
       public final IGraph graph() {
         return Agent.ComponentImpl.this.bridge.graph();
+      }
+      
+      public final Push sendMessage() {
+        return Agent.ComponentImpl.this.bridge.push();
       }
     }
     

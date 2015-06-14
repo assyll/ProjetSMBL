@@ -77,12 +77,9 @@ public class BigEcoImpl extends BigEco implements ICreateAgent{
 
 	@Override
 	public void createNewState(String id, boolean isRoot) {
-		newDynamicAssemblyAgentEtat(id, isRoot);
-	}
+		System.out.println("BigECO create new state "+id);
 
-	@Override
-	public void createNewTransition(String id, Action action, String stateSourceId) {
-		//newDynamicAssemblyAgentTransition(id, action, stateSourceId);
+		newDynamicAssemblyAgentEtat(id, isRoot);
 	}
 
 	@Override
@@ -91,34 +88,18 @@ public class BigEcoImpl extends BigEco implements ICreateAgent{
 	}
 
 	@Override
-	public void createNewTransition(String id, ActionTrace action, String idSource) {
-		newDynamicAssemblyAgentTransition(id, action, idSource);
+	public void createNewTransition(String id, ActionTrace action, String idSource, String idCible, boolean createCible) {
+		newDynamicAssemblyAgentTransition(id, action, idSource, idCible, createCible);
 	}
 
 	@Override
 	public String createNewState(boolean isRoot) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public String[] createNewTransition(ActionTrace action, String idSource) {
-		// TODO Auto-generated method stub
 		return null;
-	}
-
-	@Override
-	public void createNewTransition(ActionTrace action, String idSource,
-			String idCible) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void createNewTransition(String id, ActionTrace action,
-			String idSource, String idCible) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override

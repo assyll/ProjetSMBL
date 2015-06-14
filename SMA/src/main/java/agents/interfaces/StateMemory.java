@@ -26,6 +26,8 @@ public interface StateMemory {
 	public boolean isWaitingForResponse();// Rï¿½cupï¿½rer l'information "est en attente d'une rï¿½ponse ï¿½ une requï¿½te"
 	public boolean hasActionToProcess();
 	
+	public void removeRequestMsg(); //supprimer la requete recue
+	public void removeResponseMsg(); //supprimer la réponse recue
 	public void addNewUserName(String userName); // le nom de l'utilisateur dont on attend la prochaine trace (on est plus en attente d'une autre trace de lui)
 	public void removeUserName(String userName); // le nom de l'utilisateur dont on a rï¿½cupï¿½rer la prochaine trace (on est plus en attente d'une autre trace de lui)
 	public String getNextUserNameWaitingForAction(); // renvoi le nom de d'un utilisateur dont en est en attente d'ï¿½lï¿½ments de trace

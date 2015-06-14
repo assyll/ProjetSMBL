@@ -46,7 +46,7 @@ namespace general{
 			//requires getTraceElement: IGetAction
 		}
 		
-		species TransitionAgent(id:String, action:ActionTrace, idSource: String) {
+		species TransitionAgent(id:String, action:ActionTrace, idSource: String, idCible: String, createCible: boolean) {
 			
 			provides cycle: Do = agentComponent.cycle
 			provides create: ICreateAgent
@@ -79,6 +79,8 @@ namespace general{
 			bind decision to decide.decision
 			bind getContext to getContext
 			bind memory to memory.infos
+			bind getMessage to pull
+			
 		}
 			
 		part decide: Decide[Actionable, SharedMemory] {
@@ -92,8 +94,8 @@ namespace general{
 			bind memory to memory.infos
 			bind create to create
 			bind finishedCycleForLog to finishedCycleForLog
-			bind pull to pull
 			bind graph to graph
+			bind sendMessage to push
 		}
 		
 		provides cycle: Do = perceive.perception
@@ -101,7 +103,7 @@ namespace general{
 		requires setContext: ContextUpdate
 		requires finishedCycle: CycleAlert
 		requires push: Push
-		requires pull: PullMessage
+		requires pull: Pull
 		requires create: CreateAgent
 		requires finishedCycleForLog: ILog
 		requires graph: IGraph
@@ -112,6 +114,7 @@ namespace general{
 		requires decision: Do
 		requires getContext: Context
 		requires memory: SharedMemory
+		requires getMessage: Pull
 	}
 	
 	component Decide[Actionable, SharedMemory] {
@@ -127,8 +130,8 @@ namespace general{
 		requires memory: SharedMemory
 		requires create: CreateAgent
 		requires finishedCycleForLog: ILog
-		requires pull: PullMessage
 		requires graph: IGraph
+		requires sendMessage: Push
 	}
 		
 	component Memory[SharedMemory] {

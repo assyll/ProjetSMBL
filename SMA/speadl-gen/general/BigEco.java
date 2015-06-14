@@ -959,7 +959,7 @@ public abstract class BigEco {
    * This should be overridden by the implementation to instantiate the implementation of the species.
    * 
    */
-  protected BigEco.DynamicAssemblyAgentTransition make_DynamicAssemblyAgentTransition(final String id, final ActionTrace action, final String idSource) {
+  protected BigEco.DynamicAssemblyAgentTransition make_DynamicAssemblyAgentTransition(final String id, final ActionTrace action, final String idSource, final String idCible, final boolean createCible) {
     return new BigEco.DynamicAssemblyAgentTransition();
   }
   
@@ -967,8 +967,8 @@ public abstract class BigEco {
    * Do not call, used by generated code.
    * 
    */
-  public BigEco.DynamicAssemblyAgentTransition _createImplementationOfDynamicAssemblyAgentTransition(final String id, final ActionTrace action, final String idSource) {
-    BigEco.DynamicAssemblyAgentTransition implem = make_DynamicAssemblyAgentTransition(id,action,idSource);
+  public BigEco.DynamicAssemblyAgentTransition _createImplementationOfDynamicAssemblyAgentTransition(final String id, final ActionTrace action, final String idSource, final String idCible, final boolean createCible) {
+    BigEco.DynamicAssemblyAgentTransition implem = make_DynamicAssemblyAgentTransition(id,action,idSource,idCible,createCible);
     if (implem == null) {
     	throw new RuntimeException("make_DynamicAssemblyAgentTransition() in general.BigEco should not return null.");
     }
@@ -977,7 +977,7 @@ public abstract class BigEco {
     implem.ecosystemComponent = this.selfComponent;
     assert this.selfComponent.implem_ecoAE != null: "This is a bug.";
     assert implem.use_agentT == null: "This is a bug.";
-    implem.use_agentT = this.selfComponent.implem_ecoAE._createImplementationOfTransitionAgent(id,action,idSource);
+    implem.use_agentT = this.selfComponent.implem_ecoAE._createImplementationOfTransitionAgent(id,action,idSource,idCible,createCible);
     assert this.selfComponent.implem_fw != null: "This is a bug.";
     assert implem.use_aFW == null: "This is a bug.";
     implem.use_aFW = this.selfComponent.implem_fw._createImplementationOfTransForward(id);
@@ -988,8 +988,8 @@ public abstract class BigEco {
    * This can be called to create an instance of the species from inside the implementation of the ecosystem.
    * 
    */
-  protected BigEco.DynamicAssemblyAgentTransition.Component newDynamicAssemblyAgentTransition(final String id, final ActionTrace action, final String idSource) {
-    BigEco.DynamicAssemblyAgentTransition _implem = _createImplementationOfDynamicAssemblyAgentTransition(id,action,idSource);
+  protected BigEco.DynamicAssemblyAgentTransition.Component newDynamicAssemblyAgentTransition(final String id, final ActionTrace action, final String idSource, final String idCible, final boolean createCible) {
+    BigEco.DynamicAssemblyAgentTransition _implem = _createImplementationOfDynamicAssemblyAgentTransition(id,action,idSource,idCible,createCible);
     return _implem._newComponent(new BigEco.DynamicAssemblyAgentTransition.Requires() {},true);
   }
   
