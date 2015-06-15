@@ -48,4 +48,9 @@ public class Action {
 			return false;
 		}
 	}
+	
+	@Override
+	public int hashCode() {
+		return _actionMap.hashCode();
+	}
 }

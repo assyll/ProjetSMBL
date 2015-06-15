@@ -10,6 +10,7 @@ import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 
+import convertGraph.Fichier;
 import agents.interfaces.StateMemory;
 import agents.interfaces.TransMemory;
 import general.GraphComp;
@@ -20,6 +21,7 @@ public class GraphCompImpl extends GraphComp implements IGraph {
 	private final GraphDatabaseService _graphNeo4J;
 	
 	public GraphCompImpl(String path) {
+		Fichier.deleteFileOrDirectory(path);
 		_graphNeo4J =
 				new GraphDatabaseFactory().newEmbeddedDatabase(path);
 	}
@@ -68,7 +70,7 @@ public class GraphCompImpl extends GraphComp implements IGraph {
 	
 	@Override
 	public void majTransitionAgent(String id, TransMemory memory) {
-		
+				
 		try (Transaction tx = _graphNeo4J.beginTx()) {
 			
 			// --------------- maj de la transition ---------------
@@ -105,10 +107,11 @@ public class GraphCompImpl extends GraphComp implements IGraph {
 		
 		Node fatherNode, childNode;
 		Relationship relationship = null;
-
-		if ((childNode = findNodeById(memory.getStateCibleId()))
-				!= null) {
-			
+		
+		childNode = findNodeById(memory.getStateCibleId());
+		
+		if (childNode != null) {
+						
 			// recupere les noeuds aux deux extremites de la transition
 			fatherNode = findNodeById(memory.getStateSourceId());
 			
@@ -120,6 +123,8 @@ public class GraphCompImpl extends GraphComp implements IGraph {
 			relationship.setProperty("id", id);
 			relationship.setProperty("name", id);
 			relationship.setProperty("ui.label", id);
+			relationship.setProperty("action", memory.getAction().
+					getAction().getActionMap().get("action"));
 		}
 		
 		return relationship;

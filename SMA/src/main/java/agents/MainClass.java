@@ -11,16 +11,19 @@ import trace.Action;
 public class MainClass {
 
 	private final static String path_traces =
-			"E:" + File.separator + "traces.txt";
+			"src" + File.separator + 
+			"main" + File.separator + 
+			"resources" + File.separator + "testreal.txt";
 	
 	private final static String path_graph =
 			"target" + File.separator + "generatedGraphDB";
 	
 	public static void main(String[] args) {
 		
-		// BigEcoImpl(path_traces, path_graph).newComponent();
+		new BigEcoImpl(path_traces, path_graph).newComponent();
 		
-		Map<Action,String> actions = new HashMap<>();
+		/*Map<Action,String> actions = new HashMap<>();
+		
 		Map<String, String> act1 = new HashMap<>();
 		act1.put("action", "A1");
 		Map<String, String> act2 = new HashMap<>();
@@ -30,7 +33,7 @@ public class MainClass {
 		
 		Action testAct = new Action(act2);
 		
-		System.out.println(actions.get(testAct));
+		System.out.println(actions.get(testAct));*/
 		
 		//Map<String,String> actions1 = new HashMap<>();*/
 		/*actions1.put("action1", "A1");

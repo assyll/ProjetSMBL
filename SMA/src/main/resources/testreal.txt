@@ -1,0 +1,8 @@
+{ "userName": "U1", "action": "A1"}
+{ "userName": "U2", "action": "A2"}
+{ "userName": "U1", "action": "A2"}
+{ "userName": "U2", "action": "A3"}
+{ "userName": "U3", "action": "A1"}
+{ "userName": "U4", "action": "A1"}
+{ "userName": "U4", "action": "A2"}
+{ "userName": "U3", "action": "A4"}

@@ -61,7 +61,7 @@ public class TransAgentComplImpl extends Agent<EnvInfos, EnvUpdate, TransAction,
 	
 	@Override
 	protected Memory<TransMemory> make_memory() {
-		return new TransMemImpl(id, action, stateSourceId);
+		return new TransMemImpl(id, action, stateSourceId, stateCibleId);
 	}
 
 	@Override
