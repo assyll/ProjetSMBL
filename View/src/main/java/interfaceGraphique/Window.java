@@ -59,7 +59,6 @@ import convertGraph.ConvertGStoNeo4j;
 import convertGraph.ConvertNeo4jToGS;
 import convertGraph.Fichier;
 
-
 @SuppressWarnings("serial")
 public class Window extends JFrame {
 
@@ -101,9 +100,8 @@ public class Window extends JFrame {
 	JMenu menuFile, menuDisplay, menuTools, menuTraces;
 
 	JMenuItem importMenuGauche, importMenuDroite, exitMenu, displayDefault,
-			displayUML, displayAutomaton, displayBasic,
-			jMenuItemGenererGraphe, jMenuItemGenererTraces1,
-			jMenuItemGenererTraces2;
+			displayUML, displayAutomaton, displayBasic, jMenuItemGenererGraphe,
+			jMenuItemGenererTraces1, jMenuItemGenererTraces2;
 
 	Viewer viewerJson, viewerAgent;
 
@@ -489,7 +487,8 @@ public class Window extends JFrame {
 		// Action lors du clic sur l'item "Robot"
 		displayAutomaton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				CustomGraphRenderer.setStyleGraphAutomaton(graphJson, graphAgent);
+				CustomGraphRenderer.setStyleGraphAutomaton(graphJson,
+						graphAgent);
 			}
 		});
 
@@ -826,7 +825,8 @@ public class Window extends JFrame {
 		displayJson.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (isGraphJsonLoaded) {
-					/*WindowDisplay windowJson = */new WindowDisplay("Graph Json", viewJson, viewerJson, graphJson);
+					/* WindowDisplay windowJson = */new WindowDisplay(
+							"Graph Json", viewJson, viewerJson, graphJson);
 				} else {
 					textColorStatut
 							.appendDoc("G�n�rez un graphe au pr�alable");
@@ -1025,7 +1025,8 @@ public class Window extends JFrame {
 		displayAgent.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (isGraphAgentLoaded) {
-					/*WindowDisplay windowAgent = */new WindowDisplay("Graph Agent", viewAgent, viewerAgent, graphAgent);
+					/* WindowDisplay windowAgent = */new WindowDisplay(
+							"Graph Agent", viewAgent, viewerAgent, graphAgent);
 				} else {
 					textColorStatut
 							.appendDoc("G�n�rez un graphe au pr�alable");
@@ -1121,8 +1122,9 @@ public class Window extends JFrame {
 		dialog.show();
 	}
 
-	public static void setListenerOnViewer(final Viewer viewer, final Graph graph,
-			final JTextField jTextField, final boolean isGraphLoaded) {
+	public static void setListenerOnViewer(final Viewer viewer,
+			final Graph graph, final JTextField jTextField,
+			final boolean isGraphLoaded) {
 		// Action lors du d�placement de la souris sur le graphe
 		final View view = viewer.getDefaultView();
 		final JComponent jCompView = (JComponent) view;
@@ -1315,9 +1317,8 @@ public class Window extends JFrame {
 	}
 
 	public static String getNodeInformations(GraphicElement gElem, Graph graph) {
-		String s = "<html>", fieldName, res = "";
+		String s = "<html>", fieldName, attValue = "";
 		String idNode = gElem.getId();
-		int cpt = 1;
 		Node node = graph.getNode(idNode);
 
 		fieldName = MyJsonGenerator.FORMAT_NODE_NAME;
@@ -1326,11 +1327,13 @@ public class Window extends JFrame {
 		s += fieldName + " : " + node.getAttribute(fieldName) + "<br/>";
 		fieldName = MyJsonGenerator.FORMAT_NODE_FINAL;
 		s += fieldName + " : " + node.getAttribute(fieldName) + "<br/>";
-		while (res != null) {
-			fieldName = MyJsonGenerator.FORMAT_NODE_ATTRIBUT + cpt++;
-			res = node.getAttribute(fieldName);
-			if (res != null) {
-				s += fieldName + " : " + res + "<br/>";
+		for (String attKey : node.getAttributeKeySet()) {
+			if (attKey != MyJsonGenerator.FORMAT_NODE_NAME
+					&& attKey != MyJsonGenerator.FORMAT_NODE_SOURCE
+					&& attKey != MyJsonGenerator.FORMAT_NODE_FINAL
+							&& !attKey.startsWith("ui.")) {
+				attValue = node.getAttribute(attKey);
+				s += attKey + " : " + attValue + "<br/>";
 			}
 		}
 		s += "</html>";
@@ -1338,10 +1341,9 @@ public class Window extends JFrame {
 	}
 
 	public static String getEdgeInformations(GraphicElement gElem, Graph graph) {
-		String s = "<html>", fieldName, res = "";
+		String s = "<html>", fieldName, attValue = "";
 		String idSprite = gElem.getId();
 		Edge edge = graph.getEdge(idSprite);
-		int cpt = 1;
 
 		fieldName = MyJsonGenerator.FORMAT_EDGE_LABEL;
 		s += fieldName + " : " + edge.getId() + "<br/>";
@@ -1351,11 +1353,14 @@ public class Window extends JFrame {
 		s += fieldName + " : " + edge.getSourceNode() + "<br/>";
 		fieldName = MyJsonGenerator.FORMAT_EDGE_END_NODE;
 		s += fieldName + " : " + edge.getTargetNode() + "<br/>";
-		while (res != null) {
-			fieldName = MyJsonGenerator.FORMAT_EDGE_ATTRIBUT + cpt++;
-			res = edge.getAttribute(fieldName);
-			if (res != null) {
-				s += fieldName + " : " + res + "<br/>";
+		for (String attKey : edge.getAttributeKeySet()) {
+			if (attKey != MyJsonGenerator.FORMAT_EDGE_LABEL
+					&& attKey != MyJsonGenerator.FORMAT_EDGE_ACTION
+					&& attKey != MyJsonGenerator.FORMAT_EDGE_BEGIN_NODE
+					&& attKey != MyJsonGenerator.FORMAT_EDGE_END_NODE
+					&& !attKey.startsWith("ui.")) {
+				attValue = edge.getAttribute(attKey);
+				s += attKey + " : " + attValue + "<br/>";
 			}
 		}
 		s += "</html>";

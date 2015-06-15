@@ -29,13 +29,14 @@ public class CustomGraphRenderer {
 	public static final int GAP_SIDE = 10;
 	public static final int GAP_Y_BETWEEN_NODE = 50;
 
+	// remplace le renderer par défaut par le renderer amélioré
 	public static void SetRenderer() {
-		// remplacement du renderer par défaut
 		System.setProperty("org.graphstream.ui.renderer",
 				"org.graphstream.ui.j2dviewer.J2DGraphRenderer");
 		ToolTipManager.sharedInstance().setInitialDelay(0);
 	}
 
+	// mis en place du rendu par défaut
 	public static void setStyleGraphDefault(Graph... graphics) {
 		for (Graph graph : graphics) {
 			if (graph != null) {
@@ -43,7 +44,8 @@ public class CustomGraphRenderer {
 			}
 		}
 	}
-
+	
+	// mis en place du rendu UML-like
 	public static void setStyleGraphUML(Graph... graphics) {
 		for (Graph graph : graphics) {
 			if (graph != null) {
@@ -55,7 +57,7 @@ public class CustomGraphRenderer {
 						"edge { z-index: 0; text-alignment: center; text-offset: 0,10; fill-color: grey; }"
 								+ "node { z-index: 3; size: 15px; text-alignment: at-right; shape: diamond; fill-color: white; stroke-mode: plain; }"
 								+ NODE_SOURCE
-								+ "{ size: 10px; shape: circle; fill-color: rgb(4,195,223); stroke-mode: none; }"
+								+ "{ size: 15px; shape: circle; fill-color: rgb(4,195,223); stroke-mode: none; }"
 								+ NODE_FINAL
 								+ "{ size: 35px; fill-image: url(\"./src/main/resources/NodeFinalUML.png\"); fill-mode: image-scaled; stroke-mode: none; }"
 								+ NODE_SOURCE_FINAL
@@ -65,6 +67,7 @@ public class CustomGraphRenderer {
 		}
 	}
 
+	// mis en place du rendu automaton-like
 	public static void setStyleGraphAutomaton(Graph... graphics) {
 		for (Graph graph : graphics) {
 			if (graph != null) {
@@ -86,6 +89,7 @@ public class CustomGraphRenderer {
 		}
 	}
 
+	// mis en place du rendu basic
 	public static void setStyleGraphBasic(Graph... graphics) {
 		for (Graph graph : graphics) {
 			if (graph != null) {
