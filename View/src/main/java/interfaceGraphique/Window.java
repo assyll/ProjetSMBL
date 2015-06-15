@@ -77,6 +77,18 @@ public class Window extends JFrame {
 	public static final String ERASE_ACTION = " has been erased";
 	public static final String GRAPH_JSON_NAME = "graphJson";
 	public static final String GRAPH_AGENT_NAME = "graphAgent";
+	
+	public static final String ZOOM_TT = "Zoom +";
+	public static final String DEZOOM_TT = "Zoom -";
+	public static final String CENTER_TT = "Center";
+	public static final String DISPLAY_TT = "Display";
+	public static final String ADD_NODE_TT = "Node +";
+	public static final String DELETE_NODE_TT = "Node -";
+	public static final String ADD_EDGE_TT = "Edge +";
+	public static final String DELETE_EDGE_TT = "Edge -";
+	public static final String CLEAN_TT = "Clean";
+	public static final String SAVE_TT = "Save";
+	
 
 	public static final Dimension buttonsSize = new Dimension(25, 25);
 
@@ -100,11 +112,11 @@ public class Window extends JFrame {
 
 	JColorTextPane textColorStatut;
 
-	JButton buttonGS, zoomAvantJSon, zoomArrJSon, zoomAvantAgent,
-			zoomArrAgent, addNodeJSon, addEdgeJSon,
-			suppNodeJSon, suppEdgeJSon, suppNodeAgent, suppEdgeAgent,
+	JButton buttonGS, zoomAvantJson, zoomArrJson, zoomAvantAgent,
+			zoomArrAgent, addNodeJson, addEdgeJson,
+			suppNodeJson, suppEdgeJson, suppNodeAgent, suppEdgeAgent,
 			addNodeAgent, addEdgeAgent, structGraphJson, structGraphAgent,
-			zoomCenterJSon, zoomCenterAgent, cleanGraphJson, cleanGraphAgent,
+			zoomCenterJson, zoomCenterAgent, cleanGraphJson, cleanGraphAgent,
 			displayJson, displayAgent, buttonSave;
 
 	JMenuBar menu_bar1;
@@ -177,22 +189,30 @@ public class Window extends JFrame {
 		ImageIcon centerIcon = new ImageIcon("./src/main/resources/buttonsIcons/center.png", "center");
 		ImageIcon displayIcon = new ImageIcon("./src/main/resources/buttonsIcons/display.png", "display");
 		
-		zoomAvantJSon = new JButton(zoomIcon);
-		zoomAvantJSon.setPreferredSize(buttonsSize);
-		zoomArrJSon = new JButton(dezoomIcon);
-		zoomArrJSon.setPreferredSize(buttonsSize);
-		zoomCenterJSon = new JButton(centerIcon);
-		zoomCenterJSon.setPreferredSize(buttonsSize);
+		zoomAvantJson = new JButton(zoomIcon);
+		zoomAvantJson.setToolTipText(ZOOM_TT);
+		zoomAvantJson.setPreferredSize(buttonsSize);
+		zoomArrJson = new JButton(dezoomIcon);
+		zoomArrJson.setToolTipText(DEZOOM_TT);
+		zoomArrJson.setPreferredSize(buttonsSize);
+		zoomCenterJson = new JButton(centerIcon);
+		zoomCenterJson.setToolTipText(CENTER_TT);
+		zoomCenterJson.setPreferredSize(buttonsSize);
 		displayJson = new JButton(displayIcon);
+		displayJson.setToolTipText(DISPLAY_TT);
 		displayJson.setPreferredSize(buttonsSize);
 		
 		zoomAvantAgent = new JButton(zoomIcon);
+		zoomAvantAgent.setToolTipText(ZOOM_TT);
 		zoomAvantAgent.setPreferredSize(buttonsSize);
 		zoomArrAgent = new JButton(dezoomIcon);
+		zoomArrAgent.setToolTipText(DEZOOM_TT);
 		zoomArrAgent.setPreferredSize(buttonsSize);
 		zoomCenterAgent = new JButton(centerIcon);
+		zoomCenterAgent.setToolTipText(CENTER_TT);
 		zoomCenterAgent.setPreferredSize(buttonsSize);
 		displayAgent = new JButton(displayIcon);
+		displayAgent.setToolTipText(DISPLAY_TT);
 		displayAgent.setPreferredSize(buttonsSize);
 
 		// initialisation de la zone de texte pour le pourcentage de zoom
@@ -304,10 +324,10 @@ public class Window extends JFrame {
 
 		// Initialisation et d�finition du panneau pour zoomer le graphe Json
 		panelZoomJSon = new JPanel();
-		panelZoomJSon.add(zoomAvantJSon);
-		panelZoomJSon.add(zoomArrJSon);
+		panelZoomJSon.add(zoomAvantJson);
+		panelZoomJSon.add(zoomArrJson);
 		panelZoomJSon.add(textJSon);
-		panelZoomJSon.add(zoomCenterJSon);
+		panelZoomJSon.add(zoomCenterJson);
 		panelZoomJSon.add(displayJson);
 
 		// Initialisation et d�finition du panneau pour zoomer le graphe Agent
@@ -326,37 +346,48 @@ public class Window extends JFrame {
 		ImageIcon cleanIcon = new ImageIcon("./src/main/resources/buttonsIcons/clean.png", "clean");
 		ImageIcon saveIcon = new ImageIcon("./src/main/resources/buttonsIcons/save.png", "save");
 		
-		addNodeJSon = new JButton(addNodeIcon);
-		addNodeJSon.setPreferredSize(buttonsSize);
-		suppNodeJSon = new JButton(deleteNodeIcon);
-		suppNodeJSon.setPreferredSize(buttonsSize);
-		addEdgeJSon = new JButton(addEdgeIcon);
-		addEdgeJSon.setPreferredSize(buttonsSize);
-		suppEdgeJSon = new JButton(deleteEdgeIcon);
-		suppEdgeJSon.setPreferredSize(buttonsSize);
+		addNodeJson = new JButton(addNodeIcon);
+		addNodeJson.setToolTipText(ADD_NODE_TT);
+		addNodeJson.setPreferredSize(buttonsSize);
+		suppNodeJson = new JButton(deleteNodeIcon);
+		suppNodeJson.setToolTipText(DELETE_NODE_TT);
+		suppNodeJson.setPreferredSize(buttonsSize);
+		addEdgeJson = new JButton(addEdgeIcon);
+		addEdgeJson.setToolTipText(ADD_EDGE_TT);
+		addEdgeJson.setPreferredSize(buttonsSize);
+		suppEdgeJson = new JButton(deleteEdgeIcon);
+		suppEdgeJson.setToolTipText(DELETE_EDGE_TT);
+		suppEdgeJson.setPreferredSize(buttonsSize);
 		structGraphJson = new JButton("Manual");
 		cleanGraphJson = new JButton(cleanIcon);
+		cleanGraphJson.setToolTipText(CLEAN_TT);
 		cleanGraphJson.setPreferredSize(buttonsSize);
 		buttonSave = new JButton(saveIcon);
+		buttonSave.setToolTipText(SAVE_TT);
 		buttonSave.setPreferredSize(buttonsSize);
 		
 		addNodeAgent = new JButton(addNodeIcon);
+		addNodeAgent.setToolTipText(ADD_NODE_TT);
 		addNodeAgent.setPreferredSize(buttonsSize);
 		suppNodeAgent = new JButton(deleteNodeIcon);
+		suppNodeAgent.setToolTipText(DELETE_NODE_TT);
 		suppNodeAgent.setPreferredSize(buttonsSize);
 		addEdgeAgent = new JButton(addEdgeIcon);
+		addEdgeAgent.setToolTipText(ADD_EDGE_TT);
 		addEdgeAgent.setPreferredSize(buttonsSize);
 		suppEdgeAgent = new JButton(deleteEdgeIcon);
+		suppEdgeAgent.setToolTipText(DELETE_EDGE_TT);
 		suppEdgeAgent.setPreferredSize(buttonsSize);
 		structGraphAgent = new JButton("Manual");
 		cleanGraphAgent = new JButton(cleanIcon);
+		cleanGraphAgent.setToolTipText(CLEAN_TT);
 		cleanGraphAgent.setPreferredSize(buttonsSize);
 
 		// Ajout des boutons dans les panneaux respectifs
-		panelModifJSon.add(addNodeJSon);
-		panelModifJSon.add(suppNodeJSon);
-		panelModifJSon.add(addEdgeJSon);
-		panelModifJSon.add(suppEdgeJSon);
+		panelModifJSon.add(addNodeJson);
+		panelModifJSon.add(suppNodeJson);
+		panelModifJSon.add(addEdgeJson);
+		panelModifJSon.add(suppEdgeJson);
 		panelModifJSon.add(structGraphJson);
 		panelModifJSon.add(cleanGraphJson);
 		panelModifJSon.add(buttonSave);
@@ -599,21 +630,21 @@ public class Window extends JFrame {
 		});
 
 		// Action lors du clic sur l'item "+" de la partie gauche
-		zoomAvantJSon.addActionListener(new ActionListener() {
+		zoomAvantJson.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				modifZoom(viewJson, textJSon, isGraphJsonLoaded, ZOOM);
 			}
 		});
 
 		// Action lors du clic sur l'item "-" de la partie gauche
-		zoomArrJSon.addActionListener(new ActionListener() {
+		zoomArrJson.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				modifZoom(viewJson, textJSon, isGraphJsonLoaded, DEZOOM);
 			}
 		});
 
 		// Action lors du clic sur l'item "Node +" de la partie gauche
-		addNodeJSon.addActionListener(new ActionListener() {
+		addNodeJson.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				AddNodeDialog addNodeJSon = new AddNodeDialog(frame, "Add Node");
 				String s = addNodeJSon.getName();
@@ -645,7 +676,7 @@ public class Window extends JFrame {
 
 		// Action lors du clic sur l'item "Node -" de la
 		// partie gauche
-		suppNodeJSon.addActionListener(new ActionListener() {
+		suppNodeJson.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				if (isGraphJsonLoaded) {
 					SuppNodeDialog suppNodeJSon = new SuppNodeDialog(frame,
@@ -670,7 +701,7 @@ public class Window extends JFrame {
 		});
 
 		// Action lors du clic sur l'item "Edge +" de la partie gauche
-		addEdgeJSon.addActionListener(new ActionListener() {
+		addEdgeJson.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				if (isGraphJsonLoaded) {
 					AddEdgeDialog addEdgeJSon = new AddEdgeDialog(frame,
@@ -703,7 +734,7 @@ public class Window extends JFrame {
 
 		// Action lors du clic sur l'item "Edge -" de la
 		// partie gauche
-		suppEdgeJSon.addActionListener(new ActionListener() {
+		suppEdgeJson.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				if (isGraphJsonLoaded) {
 					SuppEdgeDialog suppEdgeJSon = new SuppEdgeDialog(frame,
@@ -798,7 +829,7 @@ public class Window extends JFrame {
 		});
 
 		// Action lors du clic sur l'item "Center" de la partie gauche
-		zoomCenterJSon.addActionListener(new ActionListener() {
+		zoomCenterJson.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				viewJson.getCamera().resetView();
 				textJSon.setText("100 %");
