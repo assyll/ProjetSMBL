@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
@@ -65,7 +66,7 @@ public class Window extends JFrame {
 	public final static String pathGraphTemp = "./src/test/resources/.grapheTemporaire";
 
 	public static final String NO_FILE_SELECTED = "You have to select a file to import";
-	public static final String INPUT_VALUE_NOT_INTEGER = "Only integer are accepted \n";
+	public static final String INPUT_VALUE_NOT_INTEGER = "You have to enter an integer \n";
 	public static final String NAME_FIELD_EMPTY = "You have to fill the name field";
 	public static final String NAME_ALREADY_IN_USE = "This name is already in use, please choose an other one";
 	public static final String NO_GRAPH_GENERATED = "You have to generate a graph before";
@@ -76,6 +77,8 @@ public class Window extends JFrame {
 	public static final String ERASE_ACTION = " has been erased";
 	public static final String GRAPH_JSON_NAME = "graphJson";
 	public static final String GRAPH_AGENT_NAME = "graphAgent";
+
+	public static final Dimension buttonsSize = new Dimension(25, 25);
 
 	public static final double tolerance = 10;
 	public static final double ZOOM = -0.1;
@@ -97,8 +100,8 @@ public class Window extends JFrame {
 
 	JColorTextPane textColorStatut;
 
-	JButton buttonGS, zoomAvantJSon, zoomArrJSon, zoomTextJSon, zoomAvantAgent,
-			zoomArrAgent, zoomTextAgent, addNodeJSon, addEdgeJSon,
+	JButton buttonGS, zoomAvantJSon, zoomArrJSon, zoomAvantAgent,
+			zoomArrAgent, addNodeJSon, addEdgeJSon,
 			suppNodeJSon, suppEdgeJSon, suppNodeAgent, suppEdgeAgent,
 			addNodeAgent, addEdgeAgent, structGraphJson, structGraphAgent,
 			zoomCenterJSon, zoomCenterAgent, cleanGraphJson, cleanGraphAgent,
@@ -162,27 +165,35 @@ public class Window extends JFrame {
 
 		// Initialisation et d�finition du panneau d'ajout de noeuds et de
 		// transition gauche
-		panelModifJSon = new JPanel(new GridLayout(7, 1, 0, 13));
+		panelModifJSon = new JPanel();
 
 		// Initialisation et d�finition du panneau d'ajout de noeuds et de
 		// transition droit
-		panelModifAgent = new JPanel(new GridLayout(6, 1, 0, 15));
-
-		// Initialisation des boutons de clean des graphes
-		cleanGraphJson = new JButton("<html><b>Clean</b></html>");
-		cleanGraphAgent = new JButton("<html><b>Clean</b></html>");
+		panelModifAgent = new JPanel();
 
 		// Initialisation des bouttons de zoom
-		zoomAvantJSon = new JButton("<html><b>Zoom +</b></html>");
-		zoomArrJSon = new JButton("<html><b>Zoom -</b></html>");
-		zoomTextJSon = new JButton("<html><b>%</b></html>");
-		zoomCenterJSon = new JButton("<html><b>Center</b></html>");
-		displayJson = new JButton("<html><b>Display</b></html>");
-		zoomAvantAgent = new JButton("<html><b>Zoom +</b></html>");
-		zoomArrAgent = new JButton("<html><b>Zoom -</b></html>");
-		zoomTextAgent = new JButton("<html><b>%</b></html>");
-		zoomCenterAgent = new JButton("<html><b>Center</b></html>");
-		displayAgent = new JButton("<html><b>Display</b></html>");
+		ImageIcon zoomIcon = new ImageIcon("./src/main/resources/buttonsIcons/zoom+.png", "zoom +");
+		ImageIcon dezoomIcon = new ImageIcon("./src/main/resources/buttonsIcons/zoom-.png", "zoom -");
+		ImageIcon centerIcon = new ImageIcon("./src/main/resources/buttonsIcons/center.png", "center");
+		ImageIcon displayIcon = new ImageIcon("./src/main/resources/buttonsIcons/display.png", "display");
+		
+		zoomAvantJSon = new JButton(zoomIcon);
+		zoomAvantJSon.setPreferredSize(buttonsSize);
+		zoomArrJSon = new JButton(dezoomIcon);
+		zoomArrJSon.setPreferredSize(buttonsSize);
+		zoomCenterJSon = new JButton(centerIcon);
+		zoomCenterJSon.setPreferredSize(buttonsSize);
+		displayJson = new JButton(displayIcon);
+		displayJson.setPreferredSize(buttonsSize);
+		
+		zoomAvantAgent = new JButton(zoomIcon);
+		zoomAvantAgent.setPreferredSize(buttonsSize);
+		zoomArrAgent = new JButton(dezoomIcon);
+		zoomArrAgent.setPreferredSize(buttonsSize);
+		zoomCenterAgent = new JButton(centerIcon);
+		zoomCenterAgent.setPreferredSize(buttonsSize);
+		displayAgent = new JButton(displayIcon);
+		displayAgent.setPreferredSize(buttonsSize);
 
 		// initialisation de la zone de texte pour le pourcentage de zoom
 		textJSon = new JTextField();
@@ -292,7 +303,7 @@ public class Window extends JFrame {
 		});
 
 		// Initialisation et d�finition du panneau pour zoomer le graphe Json
-		panelZoomJSon = new JPanel(new GridLayout(5, 1, 0, 20));
+		panelZoomJSon = new JPanel();
 		panelZoomJSon.add(zoomAvantJSon);
 		panelZoomJSon.add(zoomArrJSon);
 		panelZoomJSon.add(textJSon);
@@ -300,25 +311,46 @@ public class Window extends JFrame {
 		panelZoomJSon.add(displayJson);
 
 		// Initialisation et d�finition du panneau pour zoomer le graphe Agent
-		panelZoomAgent = new JPanel(new GridLayout(5, 1, 0, 20));
+		panelZoomAgent = new JPanel();
 		panelZoomAgent.add(zoomAvantAgent);
 		panelZoomAgent.add(zoomArrAgent);
 		panelZoomAgent.add(textAgent);
 		panelZoomAgent.add(zoomCenterAgent);
 		panelZoomAgent.add(displayAgent);
 
-		// Initialisation des boutons d'option
-		addNodeJSon = new JButton("Node +");
-		suppNodeJSon = new JButton("Node -");
-		addEdgeJSon = new JButton("Edge +");
-		suppEdgeJSon = new JButton("Edge -");
+		// Initialisation des boutons d'option.
+		ImageIcon addNodeIcon = new ImageIcon("./src/main/resources/buttonsIcons/node+.png", "node +");
+		ImageIcon deleteNodeIcon = new ImageIcon("./src/main/resources/buttonsIcons/node-.png", "node -");
+		ImageIcon addEdgeIcon = new ImageIcon("./src/main/resources/buttonsIcons/edge+.png", "edge +");
+		ImageIcon deleteEdgeIcon = new ImageIcon("./src/main/resources/buttonsIcons/edge-.png", "edge -");
+		ImageIcon cleanIcon = new ImageIcon("./src/main/resources/buttonsIcons/clean.png", "clean");
+		ImageIcon saveIcon = new ImageIcon("./src/main/resources/buttonsIcons/save.png", "save");
+		
+		addNodeJSon = new JButton(addNodeIcon);
+		addNodeJSon.setPreferredSize(buttonsSize);
+		suppNodeJSon = new JButton(deleteNodeIcon);
+		suppNodeJSon.setPreferredSize(buttonsSize);
+		addEdgeJSon = new JButton(addEdgeIcon);
+		addEdgeJSon.setPreferredSize(buttonsSize);
+		suppEdgeJSon = new JButton(deleteEdgeIcon);
+		suppEdgeJSon.setPreferredSize(buttonsSize);
 		structGraphJson = new JButton("Manual");
-		addNodeAgent = new JButton("Node +");
-		suppNodeAgent = new JButton("Node -");
-		addEdgeAgent = new JButton("Edge +");
-		suppEdgeAgent = new JButton("Edge -");
+		cleanGraphJson = new JButton(cleanIcon);
+		cleanGraphJson.setPreferredSize(buttonsSize);
+		buttonSave = new JButton(saveIcon);
+		buttonSave.setPreferredSize(buttonsSize);
+		
+		addNodeAgent = new JButton(addNodeIcon);
+		addNodeAgent.setPreferredSize(buttonsSize);
+		suppNodeAgent = new JButton(deleteNodeIcon);
+		suppNodeAgent.setPreferredSize(buttonsSize);
+		addEdgeAgent = new JButton(addEdgeIcon);
+		addEdgeAgent.setPreferredSize(buttonsSize);
+		suppEdgeAgent = new JButton(deleteEdgeIcon);
+		suppEdgeAgent.setPreferredSize(buttonsSize);
 		structGraphAgent = new JButton("Manual");
-		buttonSave = new JButton("Save");
+		cleanGraphAgent = new JButton(cleanIcon);
+		cleanGraphAgent.setPreferredSize(buttonsSize);
 
 		// Ajout des boutons dans les panneaux respectifs
 		panelModifJSon.add(addNodeJSon);
@@ -337,14 +369,14 @@ public class Window extends JFrame {
 		panelModifAgent.add(cleanGraphAgent);
 
 		// Initialisation et d�finition panneau option gauche
-		panelOptionJSon = new JPanel(new GridLayout(2, 1, 0, 50));
-		panelOptionJSon.setPreferredSize(new Dimension(80, 200));
+		panelOptionJSon = new JPanel(new GridLayout(2, 1, 0, 25));
+		panelOptionJSon.setPreferredSize(new Dimension(50, 200));
 		panelOptionJSon.add(panelZoomJSon);
 		panelOptionJSon.add(panelModifJSon);
 
 		// Initialisation et d�finition panneau option droit
-		panelOptionAgent = new JPanel(new GridLayout(2, 1, 0, 50));
-		panelOptionAgent.setPreferredSize(new Dimension(80, 200));
+		panelOptionAgent = new JPanel(new GridLayout(2, 1, 0, 25));
+		panelOptionAgent.setPreferredSize(new Dimension(50, 200));
 		panelOptionAgent.add(panelZoomAgent);
 		panelOptionAgent.add(panelModifAgent);
 
@@ -580,46 +612,6 @@ public class Window extends JFrame {
 			}
 		});
 
-		// Action lors du clic sur l'item "%" de la partie gauche
-		zoomTextJSon.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-
-				if (isGraphJsonLoaded) {
-					String s = textJSon.getText();
-					double pourcentage = 0, zoomAvant = 0, zoomArr = 0, total = 0;
-					boolean isNumber = false;
-					for (int i = 0; i < s.length(); i++) {
-						if (!Character.isDigit(s.charAt(i))) {
-							isNumber = false;
-						} else {
-							isNumber = true;
-						}
-					}
-
-					if (!isNumber) {
-						textColorStatut.appendDoc(INPUT_VALUE_NOT_INTEGER);
-					} else {
-						pourcentage = Integer.parseInt(s);
-						if (pourcentage > 100) {
-							zoomAvant = pourcentage - 100;
-							total = 1 - (zoomAvant / 100);
-							viewJson.getCamera().setViewPercent(total);
-							valZoom = viewJson.getCamera().getViewPercent() * 100;
-							textJSon.setText(df.format(valZoom) + " %");
-						} else if (pourcentage < 100) {
-							zoomArr = 100 - pourcentage;
-							total = 1 + (zoomArr / 100);
-							viewJson.getCamera().setViewPercent(total);
-							valZoom = viewJson.getCamera().getViewPercent() * 100;
-							textJSon.setText(df.format(valZoom) + " %");
-						} else {
-							viewJson.getCamera().resetView();
-						}
-					}
-				}
-			}
-		});
-
 		// Action lors du clic sur l'item "Node +" de la partie gauche
 		addNodeJSon.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -852,46 +844,6 @@ public class Window extends JFrame {
 		zoomArrAgent.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				modifZoom(viewAgent, textAgent, isGraphAgentLoaded, DEZOOM);
-			}
-		});
-
-		// Action lors du clic sur l'item "%" de la partie droite
-		zoomTextAgent.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				if (isGraphAgentLoaded) {
-					String s = textAgent.getText();
-					double pourcentage = 0, zoomAvant = 0, zoomArr = 0, total = 0;
-					boolean isNumber = false;
-					for (int i = 0; i < s.length(); i++) {
-						if (!Character.isDigit(s.charAt(i))) {
-							isNumber = false;
-						} else {
-							isNumber = true;
-						}
-					}
-
-					if (!isNumber) {
-						textColorStatut.appendDoc(INPUT_VALUE_NOT_INTEGER);
-					} else {
-						pourcentage = Integer.parseInt(s);
-						if (pourcentage > 100) {
-							zoomAvant = pourcentage - 100;
-							total = 1 - (zoomAvant / 100);
-							viewAgent.getCamera().setViewPercent(total);
-							valZoom = viewAgent.getCamera().getViewPercent() * 100;
-							textAgent.setText(df.format(valZoom) + " %");
-						} else if (pourcentage < 100) {
-							zoomArr = 100 - pourcentage;
-							total = 1 + (zoomArr / 100);
-							viewAgent.getCamera().setViewPercent(total);
-							valZoom = viewAgent.getCamera().getViewPercent() * 100;
-
-						} else {
-							viewAgent.getCamera().resetView();
-							textAgent.setText(df.format(valZoom) + " %");
-						}
-					}
-				}
 			}
 		});
 
@@ -1134,7 +1086,7 @@ public class Window extends JFrame {
 		final View view = viewer.getDefaultView();
 		final JComponent jCompView = (JComponent) view;
 		Toolkit toolkit = Toolkit.getDefaultToolkit();
-		Image image = toolkit.getImage("./src/main/resources/Drag_Hand.png");
+		Image image = toolkit.getImage("./src/main/resources/mouseIcons/Drag_Hand.png");
 		Point hotSpot = new Point(0, 0);
 		final Cursor cursor = toolkit.createCustomCursor(image, hotSpot,
 				"drag_hand");

@@ -59,9 +59,9 @@ public class CustomGraphRenderer {
 								+ NODE_SOURCE
 								+ "{ size: 15px; shape: circle; fill-color: rgb(4,195,223); stroke-mode: none; }"
 								+ NODE_FINAL
-								+ "{ size: 35px; fill-image: url(\"./src/main/resources/NodeFinalUML.png\"); fill-mode: image-scaled; stroke-mode: none; }"
+								+ "{ size: 35px; fill-image: url(\"./src/main/resources/renderer/NodeFinalUML.png\"); fill-mode: image-scaled; stroke-mode: none; }"
 								+ NODE_SOURCE_FINAL
-								+ "{ size: 35px; fill-image: url(\"./src/main/resources/NodeSourceFinalUML.png\"); fill-mode: image-scaled; stroke-mode: none; }"
+								+ "{ size: 35px; fill-image: url(\"./src/main/resources/renderer/NodeSourceFinalUML.png\"); fill-mode: image-scaled; stroke-mode: none; }"
 								+ "sprite { z-index: 2; shape: circle; fill-color: rgba(250,250,250,64); stroke-mode: plain; stroke-color: lightblue; }");
 			}
 		}
@@ -79,11 +79,11 @@ public class CustomGraphRenderer {
 						"edge { z-index: 0; text-alignment: center; text-offset: 0,10; fill-color: grey; }"
 								+ "node { z-index: 3; text-alignment: at-right; }"
 								+ NODE_SOURCE
-								+ "{ size: 50px; fill-image: url(\"./src/main/resources/NodeSourceAutomaton.png\"); fill-mode: image-scaled; }"
+								+ "{ size: 50px; fill-image: url(\"./src/main/resources/renderer/NodeSourceAutomaton.png\"); fill-mode: image-scaled; }"
 								+ NODE_FINAL
-								+ "{ size: 50px; fill-image: url(\"./src/main/resources/NodeFinalAutomaton.png\"); fill-mode: image-scaled; }"
+								+ "{ size: 50px; fill-image: url(\"./src/main/resources/renderer/NodeFinalAutomaton.png\"); fill-mode: image-scaled; }"
 								+ NODE_SOURCE_FINAL
-								+ "{ size: 50px; fill-image: url(\"./src/main/resources/NodeSourceFinalAutomaton.png\"); fill-mode: image-scaled; }"
+								+ "{ size: 50px; fill-image: url(\"./src/main/resources/renderer/NodeSourceFinalAutomaton.png\"); fill-mode: image-scaled; }"
 								+ "sprite { z-index: 2; shape: circle; fill-color: rgba(250,250,250,64); stroke-mode: plain; stroke-color: lightblue; }");
 			}
 		}
