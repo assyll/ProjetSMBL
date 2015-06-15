@@ -22,7 +22,7 @@ public class JsonToGSTest extends TestCase {
 	public void testGenerateNode(){
 		Graph graph = new MultiGraph("graphTest");
 		
-		File fileTest = new File("./src/test/resources/TestNode");
+		File fileTest = new File("./src/test/resources/jsonAndGSTest/TestNode");
 		
 		JsonFactory jfactory = new JsonFactory();
 		
@@ -58,7 +58,7 @@ public class JsonToGSTest extends TestCase {
 	public void testGenerateEdge(){
 		Graph graph = new MultiGraph("graph");
 		
-		File fileTest = new File("./src/test/resources/TestEdge");
+		File fileTest = new File("./src/test/resources/jsonAndGSTest/TestEdge");
 		
 		JsonFactory jfactory = new JsonFactory();
 		
@@ -99,7 +99,7 @@ public class JsonToGSTest extends TestCase {
 	
 	public void testGenerateJson() {
 		
-		File fileTest = new File("./src/test/resources/TestJson");
+		File fileTest = new File("./src/test/resources/jsonAndGSTest/TestJson");
 		
 		JsonFactory jfactory = new JsonFactory();
 		

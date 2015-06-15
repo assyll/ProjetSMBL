@@ -1067,7 +1067,7 @@ public class Window extends JFrame {
 
 		// TODO changer le chemin d'acces lors de la release
 		JFileChooser dialogue = new JFileChooser(new File(
-				"./src/test/resources"));
+				"./src/test/resources/jsonAndGSTest"));
 		dialogue.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 		File fichier;
 
