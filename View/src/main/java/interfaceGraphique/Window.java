@@ -64,7 +64,16 @@ public class Window extends JFrame {
 
 	public final static String pathGraphTemp = "./src/test/resources/.grapheTemporaire";
 
-	public static final String NO_FILE_SELECTED = "Veuillez d'abord sï¿½lectionner un fichier ï¿½ importer";
+	public static final String NO_FILE_SELECTED = "You have to select a file to import";
+	public static final String INPUT_VALUE_NOT_INTEGER = "Only integer are accepted \n";
+	public static final String NAME_FIELD_EMPTY = "You have to fill the name field";
+	public static final String NAME_ALREADY_IN_USE = "This name is already in use, please choose an other one";
+	public static final String NO_GRAPH_GENERATED = "You have to generate a graph before";
+	public static final String NO_NODE_DETECTED = "You have to generate a graph or add node before";
+	public static final String NO_EDGE_DETECTED = "You have to generate a graph or add edge before";
+	public static final String ACTION_ON_NODE = "The node ";
+	public static final String ACTION_ON_EDGE = "The edge ";
+	public static final String ERASE_ACTION = " has been erased";
 	public static final String GRAPH_JSON_NAME = "graphJson";
 	public static final String GRAPH_AGENT_NAME = "graphAgent";
 
@@ -195,7 +204,7 @@ public class Window extends JFrame {
 
 						if (!isNumber) {
 							textColorStatut
-									.appendDoc("Ce n'est pas un entier \n");
+									.appendDoc(INPUT_VALUE_NOT_INTEGER);
 						} else {
 							pourcentage = Integer.parseInt(s);
 							if (pourcentage > 100) {
@@ -247,7 +256,7 @@ public class Window extends JFrame {
 
 						if (!isNumber) {
 							textColorStatut
-									.appendDoc("Ce n'est pas un entier \n");
+									.appendDoc(INPUT_VALUE_NOT_INTEGER);
 						} else {
 							pourcentage = Integer.parseInt(s);
 							if (pourcentage > 100) {
@@ -477,14 +486,14 @@ public class Window extends JFrame {
 			}
 		});
 
-		// Action lors du clic sur l'item "Double Circle"
+		// Action lors du clic sur l'item "UML"
 		displayUML.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				CustomGraphRenderer.setStyleGraphUML(graphJson, graphAgent);
 			}
 		});
 
-		// Action lors du clic sur l'item "Robot"
+		// Action lors du clic sur l'item "Automaton"
 		displayAutomaton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				CustomGraphRenderer.setStyleGraphAutomaton(graphJson,
@@ -502,7 +511,7 @@ public class Window extends JFrame {
 		// Action lors du clic sur l'item "To GraphStream"
 		buttonGS.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// Visualisation du graph gï¿½nï¿½rï¿½ par le fichier importï¿½
+				// Visualisation du graph généré par le fichier importé
 				// au
 				// format .json
 
@@ -546,7 +555,7 @@ public class Window extends JFrame {
 								.getMessage());
 					} catch (NullPointerException exception) {
 						textColorStatut
-								.appendErrorMessage("Graphe Neo4j deja ouvert quelque part!");
+								.appendErrorMessage("Graph Neo4j is already open somewhere!");
 					} finally {
 						frame.setCursor(Cursor
 								.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
@@ -588,7 +597,7 @@ public class Window extends JFrame {
 					}
 
 					if (!isNumber) {
-						textColorStatut.appendDoc("Ce n'est pas un entier \n");
+						textColorStatut.appendDoc(INPUT_VALUE_NOT_INTEGER);
 					} else {
 						pourcentage = Integer.parseInt(s);
 						if (pourcentage > 100) {
@@ -623,10 +632,10 @@ public class Window extends JFrame {
 							if (n == null) {
 								GraphModifier.addNode(addNodeJSon, graphJson);
 							} else {
-								msgError("Nom dï¿½jï¿½ existant");
+								msgError(NAME_ALREADY_IN_USE);
 							}
 						} else {
-							msgError("Nom invalide car vide");
+							msgError(NAME_FIELD_EMPTY);
 						}
 					} else {
 						if (!s.equals("")) {
@@ -635,7 +644,7 @@ public class Window extends JFrame {
 							initPanelGraphJson();
 							GraphModifier.addNode(addNodeJSon, graphJson);
 						} else {
-							msgError("Nom invalide car vide");
+							msgError(NAME_FIELD_EMPTY);
 						}
 					}
 				}
@@ -654,17 +663,16 @@ public class Window extends JFrame {
 						textColorStatut.appendDoc(s);
 						Node n = graphJson.getNode(s);
 						for (Edge edge : n.getEachEdge()) {
-							System.out.println(edge.getId());
 							spriteManagerJson.removeSprite(edge.getId());
 						}
 						n = graphJson.removeNode(s);
 						if (n != null) {
-							msgAlert("Le noeud " + s + " a ï¿½tï¿½ supprimï¿½.");
+							msgAlert(ACTION_ON_NODE + s + ERASE_ACTION);
 						}
 					}
 				} else {
 					textColorStatut
-							.appendDoc("Gï¿½nï¿½rez un graphe ou ajoutez un noeud avant tout");
+							.appendDoc(NO_NODE_DETECTED);
 				}
 			}
 		});
@@ -688,15 +696,15 @@ public class Window extends JFrame {
 											.getMessage());
 								}
 							} else {
-								msgError("Nom dï¿½jï¿½ existant");
+								msgError(NAME_ALREADY_IN_USE);
 							}
 						} else {
-							msgError("Nom invalide car vide");
+							msgError(NAME_FIELD_EMPTY);
 						}
 					}
 				} else {
 					textColorStatut
-							.appendDoc("Il faut d'abord crï¿½er le graphe avec des nodes");
+							.appendDoc(NO_NODE_DETECTED);
 				}
 			}
 		});
@@ -710,17 +718,16 @@ public class Window extends JFrame {
 							"Suppr Edge", graphJson);
 					if (!suppEdgeJSon.getFerme()) {
 						String s = suppEdgeJSon.getName();
-						textColorStatut.appendDoc(s);
 						Edge e = graphJson.removeEdge(s);
 						spriteManagerJson.removeSprite(e.getId());
 						if (e != null) {
-							msgAlert("La transition " + s
-									+ " a ï¿½tï¿½ supprimï¿½.");
+							msgAlert(ACTION_ON_EDGE + s
+									+ ERASE_ACTION);
 						}
 					}
 				} else {
 					textColorStatut
-							.appendDoc("Gï¿½nï¿½rez un graphe ou ajoutez une transition avant tout");
+							.appendDoc(NO_EDGE_DETECTED);
 				}
 			}
 		});
@@ -764,12 +771,12 @@ public class Window extends JFrame {
 						if (file.exists()) {
 							int option = JOptionPane.showConfirmDialog(
 									null,
-									(Fichier.isFolderNeo4j(path) ? "Il semblerait "
-											: "Il ne semblerait pas ")
-											+ "que ce soit un dossier Neo4J"
-											+ "\nVoulez-vous sauvegarder dans ce dossier ?"
-											+ "\nNB: le dossier sera supprimÃ©.",
-									"Sauvegarder", JOptionPane.YES_NO_OPTION);
+									(Fichier.isFolderNeo4j(path) ? "It seems "
+											: "It doesn't seems ")
+											+ "that the selected folder is a neo4J's folder"
+											+ "\nWould you like to save in this folder ?"
+											+ "\n(the folder will be erased).",
+									"Save", JOptionPane.YES_NO_OPTION);
 
 							if (option == JOptionPane.OK_OPTION) {
 								// SAUVEGARDE
@@ -815,7 +822,7 @@ public class Window extends JFrame {
 					panelGraphJSon.updateUI();
 				} else {
 					textColorStatut
-							.appendDoc("Gï¿½nï¿½rez un graphe au prï¿½alable");
+							.appendDoc(NO_GRAPH_GENERATED);
 				}
 			}
 		});
@@ -829,7 +836,7 @@ public class Window extends JFrame {
 							"Graph Json", viewJson, viewerJson, graphJson);
 				} else {
 					textColorStatut
-							.appendDoc("Gï¿½nï¿½rez un graphe au prï¿½alable");
+							.appendDoc(NO_GRAPH_GENERATED);
 				}
 			}
 		});
@@ -864,7 +871,7 @@ public class Window extends JFrame {
 					}
 
 					if (!isNumber) {
-						textColorStatut.appendDoc("Ce n'est pas un entier \n");
+						textColorStatut.appendDoc(INPUT_VALUE_NOT_INTEGER);
 					} else {
 						pourcentage = Integer.parseInt(s);
 						if (pourcentage > 100) {
@@ -918,17 +925,16 @@ public class Window extends JFrame {
 						textColorStatut.appendDoc(s);
 						Node n = graphAgent.getNode(s);
 						for (Edge edge : n.getEachEdge()) {
-							System.out.println(edge.getId());
 							spriteManagerAgent.removeSprite(edge.getId());
 						}
 						n = graphAgent.removeNode(s);
 						if (n != null) {
-							msgAlert("Le noeud " + s + " a ï¿½tï¿½ supprimï¿½.");
+							msgAlert(ACTION_ON_NODE + s + ERASE_ACTION);
 						}
 					}
 				} else {
 					textColorStatut
-							.appendDoc("Gï¿½nï¿½rez un graphe ou ajoutez un noeud avant tout");
+							.appendDoc(NO_NODE_DETECTED);
 				}
 			}
 		});
@@ -950,7 +956,7 @@ public class Window extends JFrame {
 					}
 				} else {
 					textColorStatut
-							.appendDoc("Il faut d'abord crï¿½er le graphe avec des nodes");
+							.appendDoc(NO_NODE_DETECTED);
 				}
 			}
 		});
@@ -964,17 +970,16 @@ public class Window extends JFrame {
 							"Suppr Edge", graphAgent);
 					if (!suppEdgeAgent.getFerme()) {
 						String s = suppEdgeAgent.getName();
-						textColorStatut.appendDoc(s);
 						Edge e = graphAgent.removeEdge(s);
 						spriteManagerAgent.removeSprite(e.getId());
 						if (e != null) {
-							msgAlert("La transition " + s
-									+ " a ï¿½tï¿½ supprimï¿½.");
+							msgAlert(ACTION_ON_EDGE + s
+									+ ERASE_ACTION);
 						}
 					}
 				} else {
 					textColorStatut
-							.appendDoc("Gï¿½nï¿½rez un graphe ou ajoutez une transition avant tout");
+							.appendDoc(NO_EDGE_DETECTED);
 				}
 			}
 		});
@@ -1015,7 +1020,7 @@ public class Window extends JFrame {
 					panelGraphAgent.updateUI();
 				} else {
 					textColorStatut
-							.appendDoc("Gï¿½nï¿½rez un graphe au prï¿½alable");
+							.appendDoc(NO_GRAPH_GENERATED);
 				}
 			}
 		});
@@ -1029,7 +1034,7 @@ public class Window extends JFrame {
 							"Graph Agent", viewAgent, viewerAgent, graphAgent);
 				} else {
 					textColorStatut
-							.appendDoc("Gï¿½nï¿½rez un graphe au prï¿½alable");
+							.appendDoc(NO_GRAPH_GENERATED);
 				}
 			}
 		});
