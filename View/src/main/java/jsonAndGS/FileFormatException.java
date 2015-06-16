@@ -4,13 +4,13 @@ package jsonAndGS;
 public class FileFormatException extends Exception {
 
 	/**
-	 * créé une nouvelle instance de TypeFichierException
+	 * créé une nouvelle instance de FileFormatException
 	 */
 	public FileFormatException() {
 	}
 
 	/**
-	 * créé une nouvelle instance de TypeFichierException
+	 * créé une nouvelle instance de FileFormatException
 	 * 
 	 * @param message
 	 *            Le message détaillant l'exception
@@ -20,7 +20,7 @@ public class FileFormatException extends Exception {
 	}
 
 	/**
-	 * créé une nouvelle instance de TypeFichierException
+	 * créé une nouvelle instance de FileFormatException
 	 * 
 	 * @param cause
 	 *            L'exception à l'origine de cette exception
@@ -30,7 +30,7 @@ public class FileFormatException extends Exception {
 	}
 
 	/**
-	 * créé une nouvelle instance de TypeFichierException
+	 * créé une nouvelle instance de FileFormatException
 	 * 
 	 * @param message
 	 *            Le message détaillant l'exception

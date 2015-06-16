@@ -56,7 +56,7 @@ public class GraphModifier {
 	}
 
 	public static Graph addNode(AddNodeDialog n, Graph g) {
-		int cpt = 1;
+		String attKey, attValue;
 
 		Node node = g.addNode(n.getName());
 		node.addAttribute("ui.label", n.getName());
@@ -64,9 +64,10 @@ public class GraphModifier {
 		node.addAttribute(MyJsonGenerator.FORMAT_NODE_FINAL, n.getFinal());
 
 		if (n.getNbAtt() != 0) {
-			for (String attribut : n.getAttributs()) {
-				node.addAttribute(MyJsonGenerator.FORMAT_NODE_ATTRIBUT + cpt++,
-						attribut);
+			for (String[] attribut : n.getAttributs()) {
+					attKey = attribut[0];
+					attValue = attribut[1];
+				node.addAttribute(attKey, attValue);
 			}
 		}
 
@@ -77,7 +78,7 @@ public class GraphModifier {
 
 	public static Graph addEdge(AddEdgeDialog e, Graph g,
 			SpriteManager spriteManager) throws NoSpecifiedNodeException {
-		int cpt = 1;
+		String attKey, attValue;
 
 		if ((g.getNode(e.getSource()) == null)
 				|| (g.getNode(e.getEnd()) == null)) {
@@ -89,9 +90,10 @@ public class GraphModifier {
 			edge.addAttribute("ui.label", e.getAction());
 
 			if (e.getNbAtt() != 0) {
-				for (String attribut : e.getAttributs()) {
-					edge.addAttribute(MyJsonGenerator.FORMAT_EDGE_ATTRIBUT
-							+ cpt++, attribut);
+				for (String[] attribut : e.getAttributs()) {
+					attKey = attribut[0];
+					attValue = attribut[1];
+					edge.addAttribute(attKey, attValue);
 				}
 			}
 

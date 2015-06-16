@@ -183,7 +183,7 @@ public class MyJsonGenerator {
 
 		// TODO changer le chemin d'acces lors de la release
 		JFileChooser dialogue = new JFileChooser(new File(
-				"./src/test/resources"));
+				"./src/test/resources/jsonAndGSTest"));
 		PrintWriter sortie = null;
 		File fichier;
 

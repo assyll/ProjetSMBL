@@ -21,7 +21,7 @@ import junit.framework.TestCase;
 
 public class MyJsonGeneratorTest extends TestCase {
 
-	final String testPathFile = "./src/test/resources/Temp";
+	final String testPathFile = "./src/test/resources/jsonAndGSTest/Temp";
 
 	public void testGenerateNodes() {
 		MyJsonGenerator generator = new MyJsonGenerator();

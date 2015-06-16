@@ -29,13 +29,14 @@ public class CustomGraphRenderer {
 	public static final int GAP_SIDE = 10;
 	public static final int GAP_Y_BETWEEN_NODE = 50;
 
+	// remplace le renderer par défaut par le renderer amélioré
 	public static void SetRenderer() {
-		// remplacement du renderer par défaut
 		System.setProperty("org.graphstream.ui.renderer",
 				"org.graphstream.ui.j2dviewer.J2DGraphRenderer");
 		ToolTipManager.sharedInstance().setInitialDelay(0);
 	}
 
+	// mis en place du rendu par défaut
 	public static void setStyleGraphDefault(Graph... graphics) {
 		for (Graph graph : graphics) {
 			if (graph != null) {
@@ -43,7 +44,8 @@ public class CustomGraphRenderer {
 			}
 		}
 	}
-
+	
+	// mis en place du rendu UML-like
 	public static void setStyleGraphUML(Graph... graphics) {
 		for (Graph graph : graphics) {
 			if (graph != null) {
@@ -55,16 +57,17 @@ public class CustomGraphRenderer {
 						"edge { z-index: 0; text-alignment: center; text-offset: 0,10; fill-color: grey; }"
 								+ "node { z-index: 3; size: 15px; text-alignment: at-right; shape: diamond; fill-color: white; stroke-mode: plain; }"
 								+ NODE_SOURCE
-								+ "{ size: 10px; shape: circle; fill-color: rgb(4,195,223); stroke-mode: none; }"
+								+ "{ size: 15px; shape: circle; fill-color: rgb(4,195,223); stroke-mode: none; }"
 								+ NODE_FINAL
-								+ "{ size: 35px; fill-image: url(\"./src/main/resources/NodeFinalUML.png\"); fill-mode: image-scaled; stroke-mode: none; }"
+								+ "{ size: 35px; fill-image: url(\"./src/main/resources/renderer/NodeFinalUML.png\"); fill-mode: image-scaled; stroke-mode: none; }"
 								+ NODE_SOURCE_FINAL
-								+ "{ size: 35px; fill-image: url(\"./src/main/resources/NodeSourceFinalUML.png\"); fill-mode: image-scaled; stroke-mode: none; }"
+								+ "{ size: 35px; fill-image: url(\"./src/main/resources/renderer/NodeSourceFinalUML.png\"); fill-mode: image-scaled; stroke-mode: none; }"
 								+ "sprite { z-index: 2; shape: circle; fill-color: rgba(250,250,250,64); stroke-mode: plain; stroke-color: lightblue; }");
 			}
 		}
 	}
 
+	// mis en place du rendu automaton-like
 	public static void setStyleGraphAutomaton(Graph... graphics) {
 		for (Graph graph : graphics) {
 			if (graph != null) {
@@ -76,16 +79,17 @@ public class CustomGraphRenderer {
 						"edge { z-index: 0; text-alignment: center; text-offset: 0,10; fill-color: grey; }"
 								+ "node { z-index: 3; text-alignment: at-right; }"
 								+ NODE_SOURCE
-								+ "{ size: 50px; fill-image: url(\"./src/main/resources/NodeSourceAutomaton.png\"); fill-mode: image-scaled; }"
+								+ "{ size: 50px; fill-image: url(\"./src/main/resources/renderer/NodeSourceAutomaton.png\"); fill-mode: image-scaled; }"
 								+ NODE_FINAL
-								+ "{ size: 50px; fill-image: url(\"./src/main/resources/NodeFinalAutomaton.png\"); fill-mode: image-scaled; }"
+								+ "{ size: 50px; fill-image: url(\"./src/main/resources/renderer/NodeFinalAutomaton.png\"); fill-mode: image-scaled; }"
 								+ NODE_SOURCE_FINAL
-								+ "{ size: 50px; fill-image: url(\"./src/main/resources/NodeSourceFinalAutomaton.png\"); fill-mode: image-scaled; }"
+								+ "{ size: 50px; fill-image: url(\"./src/main/resources/renderer/NodeSourceFinalAutomaton.png\"); fill-mode: image-scaled; }"
 								+ "sprite { z-index: 2; shape: circle; fill-color: rgba(250,250,250,64); stroke-mode: plain; stroke-color: lightblue; }");
 			}
 		}
 	}
 
+	// mis en place du rendu basic
 	public static void setStyleGraphBasic(Graph... graphics) {
 		for (Graph graph : graphics) {
 			if (graph != null) {
@@ -107,10 +111,10 @@ public class CustomGraphRenderer {
 		}
 	}
 
-	// TODO essayer de rapprocher les nodes connectées
 	// Applique un placement sous forme d'arbre avec la(les) racine(s) en haut
-	public static void setTreeLayout(GraphicGraph gGraph, Graph graph,
+	public static void setTreeLayout(Graph graph,
 			Viewer viewer) {
+		GraphicGraph gGraph = viewer.getGraphicGraph();
 		int heightView = viewer.getDefaultView().getHeight();
 		int widthView = viewer.getDefaultView().getWidth();
 		float ratioXY = ((float) widthView) / ((float) heightView);
