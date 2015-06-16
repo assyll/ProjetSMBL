@@ -69,8 +69,8 @@ public class Window extends JFrame {
 	public static final String NAME_FIELD_EMPTY = "You have to fill the name field";
 	public static final String NAME_ALREADY_IN_USE = "This name is already in use, please choose an other one";
 	public static final String NO_GRAPH_GENERATED = "You have to generate a graph before";
-	public static final String NO_NODE_DETECTED = "You have to generate a graph or add node before";
-	public static final String NO_EDGE_DETECTED = "You have to generate a graph or add edge before";
+	public static final String NO_NODE_DETECTED = "You have to generate a graph or add a node before";
+	public static final String NO_EDGE_DETECTED = "You have to generate a graph or add an edge before";
 	public static final String ACTION_ON_NODE = "The node ";
 	public static final String ACTION_ON_EDGE = "The edge ";
 	public static final String ERASE_ACTION = " has been erased";
@@ -1286,7 +1286,7 @@ public class Window extends JFrame {
 
 	public static void deleteNode(boolean isGraphLoaded, Graph graph,
 			SpriteManager spriteManager) {
-		if (isGraphLoaded) {
+		if (isGraphLoaded && graph.getNodeCount() != 0) {
 			DeleteNodeDialog deleteNodeDialog = new DeleteNodeDialog(frame,
 					"Delete Node", graph);
 			if (!deleteNodeDialog.getFerme()) {
@@ -1326,7 +1326,7 @@ public class Window extends JFrame {
 
 	public static void deleteEdge(Boolean isGraphLoaded, Graph graph,
 			SpriteManager spriteManager) {
-		if (isGraphLoaded) {
+		if (isGraphLoaded && graph.getEdgeCount() != 0) {
 			DeleteEdgeDialog deleteEdgeDialog = new DeleteEdgeDialog(frame,
 					"Delete Edge", graph);
 			if (!deleteEdgeDialog.getFerme()) {
