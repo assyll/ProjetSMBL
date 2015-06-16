@@ -1327,7 +1327,7 @@ public class Window extends JFrame {
 	public static void deleteEdge(Boolean isGraphLoaded, Graph graph,
 			SpriteManager spriteManager) {
 		if (isGraphLoaded) {
-			SuppEdgeDialog deleteEdgeDialog = new SuppEdgeDialog(frame,
+			DeleteEdgeDialog deleteEdgeDialog = new DeleteEdgeDialog(frame,
 					"Delete Edge", graph);
 			if (!deleteEdgeDialog.getFerme()) {
 				String s = deleteEdgeDialog.getName();

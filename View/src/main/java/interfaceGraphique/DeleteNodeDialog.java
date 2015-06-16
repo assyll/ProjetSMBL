@@ -3,6 +3,8 @@ package interfaceGraphique;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -33,6 +35,14 @@ public class DeleteNodeDialog extends JDialog implements ActionListener {
 	public DeleteNodeDialog(JFrame f, String s, Graph g) {
 		super(f, s, true);
 		this.setDefaultCloseOperation(this.DISPOSE_ON_CLOSE);
+		
+		this.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				ferme = true;
+				check = false;
+			}
+		});
+		
 		frame = f;
 		graph = g;
 		nodes = getNodes();
