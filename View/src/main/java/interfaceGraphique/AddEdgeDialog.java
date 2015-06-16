@@ -3,6 +3,8 @@ package interfaceGraphique;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -19,22 +21,55 @@ import org.graphstream.graph.Node;
 @SuppressWarnings("serial")
 public class AddEdgeDialog extends JDialog implements ActionListener {
 
-	JTextField nameEdge, actionEdge, nbAttributsEdge;
-	JLabel labelName, labelSource, labelEnd, labelAction, labelNbAtt;
-	JButton ok, cancel;
-	JFrame frame;
-	JComboBox<String> sourceEdge, endEdge;
-	String name, sourceE, endE, actionE;
-	String[] nodes;
-	int nbAtt;
-	boolean ferme, check;
-	AttributDialog attDialog;
-	Graph graph;
+	private JTextField nameEdge, actionEdge, nbAttributsEdge;
+	private JLabel labelName, labelSource, labelEnd, labelAction, labelNbAtt;
+	private JButton ok, cancel;
+	private JFrame frame;
+	private JComboBox<String> sourceEdge, endEdge;
+	private String[] nodes;
+	private int nbAtt;
+	private boolean ferme, check;
+	private AttributDialog attDialog;
+	private Graph graph;
 
 	@SuppressWarnings({ "static-access", "unchecked", "rawtypes" })
 	public AddEdgeDialog(JFrame f, String s, Graph g) {
 		super(f, s, true);
 		this.setDefaultCloseOperation(this.DISPOSE_ON_CLOSE);
+
+		this.addWindowListener(new WindowListener() {
+
+			public void windowOpened(WindowEvent e) {
+
+			}
+
+			public void windowIconified(WindowEvent e) {
+
+			}
+
+			public void windowDeiconified(WindowEvent e) {
+
+			}
+
+			public void windowDeactivated(WindowEvent e) {
+
+			}
+
+			public void windowClosing(WindowEvent e) {
+				ferme = true;
+				check = false;
+				nameEdge.setText("");
+			}
+
+			public void windowClosed(WindowEvent e) {
+
+			}
+
+			public void windowActivated(WindowEvent e) {
+
+			}
+		});
+
 		frame = f;
 		graph = g;
 		nodes = getNodes();
@@ -106,7 +141,7 @@ public class AddEdgeDialog extends JDialog implements ActionListener {
 		}
 	}
 
-	public String[] getAttributs() {
+	public String[][] getAttributs() {
 		if (attDialog == null) {
 			return null;
 		} else {
@@ -141,15 +176,18 @@ public class AddEdgeDialog extends JDialog implements ActionListener {
 			check = true;
 
 			if (!ferme) {
-				name = getLabel();
-				sourceE = getSource();
-				endE = getEnd();
-				actionE = getAction();
 				nbAtt = getNbAtt();
 
+				System.out.println(attDialog.isExit());
+				
 				if (nbAtt != 0) {
 					attDialog = new AttributDialog(getFrame(),
 							"Attributs Node", getNbAtt());
+				}
+
+				if (attDialog.isExit()) {
+					ferme = true;
+					check = false;
 				}
 
 				dispose();

@@ -3,6 +3,8 @@ package interfaceGraphique;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -16,19 +18,52 @@ import javax.swing.JTextField;
 @SuppressWarnings("serial")
 public class AddNodeDialog extends JDialog implements ActionListener {
 
-	JTextField nameNode, nbAttributsNode;
-	JLabel labelName, labelRoot, labelFinal, labelNbAtt;
-	JButton ok, cancel;
-	JFrame frame;
-	String name;
-	JCheckBox rootNode, finalNode;
-	boolean rootN, finalN, ferme, check;
-	int nbAtt;
-	AttributDialog attDialog;
+	private JTextField nameNode, nbAttributsNode;
+	private JLabel labelName, labelRoot, labelFinal, labelNbAtt;
+	private JButton ok, cancel;
+	private JFrame frame;
+	private JCheckBox rootNode, finalNode;
+	private boolean ferme, check;
+	private int nbAtt;
+	private AttributDialog attDialog;
 
 	public AddNodeDialog(JFrame f, String s) {
 		super(f, s, true);
 		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+
+		this.addWindowListener(new WindowListener() {
+
+			public void windowOpened(WindowEvent e) {
+
+			}
+
+			public void windowIconified(WindowEvent e) {
+
+			}
+
+			public void windowDeiconified(WindowEvent e) {
+
+			}
+
+			public void windowDeactivated(WindowEvent e) {
+
+			}
+
+			public void windowClosing(WindowEvent e) {
+				ferme = true;
+				check = false;
+				nameNode.setText("");
+			}
+
+			public void windowClosed(WindowEvent e) {
+
+			}
+
+			public void windowActivated(WindowEvent e) {
+
+			}
+		});
+
 		frame = f;
 		Box boite = Box.createVerticalBox();
 		JPanel panelDialog = new JPanel();
@@ -89,7 +124,7 @@ public class AddNodeDialog extends JDialog implements ActionListener {
 		}
 	}
 
-	public String[] getAttributs() {
+	public String[][] getAttributs() {
 		if (attDialog == null) {
 			return null;
 		} else {
@@ -114,14 +149,17 @@ public class AddNodeDialog extends JDialog implements ActionListener {
 			ferme = false;
 			check = true;
 			if (!ferme) {
-				name = getName();
-				rootN = getRoot();
-				finalN = getFinal();
 				nbAtt = getNbAtt();
 
 				if (nbAtt != 0) {
 					attDialog = new AttributDialog(getFrame(),
 							"Attributs Node", nbAtt);
+				}
+
+				if (attDialog.isExit()) {
+					ferme = true;
+					check = false;
+					nameNode.setText("");
 				}
 
 				dispose();
