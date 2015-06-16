@@ -463,7 +463,7 @@ public class Window extends JFrame {
 				// nombre de transition maximum par noeud
 				GraphGenerateDialog dialog = new GraphGenerateDialog(
 						Window.this);
-				dialog.setVisible(true);// show();
+				dialog.setVisible(true);
 
 				// Graphe genere avec succes
 				if (dialog.isGeneratedWithSuccess()) {
@@ -519,15 +519,19 @@ public class Window extends JFrame {
 										textDirectory.getText(),
 										GRAPH_JSON_NAME);
 							}
+							
 							initGraphPropertiesJson();
 							initPanelGraphJson();
+							
 						} else {
 							if (!isDirectoryNeo4j) {
 								graphAgent = GraphModifier.GraphToGraph(
 										graphJson, GRAPH_AGENT_NAME);
 							}
+							
 							initGraphPropertiesAgent();
 							initPanelGraphAgent();
+							
 						}
 
 						frame.setCursor(Cursor

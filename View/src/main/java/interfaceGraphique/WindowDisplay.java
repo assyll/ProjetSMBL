@@ -31,8 +31,8 @@ public class WindowDisplay extends JFrame {
 
 	private JPanel panelFrame, panelGraph, panelOption, panelModif, panelZoom;
 
-	private JButton zoomAvant, zoomArr, zoomCenter, addNode, deleteNode, addEdge,
-			deleteEdge, structGraph, treeLayout;
+	private JButton zoomAvant, zoomArr, zoomCenter, addNode, deleteNode,
+			addEdge, deleteEdge, structGraph, treeLayout;
 
 	private JTextField text;
 
@@ -105,18 +105,6 @@ public class WindowDisplay extends JFrame {
 		// initialisation de la zone de texte pour le pourcentage de zoom
 		text = new JTextField();
 		text.setText(valZoom + " %");
-		text.addKeyListener(new KeyListener() {
-			public void keyPressed(KeyEvent evt) {
-				Window.enterNewZoomValue(evt, isGraphLoaded, text, view);
-			}
-
-			public void keyReleased(KeyEvent evt) {
-			}
-
-			public void keyTyped(KeyEvent evt) {
-			}
-
-		});
 
 		// Définition du panneau d'objet
 		panelZoom.add(zoomAvant);
@@ -133,12 +121,12 @@ public class WindowDisplay extends JFrame {
 				"./src/main/resources/buttonsIcons/edge+.png", "edge +");
 		ImageIcon deleteEdgeIcon = new ImageIcon(
 				"./src/main/resources/buttonsIcons/edge-.png", "edge -");
-		ImageIcon treeLayoutIcon = new ImageIcon(
-				"./src/main/resources/buttonsIcons/treeLayout.png",
-				"tree layout");
 		ImageIcon autoLayoutOnIcon = new ImageIcon(
 				"./src/main/resources/buttonsIcons/autoLayoutOn.png",
 				"automatic layout on");
+		ImageIcon treeLayoutIcon = new ImageIcon(
+				"./src/main/resources/buttonsIcons/treeLayout.png",
+				"tree layout");
 
 		addNode = new JButton(addNodeIcon);
 		addNode.setToolTipText(Window.ADD_NODE_TT);
@@ -158,7 +146,6 @@ public class WindowDisplay extends JFrame {
 		treeLayout = new JButton(treeLayoutIcon);
 		treeLayout.setToolTipText(Window.TREE_LAYOUT_TT);
 		treeLayout.setPreferredSize(Window.buttonsSize);
-
 
 		// Ajout des boutons dans le panneau
 		panelModif.add(addNode);
@@ -180,20 +167,42 @@ public class WindowDisplay extends JFrame {
 		panelFrame.add(panelOption, BorderLayout.NORTH);
 		panelFrame.add(scrollGraph, BorderLayout.CENTER);
 
-		// Action lors du clic sur l'item "+"
+		// Action lors du clic sur l'item "Zoom +"
 		zoomAvant.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Window.modifZoom(view, text, isGraphLoaded, ZOOM);
 			}
 		});
 
-		// Action lors du clic sur l'item "-"
+		// Action lors du clic sur l'item "Zoom -"
 		zoomArr.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Window.modifZoom(view, text, isGraphLoaded, DEZOOM);
 			}
 		});
+		
+		// Action lors de l'appui sur la touche entrée dans la zone de zoom
+		text.addKeyListener(new KeyListener() {
+			public void keyPressed(KeyEvent evt) {
+				Window.enterNewZoomValue(evt, isGraphLoaded, text, view);
+			}
 
+			public void keyReleased(KeyEvent evt) {
+			}
+
+			public void keyTyped(KeyEvent evt) {
+			}
+
+		});
+		
+		// Action lors du clic sur l'item "Center"
+				zoomCenter.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						view.getCamera().resetView();
+						valZoom = (int) (view.getCamera().getViewPercent() * 100);
+					}
+				});
+		
 		// Action lors du clic sur l'item "Node +"
 		addNode.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -225,32 +234,25 @@ public class WindowDisplay extends JFrame {
 		// Action lors du clic sur l'item "Automatic Layout"
 		structGraph.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				autoLayout(isGraphLoaded, isAutoLayout, graphName, viewer,
+				autoLayout(isGraphLoaded, viewer,
 						structGraph);
 			}
 		});
-		
-		// Action lors du clic sur l'item "Tree Layout"
-				treeLayout.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						if (isGraphLoaded) {
-							CustomGraphRenderer.setTreeLayout(graph, viewer);
-							Window.turnAutoLayoutButtonOff(structGraph);
-							isAutoLayout = false;
-						}
-					}
-				});
 
-		// Action lors du clic sur l'item "Center"
-		zoomCenter.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				view.getCamera().resetView();
-				valZoom = (int) (view.getCamera().getViewPercent() * 100);
+		// Action lors du clic sur l'item "Tree Layout"
+		treeLayout.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (isGraphLoaded) {
+					CustomGraphRenderer.setTreeLayout(graph, viewer);
+					Window.turnAutoLayoutButtonOff(structGraph);
+					isAutoLayout = false;
+				}
 			}
 		});
 
 		initGraphProperties();
 		initPanelGraph();
+		
 		// Définition de la fenêtre principale
 		frame.add(panelFrame);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -259,14 +261,7 @@ public class WindowDisplay extends JFrame {
 		frame.setVisible(true);
 
 	}
-
-	public void initPanelGraph() {
-		panelGraph.removeAll();
-		panelGraph.setLayout(new BorderLayout());
-		panelGraph.add((Component) view, BorderLayout.CENTER);
-		scrollGraph.setViewportView(panelGraph);
-	}
-
+	
 	public void initGraphProperties() {
 		CustomGraphRenderer.setStyleGraphBasic(graph);
 		GraphModifier.setNodesClass(graph);
@@ -285,11 +280,17 @@ public class WindowDisplay extends JFrame {
 		view.setMouseManager(new CustomMouseManager());
 
 		Window.setListenerOnViewer(viewer, graph, text, isGraphLoaded);
-
 	}
 
-	public void autoLayout(Boolean isGraphLoaded, Boolean isAutoLayout,
-			String graphName, Viewer viewer, JButton structGraph) {
+	public void initPanelGraph() {
+		panelGraph.removeAll();
+		panelGraph.setLayout(new BorderLayout());
+		panelGraph.add((Component) view, BorderLayout.CENTER);
+		scrollGraph.setViewportView(panelGraph);
+	}
+
+	public void autoLayout(Boolean isGraphLoaded, Viewer viewer,
+			JButton structGraph) {
 		if (isGraphLoaded) {
 			if (isAutoLayout) {
 				Window.turnAutoLayoutButtonOff(structGraph);
