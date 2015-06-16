@@ -22,7 +22,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
-import java.text.DecimalFormat;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -100,64 +99,61 @@ public class Window extends JFrame {
 
 	// Instanciation des diffï¿½rents Components
 
-	JFrame frame;
+	private static JFrame frame;
 
-	JPanel panelFile, panelGraph, panelGraphJSon, panelGraphAgent,
-			panelZoomJSon, panelZoomAgent, panelModifJSon, panelModifAgent,
-			panelOptionJSon, panelOptionAgent;
+	private JPanel panelFile, panelGraph, panelZoomJSon, panelZoomAgent,
+			panelModifJSon, panelModifAgent, panelOptionJSon, panelOptionAgent;
 
-	JSplitPane splitPaneHorizontale, splitPaneVerticale;
+	private static JPanel panelGraphJSon, panelGraphAgent;
 
-	JScrollPane scrollJSon, scrollAgent, scrollStatut;
+	private JSplitPane splitPaneHorizontale, splitPaneVerticale;
 
-	JTextField textDirectory, textJSon, textAgent;
+	private static JScrollPane scrollJSon, scrollAgent;
 
-	JColorTextPane textColorStatut;
+	private JScrollPane scrollStatut;
 
-	JButton buttonGS, zoomAvantJson, zoomArrJson, zoomAvantAgent, zoomArrAgent,
-			addNodeJson, addEdgeJson, suppNodeJson, suppEdgeJson,
-			suppNodeAgent, suppEdgeAgent, addNodeAgent, addEdgeAgent,
-			structGraphJson, structGraphAgent, zoomCenterJson, zoomCenterAgent,
-			cleanGraphJson, cleanGraphAgent, displayJson, displayAgent,
-			buttonSave, treeLayoutJson, treeLayoutAgent;
+	private JTextField textDirectory;
 
-	JMenuBar menu_bar1;
+	private static JTextField textJson, textAgent;
 
-	JMenu menuFile, menuDisplay, menuTools, menuTraces;
+	private static JColorTextPane textColorStatut;
 
-	JMenuItem importMenuGauche, importMenuDroite, exitMenu, displayDefault,
-			displayUML, displayAutomaton, displayBasic, jMenuItemGenererGraphe,
-			jMenuItemGenererTraces1, jMenuItemGenererTraces2;
+	private JButton buttonGS, zoomAvantJson, zoomArrJson, zoomAvantAgent,
+			zoomArrAgent, addNodeJson, addEdgeJson, deleteNodeJson,
+			deleteEdgeJson, deleteNodeAgent, deleteEdgeAgent, addNodeAgent,
+			addEdgeAgent, structGraphJson, structGraphAgent, zoomCenterJson,
+			zoomCenterAgent, cleanGraphJson, cleanGraphAgent, displayJson,
+			displayAgent, buttonSave, treeLayoutJson, treeLayoutAgent;
 
-	Viewer viewerJson, viewerAgent;
+	private JMenuBar menu_bar1;
 
-	View viewJson, viewAgent;
+	private JMenu menuFile, menuDisplay, menuTools, menuTraces;
 
-	Graph graphJson, graphAgent;
+	private JMenuItem importLeftMenu, importRightMenu, exitMenu,
+			displayDefault, displayUML, displayAutomaton, displayBasic,
+			jMenuItemGenererGraphe, jMenuItemGenererTraces1,
+			jMenuItemGenererTraces2;
 
-	double zoom = 1, dezoom = 1;
+	private static Viewer viewerJson, viewerAgent;
 
-	static Double x = null;
+	private static View viewJson, viewAgent;
 
-	static Double y = null;
+	private static Graph graphJson, graphAgent;
 
-	static Double x2 = null;
+	private static Double x = null, y = null, x2 = null, y2 = null;
 
-	static Double y2 = null;
+	private static int valZoomJson = 100, valZoomAgent = 100;
 
-	Double valZoom = 100.00;
-
-	static DecimalFormat df = new DecimalFormat("###.00");
-
-	final int xWindow = 50, yWindow = 0, widthWindow = 1280,
+	private final int xWindow = 50, yWindow = 0, widthWindow = 1280,
 			heightWindow = 700, sizeSeparator = 5;
 
-	boolean isAutoLayoutJson, isAutoLayoutAgent, isGraphJsonLoaded = false,
-			isGraphAgentLoaded = false, isDirectoryNeo4j, wantToGenerateToLeft;
+	private static boolean isAutoLayoutJson, isAutoLayoutAgent,
+			isGraphJsonLoaded = false, isGraphAgentLoaded = false,
+			isDirectoryNeo4j, wantToGenerateToLeft;
 
-	SpriteManager spriteManagerJson, spriteManagerAgent;
+	private static SpriteManager spriteManagerJson, spriteManagerAgent;
 
-	static GraphicElement gElement = null;
+	private static GraphicElement gElement = null;
 
 	public Window() {
 		CustomGraphRenderer.SetRenderer();
@@ -222,115 +218,17 @@ public class Window extends JFrame {
 		displayAgent.setPreferredSize(buttonsSize);
 
 		// initialisation de la zone de texte pour le pourcentage de zoom
-		textJSon = new JTextField();
-		textJSon.setText(valZoom + " %");
-		textJSon.addKeyListener(new KeyListener() {
-			public void keyPressed(KeyEvent evt) {
-				if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-					if (isGraphJsonLoaded) {
-						String s = textJSon.getText();
-						double pourcentage = 0, zoomAvant = 0, zoomArr = 0, total = 0;
-						boolean isNumber = false;
-						for (int i = 0; i < s.length(); i++) {
-							if (!Character.isDigit(s.charAt(i))) {
-								isNumber = false;
-							} else {
-								isNumber = true;
-							}
-						}
-
-						if (!isNumber) {
-							textColorStatut.appendDoc(INPUT_VALUE_NOT_INTEGER);
-						} else {
-							pourcentage = Integer.parseInt(s);
-							if (pourcentage > 100) {
-								zoomAvant = pourcentage - 100;
-								total = 1 - (zoomAvant / 100);
-								viewJson.getCamera().setViewPercent(total);
-								valZoom = viewJson.getCamera().getViewPercent() * 100;
-								textJSon.setText(df.format(valZoom) + " %");
-							} else if (pourcentage < 100) {
-								zoomArr = 100 - pourcentage;
-								total = 1 + (zoomArr / 100);
-								viewJson.getCamera().setViewPercent(total);
-								valZoom = viewJson.getCamera().getViewPercent() * 100;
-								textJSon.setText(df.format(valZoom) + " %");
-							} else {
-								viewJson.getCamera().resetView();
-							}
-						}
-					} else {
-						viewJson.getCamera().resetView();
-					}
-				}
-			}
-
-			public void keyReleased(KeyEvent evt) {
-			}
-
-			public void keyTyped(KeyEvent evt) {
-			}
-
-		});
+		textJson = new JTextField();
+		textJson.setText(valZoomJson + " %");
 
 		textAgent = new JTextField();
-		textAgent.setText(valZoom + " %");
-		textAgent.addKeyListener(new KeyListener() {
-			public void keyPressed(KeyEvent evt) {
-				if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-					if (isGraphAgentLoaded) {
-						String s = textAgent.getText();
-						double pourcentage = 0, zoomAvant = 0, zoomArr = 0, total = 0;
-						boolean isNumber = false;
-						for (int i = 0; i < s.length(); i++) {
-							if (!Character.isDigit(s.charAt(i))) {
-								isNumber = false;
-							} else {
-								isNumber = true;
-							}
-						}
-
-						if (!isNumber) {
-							textColorStatut.appendDoc(INPUT_VALUE_NOT_INTEGER);
-						} else {
-							pourcentage = Integer.parseInt(s);
-							if (pourcentage > 100) {
-								zoomAvant = pourcentage - 100;
-								total = 1 - (zoomAvant / 100);
-								viewAgent.getCamera().setViewPercent(total);
-								valZoom = viewAgent.getCamera()
-										.getViewPercent() * 100;
-								textAgent.setText(df.format(valZoom) + " %");
-							} else if (pourcentage < 100) {
-								zoomArr = 100 - pourcentage;
-								total = 1 + (zoomArr / 100);
-								viewJson.getCamera().setViewPercent(total);
-								valZoom = viewAgent.getCamera()
-										.getViewPercent() * 100;
-								textAgent.setText(df.format(valZoom) + " %");
-							} else {
-								viewAgent.getCamera().resetView();
-							}
-						}
-					} else {
-						viewAgent.getCamera().resetView();
-					}
-				}
-			}
-
-			public void keyReleased(KeyEvent evt) {
-			}
-
-			public void keyTyped(KeyEvent evt) {
-			}
-
-		});
+		textAgent.setText(valZoomAgent + " %");
 
 		// Initialisation et dï¿½finition du panneau pour zoomer le graphe Json
 		panelZoomJSon = new JPanel();
 		panelZoomJSon.add(zoomAvantJson);
 		panelZoomJSon.add(zoomArrJson);
-		panelZoomJSon.add(textJSon);
+		panelZoomJSon.add(textJson);
 		panelZoomJSon.add(zoomCenterJson);
 		panelZoomJSon.add(displayJson);
 
@@ -351,29 +249,29 @@ public class Window extends JFrame {
 				"./src/main/resources/buttonsIcons/edge+.png", "edge +");
 		ImageIcon deleteEdgeIcon = new ImageIcon(
 				"./src/main/resources/buttonsIcons/edge-.png", "edge -");
+		ImageIcon autoLayoutOnIcon = new ImageIcon(
+				"./src/main/resources/buttonsIcons/autoLayoutOn.png",
+				"automatic layout on");
+		ImageIcon treeLayoutIcon = new ImageIcon(
+				"./src/main/resources/buttonsIcons/treeLayout.png",
+				"tree layout");
 		ImageIcon cleanIcon = new ImageIcon(
 				"./src/main/resources/buttonsIcons/clean.png", "clean");
 		ImageIcon saveIcon = new ImageIcon(
 				"./src/main/resources/buttonsIcons/save.png", "save");
-		ImageIcon treeLayoutIcon = new ImageIcon(
-				"./src/main/resources/buttonsIcons/treeLayout.png",
-				"tree layout");
-		ImageIcon autoLayoutOnIcon = new ImageIcon(
-				"./src/main/resources/buttonsIcons/autoLayoutOn.png",
-				"automatic layout on");
 
 		addNodeJson = new JButton(addNodeIcon);
 		addNodeJson.setToolTipText(ADD_NODE_TT);
 		addNodeJson.setPreferredSize(buttonsSize);
-		suppNodeJson = new JButton(deleteNodeIcon);
-		suppNodeJson.setToolTipText(DELETE_NODE_TT);
-		suppNodeJson.setPreferredSize(buttonsSize);
+		deleteNodeJson = new JButton(deleteNodeIcon);
+		deleteNodeJson.setToolTipText(DELETE_NODE_TT);
+		deleteNodeJson.setPreferredSize(buttonsSize);
 		addEdgeJson = new JButton(addEdgeIcon);
 		addEdgeJson.setToolTipText(ADD_EDGE_TT);
 		addEdgeJson.setPreferredSize(buttonsSize);
-		suppEdgeJson = new JButton(deleteEdgeIcon);
-		suppEdgeJson.setToolTipText(DELETE_EDGE_TT);
-		suppEdgeJson.setPreferredSize(buttonsSize);
+		deleteEdgeJson = new JButton(deleteEdgeIcon);
+		deleteEdgeJson.setToolTipText(DELETE_EDGE_TT);
+		deleteEdgeJson.setPreferredSize(buttonsSize);
 		structGraphJson = new JButton(autoLayoutOnIcon);
 		structGraphJson.setToolTipText(AUTO_LAYOUT_ENABLED_TT);
 		structGraphJson.setPreferredSize(buttonsSize);
@@ -390,15 +288,15 @@ public class Window extends JFrame {
 		addNodeAgent = new JButton(addNodeIcon);
 		addNodeAgent.setToolTipText(ADD_NODE_TT);
 		addNodeAgent.setPreferredSize(buttonsSize);
-		suppNodeAgent = new JButton(deleteNodeIcon);
-		suppNodeAgent.setToolTipText(DELETE_NODE_TT);
-		suppNodeAgent.setPreferredSize(buttonsSize);
+		deleteNodeAgent = new JButton(deleteNodeIcon);
+		deleteNodeAgent.setToolTipText(DELETE_NODE_TT);
+		deleteNodeAgent.setPreferredSize(buttonsSize);
 		addEdgeAgent = new JButton(addEdgeIcon);
 		addEdgeAgent.setToolTipText(ADD_EDGE_TT);
 		addEdgeAgent.setPreferredSize(buttonsSize);
-		suppEdgeAgent = new JButton(deleteEdgeIcon);
-		suppEdgeAgent.setToolTipText(DELETE_EDGE_TT);
-		suppEdgeAgent.setPreferredSize(buttonsSize);
+		deleteEdgeAgent = new JButton(deleteEdgeIcon);
+		deleteEdgeAgent.setToolTipText(DELETE_EDGE_TT);
+		deleteEdgeAgent.setPreferredSize(buttonsSize);
 		structGraphAgent = new JButton(autoLayoutOnIcon);
 		structGraphAgent.setToolTipText(AUTO_LAYOUT_ENABLED_TT);
 		structGraphAgent.setPreferredSize(buttonsSize);
@@ -411,18 +309,18 @@ public class Window extends JFrame {
 
 		// Ajout des boutons dans les panneaux respectifs
 		panelModifJSon.add(addNodeJson);
-		panelModifJSon.add(suppNodeJson);
+		panelModifJSon.add(deleteNodeJson);
 		panelModifJSon.add(addEdgeJson);
-		panelModifJSon.add(suppEdgeJson);
+		panelModifJSon.add(deleteEdgeJson);
 		panelModifJSon.add(structGraphJson);
 		panelModifJSon.add(treeLayoutJson);
 		panelModifJSon.add(cleanGraphJson);
 		panelModifJSon.add(buttonSave);
 
 		panelModifAgent.add(addNodeAgent);
-		panelModifAgent.add(suppNodeAgent);
+		panelModifAgent.add(deleteNodeAgent);
 		panelModifAgent.add(addEdgeAgent);
-		panelModifAgent.add(suppEdgeAgent);
+		panelModifAgent.add(deleteEdgeAgent);
 		panelModifAgent.add(structGraphAgent);
 		panelModifAgent.add(treeLayoutAgent);
 		panelModifAgent.add(cleanGraphAgent);
@@ -459,10 +357,9 @@ public class Window extends JFrame {
 		menuFile = new JMenu("File");
 		menuDisplay = new JMenu("Display");
 		menuTools = new JMenu("Tools");
-		menuTraces = new JMenu("Generate traces");
 
-		importMenuGauche = new JMenuItem("Import to left");
-		importMenuDroite = new JMenuItem("Import to right");
+		importLeftMenu = new JMenuItem("Import to left");
+		importRightMenu = new JMenuItem("Import to right");
 		exitMenu = new JMenuItem("Exit");
 
 		displayDefault = new JMenuItem("Default");
@@ -471,13 +368,15 @@ public class Window extends JFrame {
 		displayBasic = new JMenuItem("Basic");
 
 		jMenuItemGenererGraphe = new JMenuItem("Generate graph");
+		menuTraces = new JMenu("Generate traces");
 		jMenuItemGenererTraces1 = new JMenuItem("Generate one trace by file");
 		jMenuItemGenererTraces2 = new JMenuItem(
 				"Generate multiple trace into one file");
 
-		menuFile.add(importMenuGauche);
-		menuFile.add(importMenuDroite);
+		menuFile.add(importLeftMenu);
+		menuFile.add(importRightMenu);
 		menuFile.add(exitMenu);
+
 		menuDisplay.add(displayDefault);
 		menuDisplay.add(displayUML);
 		menuDisplay.add(displayAutomaton);
@@ -506,14 +405,14 @@ public class Window extends JFrame {
 		panelGraphAgent = new JPanel();
 
 		// Action lors du clic sur l'item "Import to left"
-		importMenuGauche.addActionListener(new ActionListener() {
+		importLeftMenu.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				clickToImport(true);
 			}
 		});
 
 		// Action lors du clic sur l'item "Import to right"
-		importMenuDroite.addActionListener(new ActionListener() {
+		importRightMenu.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				clickToImport(false);
 			}
@@ -526,6 +425,35 @@ public class Window extends JFrame {
 			}
 		});
 
+		// Action lors du clic sur l'item "Default"
+		displayDefault.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				CustomGraphRenderer.setStyleGraphDefault(graphJson, graphAgent);
+			}
+		});
+
+		// Action lors du clic sur l'item "UML"
+		displayUML.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				CustomGraphRenderer.setStyleGraphUML(graphJson, graphAgent);
+			}
+		});
+
+		// Action lors du clic sur l'item "Automaton"
+		displayAutomaton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				CustomGraphRenderer.setStyleGraphAutomaton(graphJson,
+						graphAgent);
+			}
+		});
+
+		// Action lors du clic sur l'item "Basic"
+		displayBasic.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				CustomGraphRenderer.setStyleGraphBasic(graphJson, graphAgent);
+			}
+		});
+
 		// Action lors du clic sur l'item "Generate graph"
 		jMenuItemGenererGraphe.addActionListener(new ActionListener() {
 			@Override
@@ -535,7 +463,7 @@ public class Window extends JFrame {
 				// nombre de transition maximum par noeud
 				GraphGenerateDialog dialog = new GraphGenerateDialog(
 						Window.this);
-				dialog.show();
+				dialog.setVisible(true);// show();
 
 				// Graphe genere avec succes
 				if (dialog.isGeneratedWithSuccess()) {
@@ -570,47 +498,17 @@ public class Window extends JFrame {
 			}
 		});
 
-		// Action lors du clic sur l'item "Default"
-		displayDefault.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				CustomGraphRenderer.setStyleGraphDefault(graphJson, graphAgent);
-			}
-		});
-
-		// Action lors du clic sur l'item "UML"
-		displayUML.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				CustomGraphRenderer.setStyleGraphUML(graphJson, graphAgent);
-			}
-		});
-
-		// Action lors du clic sur l'item "Automaton"
-		displayAutomaton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				CustomGraphRenderer.setStyleGraphAutomaton(graphJson,
-						graphAgent);
-			}
-		});
-
-		// Action lors du clic sur l'item "Basic"
-		displayBasic.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				CustomGraphRenderer.setStyleGraphBasic(graphJson, graphAgent);
-			}
-		});
-
 		// Action lors du clic sur l'item "To GraphStream"
 		buttonGS.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// Visualisation du graph généré par le fichier importé
-				// au
-				// format .json
+				// au format .json
 
 				if (!textDirectory.getText().equals("Directory")) {
 					try {
 						frame.setCursor(Cursor
 								.getPredefinedCursor(Cursor.WAIT_CURSOR));
-						textJSon.setText("100 %");
+						textJson.setText("100 %");
 						textAgent.setText("100 %");
 						turnAutoLayoutButtonOn(structGraphAgent);
 						turnAutoLayoutButtonOn(structGraphJson);
@@ -657,143 +555,89 @@ public class Window extends JFrame {
 			}
 		});
 
-		// Action lors du clic sur l'item "+" de la partie gauche
+		// Action lors du clic sur l'item "Zoom +" de la partie gauche
 		zoomAvantJson.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				modifZoom(viewJson, textJSon, isGraphJsonLoaded, ZOOM);
+				modifZoom(viewJson, textJson, isGraphJsonLoaded, ZOOM);
 			}
 		});
 
-		// Action lors du clic sur l'item "-" de la partie gauche
+		// Action lors du clic sur l'item "Zoom -" de la partie gauche
 		zoomArrJson.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				modifZoom(viewJson, textJSon, isGraphJsonLoaded, DEZOOM);
+				modifZoom(viewJson, textJson, isGraphJsonLoaded, DEZOOM);
+			}
+		});
+
+		// Action lors de l'appui sur la touche entrée dans la zone de zoom de
+		// la partie gauche
+		textJson.addKeyListener(new KeyListener() {
+			public void keyPressed(KeyEvent evt) {
+				enterNewZoomValue(evt, isGraphJsonLoaded, textJson, viewJson);
+			}
+
+			public void keyReleased(KeyEvent evt) {
+			}
+
+			public void keyTyped(KeyEvent evt) {
+			}
+
+		});
+
+		// Action lors du clic sur l'item "Center" de la partie gauche
+		zoomCenterJson.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				centerView(isGraphJsonLoaded, viewJson, textJson);
+			}
+		});
+
+		// Action lors du clic sur l'item "Display" de la partie gauche
+		displayJson.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (isGraphJsonLoaded) {
+					new WindowDisplay(GRAPH_JSON_NAME, viewerJson, graphJson);
+				} else {
+					textColorStatut.appendDoc(NO_GRAPH_GENERATED);
+				}
 			}
 		});
 
 		// Action lors du clic sur l'item "Node +" de la partie gauche
 		addNodeJson.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				AddNodeDialog addNodeJSon = new AddNodeDialog(frame, "Add Node");
-				String s = addNodeJSon.getName();
-				if (!addNodeJSon.getFerme()) {
-					if (isGraphJsonLoaded) {
-						if (!s.equals("")) {
-							Node n = graphJson.getNode(s);
-							if (n == null) {
-								GraphModifier.addNode(addNodeJSon, graphJson);
-							} else {
-								msgError(NAME_ALREADY_IN_USE);
-							}
-						} else {
-							msgError(NAME_FIELD_EMPTY);
-						}
-					} else {
-						if (!s.equals("")) {
-							graphJson = new MultiGraph(GRAPH_JSON_NAME);
-							initGraphPropertiesJson();
-							initPanelGraphJson();
-							GraphModifier.addNode(addNodeJSon, graphJson);
-						} else {
-							msgError(NAME_FIELD_EMPTY);
-						}
-					}
-				}
+				addNode(isGraphJsonLoaded, graphJson, GRAPH_JSON_NAME);
 			}
 		});
 
 		// Action lors du clic sur l'item "Node -" de la
 		// partie gauche
-		suppNodeJson.addActionListener(new ActionListener() {
+		deleteNodeJson.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				if (isGraphJsonLoaded) {
-					SuppNodeDialog suppNodeJSon = new SuppNodeDialog(frame,
-							"Suppr Node", graphJson);
-					if (!suppNodeJSon.getFerme()) {
-						String s = suppNodeJSon.getName();
-						textColorStatut.appendDoc(s);
-						Node n = graphJson.getNode(s);
-						for (Edge edge : n.getEachEdge()) {
-							spriteManagerJson.removeSprite(edge.getId());
-						}
-						n = graphJson.removeNode(s);
-						if (n != null) {
-							msgAlert(ACTION_ON_NODE + s + ERASE_ACTION);
-						}
-					}
-				} else {
-					textColorStatut.appendDoc(NO_NODE_DETECTED);
-				}
+				deleteNode(isGraphJsonLoaded, graphJson, spriteManagerJson);
 			}
 		});
 
 		// Action lors du clic sur l'item "Edge +" de la partie gauche
 		addEdgeJson.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				if (isGraphJsonLoaded) {
-					AddEdgeDialog addEdgeJSon = new AddEdgeDialog(frame,
-							"Add Edge", graphJson);
-					String s = addEdgeJSon.getLabel();
-					if (!addEdgeJSon.getFerme() && addEdgeJSon.getCheck()) {
-						if (!s.equals("")) {
-							Edge ed = graphJson.getEdge(s);
-							if (ed == null) {
-								try {
-									GraphModifier.addEdge(addEdgeJSon,
-											graphJson, spriteManagerJson);
-								} catch (NoSpecifiedNodeException e) {
-									textColorStatut.appendErrorMessage(e
-											.getMessage());
-								}
-							} else {
-								msgError(NAME_ALREADY_IN_USE);
-							}
-						} else {
-							msgError(NAME_FIELD_EMPTY);
-						}
-					}
-				} else {
-					textColorStatut.appendDoc(NO_NODE_DETECTED);
-				}
+				addEdge(isGraphJsonLoaded, graphJson, spriteManagerJson);
 			}
 		});
 
 		// Action lors du clic sur l'item "Edge -" de la
 		// partie gauche
-		suppEdgeJson.addActionListener(new ActionListener() {
+		deleteEdgeJson.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				if (isGraphJsonLoaded) {
-					SuppEdgeDialog suppEdgeJSon = new SuppEdgeDialog(frame,
-							"Suppr Edge", graphJson);
-					if (!suppEdgeJSon.getFerme()) {
-						String s = suppEdgeJSon.getName();
-						Edge e = graphJson.removeEdge(s);
-						spriteManagerJson.removeSprite(e.getId());
-						if (e != null) {
-							msgAlert(ACTION_ON_EDGE + s + ERASE_ACTION);
-						}
-					}
-				} else {
-					textColorStatut.appendDoc(NO_EDGE_DETECTED);
-				}
+				deleteEdge(isGraphJsonLoaded, graphJson, spriteManagerJson);
 			}
 		});
 
-		// Action lors du clic sur l'item "Auto Layout" de la
+		// Action lors du clic sur l'item "Automatic Layout" de la
 		// partie gauche
 		structGraphJson.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if (isGraphJsonLoaded) {
-					if (isAutoLayoutJson) {
-						turnAutoLayoutButtonOff(structGraphJson);
-						viewerJson.disableAutoLayout();
-						isAutoLayoutJson = false;
-					} else {
-						turnAutoLayoutButtonOn(structGraphJson);
-						viewerJson.enableAutoLayout();
-						isAutoLayoutJson = true;
-					}
-				}
+				autoLayout(isGraphJsonLoaded, isAutoLayoutJson,
+						GRAPH_JSON_NAME, viewerJson, structGraphJson);
 			}
 		});
 
@@ -804,6 +648,19 @@ public class Window extends JFrame {
 					CustomGraphRenderer.setTreeLayout(graphJson, viewerJson);
 					turnAutoLayoutButtonOff(structGraphJson);
 					isAutoLayoutJson = false;
+				}
+			}
+		});
+
+		// Action lors du clic sur l'item "Clean" de la partie gauche
+		cleanGraphJson.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (isGraphJsonLoaded) {
+					panelGraphJSon.removeAll();
+					isGraphJsonLoaded = false;
+					panelGraphJSon.updateUI();
+				} else {
+					textColorStatut.appendDoc(NO_GRAPH_GENERATED);
 				}
 			}
 		});
@@ -861,94 +718,65 @@ public class Window extends JFrame {
 			}
 		});
 
-		// Action lors du clic sur l'item "Center" de la partie gauche
-		zoomCenterJson.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				viewJson.getCamera().resetView();
-				textJSon.setText("100 %");
-			}
-		});
-
-		// Action lors du clic sur l'item "Clean" de la partie gauche
-		cleanGraphJson.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (isGraphJsonLoaded) {
-					panelGraphJSon.removeAll();
-					isGraphJsonLoaded = false;
-					panelGraphJSon.updateUI();
-				} else {
-					textColorStatut.appendDoc(NO_GRAPH_GENERATED);
-				}
-			}
-		});
-
-		// Action lors du clic sur l'item "Display" de la partie gauche
-		// TODO Gï¿½rez la view sur le nouvel affichage du graphe
-		displayJson.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (isGraphJsonLoaded) {
-					/* WindowDisplay windowJson = */new WindowDisplay(
-							"Graph Json", viewJson, viewerJson, graphJson);
-				} else {
-					textColorStatut.appendDoc(NO_GRAPH_GENERATED);
-				}
-			}
-		});
-
-		// Action lors du clic sur l'item "+" de la partie droite
+		// Action lors du clic sur l'item "Zoom +" de la partie droite
 		zoomAvantAgent.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				modifZoom(viewAgent, textAgent, isGraphAgentLoaded, ZOOM);
 			}
 		});
 
-		// Action lors du clic sur l'item "-" de la partie droite
+		// Action lors du clic sur l'item "Zoom -" de la partie droite
 		zoomArrAgent.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				modifZoom(viewAgent, textAgent, isGraphAgentLoaded, DEZOOM);
 			}
 		});
 
+		// Action lors de l'appui sur la touche entrée dans la zone de zoom de
+		// la partie droite
+		textAgent.addKeyListener(new KeyListener() {
+			public void keyPressed(KeyEvent evt) {
+				enterNewZoomValue(evt, isGraphAgentLoaded, textAgent, viewAgent);
+			}
+
+			public void keyReleased(KeyEvent evt) {
+			}
+
+			public void keyTyped(KeyEvent evt) {
+			}
+
+		});
+
+		// Action lors du clic sur l'item "Center" de la partie droite
+		zoomCenterAgent.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				centerView(isGraphAgentLoaded, viewAgent, textAgent);
+			}
+		});
+
+		// Action lors du clic sur l'item "Display" de la partie droite
+		displayAgent.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (isGraphAgentLoaded) {
+					new WindowDisplay(GRAPH_AGENT_NAME, viewerAgent, graphAgent);
+				} else {
+					textColorStatut.appendDoc(NO_GRAPH_GENERATED);
+				}
+			}
+		});
+
 		// Action lors du clic sur l'item "Node +" de la partie droite
 		addNodeAgent.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				AddNodeDialog addNodeAgent = new AddNodeDialog(frame,
-						"Add Node");
-				if (!addNodeAgent.getFerme()) {
-					if (isGraphAgentLoaded) {
-						GraphModifier.addNode(addNodeAgent, graphAgent);
-					} else {
-						graphAgent = new MultiGraph(GRAPH_AGENT_NAME);
-						initGraphPropertiesAgent();
-						initPanelGraphAgent();
-						GraphModifier.addNode(addNodeAgent, graphAgent);
-					}
-				}
+				addNode(isGraphAgentLoaded, graphAgent, GRAPH_AGENT_NAME);
 			}
 		});
 
 		// Action lors du clic sur l'item "Node -" de la
 		// partie droite
-		suppNodeAgent.addActionListener(new ActionListener() {
+		deleteNodeAgent.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				if (isGraphAgentLoaded) {
-					SuppNodeDialog suppNodeAgent = new SuppNodeDialog(frame,
-							"Suppr Node", graphAgent);
-					if (!suppNodeAgent.getFerme()) {
-						String s = suppNodeAgent.getName();
-						textColorStatut.appendDoc(s);
-						Node n = graphAgent.getNode(s);
-						for (Edge edge : n.getEachEdge()) {
-							spriteManagerAgent.removeSprite(edge.getId());
-						}
-						n = graphAgent.removeNode(s);
-						if (n != null) {
-							msgAlert(ACTION_ON_NODE + s + ERASE_ACTION);
-						}
-					}
-				} else {
-					textColorStatut.appendDoc(NO_NODE_DETECTED);
-				}
+				deleteNode(isGraphAgentLoaded, graphAgent, spriteManagerAgent);
 			}
 		});
 
@@ -975,40 +803,18 @@ public class Window extends JFrame {
 
 		// Action lors du clic sur l'item "Edge -" de la
 		// partie droite
-		suppEdgeAgent.addActionListener(new ActionListener() {
+		deleteEdgeAgent.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				if (isGraphAgentLoaded) {
-					SuppEdgeDialog suppEdgeAgent = new SuppEdgeDialog(frame,
-							"Suppr Edge", graphAgent);
-					if (!suppEdgeAgent.getFerme()) {
-						String s = suppEdgeAgent.getName();
-						Edge e = graphAgent.removeEdge(s);
-						spriteManagerAgent.removeSprite(e.getId());
-						if (e != null) {
-							msgAlert(ACTION_ON_EDGE + s + ERASE_ACTION);
-						}
-					}
-				} else {
-					textColorStatut.appendDoc(NO_EDGE_DETECTED);
-				}
+				deleteEdge(isGraphAgentLoaded, graphAgent, spriteManagerAgent);
 			}
 		});
 
-		// Action lors du clic sur l'item "Structurer / Dï¿½structurer" de la
+		// Action lors du clic sur l'item "Automatic layout" de la
 		// partie droite
 		structGraphAgent.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if (isGraphAgentLoaded) {
-					if (isAutoLayoutAgent) {
-						turnAutoLayoutButtonOff(structGraphAgent);
-						viewerAgent.disableAutoLayout();
-						isAutoLayoutAgent = false;
-					} else {
-						turnAutoLayoutButtonOn(structGraphAgent);
-						viewerAgent.enableAutoLayout();
-						isAutoLayoutAgent = true;
-					}
-				}
+				autoLayout(isGraphAgentLoaded, isAutoLayoutAgent,
+						GRAPH_AGENT_NAME, viewerAgent, structGraphAgent);
 			}
 		});
 
@@ -1023,14 +829,6 @@ public class Window extends JFrame {
 			}
 		});
 
-		// Action lors du clic sur l'item "Center" de la partie droite
-		zoomCenterAgent.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				viewAgent.getCamera().resetView();
-				textAgent.setText("100 %");
-			}
-		});
-
 		// Action lors du clic sur l'item "Clean" de la partie droite
 		cleanGraphAgent.addActionListener(new ActionListener() {
 
@@ -1039,19 +837,6 @@ public class Window extends JFrame {
 					panelGraphAgent.removeAll();
 					isGraphAgentLoaded = false;
 					panelGraphAgent.updateUI();
-				} else {
-					textColorStatut.appendDoc(NO_GRAPH_GENERATED);
-				}
-			}
-		});
-
-		// Action lors du clic sur l'item "Display" de la partie droite
-		// TODO Gï¿½rez la view sur le nouvel affichage du graphe
-		displayAgent.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (isGraphAgentLoaded) {
-					/* WindowDisplay windowAgent = */new WindowDisplay(
-							"Graph Agent", viewAgent, viewerAgent, graphAgent);
 				} else {
 					textColorStatut.appendDoc(NO_GRAPH_GENERATED);
 				}
@@ -1274,7 +1059,7 @@ public class Window extends JFrame {
 		return null;
 	}
 
-	public void initGraphPropertiesJson() {
+	public static void initGraphPropertiesJson() {
 		CustomGraphRenderer.setStyleGraphBasic(graphJson);
 		GraphModifier.setNodesClass(graphJson);
 		spriteManagerJson = new SpriteManager(graphJson);
@@ -1292,10 +1077,10 @@ public class Window extends JFrame {
 		// suppression du comportement par defaut du MouseListener de la view
 		viewJson.setMouseManager(new CustomMouseManager());
 
-		setListenerOnViewer(viewerJson, graphJson, textJSon, isGraphJsonLoaded);
+		setListenerOnViewer(viewerJson, graphJson, textJson, isGraphJsonLoaded);
 	}
 
-	public void initGraphPropertiesAgent() {
+	public static void initGraphPropertiesAgent() {
 		CustomGraphRenderer.setStyleGraphBasic(graphAgent);
 		GraphModifier.setNodesClass(graphAgent);
 		spriteManagerAgent = new SpriteManager(graphAgent);
@@ -1316,29 +1101,46 @@ public class Window extends JFrame {
 		setListenerOnViewer(viewerAgent, graphAgent, textAgent,
 				isGraphAgentLoaded);
 	}
+	
+	public static void initGraphProperties(String graphName) {
+		if (graphName.equals(GRAPH_JSON_NAME)) {
+			initGraphPropertiesJson();
+		} else if (graphName.equals(GRAPH_AGENT_NAME)) {
+			initGraphPropertiesAgent();
+		}
+	}
 
-	public void initPanelGraphJson() {
+	public static void initPanelGraphJson() {
 		panelGraphJSon.removeAll();
 		panelGraphJSon.setLayout(new BorderLayout());
 		panelGraphJSon.add((Component) viewJson, BorderLayout.CENTER);
 		scrollJSon.setViewportView(panelGraphJSon);
 	}
 
-	public void initPanelGraphAgent() {
+	public static void initPanelGraphAgent() {
 		panelGraphAgent.removeAll();
 		panelGraphAgent.setLayout(new BorderLayout());
 		panelGraphAgent.add((Component) viewAgent, BorderLayout.CENTER);
 		scrollAgent.setViewportView(panelGraphAgent);
 	}
 
+	public static void initPanelGraph(String graphName) {
+		if (graphName.equals(GRAPH_JSON_NAME)) {
+			initPanelGraphJson();
+		} else if (graphName.equals(GRAPH_AGENT_NAME)) {
+			initPanelGraphAgent();
+		}
+	}
+
 	public static void modifZoom(View view, JTextField jTextField,
 			boolean isGraphLoaded, double modif) {
-		double zoom, valZoom;
+		double zoom;
+		int valZoom;
 		if (isGraphLoaded) {
 			zoom = view.getCamera().getViewPercent();
 			view.getCamera().setViewPercent(zoom + modif);
-			valZoom = view.getCamera().getViewPercent() * 100;
-			jTextField.setText(df.format(valZoom) + " %");
+			valZoom = (int) (view.getCamera().getViewPercent() * 100);
+			jTextField.setText(valZoom + " %");
 		}
 	}
 
@@ -1392,8 +1194,151 @@ public class Window extends JFrame {
 		s += "</html>";
 		return s;
 	}
+	
+	public static void enterNewZoomValue(KeyEvent evt, Boolean isGraphLoaded,
+			JTextField textZoom, View view) {
+		if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+			int valZoom;
 
-	public void turnAutoLayoutButtonOn(JButton button) {
+			if (isGraphLoaded) {
+				String s = textZoom.getText();
+				double pourcentage = 0, zoomAvant = 0, zoomArr = 0, total = 0;
+				boolean isNumber = false;
+				for (int i = 0; i < s.length(); i++) {
+					if (!Character.isDigit(s.charAt(i))) {
+						isNumber = false;
+					} else {
+						isNumber = true;
+					}
+				}
+
+				if (!isNumber) {
+					textColorStatut.appendDoc(INPUT_VALUE_NOT_INTEGER);
+				} else {
+					pourcentage = Integer.parseInt(s);
+					if (pourcentage > 100) {
+						zoomAvant = pourcentage - 100;
+						total = 1 - (zoomAvant / 100);
+						view.getCamera().setViewPercent(total);
+						valZoom = (int) (view.getCamera().getViewPercent() * 100);
+						textZoom.setText(valZoom + " %");
+					} else if (pourcentage < 100) {
+						zoomArr = 100 - pourcentage;
+						total = 1 + (zoomArr / 100);
+						view.getCamera().setViewPercent(total);
+						valZoom = (int) (viewJson.getCamera().getViewPercent() * 100);
+						textZoom.setText(valZoom + " %");
+					} else {
+						view.getCamera().resetView();
+					}
+				}
+			} else {
+				view.getCamera().resetView();
+			}
+		}
+	}
+
+	public void centerView(Boolean isGraphLoaded, View view, JTextField textZoom) {
+		if (isGraphLoaded) {
+			view.getCamera().resetView();
+			textZoom.setText("100 %");
+		}
+	}
+
+	public static void addNode(boolean isGraphLoaded, Graph graph,
+			String graphName) {
+		AddNodeDialog addNodeDialog = new AddNodeDialog(frame, "Add Node");
+		String s = addNodeDialog.getName();
+		if (!addNodeDialog.getFerme()) {
+			if (isGraphLoaded) {
+				if (!s.equals("")) {
+					Node n = graph.getNode(s);
+					if (n == null) {
+						GraphModifier.addNode(addNodeDialog, graph);
+					} else {
+						msgError(NAME_ALREADY_IN_USE);
+					}
+				} else {
+					msgError(NAME_FIELD_EMPTY);
+				}
+			} else {
+				if (!s.equals("")) {
+					if (graphName.equals(GRAPH_JSON_NAME)) {
+						graphJson = new MultiGraph(graphName);
+						graph = graphJson;
+					} else if (graphName.equals(GRAPH_AGENT_NAME)) {
+						graphAgent = new MultiGraph(graphName);
+						graph = graphAgent;
+					}
+					initGraphProperties(graphName);
+					initPanelGraph(graphName);
+					GraphModifier.addNode(addNodeDialog, graph);
+				} else {
+					msgError(NAME_FIELD_EMPTY);
+				}
+			}
+		}
+	}
+
+	public static void deleteNode(boolean isGraphLoaded, Graph graph,
+			SpriteManager spriteManager) {
+		if (isGraphLoaded) {
+			DeleteNodeDialog deleteNodeDialog = new DeleteNodeDialog(frame,
+					"Delete Node", graph);
+			if (!deleteNodeDialog.getFerme()) {
+				String s = deleteNodeDialog.getName();
+				textColorStatut.appendDoc(s);
+				Node n = graph.getNode(s);
+				for (Edge edge : n.getEachEdge()) {
+					spriteManager.removeSprite(edge.getId());
+				}
+				n = graph.removeNode(s);
+				if (n != null) {
+					msgAlert(ACTION_ON_NODE + s + ERASE_ACTION);
+				}
+			}
+		} else {
+			textColorStatut.appendDoc(NO_NODE_DETECTED);
+		}
+	}
+
+	public static void addEdge(Boolean isGraphLoaded, Graph graph,
+			SpriteManager spriteManager) {
+		if (isGraphLoaded) {
+			AddEdgeDialog addEdgeDialog = new AddEdgeDialog(frame, "Add Edge",
+					graph);
+			if (!addEdgeDialog.getFerme()) {
+				try {
+					GraphModifier.addEdge(addEdgeDialog, graph, spriteManager);
+
+				} catch (NoSpecifiedNodeException e) {
+					textColorStatut.appendErrorMessage(e.getMessage());
+				}
+			}
+		} else {
+			textColorStatut.appendDoc(NO_NODE_DETECTED);
+		}
+	}
+
+	public static void deleteEdge(Boolean isGraphLoaded, Graph graph,
+			SpriteManager spriteManager) {
+		if (isGraphLoaded) {
+			SuppEdgeDialog deleteEdgeDialog = new SuppEdgeDialog(frame,
+					"Delete Edge", graph);
+			if (!deleteEdgeDialog.getFerme()) {
+				String s = deleteEdgeDialog.getName();
+				Edge e = graph.removeEdge(s);
+				spriteManager.removeSprite(e.getId());
+				if (e != null) {
+					msgAlert(ACTION_ON_EDGE + s + ERASE_ACTION);
+				}
+			}
+		} else {
+			textColorStatut.appendDoc(NO_EDGE_DETECTED);
+		}
+	}
+
+	public static void turnAutoLayoutButtonOn(JButton button) {
 		ImageIcon autoLayoutOnIcon = new ImageIcon(
 				"./src/main/resources/buttonsIcons/autoLayoutOn.png",
 				"automatic layout on");
@@ -1401,21 +1346,44 @@ public class Window extends JFrame {
 		button.setToolTipText(AUTO_LAYOUT_ENABLED_TT);
 	}
 
-	public void turnAutoLayoutButtonOff(JButton button) {
+	public static void turnAutoLayoutButtonOff(JButton button) {
 		ImageIcon autoLayoutOffIcon = new ImageIcon(
 				"./src/main/resources/buttonsIcons/autoLayoutOff.png",
 				"automatic layout on");
 		button.setIcon(autoLayoutOffIcon);
 		button.setToolTipText(AUTO_LAYOUT_DISABLED_TT);
 	}
+	
+	public void autoLayout(Boolean isGraphLoaded, Boolean isAutoLayout,
+			String graphName, Viewer viewer, JButton structGraph) {
+		if (isGraphLoaded) {
+			if (isAutoLayout) {
+				turnAutoLayoutButtonOff(structGraph);
+				viewer.disableAutoLayout();
+				if (graphName.equals(GRAPH_JSON_NAME)) {
+					isAutoLayoutJson = false;
+				} else if (graphName.equals(GRAPH_AGENT_NAME)) {
+					isAutoLayoutAgent = false;
+				}
+			} else {
+				turnAutoLayoutButtonOn(structGraph);
+				viewer.enableAutoLayout();
+				if (graphName.equals(GRAPH_JSON_NAME)) {
+					isAutoLayoutJson = true;
+				} else if (graphName.equals(GRAPH_AGENT_NAME)) {
+					isAutoLayoutAgent = true;
+				}
+			}
+		}
+	}
 
-	private void msgError(String s) {
-		JOptionPane.showMessageDialog(this, s, "Error",
+	public static void msgError(String s) {
+		JOptionPane.showMessageDialog(null, s, "Error",
 				JOptionPane.ERROR_MESSAGE);
 	}
 
-	private void msgAlert(String s) {
-		JOptionPane.showMessageDialog(this, s, "Alert",
+	public static void msgAlert(String s) {
+		JOptionPane.showMessageDialog(null, s, "Alert",
 				JOptionPane.INFORMATION_MESSAGE);
 	}
 
@@ -1429,7 +1397,7 @@ public class Window extends JFrame {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				Window.this.textColorStatut.appendDoc(msg);
+				Window.textColorStatut.appendDoc(msg);
 			}
 		}).start();
 	}

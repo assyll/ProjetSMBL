@@ -16,7 +16,7 @@ import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 
 @SuppressWarnings("serial")
-public class SuppNodeDialog extends JDialog implements ActionListener {
+public class DeleteNodeDialog extends JDialog implements ActionListener {
 
 	JFrame frame;
 	Graph graph;
@@ -30,7 +30,7 @@ public class SuppNodeDialog extends JDialog implements ActionListener {
 	String nameNode;
 
 	@SuppressWarnings("static-access")
-	public SuppNodeDialog(JFrame f, String s, Graph g) {
+	public DeleteNodeDialog(JFrame f, String s, Graph g) {
 		super(f, s, true);
 		this.setDefaultCloseOperation(this.DISPOSE_ON_CLOSE);
 		frame = f;

@@ -177,17 +177,15 @@ public class AddEdgeDialog extends JDialog implements ActionListener {
 
 			if (!ferme) {
 				nbAtt = getNbAtt();
-
-				System.out.println(attDialog.isExit());
 				
 				if (nbAtt != 0) {
 					attDialog = new AttributDialog(getFrame(),
 							"Attributs Node", getNbAtt());
-				}
-
-				if (attDialog.isExit()) {
-					ferme = true;
-					check = false;
+					if (attDialog.isExit()) {
+						ferme = true;
+						check = false;
+						nameEdge.setText("");
+					}
 				}
 
 				dispose();
