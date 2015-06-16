@@ -10,13 +10,14 @@ import java.util.Map;
 
 import trace.Action;
 import trace.ActionTrace;
+import agents.impl.Child;
 import agents.impl.RequestMessage;
 import agents.impl.ResponseMessage;
 import agents.interfaces.StateMemory;
 
 public class StateMemImpl extends Memory<StateMemory> implements StateMemory {
 
-	private String _stateId, _fatherTransId;
+	private String _stateId;
 	private boolean _waitingForTraceElmt, _gotRequest, _waitingForResponse, _gotResponse, _actionsToProcess;
 	private List<String> _userNameWaitingForTraceList;
 	private List<ActionTrace> _actionMap;
@@ -24,8 +25,12 @@ public class StateMemImpl extends Memory<StateMemory> implements StateMemory {
 	private ResponseMessage _responseMsg;
 	private boolean _isRoot;
 	private Map<Action,String> _inputTransitionIdByAction;
+	private Map<Action,String> _outputTransitionIdByAction;
 	private Map<String,String> _stateChildIdByTransId;
+	private Map<String, String> _stateFatherIdByTransId;
 	private int _userNameIndex;
+	private List<String> agentIdInMyCell;
+	private List<Child>[] _childListArrayWithWithout;
 
 	public StateMemImpl(String id, boolean isRoot) {
 		_stateId = id;
@@ -39,9 +44,17 @@ public class StateMemImpl extends Memory<StateMemory> implements StateMemory {
 		_responseMsg = null;
 		_gotResponse = false;
 		_stateChildIdByTransId = new HashMap<String, String>();
+		_stateFatherIdByTransId = new HashMap<String, String>();
 		_inputTransitionIdByAction = new HashMap<Action, String>();
+		_outputTransitionIdByAction = new HashMap<Action, String>();
 		_actionsToProcess = false;
 		_userNameIndex = 0;
+		agentIdInMyCell = new ArrayList<String>();
+		
+		_childListArrayWithWithout = new List[2];
+		_childListArrayWithWithout[0] = new ArrayList<Child>();
+		_childListArrayWithWithout[1] = new ArrayList<Child>();
+		
 	}
 
 
@@ -148,7 +161,7 @@ public class StateMemImpl extends Memory<StateMemory> implements StateMemory {
 
 
 	@Override
-	public List<ActionTrace> getActionList() {
+	public List<ActionTrace> getActionTraceList() {
 		return _actionMap;
 	}
 
@@ -218,8 +231,10 @@ public class StateMemImpl extends Memory<StateMemory> implements StateMemory {
 
 
 	@Override
-	public void addChild(String stateId, String transId) {
+	public void addChild(String stateId, String transId, boolean childWithChild) {
 		_stateChildIdByTransId.put(transId, stateId);
+		_childListArrayWithWithout[childWithChild ? 0 : 1].
+			add(new Child(transId, stateId));
 	}
 
 
@@ -269,8 +284,8 @@ public class StateMemImpl extends Memory<StateMemory> implements StateMemory {
 
 
 	@Override
-	public void addFather(String transId) {
-		_fatherTransId = transId;
+	public void addFather(String transId, String stateId) {
+		_stateFatherIdByTransId.put(transId, stateId);
 	}
 
 
@@ -294,6 +309,76 @@ public class StateMemImpl extends Memory<StateMemory> implements StateMemory {
 	public void removeResponseMsg() {
 		_responseMsg = null;
 		_gotResponse = false;
+	}
+
+
+
+	@Override
+	public List<Action> getActionList() {
+		return new ArrayList<Action>(_outputTransitionIdByAction.keySet());
+	}
+
+
+
+	@Override
+	public void setAgentIdInMyCell(List<String> agentIds) {
+		agentIdInMyCell = agentIds;
+	}
+
+
+
+	@Override
+	public List<String> getAgentIdInMyCell() {
+		return agentIdInMyCell;
+	}
+
+
+
+	@Override
+	public List<Child> getChildrenWithSohn() {
+		return _childListArrayWithWithout[0];
+	}
+
+
+
+	@Override
+	public List<Child> getChildrenWithoutSohn() {
+		return _childListArrayWithWithout[1];
+	}
+
+
+
+	@Override
+	public List<String> getStateFatherList() {
+		return new ArrayList<String> (_stateFatherIdByTransId.values());
+	}
+
+
+
+	@Override
+	public List<String> getTransFatherList() {
+		return new ArrayList<String> (_stateFatherIdByTransId.keySet());
+	}
+
+
+
+	@Override
+	public List<String> getStateChildList() {
+		return new ArrayList<String> (_stateChildIdByTransId.values());
+	}
+
+
+
+	@Override
+	public List<String> getTransChildList() {
+		return new ArrayList<String> (_stateChildIdByTransId.keySet());
+	}
+
+
+
+	@Override
+	public void addAction(Action action, String destState) {
+		_outputTransitionIdByAction.put(action, destState);
 	}
 
 

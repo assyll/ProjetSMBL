@@ -2,6 +2,7 @@ package general;
 
 import agents.interfaces.Do;
 import agents.interfaces.IGetThread;
+import agents.interfaces.ISuicide;
 import agents.interfaces.PullMessage;
 import agents.interfaces.SendMessage;
 import agents.interfaces.StateAction;
@@ -138,6 +139,12 @@ public abstract class EcoAgents {
        * 
        */
       public ICreateAgent create();
+      
+      /**
+       * This can be called to access the provided port.
+       * 
+       */
+      public ISuicide suicide();
     }
     
     public interface Parts {
@@ -184,8 +191,17 @@ public abstract class EcoAgents {
         }
       }
       
+      private void init_suicide() {
+        assert this.suicide == null: "This is a bug.";
+        this.suicide = this.implementation.make_suicide();
+        if (this.suicide == null) {
+        	throw new RuntimeException("make_suicide() in general.EcoAgents$StateAgent should not return null.");
+        }
+      }
+      
       protected void initProvidedPorts() {
         init_create();
+        init_suicide();
       }
       
       public ComponentImpl(final EcoAgents.StateAgent implem, final EcoAgents.StateAgent.Requires b, final boolean doInits) {
@@ -212,6 +228,12 @@ public abstract class EcoAgents {
       
       public ICreateAgent create() {
         return this.create;
+      }
+      
+      private ISuicide suicide;
+      
+      public ISuicide suicide() {
+        return this.suicide;
       }
       
       private Agent.Component<ContextInfos, EnvUpdate, StateAction, StateMemory, ICreateAgent, SendMessage, PullMessage> agentComponent;
@@ -249,6 +271,10 @@ public abstract class EcoAgents {
         
         public final IGraph graph() {
           return EcoAgents.StateAgent.ComponentImpl.this.bridge.graph();
+        }
+        
+        public final ISuicide suicide() {
+          return EcoAgents.StateAgent.ComponentImpl.this.suicide();
         }
       }
       
@@ -302,6 +328,13 @@ public abstract class EcoAgents {
      * 
      */
     protected abstract ICreateAgent make_create();
+    
+    /**
+     * This should be overridden by the implementation to define the provided port.
+     * This will be called once during the construction of the component to initialize the port.
+     * 
+     */
+    protected abstract ISuicide make_suicide();
     
     /**
      * This can be called by the implementation to access the required ports.
@@ -440,6 +473,12 @@ public abstract class EcoAgents {
        * 
        */
       public ICreateAgent create();
+      
+      /**
+       * This can be called to access the provided port.
+       * 
+       */
+      public ISuicide suicide();
     }
     
     public interface Parts {
@@ -486,8 +525,17 @@ public abstract class EcoAgents {
         }
       }
       
+      private void init_suicide() {
+        assert this.suicide == null: "This is a bug.";
+        this.suicide = this.implementation.make_suicide();
+        if (this.suicide == null) {
+        	throw new RuntimeException("make_suicide() in general.EcoAgents$TransitionAgent should not return null.");
+        }
+      }
+      
       protected void initProvidedPorts() {
         init_create();
+        init_suicide();
       }
       
       public ComponentImpl(final EcoAgents.TransitionAgent implem, final EcoAgents.TransitionAgent.Requires b, final boolean doInits) {
@@ -514,6 +562,12 @@ public abstract class EcoAgents {
       
       public ICreateAgent create() {
         return this.create;
+      }
+      
+      private ISuicide suicide;
+      
+      public ISuicide suicide() {
+        return this.suicide;
       }
       
       private Agent.Component<EnvInfos, EnvUpdate, TransAction, TransMemory, ICreateAgent, SendMessage, PullMessage> agentComponent;
@@ -551,6 +605,10 @@ public abstract class EcoAgents {
         
         public final IGraph graph() {
           return EcoAgents.TransitionAgent.ComponentImpl.this.bridge.graph();
+        }
+        
+        public final ISuicide suicide() {
+          return EcoAgents.TransitionAgent.ComponentImpl.this.suicide();
         }
       }
       
@@ -604,6 +662,13 @@ public abstract class EcoAgents {
      * 
      */
     protected abstract ICreateAgent make_create();
+    
+    /**
+     * This should be overridden by the implementation to define the provided port.
+     * This will be called once during the construction of the component to initialize the port.
+     * 
+     */
+    protected abstract ISuicide make_suicide();
     
     /**
      * This can be called by the implementation to access the required ports.

@@ -23,7 +23,7 @@ import agents.interfaces.StateMemory;
 import agents.interfaces.TransMemory;
 
 public class TransForwardImpl extends TransForward<CycleAlert, ContextInfos, EnvInfos, EnvUpdate, SendMessage, PullMessage, ITakeAction> 
-implements CycleAlert, EnvInfos, EnvUpdate, SendMessage, PullMessage, ILog, ILetterBox, IGraph {
+implements CycleAlert, EnvInfos, EnvUpdate, SendMessage, PullMessage, ILog, IGraph {
 
 	private String id;
 	private List<RequestMessage> requestMessagesQueue;
@@ -109,6 +109,11 @@ implements CycleAlert, EnvInfos, EnvUpdate, SendMessage, PullMessage, ILog, ILet
 	public void sendRequestMessage(RequestMessage request) {
 		eco_provides().l().sendRequestMessage(request);
 	}
+	
+	@Override
+	public void sendResponseMessage(ResponseMessage response) {
+		eco_provides().l().sendResponseMessage(response);
+	}
 
 	@Override
 	public RequestMessage pullRequestMessage() {
@@ -127,13 +132,11 @@ implements CycleAlert, EnvInfos, EnvUpdate, SendMessage, PullMessage, ILog, ILet
 			return null;
 		}
 	}
-
-	@Override
+	
 	public void pushRequestMessage(RequestMessage request) {
 		requestMessagesQueue.add(request);
 	}
-
-	@Override
+	
 	public void pushResponseMessage(ResponseMessage response) {
 		responseMessagesQueue.add(response);
 	}

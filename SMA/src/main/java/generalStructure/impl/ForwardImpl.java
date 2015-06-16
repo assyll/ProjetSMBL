@@ -13,9 +13,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import scala.util.control.Exception;
 import trace.Action;
 import trace.interfaces.ITakeAction;
 import agents.impl.RequestMessage;
+import agents.impl.ResponseMessage;
 import agents.interfaces.PullMessage;
 import agents.interfaces.SendMessage;
 
@@ -75,7 +77,7 @@ public class ForwardImpl extends Forward<CycleAlert, ContextInfos,EnvInfos,  Env
 	}
 
 	@Override
-	public void sendRequestMessage(RequestMessage request) {
+	public void sendRequestMessage(RequestMessage request) {		
 		// Recupere l'agent destinataire
 		String reveiverId = request.getReceiverId();
 		
@@ -92,6 +94,25 @@ public class ForwardImpl extends Forward<CycleAlert, ContextInfos,EnvInfos,  Env
 			// ERREUR -> le forward du destinataire nexiste pas !
 		}
 		
+	}
+
+	@Override
+	public void sendResponseMessage(ResponseMessage response) {
+		// Recupere l'agent destinataire
+		String reveiverId = response.getReceiverId();
+		
+		// Recupere son forward
+		StateForwardImpl stateForward = stateFwList.get(reveiverId);
+		TransForwardImpl transForward = transFwList.get(reveiverId);
+		
+		// place le message dans la bonne <<boite aux lettres>>
+		if (stateForward != null) {
+			stateForward.pushResponseMessage(response);
+		} else if (transForward != null) {
+			transForward.pushResponseMessage(response);
+		} else {
+			// ERREUR -> le forward du destinataire nexiste pas !
+		}
 	}
 
 }

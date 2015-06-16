@@ -1,0 +1,10 @@
+{"userName":"U1", "action":"A1"}
+{"userName":"U2", "action":"A1"}
+{"userName":"U3", "action":"A2"}
+{"userName":"U4", "action":"A2"}
+{"userName":"U4", "action":"A4"}
+{"userName":"U1", "action":"A2"}
+{"userName":"U2", "action":"A5"}
+{"userName":"U2", "action":"A7"}
+{"userName":"U4", "action":"A7"}
+{"userName":"U3", "action":"A6"}

@@ -29,7 +29,6 @@ public class EnvironnementImpl extends Environnement<EnvInfos, EnvUpdate>
 		int level = actionList.size();
 		CellImpl cell = new CellImpl(actionList);
 
-
 		if (!cellsByLevel.containsKey(level)) {
 			cellsByLevel.put(level, new ArrayList<CellImpl>());
 		}
@@ -60,9 +59,14 @@ public class EnvironnementImpl extends Environnement<EnvInfos, EnvUpdate>
 	@Override
 	public void move(String id, List<Action> currentPositionActions,
 			Action newAction) {
+		
+		System.out.println("laaaa111");
 		CellImpl cell = getCellByActionList(currentPositionActions);
+		System.out.println("laaaa222");
 		cell.removeStateAgent(id);
-		Map<Action,CellImpl> childrenMap = cell.getChildrenMap();
+		System.out.println("laaaa333");
+		
+		/*Map<Action,CellImpl> childrenMap = cell.getChildrenMap();
 		
 		if(childrenMap.containsKey(newAction)){
 			childrenMap.get(newAction).addNewStateAgent(id);
@@ -78,7 +82,14 @@ public class EnvironnementImpl extends Environnement<EnvInfos, EnvUpdate>
 			}
 			
 			destionationCell.addNewStateAgent(id);	
-		}
+		}*/
+		
+		List<Action> newActionList = new ArrayList<Action>();
+		newActionList.addAll(currentPositionActions);
+		newActionList.add(newAction);
+		addStateAgent(id, newActionList);
+		
+		System.out.println("iciiiiiiiiiiiiii");
 		
 	}
 
@@ -109,6 +120,9 @@ public class EnvironnementImpl extends Environnement<EnvInfos, EnvUpdate>
 	}
 	
 	private CellImpl getCellByActionList(List<Action> actionList) {
+		if (cellsByLevel.get(actionList.size()) == null) {
+			return null;
+		}
 		
 		for(CellImpl cell:  cellsByLevel.get(actionList.size())){
 			if(cell.getListOfActions().containsAll(actionList))

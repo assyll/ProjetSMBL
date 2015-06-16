@@ -1,5 +1,6 @@
 package general;
 
+import agents.interfaces.ISuicide;
 import generalStructure.interfaces.CycleAlert;
 import generalStructure.interfaces.IGraph;
 import generalStructure.interfaces.ILog;
@@ -48,6 +49,12 @@ public abstract class Act<Actionable, ContextUpdate, SharedMemory, CreateAgent, 
      * 
      */
     public Push sendMessage();
+    
+    /**
+     * This can be called by the implementation to access this required port.
+     * 
+     */
+    public ISuicide suicide();
   }
   
   public interface Component<Actionable, ContextUpdate, SharedMemory, CreateAgent, Push> extends Act.Provides<Actionable, ContextUpdate, SharedMemory, CreateAgent, Push> {
