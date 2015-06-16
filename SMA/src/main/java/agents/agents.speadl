@@ -14,6 +14,7 @@ import agents.interfaces.TransMemory
 import generalStructure.interfaces.ILog
 import trace.ActionTrace
 import generalStructure.interfaces.IGraph
+import agents.interfaces.ISuicide
 
 namespace general{
 
@@ -24,6 +25,8 @@ namespace general{
 		species StateAgent (id: String, isRoot: boolean) {
 			provides cycle: Do = agentComponent.cycle
 			provides create: ICreateAgent
+			provides suicide: ISuicide
+			
 			requires getContext: ContextInfos
 			requires setContext: EnvUpdate
 			requires finishedCycle: CycleAlert
@@ -41,6 +44,7 @@ namespace general{
 			 	bind create to create
 			 	bind finishedCycleForLog to finishedCycleForLog
 			 	bind graph to graph
+			 	bind suicide to suicide
 			 }
 						
 			//requires getTraceElement: IGetAction
@@ -50,6 +54,8 @@ namespace general{
 			
 			provides cycle: Do = agentComponent.cycle
 			provides create: ICreateAgent
+			provides suicide: ISuicide
+			
 			requires getContext: EnvInfos
 			requires setContext: EnvUpdate
 			requires finishedCycle: CycleAlert
@@ -67,6 +73,7 @@ namespace general{
 			 	bind create to create
 			 	bind finishedCycleForLog to finishedCycleForLog
 			 	bind graph to graph
+			 	bind suicide to suicide
 			}
 		}
 	}
@@ -96,6 +103,7 @@ namespace general{
 			bind finishedCycleForLog to finishedCycleForLog
 			bind graph to graph
 			bind sendMessage to push
+			bind suicide to suicide
 		}
 		
 		provides cycle: Do = perceive.perception
@@ -107,6 +115,7 @@ namespace general{
 		requires create: CreateAgent
 		requires finishedCycleForLog: ILog
 		requires graph: IGraph
+		requires suicide: ISuicide
 	}
 	
 	component Perceive[Context, SharedMemory, Pull] {
@@ -132,6 +141,7 @@ namespace general{
 		requires finishedCycleForLog: ILog
 		requires graph: IGraph
 		requires sendMessage: Push
+		requires suicide: ISuicide
 	}
 		
 	component Memory[SharedMemory] {

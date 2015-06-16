@@ -20,14 +20,27 @@ public class DecideStateImpl extends AbstractDecide<StateAction, StateMemory> {
 	@Override
 	public void makeDecision() {
 		System.out.println("Decision de " + id);
-
-		// Si j'ai une action en attente de traitement
-		if(requires().memory().hasGotRequestMessage()) {
+		
+		// Si j'ai une reponse a traiter
+		if (requires().memory().hasGotResponseMessage()) {
+			System.out.println(id + ": reponse recu");
+			requires().action().treatResponseMessage();
+			
+		// Si j'ai une requete a traiter
+		} else if(requires().memory().hasGotRequestMessage()) {
 			System.out.println(id + ": requete recu");
 			this.requires().action().treatRequestMessage();
-		} else if(requires().memory().hasActionToProcess()) {
+			
+		// Si j'ai un element de trace
+		} else if (requires().memory().hasActionToProcess()) {
 			System.out.println(id + ": element de trace recu");
 			processActionTrace(requires().memory().getNextAction());
+			
+		// Si j'ai au moins un voisin
+		} else if(requires().memory().getAgentIdInMyCell().size() > 0) {
+			requires().action().askToMerge(requires().memory().getAgentIdInMyCell());
+			
+		// Sinon
 		} else {
 			System.out.println(id + ": rien a faire");
 			requires().action().doNothing();
@@ -38,17 +51,23 @@ public class DecideStateImpl extends AbstractDecide<StateAction, StateMemory> {
 		String transitionId = requires().memory().getTransitionWithAction(action.getAction());
 		
 		if(transitionId == null) {
-			System.out.println(id + ": cree une nouvelle transition");
-			String[] ids = this.requires().action().createTransitionAgent(action);
-			requires().memory().addNewOutputTransition(ids[0], action.getAction());
-			requires().memory().addChild(ids[1], ids[0]);
-			System.out.println(id + ": creation de la transition "+ids[0]+" avec l'action "+ action.getAction().getActionMap().get("action"));
-			System.out.println(id + ": nouveau fils " + ids[1]);
-			requires().action().doNothing();
+			System.out.println("JE CREE LA TRANSITION !!!!!!!!"
+					+ "!!!!!!!!!!!!!!!!!!!!!! ->   " + transitionId);
+			requires().action().createTransitionAgent(action);
 		} else {
-			//Envoyer une requête à l'état fils pour qu'il se mette en attente d'un nouvel élément de trace
-			String childId = requires().memory().getChildByTransition(transitionId);
-			this.requires().action().sendRequestMessage(new RequestMessage(id, childId, RequestType.WAIT_FOR_NEXT_ACTION, action.getUserName()));
+			System.out.println("JE CREE PAS LA TRANSITION"
+					+ "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ->   " + transitionId);
+			//Envoyer une requete a l'etat fils pour qu'il
+			//se mette en attente d'un nouvel element de trace
+			String childId = requires().memory().
+					getChildByTransition(transitionId);
+			
+			this.requires().action().sendRequestMessage(
+					new RequestMessage(id, childId,
+							RequestType.WAIT_FOR_NEXT_ACTION,
+							action.getUserName()));
+			System.out.println("ENVOIE DUN USERNAME ..................................... de "+
+							id + " a " + childId);
 		}
 	}
 	

@@ -23,7 +23,7 @@ import agents.interfaces.StateMemory;
 import agents.interfaces.TransMemory;
 
 public class StateForwardImpl extends StateForward<CycleAlert, ContextInfos, EnvInfos, EnvUpdate, SendMessage, PullMessage, ITakeAction>
-implements CycleAlert, ContextInfos, EnvUpdate, SendMessage, PullMessage, ILog, ILetterBox, IGraph {
+implements CycleAlert, ContextInfos, EnvUpdate, SendMessage, PullMessage, ILog, IGraph {
 
 	private List<RequestMessage> requestMessagesQueue;
 	private List<ResponseMessage> responseMessagesQueue;
@@ -129,6 +129,11 @@ implements CycleAlert, ContextInfos, EnvUpdate, SendMessage, PullMessage, ILog, 
 	}
 	
 	@Override
+	public void sendResponseMessage(ResponseMessage response) {
+		eco_provides().l().sendResponseMessage(response);
+	}
+	
+	@Override
 	public void majTransitionAgent(String id, TransMemory memory) {
 		eco_requires().graph().majTransitionAgent(id, memory);
 	}
@@ -156,12 +161,10 @@ implements CycleAlert, ContextInfos, EnvUpdate, SendMessage, PullMessage, ILog, 
 		}
 	}
 	
-	@Override
 	public void pushRequestMessage(RequestMessage request) {
 		requestMessagesQueue.add(request);
 	}
-
-	@Override
+	
 	public void pushResponseMessage(ResponseMessage response) {
 		responseMessagesQueue.add(response);
 	}

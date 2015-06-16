@@ -1,6 +1,7 @@
 package general;
 
 import agents.interfaces.Do;
+import agents.interfaces.ISuicide;
 import general.Act;
 import general.Decide;
 import general.Memory;
@@ -59,6 +60,12 @@ public abstract class Agent<Context, ContextUpdate, Actionable, SharedMemory, Cr
      * 
      */
     public IGraph graph();
+    
+    /**
+     * This can be called by the implementation to access this required port.
+     * 
+     */
+    public ISuicide suicide();
   }
   
   public interface Component<Context, ContextUpdate, Actionable, SharedMemory, CreateAgent, Push, Pull> extends Agent.Provides<Context, ContextUpdate, Actionable, SharedMemory, CreateAgent, Push, Pull> {
@@ -281,6 +288,10 @@ public abstract class Agent<Context, ContextUpdate, Actionable, SharedMemory, Cr
       
       public final Push sendMessage() {
         return Agent.ComponentImpl.this.bridge.push();
+      }
+      
+      public final ISuicide suicide() {
+        return Agent.ComponentImpl.this.bridge.suicide();
       }
     }
     

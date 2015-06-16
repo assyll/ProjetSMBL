@@ -17,6 +17,7 @@ import trace.ActionTrace;
 import agents.impl.state.StateAgentCompImpl;
 import agents.impl.transition.TransAgentComplImpl;
 import agents.interfaces.AgentTrace;
+import agents.interfaces.ISuicide;
 import agents.interfaces.PullMessage;
 import agents.interfaces.SendMessage;
 import agents.interfaces.StateAction;
@@ -101,7 +102,8 @@ public class EcoAgentsImpl extends EcoAgents implements AgentTrace{
 
 	/**************************** Private Classes **************************/
 
-	private class StateAgentImpl extends StateAgent implements Runnable, ICreateAgent {
+	private class StateAgentImpl extends StateAgent
+	implements Runnable, ICreateAgent, ISuicide {
 
 		String id; 
 		boolean isRoot;
@@ -160,11 +162,22 @@ public class EcoAgentsImpl extends EcoAgents implements AgentTrace{
 			eco_requires().createAgent().createNewTransition(id, action, idSource, idCible, createCible);
 		}
 
+		@Override
+		protected ISuicide make_suicide() {
+			return this;
+		}
+
+		@Override
+		public void suicide() {
+			killAgent(id);
+		}
+
 	}
 
 	/**************************** Private Classes **************************/
 
-	private class TransAgentImpl extends TransitionAgent implements Runnable, ICreateAgent {
+	private class TransAgentImpl extends TransitionAgent
+	implements Runnable, ICreateAgent, ISuicide {
 
 		private String id; 
 		private ActionTrace action;
@@ -228,6 +241,16 @@ public class EcoAgentsImpl extends EcoAgents implements AgentTrace{
 				String idSource, String idCible, boolean createCible) {
 			// TODO Auto-generated method stub
 			
+		}
+
+		@Override
+		public void suicide() {
+			killAgent(id);
+		}
+
+		@Override
+		protected ISuicide make_suicide() {
+			return this;
 		}
 
 	}

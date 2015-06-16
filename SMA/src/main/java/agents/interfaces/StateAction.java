@@ -14,5 +14,7 @@ public interface StateAction {
 	public void removeAgent(String id, List<Action> actions);
 	public void doNothing();
 	public void treatRequestMessage();
+	public void treatResponseMessage();
 	public void sendRequestMessage(RequestMessage msg);
+	public void askToMerge(List<String> agentIdInMyCell);
 }

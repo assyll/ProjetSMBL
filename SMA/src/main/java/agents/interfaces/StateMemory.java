@@ -5,6 +5,7 @@ import java.util.Map;
 
 import trace.Action;
 import trace.ActionTrace;
+import agents.impl.Child;
 import agents.impl.RequestMessage;
 import agents.impl.ResponseMessage;
 
@@ -27,25 +28,35 @@ public interface StateMemory {
 	public boolean hasActionToProcess();
 	
 	public void removeRequestMsg(); //supprimer la requete recue
-	public void removeResponseMsg(); //supprimer la réponse recue
+	public void removeResponseMsg(); //supprimer la rï¿½ponse recue
 	public void addNewUserName(String userName); // le nom de l'utilisateur dont on attend la prochaine trace (on est plus en attente d'une autre trace de lui)
 	public void removeUserName(String userName); // le nom de l'utilisateur dont on a rï¿½cupï¿½rer la prochaine trace (on est plus en attente d'une autre trace de lui)
 	public String getNextUserNameWaitingForAction(); // renvoi le nom de d'un utilisateur dont en est en attente d'ï¿½lï¿½ments de trace
 	public List<String> getUserNameWaitingForTraceList();
 	public boolean addAction(ActionTrace newAction); // ajout d'une action en attente de traitement relative ï¿½ une trace d'un utilisateur donnï¿½e
-	public List<ActionTrace> getActionList(); // rï¿½cupï¿½ration de la map des actions en attente de traitment par user
+	public List<ActionTrace> getActionTraceList(); // rï¿½cupï¿½ration de la map des actions en attente de traitment par user
+	public void addAction(Action action, String destState);
+	public List<Action> getActionList();
 	public ActionTrace getNextAction();
 	
 	public boolean gotTransitionWithAction(Action action);
 	public String getTransitionWithAction(Action action); 
 	public String getChildByTransition(String transId);
 	public void addNewOutputTransition(String id, Action action);
-	public void addChild(String stateId, String transId);
-	public void addFather(String transId);
+	public void addChild(String stateId, String transId, boolean childWithChild);
+	public void addFather(String transId, String stateId);
+	public List<String> getStateFatherList();
+	public List<String> getTransFatherList();
+	public List<String> getStateChildList();
+	public List<String> getTransChildList();
 	
-	// Utiles aussi pour creer le graphe
+	public void setAgentIdInMyCell(List<String> agentIds);
+	public List<String> getAgentIdInMyCell();
+	
 	public boolean isRoot(); // recuperation de l'information (est racine)
 	public boolean isFinal();
 	public Map<String, String> getChildren();
+	public List<Child> getChildrenWithSohn();
+	public List<Child> getChildrenWithoutSohn();
 	
 }

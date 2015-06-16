@@ -88,9 +88,18 @@ public class GraphCompImpl extends GraphComp implements IGraph {
 						equals(memory.getStateSourceId())
 						|| !childNode.getProperty("id").
 						equals(memory.getStateCibleId())) {
-					
+				
+				System.out.println("REDIRECTION ---------> ancien fils:"
+				+ childNode.getProperty("id") + ", nouveau fils:" + memory.getStateCibleId());
+				
+				try {
 					relationship.delete(); // efface la transition actuelle
 					createRelationship(id, memory); // redessine la transition
+				} catch (Exception e) {
+					
+				}
+					
+					System.out.println("REDIRECTION DE LA TRANSITION !!!!!!!!");
 				}
 				
 			} else {

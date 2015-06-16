@@ -53,4 +53,9 @@ public class Action {
 	public int hashCode() {
 		return _actionMap.hashCode();
 	}
+	
+	@Override
+	public String toString() {
+		return _actionMap.get("action");
+	}
 }
