@@ -111,10 +111,10 @@ public class CustomGraphRenderer {
 		}
 	}
 
-	// TODO essayer de rapprocher les nodes connectées
 	// Applique un placement sous forme d'arbre avec la(les) racine(s) en haut
-	public static void setTreeLayout(GraphicGraph gGraph, Graph graph,
+	public static void setTreeLayout(Graph graph,
 			Viewer viewer) {
+		GraphicGraph gGraph = viewer.getGraphicGraph();
 		int heightView = viewer.getDefaultView().getHeight();
 		int widthView = viewer.getDefaultView().getWidth();
 		float ratioXY = ((float) widthView) / ((float) heightView);

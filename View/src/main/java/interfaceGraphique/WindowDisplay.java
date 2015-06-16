@@ -310,7 +310,7 @@ public class WindowDisplay extends JFrame {
 						isAutoLayout = false;
 					} else {
 						structGraph.setText("Manual");
-						CustomGraphRenderer.setTreeLayout(viewer.getGraphicGraph(), graph, viewer);
+						CustomGraphRenderer.setTreeLayout(graph, viewer);
 						isAutoLayout = true;
 					}
 				}
