@@ -287,7 +287,7 @@ public class WindowDisplay extends JFrame {
 		// suppression du comportement par defaut du MouseListener de la view
 		view.setMouseManager(new CustomMouseManager());
 
-		Window.setListenerOnViewer(viewer, graph, text, isGraphLoaded, spriteManager);
+		Window.setListenerOnViewer(viewer, graph, text, isGraphLoaded);
 	}
 
 	public void initPanelGraph() {

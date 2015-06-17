@@ -130,7 +130,7 @@ public class GraphModifier {
 		return graph;
 	}
 
-	public static Graph changeEdge(ChangeEdgeDialog cED, Graph graph, String edgeId, String spriteId, SpriteManager spriteManager){
+	public static Graph changeEdge(ChangeEdgeDialog cED, Graph graph, String edgeId){
 		String attKey, attValue;
 		Edge oldEdge = graph.getEdge(edgeId);
 		
@@ -145,9 +145,6 @@ public class GraphModifier {
 				oldEdge.addAttribute(attKey, attValue);
 			}
 		}
-		
-		spriteManager.removeSprite(spriteId);
-		generateSprite(spriteManager, oldEdge);
 		
 		return graph;
 	}

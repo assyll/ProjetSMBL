@@ -961,7 +961,7 @@ public class Window extends JFrame {
 
 	public static void setListenerOnViewer(final Viewer viewer,
 			final Graph graph, final JTextField jTextField,
-			final boolean isGraphLoaded, final SpriteManager spriteManager) {
+			final boolean isGraphLoaded) {
 		// Action lors du d�placement de la souris sur le graphe
 		final View view = viewer.getDefaultView();
 		final JComponent jCompView = (JComponent) view;
@@ -1030,6 +1030,7 @@ public class Window extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				if (isGraphLoaded) {
 					gElement = findNodeOrSpriteAtWithTolerance(e, view);
+					System.out.println(gElement);
 					if (gElement instanceof GraphicNode) {
 						ChangeNodeDialog changeNodeDialog = new ChangeNodeDialog(
 								frame, "Change Node", gElement.getId(), graph);
@@ -1053,10 +1054,11 @@ public class Window extends JFrame {
 								frame, "Change Edge", ((GraphicSprite) gElement).getAttachment().getId(), graph);
 						if (!ChangeNodeDialog.getFerme()) {
 							GraphModifier.changeEdge(changeEdgeDialog, graph,
-									((GraphicSprite) gElement).getAttachment().getId(), gElement.getId(), spriteManager);
+									((GraphicSprite) gElement).getAttachment().getId());
 						}
 					}
 				}
+				view.display(viewer.getGraphicGraph(), true);
 			}
 
 			public void mouseEntered(MouseEvent arg0) {
@@ -1133,7 +1135,7 @@ public class Window extends JFrame {
 		// suppression du comportement par defaut du MouseListener de la view
 		viewJson.setMouseManager(new CustomMouseManager());
 
-		setListenerOnViewer(viewerJson, graphJson, textJson, isGraphJsonLoaded, spriteManagerJson);
+		setListenerOnViewer(viewerJson, graphJson, textJson, isGraphJsonLoaded);
 	}
 
 	public static void initGraphPropertiesAgent() {
@@ -1155,7 +1157,7 @@ public class Window extends JFrame {
 		viewAgent.setMouseManager(new CustomMouseManager());
 
 		setListenerOnViewer(viewerAgent, graphAgent, textAgent,
-				isGraphAgentLoaded, spriteManagerAgent);
+				isGraphAgentLoaded);
 	}
 
 	public static void initGraphProperties(String graphName) {
