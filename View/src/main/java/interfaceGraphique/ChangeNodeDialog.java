@@ -35,15 +35,16 @@ public class ChangeNodeDialog extends JDialog implements ActionListener {
 	private int nbAtt = 0;
 	private AttributDialog attDialog;
 	private String nodeName;
-	private Node node;
+	private Node oldNode;
 
 	public ChangeNodeDialog(JFrame f, String s, final String nodeId, Graph graph) {
 		super(f, s, true);
 		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		
 		nodeName = nodeId;
-		node = graph.getNode(nodeName);
-		isSource = node.getAttribute(MyJsonGenerator.FORMAT_NODE_SOURCE);
-		isFinal = node.getAttribute(MyJsonGenerator.FORMAT_NODE_FINAL);
+		oldNode = graph.getNode(nodeName);
+		isSource = oldNode.getAttribute(MyJsonGenerator.FORMAT_NODE_SOURCE);
+		isFinal = oldNode.getAttribute(MyJsonGenerator.FORMAT_NODE_FINAL);
 
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {

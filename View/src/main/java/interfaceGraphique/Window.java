@@ -961,7 +961,7 @@ public class Window extends JFrame {
 
 	public static void setListenerOnViewer(final Viewer viewer,
 			final Graph graph, final JTextField jTextField,
-			final boolean isGraphLoaded) {
+			final boolean isGraphLoaded, final SpriteManager spriteManager) {
 		// Action lors du d�placement de la souris sur le graphe
 		final View view = viewer.getDefaultView();
 		final JComponent jCompView = (JComponent) view;
@@ -1031,15 +1031,16 @@ public class Window extends JFrame {
 				if (isGraphLoaded) {
 					gElement = findNodeOrSpriteAtWithTolerance(e, view);
 					if (gElement instanceof GraphicNode) {
-						ChangeNodeDialog changeNodeDialog = new ChangeNodeDialog(frame,
-								"Change Node", gElement.getId(), graph);
+						ChangeNodeDialog changeNodeDialog = new ChangeNodeDialog(
+								frame, "Change Node", gElement.getId(), graph);
 						String s = ChangeNodeDialog.getNameNode();
 						if (!ChangeNodeDialog.getFerme()) {
 
 							if (!s.equals("")) {
 								Node n = graph.getNode(s);
 								if (n == null || s.equals(gElement.getId())) {
-									GraphModifier.changeNode(changeNodeDialog, graph, gElement.getId());
+									GraphModifier.changeNode(changeNodeDialog,
+											graph, gElement.getId());
 								} else {
 									msgError(NAME_ALREADY_IN_USE);
 								}
@@ -1047,9 +1048,15 @@ public class Window extends JFrame {
 								msgError(NAME_FIELD_EMPTY);
 							}
 						}
+					} else if (gElement instanceof GraphicSprite) {
+						ChangeEdgeDialog changeEdgeDialog = new ChangeEdgeDialog(
+								frame, "Change Edge", ((GraphicSprite) gElement).getAttachment().getId(), graph);
+						if (!ChangeNodeDialog.getFerme()) {
+							GraphModifier.changeEdge(changeEdgeDialog, graph,
+									((GraphicSprite) gElement).getAttachment().getId(), gElement.getId(), spriteManager);
+						}
 					}
 				}
-
 			}
 
 			public void mouseEntered(MouseEvent arg0) {
@@ -1126,7 +1133,7 @@ public class Window extends JFrame {
 		// suppression du comportement par defaut du MouseListener de la view
 		viewJson.setMouseManager(new CustomMouseManager());
 
-		setListenerOnViewer(viewerJson, graphJson, textJson, isGraphJsonLoaded);
+		setListenerOnViewer(viewerJson, graphJson, textJson, isGraphJsonLoaded, spriteManagerJson);
 	}
 
 	public static void initGraphPropertiesAgent() {
@@ -1148,7 +1155,7 @@ public class Window extends JFrame {
 		viewAgent.setMouseManager(new CustomMouseManager());
 
 		setListenerOnViewer(viewerAgent, graphAgent, textAgent,
-				isGraphAgentLoaded);
+				isGraphAgentLoaded, spriteManagerAgent);
 	}
 
 	public static void initGraphProperties(String graphName) {
@@ -1199,7 +1206,7 @@ public class Window extends JFrame {
 		Node node = graph.getNode(idNode);
 
 		fieldName = MyJsonGenerator.FORMAT_NODE_NAME;
-		s += fieldName + " : " + node.getId() + "<br/>";
+		s += fieldName + " : " + node.getAttribute("ui.label") + "<br/>";
 		fieldName = MyJsonGenerator.FORMAT_NODE_SOURCE;
 		s += fieldName + " : " + node.getAttribute(fieldName) + "<br/>";
 		fieldName = MyJsonGenerator.FORMAT_NODE_FINAL;

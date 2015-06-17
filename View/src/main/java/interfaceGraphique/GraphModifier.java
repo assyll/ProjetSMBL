@@ -110,11 +110,12 @@ public class GraphModifier {
 		String attKey, attValue;
 		Node oldNode = graph.getNode(nodeId);
 
+		oldNode.clearAttributes();
 		oldNode.setAttribute("ui.label", ChangeNodeDialog.getNameNode());
 		oldNode.setAttribute(MyJsonGenerator.FORMAT_NODE_NAME,
 				ChangeNodeDialog.getNameNode());
-		oldNode.addAttribute(MyJsonGenerator.FORMAT_NODE_SOURCE, cND.getRoot());
-		oldNode.addAttribute(MyJsonGenerator.FORMAT_NODE_FINAL, cND.getFinal());
+		oldNode.setAttribute(MyJsonGenerator.FORMAT_NODE_SOURCE, cND.getRoot());
+		oldNode.setAttribute(MyJsonGenerator.FORMAT_NODE_FINAL, cND.getFinal());
 
 		if (cND.getNbAtt() != 0) {
 			for (String[] attribut : cND.getAttributs()) {
@@ -129,6 +130,28 @@ public class GraphModifier {
 		return graph;
 	}
 
+	public static Graph changeEdge(ChangeEdgeDialog cED, Graph graph, String edgeId, String spriteId, SpriteManager spriteManager){
+		String attKey, attValue;
+		Edge oldEdge = graph.getEdge(edgeId);
+		
+		oldEdge.clearAttributes();
+		oldEdge.setAttribute("ui.label", ChangeEdgeDialog.getAction());
+		oldEdge.setAttribute(MyJsonGenerator.FORMAT_EDGE_ACTION, ChangeEdgeDialog.getAction());
+		
+		if (cED.getNbAtt() != 0) {
+			for (String[] attribut : cED.getAttributs()) {
+				attKey = attribut[0];
+				attValue = attribut[1];
+				oldEdge.addAttribute(attKey, attValue);
+			}
+		}
+		
+		spriteManager.removeSprite(spriteId);
+		generateSprite(spriteManager, oldEdge);
+		
+		return graph;
+	}
+	
 	public static void generateSprites(Graph graph, SpriteManager spriteManager) {
 		for (Edge edge : graph.getEachEdge()) {
 			generateSprite(spriteManager, edge);

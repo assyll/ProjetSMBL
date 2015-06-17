@@ -34,7 +34,6 @@ public class AddNodeDialog extends JDialog implements ActionListener {
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				ferme = true;
-				nameNode.setText("");
 			}
 		});
 
@@ -125,10 +124,8 @@ public class AddNodeDialog extends JDialog implements ActionListener {
 							"Attributs Node", nbAtt);
 					if (attDialog.isExit()) {
 						ferme = true;
-						nameNode.setText("");
 					}
 				}
-
 				dispose();
 			}
 		} else if (evt.getSource() == cancel) {

@@ -89,14 +89,10 @@ public class DeleteNodeDialog extends JDialog implements ActionListener {
 	public void actionPerformed(ActionEvent evt) {
 		if (evt.getSource() == ok) {
 			ferme = false;
-			if (!ferme) {
-				getName();
-				dispose();
-			}
 		} else if (evt.getSource() == cancel) {
 			ferme = true;
-			dispose();
 		}
+		dispose();
 	}
 
 }
