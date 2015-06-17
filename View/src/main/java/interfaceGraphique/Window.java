@@ -1027,7 +1027,28 @@ public class Window extends JFrame {
 
 		jCompView.addMouseListener(new MouseListener() {
 
-			public void mouseClicked(MouseEvent arg0) {
+			public void mouseClicked(MouseEvent e) {
+				if (isGraphLoaded) {
+					gElement = findNodeOrSpriteAtWithTolerance(e, view);
+					if (gElement instanceof GraphicNode) {
+						ChangeNodeDialog changeNodeDialog = new ChangeNodeDialog(frame,
+								"Change Node", gElement.getId(), graph);
+						String s = ChangeNodeDialog.getNameNode();
+						if (!ChangeNodeDialog.getFerme()) {
+
+							if (!s.equals("")) {
+								Node n = graph.getNode(s);
+								if (n == null || s.equals(gElement.getId())) {
+									GraphModifier.changeNode(changeNodeDialog, graph, gElement.getId());
+								} else {
+									msgError(NAME_ALREADY_IN_USE);
+								}
+							} else {
+								msgError(NAME_FIELD_EMPTY);
+							}
+						}
+					}
+				}
 
 			}
 

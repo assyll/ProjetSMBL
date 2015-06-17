@@ -28,7 +28,7 @@ public class DeleteNodeDialog extends JDialog implements ActionListener {
 	JLabel name;
 	JComboBox<String> node;
 	JButton ok, cancel;
-	boolean ferme, check;
+	boolean ferme;
 	String nameNode;
 
 	@SuppressWarnings("static-access")
@@ -39,7 +39,6 @@ public class DeleteNodeDialog extends JDialog implements ActionListener {
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				ferme = true;
-				check = false;
 			}
 		});
 		

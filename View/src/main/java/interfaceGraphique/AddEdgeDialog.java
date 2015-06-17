@@ -28,7 +28,7 @@ public class AddEdgeDialog extends JDialog implements ActionListener {
 	private JComboBox<String> sourceEdge, endEdge;
 	private String[] nodes;
 	private int nbAtt;
-	private boolean ferme, check;
+	private boolean ferme;
 	private AttributDialog attDialog;
 	private Graph graph;
 
@@ -40,7 +40,6 @@ public class AddEdgeDialog extends JDialog implements ActionListener {
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				ferme = true;
-				check = false;
 				nameEdge.setText("");
 			}
 		});
@@ -141,15 +140,9 @@ public class AddEdgeDialog extends JDialog implements ActionListener {
 		return ferme;
 	}
 
-	public boolean getCheck() {
-		return check;
-	}
-
 	public void actionPerformed(ActionEvent evt) {
 		if (evt.getSource() == ok) {
 			ferme = false;
-			check = true;
-
 			if (!ferme) {
 				nbAtt = getNbAtt();
 
@@ -158,7 +151,6 @@ public class AddEdgeDialog extends JDialog implements ActionListener {
 							"Attributs Node", getNbAtt());
 					if (attDialog.isExit()) {
 						ferme = true;
-						check = false;
 						nameEdge.setText("");
 					}
 				}
@@ -167,7 +159,6 @@ public class AddEdgeDialog extends JDialog implements ActionListener {
 			}
 		} else if (evt.getSource() == cancel) {
 			ferme = true;
-			check = false;
 			dispose();
 		}
 	}

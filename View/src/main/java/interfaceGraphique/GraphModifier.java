@@ -29,7 +29,9 @@ public class GraphModifier {
 		} else if (isSource) {
 			node.setAttribute("ui.class", MyJsonGenerator.FORMAT_NODE_SOURCE);
 		} else if (isFinal) {
-			node.addAttribute("ui.class", MyJsonGenerator.FORMAT_NODE_FINAL);
+			node.setAttribute("ui.class", MyJsonGenerator.FORMAT_NODE_FINAL);
+		} else {
+			node.removeAttribute("ui.class");
 		}
 	}
 
@@ -60,13 +62,14 @@ public class GraphModifier {
 
 		Node node = g.addNode(n.getName());
 		node.addAttribute("ui.label", n.getName());
+		node.addAttribute(MyJsonGenerator.FORMAT_NODE_NAME, n.getName());
 		node.addAttribute(MyJsonGenerator.FORMAT_NODE_SOURCE, n.getRoot());
 		node.addAttribute(MyJsonGenerator.FORMAT_NODE_FINAL, n.getFinal());
 
 		if (n.getNbAtt() != 0) {
 			for (String[] attribut : n.getAttributs()) {
-					attKey = attribut[0];
-					attValue = attribut[1];
+				attKey = attribut[0];
+				attValue = attribut[1];
 				node.addAttribute(attKey, attValue);
 			}
 		}
@@ -101,6 +104,29 @@ public class GraphModifier {
 
 			return g;
 		}
+	}
+
+	public static Graph changeNode(ChangeNodeDialog cND, Graph graph, String nodeId) {
+		String attKey, attValue;
+		Node oldNode = graph.getNode(nodeId);
+
+		oldNode.setAttribute("ui.label", ChangeNodeDialog.getNameNode());
+		oldNode.setAttribute(MyJsonGenerator.FORMAT_NODE_NAME,
+				ChangeNodeDialog.getNameNode());
+		oldNode.addAttribute(MyJsonGenerator.FORMAT_NODE_SOURCE, cND.getRoot());
+		oldNode.addAttribute(MyJsonGenerator.FORMAT_NODE_FINAL, cND.getFinal());
+
+		if (cND.getNbAtt() != 0) {
+			for (String[] attribut : cND.getAttributs()) {
+				attKey = attribut[0];
+				attValue = attribut[1];
+				oldNode.addAttribute(attKey, attValue);
+			}
+		}
+
+		setNodeClass(graph, oldNode);
+
+		return graph;
 	}
 
 	public static void generateSprites(Graph graph, SpriteManager spriteManager) {
