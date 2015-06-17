@@ -532,8 +532,9 @@ public class Window extends JFrame {
 
 						} else {
 							if (!isDirectoryNeo4j) {
-								graphAgent = GraphModifier.GraphToGraph(
-										graphJson, GRAPH_AGENT_NAME);
+								graphAgent = JsonToGS.generateGraph(
+										textDirectory.getText(),
+										GRAPH_AGENT_NAME);
 							}
 
 							initGraphPropertiesAgent();
