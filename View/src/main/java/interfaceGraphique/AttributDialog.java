@@ -1,6 +1,7 @@
 package interfaceGraphique;
 
 import java.awt.Component;
+import java.awt.ComponentOrientation;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.GridLayout;
@@ -22,7 +23,7 @@ public class AttributDialog extends JDialog implements ActionListener {
 
 	private int nbAttribut;
 	private JButton ok, cancel;
-	private JPanel panelDialog, panelAttributs;
+	private JPanel panelDialog, panelAttributs, panelOption;
 	private JScrollPane scrollAtt;
 	private Box boite;
 	private boolean exit = false;
@@ -63,9 +64,12 @@ public class AttributDialog extends JDialog implements ActionListener {
 
 		nbAttribut = nbAtt;
 		boite = Box.createVerticalBox();
-		panelDialog = new JPanel(new GridLayout(nbAtt, 2, 5, 5));
-		panelDialog.setPreferredSize(new Dimension(300, 400));
-		panelAttributs = new JPanel();
+		panelDialog = new JPanel(new GridLayout(2, 1, 5, 5));
+		panelDialog.setPreferredSize(new Dimension(300, (nbAtt + 1) * 70));
+		panelAttributs = new JPanel(new GridLayout(nbAtt, 4, 5, 5));
+		panelAttributs.setPreferredSize(new Dimension(300, (nbAtt * 70)));
+		panelAttributs.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+		panelOption = new JPanel();
 		scrollAtt = new JScrollPane(panelDialog);
 
 		for (int i = 0; i < nbAtt; i++) {
@@ -83,17 +87,18 @@ public class AttributDialog extends JDialog implements ActionListener {
 		}
 
 		ok = new JButton("Ok");
-		panelDialog.add(ok);
-
 		cancel = new JButton("Cancel");
-		panelDialog.add(cancel);
-
+		
+		panelOption.add(ok);
+		panelOption.add(cancel);
+		panelDialog.add(panelOption);
+		
 		ok.addActionListener(this);
 		cancel.addActionListener(this);
 
 		boite.add(scrollAtt);
 		this.add(boite);
-		this.setBounds(400, 200, 400, 400);
+		this.setBounds(400, 200, 400, 300);
 		this.setVisible(true);
 	}
 
