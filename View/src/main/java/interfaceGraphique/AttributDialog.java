@@ -3,6 +3,7 @@ package interfaceGraphique;
 import java.awt.Component;
 import java.awt.ComponentOrientation;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -69,7 +70,8 @@ public class AttributDialog extends JDialog implements ActionListener {
 		panelAttributs = new JPanel(new GridLayout(nbAtt, 4, 5, 5));
 		panelAttributs.setPreferredSize(new Dimension(300, (nbAtt * 70)));
 		panelAttributs.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
-		panelOption = new JPanel();
+		panelOption = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		panelOption.setPreferredSize(new Dimension(300,70));
 		scrollAtt = new JScrollPane(panelDialog);
 
 		for (int i = 0; i < nbAtt; i++) {

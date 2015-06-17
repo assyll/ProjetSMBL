@@ -158,6 +158,7 @@ public class JsonToGS {
 			jParser.nextToken();
 			nodeE = jParser.getText();
 			edge = graph.addEdge(label, nodeB, nodeE, true);
+			edge.setAttribute(MyJsonGenerator.FORMAT_EDGE_LABEL, label);
 		} else {
 			throw new FileFormatException(FILE_FORMAT_ERROR);
 		}
@@ -169,6 +170,7 @@ public class JsonToGS {
 			// move to next, which is "Action"'s value
 			jParser.nextToken();
 			action = jParser.getText();
+			edge.setAttribute(fieldname, action);
 			edge.setAttribute("ui.label", action);
 		} else {
 			throw new FileFormatException(FILE_FORMAT_ERROR);

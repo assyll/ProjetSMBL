@@ -119,11 +119,12 @@ public class Window extends JFrame {
 	private static JColorTextPane textColorStatut;
 
 	private JButton buttonGS, zoomAvantJson, zoomArrJson, zoomAvantAgent,
-			zoomArrAgent, addNodeJson, addEdgeJson, deleteNodeJson,
-			deleteEdgeJson, deleteNodeAgent, deleteEdgeAgent, addNodeAgent,
-			addEdgeAgent, structGraphJson, structGraphAgent, zoomCenterJson,
-			zoomCenterAgent, cleanGraphJson, cleanGraphAgent, displayJson,
-			displayAgent, buttonSave, treeLayoutJson, treeLayoutAgent;
+			zoomArrAgent, changeEdgeDisplayJson, addNodeJson, addEdgeJson,
+			deleteNodeJson, deleteEdgeJson, deleteNodeAgent, deleteEdgeAgent,
+			changeEdgeDisplayAgent, addNodeAgent, addEdgeAgent,
+			structGraphJson, structGraphAgent, zoomCenterJson, zoomCenterAgent,
+			cleanGraphJson, cleanGraphAgent, displayJson, displayAgent,
+			treeLayoutJson, treeLayoutAgent, buttonSave;
 
 	private JMenuBar menu_bar1;
 
@@ -154,6 +155,8 @@ public class Window extends JFrame {
 	private static SpriteManager spriteManagerJson, spriteManagerAgent;
 
 	private static GraphicElement gElement = null;
+
+	private static String currentEdgeDisplay;
 
 	public Window() {
 		CustomGraphRenderer.SetRenderer();
@@ -260,6 +263,7 @@ public class Window extends JFrame {
 		ImageIcon saveIcon = new ImageIcon(
 				"./src/main/resources/buttonsIcons/save.png", "save");
 
+		changeEdgeDisplayJson = new JButton("change edge display");
 		addNodeJson = new JButton(addNodeIcon);
 		addNodeJson.setToolTipText(ADD_NODE_TT);
 		addNodeJson.setPreferredSize(buttonsSize);
@@ -285,6 +289,7 @@ public class Window extends JFrame {
 		buttonSave.setToolTipText(SAVE_TT);
 		buttonSave.setPreferredSize(buttonsSize);
 
+		changeEdgeDisplayAgent = new JButton("change label");
 		addNodeAgent = new JButton(addNodeIcon);
 		addNodeAgent.setToolTipText(ADD_NODE_TT);
 		addNodeAgent.setPreferredSize(buttonsSize);
@@ -308,6 +313,7 @@ public class Window extends JFrame {
 		cleanGraphAgent.setPreferredSize(buttonsSize);
 
 		// Ajout des boutons dans les panneaux respectifs
+		panelModifJSon.add(changeEdgeDisplayJson);
 		panelModifJSon.add(addNodeJson);
 		panelModifJSon.add(deleteNodeJson);
 		panelModifJSon.add(addEdgeJson);
@@ -317,6 +323,7 @@ public class Window extends JFrame {
 		panelModifJSon.add(cleanGraphJson);
 		panelModifJSon.add(buttonSave);
 
+		panelModifAgent.add(changeEdgeDisplayAgent);
 		panelModifAgent.add(addNodeAgent);
 		panelModifAgent.add(deleteNodeAgent);
 		panelModifAgent.add(addEdgeAgent);
@@ -519,19 +526,19 @@ public class Window extends JFrame {
 										textDirectory.getText(),
 										GRAPH_JSON_NAME);
 							}
-							
+
 							initGraphPropertiesJson();
 							initPanelGraphJson();
-							
+
 						} else {
 							if (!isDirectoryNeo4j) {
 								graphAgent = GraphModifier.GraphToGraph(
 										graphJson, GRAPH_AGENT_NAME);
 							}
-							
+
 							initGraphPropertiesAgent();
 							initPanelGraphAgent();
-							
+
 						}
 
 						frame.setCursor(Cursor
@@ -603,6 +610,14 @@ public class Window extends JFrame {
 				} else {
 					textColorStatut.appendDoc(NO_GRAPH_GENERATED);
 				}
+			}
+		});
+
+		// Action lors du clic sur l'item "change edge display" de la partie
+		// gauche
+		changeEdgeDisplayJson.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				changeDisplayEdge(isGraphJsonLoaded, graphJson);
 			}
 		});
 
@@ -766,6 +781,14 @@ public class Window extends JFrame {
 				} else {
 					textColorStatut.appendDoc(NO_GRAPH_GENERATED);
 				}
+			}
+		});
+
+		// Action lors du clic sur l'item "change edge display" de la partie
+		// droite
+		changeEdgeDisplayAgent.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				changeDisplayEdge(isGraphAgentLoaded, graphAgent);
 			}
 		});
 
@@ -1105,7 +1128,7 @@ public class Window extends JFrame {
 		setListenerOnViewer(viewerAgent, graphAgent, textAgent,
 				isGraphAgentLoaded);
 	}
-	
+
 	public static void initGraphProperties(String graphName) {
 		if (graphName.equals(GRAPH_JSON_NAME)) {
 			initGraphPropertiesJson();
@@ -1180,11 +1203,7 @@ public class Window extends JFrame {
 		fieldName = MyJsonGenerator.FORMAT_EDGE_LABEL;
 		s += fieldName + " : " + edge.getId() + "<br/>";
 		fieldName = MyJsonGenerator.FORMAT_EDGE_ACTION;
-		s += fieldName + " : " + edge.getAttribute("ui.label") + "<br/>";
-		fieldName = MyJsonGenerator.FORMAT_EDGE_BEGIN_NODE;
-		s += fieldName + " : " + edge.getSourceNode() + "<br/>";
-		fieldName = MyJsonGenerator.FORMAT_EDGE_END_NODE;
-		s += fieldName + " : " + edge.getTargetNode() + "<br/>";
+		s += fieldName + " : " + edge.getAttribute(fieldName) + "<br/>";
 		for (String attKey : edge.getAttributeKeySet()) {
 			if (attKey != MyJsonGenerator.FORMAT_EDGE_LABEL
 					&& attKey != MyJsonGenerator.FORMAT_EDGE_ACTION
@@ -1198,7 +1217,7 @@ public class Window extends JFrame {
 		s += "</html>";
 		return s;
 	}
-	
+
 	public static void enterNewZoomValue(KeyEvent evt, Boolean isGraphLoaded,
 			JTextField textZoom, View view) {
 		if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
@@ -1246,6 +1265,24 @@ public class Window extends JFrame {
 		if (isGraphLoaded) {
 			view.getCamera().resetView();
 			textZoom.setText("100 %");
+		}
+	}
+
+	public static void changeDisplayEdge(boolean isGraphLoaded, Graph graph) {
+		ChangeDisplayEdgeDialog changeDisplayEdge = new ChangeDisplayEdgeDialog(
+				frame, "Change Edge Display", graph);
+		String s = changeDisplayEdge.getDisplay();
+		if (!changeDisplayEdge.getFerme()) {
+			if (isGraphLoaded) {
+				if (!s.equals(currentEdgeDisplay)) {
+					for (Edge edge : graph.getEachEdge()) {
+						String attValue = edge.getAttribute(s);
+						if (attValue != null) {
+							edge.setAttribute("ui.label", attValue);
+						}
+					}
+				}
+			}
 		}
 	}
 
@@ -1357,7 +1394,7 @@ public class Window extends JFrame {
 		button.setIcon(autoLayoutOffIcon);
 		button.setToolTipText(AUTO_LAYOUT_DISABLED_TT);
 	}
-	
+
 	public void autoLayout(Boolean isGraphLoaded, Boolean isAutoLayout,
 			String graphName, Viewer viewer, JButton structGraph) {
 		if (isGraphLoaded) {

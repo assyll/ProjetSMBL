@@ -31,8 +31,8 @@ public class WindowDisplay extends JFrame {
 
 	private JPanel panelFrame, panelGraph, panelOption, panelModif, panelZoom;
 
-	private JButton zoomAvant, zoomArr, zoomCenter, addNode, deleteNode,
-			addEdge, deleteEdge, structGraph, treeLayout;
+	private JButton zoomAvant, zoomArr, zoomCenter, changeEdgeDisplay, addNode,
+			deleteNode, addEdge, deleteEdge, structGraph, treeLayout;
 
 	private JTextField text;
 
@@ -128,6 +128,7 @@ public class WindowDisplay extends JFrame {
 				"./src/main/resources/buttonsIcons/treeLayout.png",
 				"tree layout");
 
+		changeEdgeDisplay = new JButton("Change Display Edge");
 		addNode = new JButton(addNodeIcon);
 		addNode.setToolTipText(Window.ADD_NODE_TT);
 		addNode.setPreferredSize(Window.buttonsSize);
@@ -148,6 +149,7 @@ public class WindowDisplay extends JFrame {
 		treeLayout.setPreferredSize(Window.buttonsSize);
 
 		// Ajout des boutons dans le panneau
+		panelModif.add(changeEdgeDisplay);
 		panelModif.add(addNode);
 		panelModif.add(deleteNode);
 		panelModif.add(addEdge);
@@ -180,7 +182,7 @@ public class WindowDisplay extends JFrame {
 				Window.modifZoom(view, text, isGraphLoaded, DEZOOM);
 			}
 		});
-		
+
 		// Action lors de l'appui sur la touche entrée dans la zone de zoom
 		text.addKeyListener(new KeyListener() {
 			public void keyPressed(KeyEvent evt) {
@@ -194,15 +196,22 @@ public class WindowDisplay extends JFrame {
 			}
 
 		});
-		
+
 		// Action lors du clic sur l'item "Center"
-				zoomCenter.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent arg0) {
-						view.getCamera().resetView();
-						valZoom = (int) (view.getCamera().getViewPercent() * 100);
-					}
-				});
-		
+		zoomCenter.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				view.getCamera().resetView();
+				valZoom = (int) (view.getCamera().getViewPercent() * 100);
+			}
+		});
+
+		// Action lors du clic sur l'item "change edge display"
+		changeEdgeDisplay.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Window.changeDisplayEdge(isGraphLoaded, graph);
+			}
+		});
+
 		// Action lors du clic sur l'item "Node +"
 		addNode.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -234,8 +243,7 @@ public class WindowDisplay extends JFrame {
 		// Action lors du clic sur l'item "Automatic Layout"
 		structGraph.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				autoLayout(isGraphLoaded, viewer,
-						structGraph);
+				autoLayout(isGraphLoaded, viewer, structGraph);
 			}
 		});
 
@@ -252,7 +260,7 @@ public class WindowDisplay extends JFrame {
 
 		initGraphProperties();
 		initPanelGraph();
-		
+
 		// Définition de la fenêtre principale
 		frame.add(panelFrame);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -261,7 +269,7 @@ public class WindowDisplay extends JFrame {
 		frame.setVisible(true);
 
 	}
-	
+
 	public void initGraphProperties() {
 		CustomGraphRenderer.setStyleGraphBasic(graph);
 		GraphModifier.setNodesClass(graph);
