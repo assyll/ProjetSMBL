@@ -32,7 +32,8 @@ public class WindowDisplay extends JFrame {
 	private JPanel panelFrame, panelGraph, panelOption, panelModif, panelZoom;
 
 	private JButton zoomAvant, zoomArr, zoomCenter, changeEdgeDisplay, addNode,
-			deleteNode, addEdge, deleteEdge, structGraph, treeLayout;
+			deleteNode, modifyNode, addEdge, deleteEdge, modifyEdge,
+			structGraph, treeLayout;
 
 	private JTextField text;
 
@@ -92,7 +93,8 @@ public class WindowDisplay extends JFrame {
 		ImageIcon centerIcon = new ImageIcon(
 				"./src/main/resources/buttonsIcons/center.png", "center");
 		ImageIcon edgeDisplayIcon = new ImageIcon(
-				"./src/main/resources/buttonsIcons/edgeDisplay.png", "edge display");
+				"./src/main/resources/buttonsIcons/edgeDisplay.png",
+				"edge display");
 
 		zoomAvant = new JButton(zoomIcon);
 		zoomAvant.setToolTipText(Window.ZOOM_TT);
@@ -123,10 +125,14 @@ public class WindowDisplay extends JFrame {
 				"./src/main/resources/buttonsIcons/node+.png", "node +");
 		ImageIcon deleteNodeIcon = new ImageIcon(
 				"./src/main/resources/buttonsIcons/node-.png", "node -");
+		ImageIcon modifNodeIcon = new ImageIcon(
+				"./src/main/resources/buttonsIcons/nodeModif.png", "node modif");
 		ImageIcon addEdgeIcon = new ImageIcon(
 				"./src/main/resources/buttonsIcons/edge+.png", "edge +");
 		ImageIcon deleteEdgeIcon = new ImageIcon(
 				"./src/main/resources/buttonsIcons/edge-.png", "edge -");
+		ImageIcon modifEdgeIcon = new ImageIcon(
+				"./src/main/resources/buttonsIcons/edgeModif.png", "edge modif");
 		ImageIcon autoLayoutOnIcon = new ImageIcon(
 				"./src/main/resources/buttonsIcons/autoLayoutOn.png",
 				"automatic layout on");
@@ -140,12 +146,18 @@ public class WindowDisplay extends JFrame {
 		deleteNode = new JButton(deleteNodeIcon);
 		deleteNode.setToolTipText(Window.DELETE_NODE_TT);
 		deleteNode.setPreferredSize(Window.buttonsSize);
+		modifyNode = new JButton(modifNodeIcon);
+		modifyNode.setToolTipText(Window.MODIF_NODE_TT);
+		modifyNode.setPreferredSize(Window.buttonsSize);
 		addEdge = new JButton(addEdgeIcon);
 		addEdge.setToolTipText(Window.ADD_EDGE_TT);
 		addEdge.setPreferredSize(Window.buttonsSize);
 		deleteEdge = new JButton(deleteEdgeIcon);
 		deleteEdge.setToolTipText(Window.DELETE_EDGE_TT);
 		deleteEdge.setPreferredSize(Window.buttonsSize);
+		modifyEdge = new JButton(modifEdgeIcon);
+		modifyEdge.setToolTipText(Window.MODIF_EDGE_TT);
+		modifyEdge.setPreferredSize(Window.buttonsSize);
 		structGraph = new JButton(autoLayoutOnIcon);
 		structGraph.setToolTipText(Window.AUTO_LAYOUT_ENABLED_TT);
 		structGraph.setPreferredSize(Window.buttonsSize);
@@ -156,8 +168,10 @@ public class WindowDisplay extends JFrame {
 		// Ajout des boutons dans le panneau
 		panelModif.add(addNode);
 		panelModif.add(deleteNode);
+		panelModif.add(modifyNode);
 		panelModif.add(addEdge);
 		panelModif.add(deleteEdge);
+		panelModif.add(modifyEdge);
 		panelModif.add(structGraph);
 		panelModif.add(treeLayout);
 
@@ -212,35 +226,49 @@ public class WindowDisplay extends JFrame {
 		// Action lors du clic sur l'item "change edge display"
 		changeEdgeDisplay.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Window.changeDisplayEdge(isGraphLoaded, graph);
+				Window.changeDisplayEdge(frame, isGraphLoaded, graph);
 			}
 		});
 
 		// Action lors du clic sur l'item "Node +"
 		addNode.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Window.addNode(isGraphLoaded, graph, graphName);
+				Window.addNode(frame, isGraphLoaded, graph, graphName);
 			}
 		});
 
 		// Action lors du clic sur l'item "Node -"
 		deleteNode.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Window.deleteNode(isGraphLoaded, graph, spriteManager);
+				Window.deleteNode(frame, isGraphLoaded, graph, spriteManager);
+			}
+		});
+
+		// Action lors du clic sur l'item "modify node"
+		modifyNode.addActionListener(new ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				Window.selectNode(frame, isGraphLoaded, graph);
 			}
 		});
 
 		// Action lors du clic sur l'item "Edge +"
 		addEdge.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Window.addEdge(isGraphLoaded, graph, spriteManager);
+				Window.addEdge(frame, isGraphLoaded, graph, spriteManager);
 			}
 		});
 
 		// Action lors du clic sur l'item "Edge -"
 		deleteEdge.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				Window.deleteEdge(isGraphLoaded, graph, spriteManager);
+				Window.deleteEdge(frame, isGraphLoaded, graph, spriteManager);
+			}
+		});
+
+		// Action lors du clic sur l'item "modify edge"
+		modifyEdge.addActionListener(new ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				Window.selectEdge(frame, isGraphLoaded, graph);
 			}
 		});
 
@@ -311,13 +339,13 @@ public class WindowDisplay extends JFrame {
 			}
 		}
 	}
-	
+
 	public void setTreeLayout(Boolean isGraphLoaded, Graph graph,
 			Viewer viewer, JButton structGraph) {
 		if (isGraphLoaded) {
 			CustomGraphRenderer.setTreeLayout(graph, viewer);
 			Window.turnAutoLayoutButtonOff(structGraph);
-				isAutoLayout = false;
+			isAutoLayout = false;
 		}
 	}
 }

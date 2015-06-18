@@ -126,7 +126,7 @@ public class Window extends JFrame {
 
 	private JButton buttonGS, zoomAvantJson, zoomArrJson, zoomCenterJson,
 			displayJson, changeEdgeDisplayJson, addNodeJson, deleteNodeJson,
-			modifNodeJson, addEdgeJson, deleteEdgeJson, modifEdgeJson,
+			modifyNodeJson, addEdgeJson, deleteEdgeJson, modifyEdgeJson,
 			structGraphJson, treeLayoutJson, cleanGraphJson, buttonSave,
 			zoomAvantAgent, zoomArrAgent, zoomCenterAgent, displayAgent,
 			changeEdgeDisplayAgent, addNodeAgent, deleteNodeAgent,
@@ -264,10 +264,14 @@ public class Window extends JFrame {
 				"./src/main/resources/buttonsIcons/node+.png", "node +");
 		ImageIcon deleteNodeIcon = new ImageIcon(
 				"./src/main/resources/buttonsIcons/node-.png", "node -");
+		ImageIcon modifNodeIcon = new ImageIcon(
+				"./src/main/resources/buttonsIcons/nodeModif.png", "node modif");
 		ImageIcon addEdgeIcon = new ImageIcon(
 				"./src/main/resources/buttonsIcons/edge+.png", "edge +");
 		ImageIcon deleteEdgeIcon = new ImageIcon(
 				"./src/main/resources/buttonsIcons/edge-.png", "edge -");
+		ImageIcon modifEdgeIcon = new ImageIcon(
+				"./src/main/resources/buttonsIcons/edgeModif.png", "edge modif");
 		ImageIcon autoLayoutOnIcon = new ImageIcon(
 				"./src/main/resources/buttonsIcons/autoLayoutOn.png",
 				"automatic layout on");
@@ -278,10 +282,6 @@ public class Window extends JFrame {
 				"./src/main/resources/buttonsIcons/clean.png", "clean");
 		ImageIcon saveIcon = new ImageIcon(
 				"./src/main/resources/buttonsIcons/save.png", "save");
-		ImageIcon modifNodeIcon = new ImageIcon(
-				"./src/main/resources/buttonsIcons/nodeModif.png", "node modif");
-		ImageIcon modifEdgeIcon = new ImageIcon(
-				"./src/main/resources/buttonsIcons/edgeModif.png", "edge modif");
 
 		addNodeJson = new JButton(addNodeIcon);
 		addNodeJson.setToolTipText(ADD_NODE_TT);
@@ -289,18 +289,18 @@ public class Window extends JFrame {
 		deleteNodeJson = new JButton(deleteNodeIcon);
 		deleteNodeJson.setToolTipText(DELETE_NODE_TT);
 		deleteNodeJson.setPreferredSize(buttonsSize);
-		modifNodeJson = new JButton(modifNodeIcon);
-		modifNodeJson.setToolTipText(MODIF_NODE_TT);
-		modifNodeJson.setPreferredSize(buttonsSize);
+		modifyNodeJson = new JButton(modifNodeIcon);
+		modifyNodeJson.setToolTipText(MODIF_NODE_TT);
+		modifyNodeJson.setPreferredSize(buttonsSize);
 		addEdgeJson = new JButton(addEdgeIcon);
 		addEdgeJson.setToolTipText(ADD_EDGE_TT);
 		addEdgeJson.setPreferredSize(buttonsSize);
 		deleteEdgeJson = new JButton(deleteEdgeIcon);
 		deleteEdgeJson.setToolTipText(DELETE_EDGE_TT);
 		deleteEdgeJson.setPreferredSize(buttonsSize);
-		modifEdgeJson = new JButton(modifEdgeIcon);
-		modifEdgeJson.setToolTipText(MODIF_EDGE_TT);
-		modifEdgeJson.setPreferredSize(buttonsSize);
+		modifyEdgeJson = new JButton(modifEdgeIcon);
+		modifyEdgeJson.setToolTipText(MODIF_EDGE_TT);
+		modifyEdgeJson.setPreferredSize(buttonsSize);
 		structGraphJson = new JButton(autoLayoutOnIcon);
 		structGraphJson.setToolTipText(AUTO_LAYOUT_ENABLED_TT);
 		structGraphJson.setPreferredSize(buttonsSize);
@@ -350,10 +350,10 @@ public class Window extends JFrame {
 				.createEtchedBorder(EtchedBorder.LOWERED));
 		panelModifJson.add(addNodeJson);
 		panelModifJson.add(deleteNodeJson);
-		panelModifJson.add(modifNodeJson);
+		panelModifJson.add(modifyNodeJson);
 		panelModifJson.add(addEdgeJson);
 		panelModifJson.add(deleteEdgeJson);
-		panelModifJson.add(modifEdgeJson);
+		panelModifJson.add(modifyEdgeJson);
 		panelModifJson.add(structGraphJson);
 		panelModifJson.add(treeLayoutJson);
 		panelModifJson.add(cleanGraphJson);
@@ -662,14 +662,14 @@ public class Window extends JFrame {
 		// gauche
 		changeEdgeDisplayJson.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				changeDisplayEdge(isGraphJsonLoaded, graphJson);
+				changeDisplayEdge(frame, isGraphJsonLoaded, graphJson);
 			}
 		});
 
 		// Action lors du clic sur l'item "Node +" de la partie gauche
 		addNodeJson.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				addNode(isGraphJsonLoaded, graphJson, GRAPH_JSON_NAME);
+				addNode(frame, isGraphJsonLoaded, graphJson, GRAPH_JSON_NAME);
 			}
 		});
 
@@ -677,21 +677,22 @@ public class Window extends JFrame {
 		// partie gauche
 		deleteNodeJson.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				deleteNode(isGraphJsonLoaded, graphJson, spriteManagerJson);
+				deleteNode(frame, isGraphJsonLoaded, graphJson,
+						spriteManagerJson);
 			}
 		});
 
 		// Action lors du clic sur l'item "modify node" de la partie gauche
-		modifNodeJson.addActionListener(new ActionListener() {
+		modifyNodeJson.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				selectNode(isGraphJsonLoaded, graphJson);
+				selectNode(frame, isGraphJsonLoaded, graphJson);
 			}
 		});
 
 		// Action lors du clic sur l'item "Edge +" de la partie gauche
 		addEdgeJson.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				addEdge(isGraphJsonLoaded, graphJson, spriteManagerJson);
+				addEdge(frame, isGraphJsonLoaded, graphJson, spriteManagerJson);
 			}
 		});
 
@@ -699,16 +700,16 @@ public class Window extends JFrame {
 		// partie gauche
 		deleteEdgeJson.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				deleteEdge(isGraphJsonLoaded, graphJson, spriteManagerJson);
+				deleteEdge(frame, isGraphJsonLoaded, graphJson, spriteManagerJson);
 			}
 		});
-		
+
 		// Action lors du clic sur l'item "modify edge" de la partie gauche
-				modifEdgeJson.addActionListener(new ActionListener() {
-					public void actionPerformed(java.awt.event.ActionEvent evt) {
-						selectEdge(isGraphJsonLoaded, graphJson);
-					}
-				});
+		modifyEdgeJson.addActionListener(new ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				selectEdge(frame, isGraphJsonLoaded, graphJson);
+			}
+		});
 
 		// Action lors du clic sur l'item "Automatic Layout" de la
 		// partie gauche
@@ -835,14 +836,14 @@ public class Window extends JFrame {
 		// droite
 		changeEdgeDisplayAgent.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				changeDisplayEdge(isGraphAgentLoaded, graphAgent);
+				changeDisplayEdge(frame, isGraphAgentLoaded, graphAgent);
 			}
 		});
 
 		// Action lors du clic sur l'item "Node +" de la partie droite
 		addNodeAgent.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				addNode(isGraphAgentLoaded, graphAgent, GRAPH_AGENT_NAME);
+				addNode(frame, isGraphAgentLoaded, graphAgent, GRAPH_AGENT_NAME);
 			}
 		});
 
@@ -850,21 +851,22 @@ public class Window extends JFrame {
 		// partie droite
 		deleteNodeAgent.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				deleteNode(isGraphAgentLoaded, graphAgent, spriteManagerAgent);
+				deleteNode(frame, isGraphAgentLoaded, graphAgent,
+						spriteManagerAgent);
 			}
 		});
 
 		// Action lors du clic sur l'item "modify node" de la partie droite
 		modifNodeAgent.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				selectNode(isGraphAgentLoaded, graphAgent);
+				selectNode(frame, isGraphAgentLoaded, graphAgent);
 			}
 		});
 
 		// Action lors du clic sur l'item "Edge +" de la partie droite
 		addEdgeAgent.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				addEdge(isGraphAgentLoaded, graphAgent, spriteManagerAgent);
+				addEdge(frame, isGraphAgentLoaded, graphAgent, spriteManagerAgent);
 			}
 		});
 
@@ -872,14 +874,14 @@ public class Window extends JFrame {
 		// partie droite
 		deleteEdgeAgent.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				deleteEdge(isGraphAgentLoaded, graphAgent, spriteManagerAgent);
+				deleteEdge(frame, isGraphAgentLoaded, graphAgent, spriteManagerAgent);
 			}
 		});
 
 		// Action lors du clic sur l'item "modify edge" de la partie droite
 		modifEdgeAgent.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				selectEdge(isGraphAgentLoaded, graphAgent);
+				selectEdge(frame, isGraphAgentLoaded, graphAgent);
 			}
 		});
 
@@ -1070,9 +1072,9 @@ public class Window extends JFrame {
 							e, view);
 					gElement = nearestElement(e, gElements);
 					if (gElement instanceof GraphicNode) {
-						modifyNode(graph, gElement.getId());
+						modifyNode(frame, graph, gElement.getId());
 					} else if (gElement instanceof GraphicSprite) {
-						modifyEdge(graph, gElement.getId());
+						modifyEdge(frame, graph, gElement.getId());
 					}
 					view.display(viewer.getGraphicGraph(), true);
 				}
@@ -1349,7 +1351,8 @@ public class Window extends JFrame {
 		}
 	}
 
-	public static void changeDisplayEdge(boolean isGraphLoaded, Graph graph) {
+	public static void changeDisplayEdge(JFrame frame, boolean isGraphLoaded,
+			Graph graph) {
 		if (isGraphLoaded) {
 			ChangeDisplayEdgeDialog changeDisplayEdge = new ChangeDisplayEdgeDialog(
 					frame, "Change Edge Display", graph);
@@ -1366,8 +1369,8 @@ public class Window extends JFrame {
 		}
 	}
 
-	public static void addNode(boolean isGraphLoaded, Graph graph,
-			String graphName) {
+	public static void addNode(JFrame frame, boolean isGraphLoaded,
+			Graph graph, String graphName) {
 		AddNodeDialog addNodeDialog = new AddNodeDialog(frame, "Add Node");
 		String nodeName = addNodeDialog.getName();
 		if (!addNodeDialog.getFerme()) {
@@ -1401,8 +1404,8 @@ public class Window extends JFrame {
 		}
 	}
 
-	public static void deleteNode(boolean isGraphLoaded, Graph graph,
-			SpriteManager spriteManager) {
+	public static void deleteNode(JFrame frame, boolean isGraphLoaded,
+			Graph graph, SpriteManager spriteManager) {
 		if (isGraphLoaded && graph.getNodeCount() != 0) {
 			DeleteNodeDialog deleteNodeDialog = new DeleteNodeDialog(frame,
 					"Delete Node", graph);
@@ -1422,20 +1425,21 @@ public class Window extends JFrame {
 		}
 	}
 
-	public static void selectNode(boolean isGraphLoaded, Graph graph) {
+	public static void selectNode(JFrame frame, boolean isGraphLoaded,
+			Graph graph) {
 		if (isGraphLoaded && graph.getNodeCount() != 0) {
 			SelectNodeDialog selectNodeDialog = new SelectNodeDialog(frame,
 					"Select Node", graph);
 			if (!SelectNodeDialog.getFerme()) {
 				String nodeName = selectNodeDialog.getNodeName();
-				modifyNode(graph, nodeName);
+				modifyNode(frame, graph, nodeName);
 			}
 		} else {
 			textColorStatut.appendDoc(NO_NODE_DETECTED);
 		}
 	}
 
-	public static void modifyNode(Graph graph, String nodeName) {
+	public static void modifyNode(JFrame frame, Graph graph, String nodeName) {
 		ChangeNodeDialog changeNodeDialog = new ChangeNodeDialog(frame,
 				"Modify Node", nodeName, graph);
 		String s = ChangeNodeDialog.getNameNode();
@@ -1454,7 +1458,7 @@ public class Window extends JFrame {
 		}
 	}
 
-	public static void addEdge(Boolean isGraphLoaded, Graph graph,
+	public static void addEdge(JFrame frame, Boolean isGraphLoaded, Graph graph,
 			SpriteManager spriteManager) {
 		if (isGraphLoaded) {
 			AddEdgeDialog addEdgeDialog = new AddEdgeDialog(frame, "Add Edge",
@@ -1472,7 +1476,7 @@ public class Window extends JFrame {
 		}
 	}
 
-	public static void deleteEdge(Boolean isGraphLoaded, Graph graph,
+	public static void deleteEdge(JFrame frame, Boolean isGraphLoaded, Graph graph,
 			SpriteManager spriteManager) {
 		if (isGraphLoaded && graph.getEdgeCount() != 0) {
 			DeleteEdgeDialog deleteEdgeDialog = new DeleteEdgeDialog(frame,
@@ -1490,20 +1494,20 @@ public class Window extends JFrame {
 		}
 	}
 
-	public void selectEdge(Boolean isGraphLoaded, Graph graph) {
+	public static void selectEdge(JFrame frame, Boolean isGraphLoaded, Graph graph) {
 		if (isGraphLoaded && graph.getEdgeCount() != 0) {
 			SelectEdgeDialog selectEdgeDialog = new SelectEdgeDialog(frame,
 					"Select Edge", graph);
 			if (!SelectEdgeDialog.getFerme()) {
 				String edgeName = selectEdgeDialog.getEdgeName();
-				modifyEdge(graph, edgeName);
+				modifyEdge(frame, graph, edgeName);
 			}
 		} else {
 			textColorStatut.appendDoc(NO_NODE_DETECTED);
 		}
 	}
 
-	public static void modifyEdge(Graph graph, String edgeName) {
+	public static void modifyEdge(JFrame frame, Graph graph, String edgeName) {
 		ChangeEdgeDialog changeEdgeDialog = new ChangeEdgeDialog(frame,
 				"Modify Edge", edgeName, graph);
 		if (!changeEdgeDialog.getFerme()) {
