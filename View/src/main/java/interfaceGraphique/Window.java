@@ -1016,7 +1016,7 @@ public class Window extends JFrame {
 								frame, "Change Edge",
 								((GraphicSprite) gElement).getAttachment()
 										.getId(), graph);
-						if (!ChangeNodeDialog.getFerme()) {
+						if (!changeEdgeDialog.getFerme()) {
 							GraphModifier.changeEdge(changeEdgeDialog, graph,
 									((GraphicSprite) gElement).getAttachment()
 											.getId(), currentEdgeDisplay);
@@ -1074,7 +1074,6 @@ public class Window extends JFrame {
 		double bottomY = e.getY() + tolerance;
 		double leftX = e.getX() - tolerance;
 		double rightX = e.getX() + tolerance;
-		System.out.println(view.allNodesOrSpritesIn(leftX, topY, rightX, bottomY));
 		return view.allNodesOrSpritesIn(leftX, topY, rightX, bottomY);
 	}
 	
