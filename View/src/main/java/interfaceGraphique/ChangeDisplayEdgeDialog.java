@@ -29,6 +29,7 @@ public class ChangeDisplayEdgeDialog extends JDialog implements ActionListener {
 	private List<String> displays;
 	private boolean ferme;
 	private Graph graph;
+	Object[] tabDisplays;
 
 	@SuppressWarnings({ "static-access", "unchecked", "rawtypes" })
 	public ChangeDisplayEdgeDialog(JFrame f, String s, Graph g) {
@@ -44,6 +45,7 @@ public class ChangeDisplayEdgeDialog extends JDialog implements ActionListener {
 		frame = f;
 		graph = g;
 		displays = getDisplays();
+		tabDisplays = displays.toArray();
 		Box boite = Box.createVerticalBox();
 		JPanel panelDialog = new JPanel();
 		panelDialog.setLayout(new GridLayout(2, 2, 20, 5));
@@ -51,6 +53,7 @@ public class ChangeDisplayEdgeDialog extends JDialog implements ActionListener {
 		labelDisplay = new JLabel("Choose the display for edges :");
 		panelDialog.add(labelDisplay);
 		edgeDisplay = new JComboBox(displays.toArray());
+		edgeDisplay.insertItemAt("Label", 1);
 		panelDialog.add(edgeDisplay);
 
 		ok = new JButton("Ok");

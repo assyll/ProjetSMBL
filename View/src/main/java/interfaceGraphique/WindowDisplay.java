@@ -101,6 +101,7 @@ public class WindowDisplay extends JFrame {
 		zoomCenter = new JButton(centerIcon);
 		zoomCenter.setToolTipText(Window.CENTER_TT);
 		zoomCenter.setPreferredSize(Window.buttonsSize);
+		changeEdgeDisplay = new JButton("Change Display Edge");
 
 		// initialisation de la zone de texte pour le pourcentage de zoom
 		text = new JTextField();
@@ -111,6 +112,7 @@ public class WindowDisplay extends JFrame {
 		panelZoom.add(zoomArr);
 		panelZoom.add(text);
 		panelZoom.add(zoomCenter);
+		panelZoom.add(changeEdgeDisplay);
 
 		// Initialisation des boutons d'option
 		ImageIcon addNodeIcon = new ImageIcon(
@@ -128,7 +130,6 @@ public class WindowDisplay extends JFrame {
 				"./src/main/resources/buttonsIcons/treeLayout.png",
 				"tree layout");
 
-		changeEdgeDisplay = new JButton("Change Display Edge");
 		addNode = new JButton(addNodeIcon);
 		addNode.setToolTipText(Window.ADD_NODE_TT);
 		addNode.setPreferredSize(Window.buttonsSize);
@@ -149,7 +150,6 @@ public class WindowDisplay extends JFrame {
 		treeLayout.setPreferredSize(Window.buttonsSize);
 
 		// Ajout des boutons dans le panneau
-		panelModif.add(changeEdgeDisplay);
 		panelModif.add(addNode);
 		panelModif.add(deleteNode);
 		panelModif.add(addEdge);
@@ -250,11 +250,7 @@ public class WindowDisplay extends JFrame {
 		// Action lors du clic sur l'item "Tree Layout"
 		treeLayout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (isGraphLoaded) {
-					CustomGraphRenderer.setTreeLayout(graph, viewer);
-					Window.turnAutoLayoutButtonOff(structGraph);
-					isAutoLayout = false;
-				}
+				setTreeLayout(isGraphLoaded, graph, viewer, structGraph);
 			}
 		});
 
@@ -309,6 +305,15 @@ public class WindowDisplay extends JFrame {
 				viewer.enableAutoLayout();
 				isAutoLayout = true;
 			}
+		}
+	}
+	
+	public void setTreeLayout(Boolean isGraphLoaded, Graph graph,
+			Viewer viewer, JButton structGraph) {
+		if (isGraphLoaded) {
+			CustomGraphRenderer.setTreeLayout(graph, viewer);
+			Window.turnAutoLayoutButtonOff(structGraph);
+				isAutoLayout = false;
 		}
 	}
 }

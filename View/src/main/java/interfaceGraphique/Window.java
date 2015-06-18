@@ -22,6 +22,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -104,7 +105,7 @@ public class Window extends JFrame {
 	private JPanel panelFile, panelGraph, panelZoomJSon, panelZoomAgent,
 			panelModifJSon, panelModifAgent, panelOptionJSon, panelOptionAgent;
 
-	private static JPanel panelGraphJSon, panelGraphAgent;
+	private static JPanel panelGraphJson, panelGraphAgent;
 
 	private JSplitPane splitPaneHorizontale, splitPaneVerticale;
 
@@ -156,7 +157,7 @@ public class Window extends JFrame {
 
 	private static GraphicElement gElement = null;
 
-	private static String currentEdgeDisplay;
+	private static String currentEdgeDisplay = MyJsonGenerator.FORMAT_EDGE_ACTION;
 
 	public Window() {
 		CustomGraphRenderer.SetRenderer();
@@ -206,6 +207,7 @@ public class Window extends JFrame {
 		displayJson = new JButton(displayIcon);
 		displayJson.setToolTipText(DISPLAY_TT);
 		displayJson.setPreferredSize(buttonsSize);
+		changeEdgeDisplayJson = new JButton("change edge display");
 
 		zoomAvantAgent = new JButton(zoomIcon);
 		zoomAvantAgent.setToolTipText(ZOOM_TT);
@@ -219,6 +221,7 @@ public class Window extends JFrame {
 		displayAgent = new JButton(displayIcon);
 		displayAgent.setToolTipText(DISPLAY_TT);
 		displayAgent.setPreferredSize(buttonsSize);
+		changeEdgeDisplayAgent = new JButton("change label");
 
 		// initialisation de la zone de texte pour le pourcentage de zoom
 		textJson = new JTextField();
@@ -234,6 +237,7 @@ public class Window extends JFrame {
 		panelZoomJSon.add(textJson);
 		panelZoomJSon.add(zoomCenterJson);
 		panelZoomJSon.add(displayJson);
+		panelZoomJSon.add(changeEdgeDisplayJson);
 
 		// Initialisation et d�finition du panneau pour zoomer le graphe Agent
 		panelZoomAgent = new JPanel();
@@ -242,6 +246,7 @@ public class Window extends JFrame {
 		panelZoomAgent.add(textAgent);
 		panelZoomAgent.add(zoomCenterAgent);
 		panelZoomAgent.add(displayAgent);
+		panelZoomAgent.add(changeEdgeDisplayAgent);
 
 		// Initialisation des boutons d'option.
 		ImageIcon addNodeIcon = new ImageIcon(
@@ -263,7 +268,6 @@ public class Window extends JFrame {
 		ImageIcon saveIcon = new ImageIcon(
 				"./src/main/resources/buttonsIcons/save.png", "save");
 
-		changeEdgeDisplayJson = new JButton("change edge display");
 		addNodeJson = new JButton(addNodeIcon);
 		addNodeJson.setToolTipText(ADD_NODE_TT);
 		addNodeJson.setPreferredSize(buttonsSize);
@@ -289,7 +293,6 @@ public class Window extends JFrame {
 		buttonSave.setToolTipText(SAVE_TT);
 		buttonSave.setPreferredSize(buttonsSize);
 
-		changeEdgeDisplayAgent = new JButton("change label");
 		addNodeAgent = new JButton(addNodeIcon);
 		addNodeAgent.setToolTipText(ADD_NODE_TT);
 		addNodeAgent.setPreferredSize(buttonsSize);
@@ -313,7 +316,6 @@ public class Window extends JFrame {
 		cleanGraphAgent.setPreferredSize(buttonsSize);
 
 		// Ajout des boutons dans les panneaux respectifs
-		panelModifJSon.add(changeEdgeDisplayJson);
 		panelModifJSon.add(addNodeJson);
 		panelModifJSon.add(deleteNodeJson);
 		panelModifJSon.add(addEdgeJson);
@@ -323,7 +325,6 @@ public class Window extends JFrame {
 		panelModifJSon.add(cleanGraphJson);
 		panelModifJSon.add(buttonSave);
 
-		panelModifAgent.add(changeEdgeDisplayAgent);
 		panelModifAgent.add(addNodeAgent);
 		panelModifAgent.add(deleteNodeAgent);
 		panelModifAgent.add(addEdgeAgent);
@@ -408,7 +409,7 @@ public class Window extends JFrame {
 		scrollStatut.setPreferredSize(new Dimension(panelGraph.getWidth(),
 				panelGraph.getHeight() + 60));
 		scrollStatut.setViewportView(textColorStatut);
-		panelGraphJSon = new JPanel();
+		panelGraphJson = new JPanel();
 		panelGraphAgent = new JPanel();
 
 		// Action lors du clic sur l'item "Import to left"
@@ -606,11 +607,8 @@ public class Window extends JFrame {
 		// Action lors du clic sur l'item "Display" de la partie gauche
 		displayJson.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (isGraphJsonLoaded) {
-					new WindowDisplay(GRAPH_JSON_NAME, viewerJson, graphJson);
-				} else {
-					textColorStatut.appendDoc(NO_GRAPH_GENERATED);
-				}
+				setDisplay(isGraphJsonLoaded, viewerJson, graphJson,
+						GRAPH_JSON_NAME);
 			}
 		});
 
@@ -664,24 +662,15 @@ public class Window extends JFrame {
 		// Action lors du clic sur l'item "Tree Layout" de la partie gauche
 		treeLayoutJson.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (isGraphJsonLoaded) {
-					CustomGraphRenderer.setTreeLayout(graphJson, viewerJson);
-					turnAutoLayoutButtonOff(structGraphJson);
-					isAutoLayoutJson = false;
-				}
+				setTreeLayout(isGraphJsonLoaded, graphJson, viewerJson,
+						structGraphJson, GRAPH_JSON_NAME);
 			}
 		});
 
 		// Action lors du clic sur l'item "Clean" de la partie gauche
 		cleanGraphJson.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (isGraphJsonLoaded) {
-					panelGraphJSon.removeAll();
-					isGraphJsonLoaded = false;
-					panelGraphJSon.updateUI();
-				} else {
-					textColorStatut.appendDoc(NO_GRAPH_GENERATED);
-				}
+				cleanView(isGraphJsonLoaded, panelGraphJson, GRAPH_JSON_NAME);
 			}
 		});
 
@@ -777,11 +766,8 @@ public class Window extends JFrame {
 		// Action lors du clic sur l'item "Display" de la partie droite
 		displayAgent.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (isGraphAgentLoaded) {
-					new WindowDisplay(GRAPH_AGENT_NAME, viewerAgent, graphAgent);
-				} else {
-					textColorStatut.appendDoc(NO_GRAPH_GENERATED);
-				}
+				setDisplay(isGraphAgentLoaded, viewerAgent, graphAgent,
+						GRAPH_JSON_NAME);
 			}
 		});
 
@@ -811,21 +797,7 @@ public class Window extends JFrame {
 		// Action lors du clic sur l'item "Edge +" de la partie droite
 		addEdgeAgent.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				if (isGraphAgentLoaded) {
-					AddEdgeDialog addEdgeAgent = new AddEdgeDialog(frame,
-							"Add Edge", graphAgent);
-					if (!addEdgeAgent.getFerme()) {
-						try {
-							GraphModifier.addEdge(addEdgeAgent, graphAgent,
-									spriteManagerAgent);
-
-						} catch (NoSpecifiedNodeException e) {
-							textColorStatut.appendErrorMessage(e.getMessage());
-						}
-					}
-				} else {
-					textColorStatut.appendDoc(NO_NODE_DETECTED);
-				}
+				addEdge(isGraphAgentLoaded, graphAgent, spriteManagerAgent);
 			}
 		});
 
@@ -849,25 +821,15 @@ public class Window extends JFrame {
 		// Action lors du clic sur l'item "Tree Layout" de la partie droite
 		treeLayoutAgent.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (isAutoLayoutAgent) {
-					CustomGraphRenderer.setTreeLayout(graphAgent, viewerAgent);
-					turnAutoLayoutButtonOff(structGraphAgent);
-					isAutoLayoutAgent = false;
-				}
+				setTreeLayout(isGraphAgentLoaded, graphAgent, viewerAgent,
+						structGraphAgent, GRAPH_AGENT_NAME);
 			}
 		});
 
 		// Action lors du clic sur l'item "Clean" de la partie droite
 		cleanGraphAgent.addActionListener(new ActionListener() {
-
 			public void actionPerformed(ActionEvent e) {
-				if (isGraphAgentLoaded) {
-					panelGraphAgent.removeAll();
-					isGraphAgentLoaded = false;
-					panelGraphAgent.updateUI();
-				} else {
-					textColorStatut.appendDoc(NO_GRAPH_GENERATED);
-				}
+				cleanView(isGraphAgentLoaded, panelGraphAgent, GRAPH_AGENT_NAME);
 			}
 		});
 
@@ -977,17 +939,17 @@ public class Window extends JFrame {
 
 					public void mouseMoved(MouseEvent e) {
 						String s;
-						GraphicElement gElem = findNodeOrSpriteAtWithTolerance(
-								e, view);
-						if (gElem instanceof GraphicNode) {
-							s = getNodeInformations(gElem, graph);
+						Collection<GraphicElement> gElements = findNodesOrSpritesAtWithTolerance(e, view);
+						gElement = nearestElement(e, gElements);
+						if (gElement instanceof GraphicNode) {
+							s = getNodeInformations(gElement, graph);
 							if ((jCompView.getToolTipText() == null || !jCompView
 									.getToolTipText().equals(s))) {
 								jCompView.setToolTipText(s);
 								view.display(viewer.getGraphicGraph(), true);
 							}
-						} else if (gElem instanceof GraphicSprite) {
-							s = getEdgeInformations(gElem, graph);
+						} else if (gElement instanceof GraphicSprite) {
+							s = getEdgeInformations(gElement, graph);
 							if ((jCompView.getToolTipText() == null || !jCompView
 									.getToolTipText().equals(s))) {
 								jCompView.setToolTipText(s);
@@ -1029,8 +991,8 @@ public class Window extends JFrame {
 
 			public void mouseClicked(MouseEvent e) {
 				if (isGraphLoaded) {
-					gElement = findNodeOrSpriteAtWithTolerance(e, view);
-					System.out.println(gElement);
+					Collection<GraphicElement> gElements = findNodesOrSpritesAtWithTolerance(e, view);
+					gElement = nearestElement(e, gElements);
 					if (gElement instanceof GraphicNode) {
 						ChangeNodeDialog changeNodeDialog = new ChangeNodeDialog(
 								frame, "Change Node", gElement.getId(), graph);
@@ -1051,14 +1013,17 @@ public class Window extends JFrame {
 						}
 					} else if (gElement instanceof GraphicSprite) {
 						ChangeEdgeDialog changeEdgeDialog = new ChangeEdgeDialog(
-								frame, "Change Edge", ((GraphicSprite) gElement).getAttachment().getId(), graph);
+								frame, "Change Edge",
+								((GraphicSprite) gElement).getAttachment()
+										.getId(), graph);
 						if (!ChangeNodeDialog.getFerme()) {
 							GraphModifier.changeEdge(changeEdgeDialog, graph,
-									((GraphicSprite) gElement).getAttachment().getId());
+									((GraphicSprite) gElement).getAttachment()
+											.getId(), currentEdgeDisplay);
 						}
 					}
+					view.display(viewer.getGraphicGraph(), true);
 				}
-				view.display(viewer.getGraphicGraph(), true);
 			}
 
 			public void mouseEntered(MouseEvent arg0) {
@@ -1072,7 +1037,8 @@ public class Window extends JFrame {
 			}
 
 			public void mousePressed(MouseEvent e) {
-				gElement = findNodeOrSpriteAtWithTolerance(e, view);
+				Collection<GraphicElement> gElements = findNodesOrSpritesAtWithTolerance(e, view);
+				gElement = nearestElement(e, gElements);
 				if (gElement instanceof GraphicNode) {
 					view.moveElementAtPx(gElement, e.getX(), e.getY());
 				}
@@ -1102,19 +1068,40 @@ public class Window extends JFrame {
 		});
 	}
 
-	public static GraphicElement findNodeOrSpriteAtWithTolerance(MouseEvent e,
+	public static Collection<GraphicElement> findNodesOrSpritesAtWithTolerance(MouseEvent e,
 			View view) {
-		GraphicElement elem = null;
-		for (double yEvt = e.getY() - tolerance; yEvt < e.getY() + tolerance; yEvt += tolerance / 10) {
-			for (double xEvt = e.getX() - tolerance; xEvt < e.getX()
-					+ tolerance; xEvt += tolerance / 10) {
-				elem = view.findNodeOrSpriteAt(xEvt, yEvt);
-				if (elem != null) {
-					return elem;
+		double topY = e.getY() - tolerance;
+		double bottomY = e.getY() + tolerance;
+		double leftX = e.getX() - tolerance;
+		double rightX = e.getX() + tolerance;
+		System.out.println(view.allNodesOrSpritesIn(leftX, topY, rightX, bottomY));
+		return view.allNodesOrSpritesIn(leftX, topY, rightX, bottomY);
+	}
+	
+	public static GraphicElement nearestElement(MouseEvent e, Collection<GraphicElement> gElements){
+		int nbElem = gElements.size();
+		GraphicElement gElem;
+		double distance, distanceTemp;
+		if(nbElem == 0){
+			return null;
+		} else if (nbElem == 1){
+			return (GraphicElement) gElements.toArray()[0];
+		} else {
+			gElem = (GraphicElement) gElements.toArray()[0];
+			distance = calculDistance(e, gElem);
+			for(GraphicElement gElement : gElements){
+				distanceTemp = calculDistance(e, gElement);
+				if(distanceTemp < distance){
+					gElem = gElement;
+					distance = distanceTemp;
 				}
 			}
+			return gElem;
 		}
-		return null;
+	}
+	
+	public static double calculDistance(MouseEvent e, GraphicElement gElem){
+		return Math.sqrt((gElem.getX() - e.getX()) * (gElem.getX() - e.getX()) + (gElem.getY() - e.getY()) * (gElem.getY() - e.getY()));
 	}
 
 	public static void initGraphPropertiesJson() {
@@ -1169,10 +1156,10 @@ public class Window extends JFrame {
 	}
 
 	public static void initPanelGraphJson() {
-		panelGraphJSon.removeAll();
-		panelGraphJSon.setLayout(new BorderLayout());
-		panelGraphJSon.add((Component) viewJson, BorderLayout.CENTER);
-		scrollJSon.setViewportView(panelGraphJSon);
+		panelGraphJson.removeAll();
+		panelGraphJson.setLayout(new BorderLayout());
+		panelGraphJson.add((Component) viewJson, BorderLayout.CENTER);
+		scrollJSon.setViewportView(panelGraphJson);
 	}
 
 	public static void initPanelGraphAgent() {
@@ -1299,18 +1286,26 @@ public class Window extends JFrame {
 		}
 	}
 
+	public void setDisplay(Boolean isGraphLoaded, Viewer viewer, Graph graph,
+			String graphName) {
+		if (isGraphLoaded) {
+			new WindowDisplay(graphName, viewer, graph);
+		} else {
+			textColorStatut.appendDoc(NO_GRAPH_GENERATED);
+		}
+	}
+
 	public static void changeDisplayEdge(boolean isGraphLoaded, Graph graph) {
-		ChangeDisplayEdgeDialog changeDisplayEdge = new ChangeDisplayEdgeDialog(
-				frame, "Change Edge Display", graph);
-		String s = changeDisplayEdge.getDisplay();
-		if (!changeDisplayEdge.getFerme()) {
-			if (isGraphLoaded) {
-				if (!s.equals(currentEdgeDisplay)) {
+		if (isGraphLoaded) {
+			ChangeDisplayEdgeDialog changeDisplayEdge = new ChangeDisplayEdgeDialog(
+					frame, "Change Edge Display", graph);
+			String displayToApply = changeDisplayEdge.getDisplay();
+			if (!changeDisplayEdge.getFerme()) {
+
+				if (!displayToApply.equals(currentEdgeDisplay)) {
+					currentEdgeDisplay = displayToApply;
 					for (Edge edge : graph.getEachEdge()) {
-						String attValue = edge.getAttribute(s);
-						if (attValue != null) {
-							edge.setAttribute("ui.label", attValue);
-						}
+						GraphModifier.setUILabelEdge(displayToApply, edge);
 					}
 				}
 			}
@@ -1446,6 +1441,34 @@ public class Window extends JFrame {
 					isAutoLayoutAgent = true;
 				}
 			}
+		}
+	}
+
+	public void setTreeLayout(Boolean isGraphLoaded, Graph graph,
+			Viewer viewer, JButton structGraph, String graphName) {
+		if (isGraphLoaded) {
+			CustomGraphRenderer.setTreeLayout(graph, viewer);
+			turnAutoLayoutButtonOff(structGraph);
+			if (graphName.equals(GRAPH_JSON_NAME)) {
+				isAutoLayoutJson = false;
+			} else if (graphName.equals(GRAPH_AGENT_NAME)) {
+				isAutoLayoutAgent = false;
+			}
+		}
+	}
+
+	public void cleanView(Boolean isGraphLoaded, JPanel panelGraph,
+			String graphName) {
+		if (isGraphLoaded) {
+			panelGraph.removeAll();
+			if (graphName.equals(GRAPH_JSON_NAME)) {
+				isGraphJsonLoaded = false;
+			} else if (graphName.equals(GRAPH_AGENT_NAME)) {
+				isGraphAgentLoaded = false;
+			}
+			panelGraph.updateUI();
+		} else {
+			textColorStatut.appendDoc(NO_GRAPH_GENERATED);
 		}
 	}
 
