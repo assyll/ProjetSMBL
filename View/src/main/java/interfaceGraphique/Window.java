@@ -82,6 +82,7 @@ public class Window extends JFrame {
 	public static final String DEZOOM_TT = "Dezoom on the view";
 	public static final String CENTER_TT = "Center the view";
 	public static final String DISPLAY_TT = "Display the graph in an other window";
+	public static final String EDGE_DISPLAY_TT = "Change the text wich is next to the edge";
 	public static final String ADD_NODE_TT = "add a node";
 	public static final String DELETE_NODE_TT = "delete a node";
 	public static final String ADD_EDGE_TT = "Add an edge";
@@ -194,6 +195,8 @@ public class Window extends JFrame {
 				"./src/main/resources/buttonsIcons/center.png", "center");
 		ImageIcon displayIcon = new ImageIcon(
 				"./src/main/resources/buttonsIcons/display.png", "display");
+		ImageIcon edgeDisplayIcon = new ImageIcon(
+				"./src/main/resources/buttonsIcons/edgeDisplay.png", "edge display");
 
 		zoomAvantJson = new JButton(zoomIcon);
 		zoomAvantJson.setToolTipText(ZOOM_TT);
@@ -207,7 +210,9 @@ public class Window extends JFrame {
 		displayJson = new JButton(displayIcon);
 		displayJson.setToolTipText(DISPLAY_TT);
 		displayJson.setPreferredSize(buttonsSize);
-		changeEdgeDisplayJson = new JButton("change edge display");
+		changeEdgeDisplayJson = new JButton(edgeDisplayIcon);
+		changeEdgeDisplayJson.setToolTipText(EDGE_DISPLAY_TT);
+		changeEdgeDisplayJson.setPreferredSize(buttonsSize);
 
 		zoomAvantAgent = new JButton(zoomIcon);
 		zoomAvantAgent.setToolTipText(ZOOM_TT);
@@ -221,7 +226,9 @@ public class Window extends JFrame {
 		displayAgent = new JButton(displayIcon);
 		displayAgent.setToolTipText(DISPLAY_TT);
 		displayAgent.setPreferredSize(buttonsSize);
-		changeEdgeDisplayAgent = new JButton("change label");
+		changeEdgeDisplayAgent = new JButton(edgeDisplayIcon);
+		changeEdgeDisplayAgent.setToolTipText(EDGE_DISPLAY_TT);
+		changeEdgeDisplayAgent.setPreferredSize(buttonsSize);
 
 		// initialisation de la zone de texte pour le pourcentage de zoom
 		textJson = new JTextField();

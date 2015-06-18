@@ -91,6 +91,8 @@ public class WindowDisplay extends JFrame {
 				"./src/main/resources/buttonsIcons/zoom-.png", "zoom -");
 		ImageIcon centerIcon = new ImageIcon(
 				"./src/main/resources/buttonsIcons/center.png", "center");
+		ImageIcon edgeDisplayIcon = new ImageIcon(
+				"./src/main/resources/buttonsIcons/edgeDisplay.png", "edge display");
 
 		zoomAvant = new JButton(zoomIcon);
 		zoomAvant.setToolTipText(Window.ZOOM_TT);
@@ -101,7 +103,9 @@ public class WindowDisplay extends JFrame {
 		zoomCenter = new JButton(centerIcon);
 		zoomCenter.setToolTipText(Window.CENTER_TT);
 		zoomCenter.setPreferredSize(Window.buttonsSize);
-		changeEdgeDisplay = new JButton("Change Display Edge");
+		changeEdgeDisplay = new JButton(edgeDisplayIcon);
+		changeEdgeDisplay.setToolTipText(Window.EDGE_DISPLAY_TT);
+		changeEdgeDisplay.setPreferredSize(Window.buttonsSize);
 
 		// initialisation de la zone de texte pour le pourcentage de zoom
 		text = new JTextField();
