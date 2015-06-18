@@ -25,6 +25,8 @@ import java.io.IOException;
 import java.util.Collection;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -38,6 +40,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
+import javax.swing.border.EtchedBorder;
 
 import jsonAndGS.FileFormatException;
 import jsonAndGS.JsonToGS;
@@ -103,8 +106,8 @@ public class Window extends JFrame {
 
 	private static JFrame frame;
 
-	private JPanel panelFile, panelGraph, panelZoomJSon, panelZoomAgent,
-			panelModifJSon, panelModifAgent, panelOptionJSon, panelOptionAgent;
+	private JPanel panelFile, panelGraph, panelZoomJson, panelZoomAgent,
+			panelModifJson, panelModifAgent, panelOptionJSon, panelOptionAgent;
 
 	private static JPanel panelGraphJson, panelGraphAgent;
 
@@ -178,14 +181,6 @@ public class Window extends JFrame {
 				BorderFactory.createTitledBorder("Graphs"),
 				BorderFactory.createEmptyBorder(1, 1, 1, 1)));
 
-		// Initialisation et d�finition du panneau d'ajout de noeuds et de
-		// transition gauche
-		panelModifJSon = new JPanel();
-
-		// Initialisation et d�finition du panneau d'ajout de noeuds et de
-		// transition droit
-		panelModifAgent = new JPanel();
-
 		// Initialisation des bouttons de zoom
 		ImageIcon zoomIcon = new ImageIcon(
 				"./src/main/resources/buttonsIcons/zoom+.png", "zoom +");
@@ -196,7 +191,8 @@ public class Window extends JFrame {
 		ImageIcon displayIcon = new ImageIcon(
 				"./src/main/resources/buttonsIcons/display.png", "display");
 		ImageIcon edgeDisplayIcon = new ImageIcon(
-				"./src/main/resources/buttonsIcons/edgeDisplay.png", "edge display");
+				"./src/main/resources/buttonsIcons/edgeDisplay.png",
+				"edge display");
 
 		zoomAvantJson = new JButton(zoomIcon);
 		zoomAvantJson.setToolTipText(ZOOM_TT);
@@ -238,16 +234,22 @@ public class Window extends JFrame {
 		textAgent.setText(valZoomAgent + " %");
 
 		// Initialisation et d�finition du panneau pour zoomer le graphe Json
-		panelZoomJSon = new JPanel();
-		panelZoomJSon.add(zoomAvantJson);
-		panelZoomJSon.add(zoomArrJson);
-		panelZoomJSon.add(textJson);
-		panelZoomJSon.add(zoomCenterJson);
-		panelZoomJSon.add(displayJson);
-		panelZoomJSon.add(changeEdgeDisplayJson);
+		panelZoomJson = new JPanel();
+		panelZoomJson.setMaximumSize(new Dimension(50, 20000));
+		panelZoomJson.setBorder(BorderFactory
+				.createEtchedBorder(EtchedBorder.LOWERED));
+		panelZoomJson.add(zoomAvantJson);
+		panelZoomJson.add(zoomArrJson);
+		panelZoomJson.add(textJson);
+		panelZoomJson.add(zoomCenterJson);
+		panelZoomJson.add(displayJson);
+		panelZoomJson.add(changeEdgeDisplayJson);
 
 		// Initialisation et d�finition du panneau pour zoomer le graphe Agent
 		panelZoomAgent = new JPanel();
+		panelZoomAgent.setMaximumSize(new Dimension(50, 20000));
+		panelZoomAgent.setBorder(BorderFactory
+				.createEtchedBorder(EtchedBorder.LOWERED));
 		panelZoomAgent.add(zoomAvantAgent);
 		panelZoomAgent.add(zoomArrAgent);
 		panelZoomAgent.add(textAgent);
@@ -322,16 +324,25 @@ public class Window extends JFrame {
 		cleanGraphAgent.setToolTipText(CLEAN_TT);
 		cleanGraphAgent.setPreferredSize(buttonsSize);
 
-		// Ajout des boutons dans les panneaux respectifs
-		panelModifJSon.add(addNodeJson);
-		panelModifJSon.add(deleteNodeJson);
-		panelModifJSon.add(addEdgeJson);
-		panelModifJSon.add(deleteEdgeJson);
-		panelModifJSon.add(structGraphJson);
-		panelModifJSon.add(treeLayoutJson);
-		panelModifJSon.add(cleanGraphJson);
-		panelModifJSon.add(buttonSave);
+		// Initialisation et d�finition du panneau d'ajout de noeuds et de
+		// transition gauche
+		panelModifJson = new JPanel();
+		panelModifJson.setBorder(BorderFactory
+				.createEtchedBorder(EtchedBorder.LOWERED));
+		panelModifJson.add(addNodeJson);
+		panelModifJson.add(deleteNodeJson);
+		panelModifJson.add(addEdgeJson);
+		panelModifJson.add(deleteEdgeJson);
+		panelModifJson.add(structGraphJson);
+		panelModifJson.add(treeLayoutJson);
+		panelModifJson.add(cleanGraphJson);
+		panelModifJson.add(buttonSave);
 
+		// Initialisation et d�finition du panneau d'ajout de noeuds et de
+		// transition droit
+		panelModifAgent = new JPanel();
+		panelModifAgent.setBorder(BorderFactory
+				.createEtchedBorder(EtchedBorder.LOWERED));
 		panelModifAgent.add(addNodeAgent);
 		panelModifAgent.add(deleteNodeAgent);
 		panelModifAgent.add(addEdgeAgent);
@@ -341,15 +352,21 @@ public class Window extends JFrame {
 		panelModifAgent.add(cleanGraphAgent);
 
 		// Initialisation et d�finition panneau option gauche
-		panelOptionJSon = new JPanel(new GridLayout(2, 1, 0, 25));
+		panelOptionJSon = new JPanel();
+		panelOptionJSon.setLayout(new BoxLayout(panelOptionJSon,
+				BoxLayout.PAGE_AXIS));
 		panelOptionJSon.setPreferredSize(new Dimension(50, 200));
-		panelOptionJSon.add(panelZoomJSon);
-		panelOptionJSon.add(panelModifJSon);
+		panelOptionJSon.add(panelZoomJson);
+		panelOptionJSon.add(Box.createRigidArea(new Dimension(0, 5)));
+		panelOptionJSon.add(panelModifJson);
 
 		// Initialisation et d�finition panneau option droit
-		panelOptionAgent = new JPanel(new GridLayout(2, 1, 0, 25));
+		panelOptionAgent = new JPanel();
+		panelOptionAgent.setLayout(new BoxLayout(panelOptionAgent,
+				BoxLayout.PAGE_AXIS));
 		panelOptionAgent.setPreferredSize(new Dimension(50, 200));
 		panelOptionAgent.add(panelZoomAgent);
+		panelOptionAgent.add(Box.createRigidArea(new Dimension(0, 5)));
 		panelOptionAgent.add(panelModifAgent);
 
 		// Initialisation de la zone de texte de la barre de statut
@@ -946,7 +963,8 @@ public class Window extends JFrame {
 
 					public void mouseMoved(MouseEvent e) {
 						String s;
-						Collection<GraphicElement> gElements = findNodesOrSpritesAtWithTolerance(e, view);
+						Collection<GraphicElement> gElements = findNodesOrSpritesAtWithTolerance(
+								e, view);
 						gElement = nearestElement(e, gElements);
 						if (gElement instanceof GraphicNode) {
 							s = getNodeInformations(gElement, graph);
@@ -998,7 +1016,8 @@ public class Window extends JFrame {
 
 			public void mouseClicked(MouseEvent e) {
 				if (isGraphLoaded) {
-					Collection<GraphicElement> gElements = findNodesOrSpritesAtWithTolerance(e, view);
+					Collection<GraphicElement> gElements = findNodesOrSpritesAtWithTolerance(
+							e, view);
 					gElement = nearestElement(e, gElements);
 					if (gElement instanceof GraphicNode) {
 						ChangeNodeDialog changeNodeDialog = new ChangeNodeDialog(
@@ -1044,7 +1063,8 @@ public class Window extends JFrame {
 			}
 
 			public void mousePressed(MouseEvent e) {
-				Collection<GraphicElement> gElements = findNodesOrSpritesAtWithTolerance(e, view);
+				Collection<GraphicElement> gElements = findNodesOrSpritesAtWithTolerance(
+						e, view);
 				gElement = nearestElement(e, gElements);
 				if (gElement instanceof GraphicNode) {
 					view.moveElementAtPx(gElement, e.getX(), e.getY());
@@ -1075,29 +1095,30 @@ public class Window extends JFrame {
 		});
 	}
 
-	public static Collection<GraphicElement> findNodesOrSpritesAtWithTolerance(MouseEvent e,
-			View view) {
+	public static Collection<GraphicElement> findNodesOrSpritesAtWithTolerance(
+			MouseEvent e, View view) {
 		double topY = e.getY() - tolerance;
 		double bottomY = e.getY() + tolerance;
 		double leftX = e.getX() - tolerance;
 		double rightX = e.getX() + tolerance;
 		return view.allNodesOrSpritesIn(leftX, topY, rightX, bottomY);
 	}
-	
-	public static GraphicElement nearestElement(MouseEvent e, Collection<GraphicElement> gElements){
+
+	public static GraphicElement nearestElement(MouseEvent e,
+			Collection<GraphicElement> gElements) {
 		int nbElem = gElements.size();
 		GraphicElement gElem;
 		double distance, distanceTemp;
-		if(nbElem == 0){
+		if (nbElem == 0) {
 			return null;
-		} else if (nbElem == 1){
+		} else if (nbElem == 1) {
 			return (GraphicElement) gElements.toArray()[0];
 		} else {
 			gElem = (GraphicElement) gElements.toArray()[0];
 			distance = calculDistance(e, gElem);
-			for(GraphicElement gElement : gElements){
+			for (GraphicElement gElement : gElements) {
 				distanceTemp = calculDistance(e, gElement);
-				if(distanceTemp < distance){
+				if (distanceTemp < distance) {
 					gElem = gElement;
 					distance = distanceTemp;
 				}
@@ -1105,9 +1126,10 @@ public class Window extends JFrame {
 			return gElem;
 		}
 	}
-	
-	public static double calculDistance(MouseEvent e, GraphicElement gElem){
-		return Math.sqrt((gElem.getX() - e.getX()) * (gElem.getX() - e.getX()) + (gElem.getY() - e.getY()) * (gElem.getY() - e.getY()));
+
+	public static double calculDistance(MouseEvent e, GraphicElement gElem) {
+		return Math.sqrt((gElem.getX() - e.getX()) * (gElem.getX() - e.getX())
+				+ (gElem.getY() - e.getY()) * (gElem.getY() - e.getY()));
 	}
 
 	public static void initGraphPropertiesJson() {
