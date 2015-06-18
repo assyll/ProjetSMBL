@@ -22,7 +22,7 @@ import org.graphstream.graph.Node;
 
 @SuppressWarnings("serial")
 public class ChangeNodeDialog extends JDialog implements ActionListener {
-	
+
 	private static JTextField nameNode;
 	private JTextField nbAttributsNode;
 	private JLabel labelName, labelRoot, labelFinal, labelNbAtt;
@@ -40,7 +40,7 @@ public class ChangeNodeDialog extends JDialog implements ActionListener {
 	public ChangeNodeDialog(JFrame f, String s, final String nodeId, Graph graph) {
 		super(f, s, true);
 		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		
+
 		nodeName = nodeId;
 		oldNode = graph.getNode(nodeName);
 		isSource = oldNode.getAttribute(MyJsonGenerator.FORMAT_NODE_SOURCE);
@@ -134,19 +134,17 @@ public class ChangeNodeDialog extends JDialog implements ActionListener {
 	public void actionPerformed(ActionEvent evt) {
 		if (evt.getSource() == ok) {
 			ferme = false;
-			if (!ferme) {
-				nbAtt = getNbAtt();
+			nbAtt = getNbAtt();
 
-				if (nbAtt != 0) {
-					attDialog = new AttributDialog(getFrame(),
-							"Attributs Node", nbAtt);
-					if (attDialog.isExit()) {
-						ferme = true;
-					}
+			if (nbAtt != 0) {
+				attDialog = new AttributDialog(getFrame(), "Attributs Node",
+						nbAtt);
+				if (attDialog.isExit()) {
+					ferme = true;
 				}
-
-				dispose();
 			}
+
+			dispose();
 		} else if (evt.getSource() == cancel) {
 			ferme = true;
 			dispose();

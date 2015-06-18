@@ -116,18 +116,16 @@ public class AddNodeDialog extends JDialog implements ActionListener {
 	public void actionPerformed(ActionEvent evt) {
 		if (evt.getSource() == ok) {
 			ferme = false;
-			if (!ferme) {
-				nbAtt = getNbAtt();
+			nbAtt = getNbAtt();
 
-				if (nbAtt != 0) {
-					attDialog = new AttributDialog(getFrame(),
-							"Attributs Node", nbAtt);
-					if (attDialog.isExit()) {
-						ferme = true;
-					}
+			if (nbAtt != 0) {
+				attDialog = new AttributDialog(getFrame(), "Attributs Node",
+						nbAtt);
+				if (attDialog.isExit()) {
+					ferme = true;
 				}
-				dispose();
 			}
+			dispose();
 		} else if (evt.getSource() == cancel) {
 			ferme = true;
 			dispose();

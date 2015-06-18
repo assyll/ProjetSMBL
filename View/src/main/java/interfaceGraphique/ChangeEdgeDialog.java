@@ -38,7 +38,7 @@ public class ChangeEdgeDialog extends JDialog implements ActionListener {
 	public ChangeEdgeDialog(JFrame f, String s, final String edgeId, Graph g) {
 		super(f, s, true);
 		this.setDefaultCloseOperation(this.DISPOSE_ON_CLOSE);
-		
+
 		edgeName = edgeId;
 		graph = g;
 		oldEdge = graph.getEdge(edgeName);
@@ -101,7 +101,7 @@ public class ChangeEdgeDialog extends JDialog implements ActionListener {
 			return (attDialog.getAttributs());
 		}
 	}
-	
+
 	public JFrame getFrame() {
 		return frame;
 	}
@@ -113,19 +113,17 @@ public class ChangeEdgeDialog extends JDialog implements ActionListener {
 	public void actionPerformed(ActionEvent evt) {
 		if (evt.getSource() == ok) {
 			ferme = false;
-			if (!ferme) {
-				nbAtt = getNbAtt();
+			nbAtt = getNbAtt();
 
-				if (nbAtt != 0) {
-					attDialog = new AttributDialog(getFrame(),
-							"Attributs Node", getNbAtt());
-					if (attDialog.isExit()) {
-						ferme = true;
-					}
+			if (nbAtt != 0) {
+				attDialog = new AttributDialog(getFrame(), "Attributs Node",
+						getNbAtt());
+				if (attDialog.isExit()) {
+					ferme = true;
 				}
-
-				dispose();
 			}
+
+			dispose();
 		} else if (evt.getSource() == cancel) {
 			ferme = true;
 			dispose();

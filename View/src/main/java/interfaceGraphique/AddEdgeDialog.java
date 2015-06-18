@@ -126,7 +126,7 @@ public class AddEdgeDialog extends JDialog implements ActionListener {
 		String[] tmp = new String[graph.getNodeCount()];
 		int cpt = 0;
 		for (Node node : graph.getEachNode()) {
-			tmp[cpt++] = node.toString();
+			tmp[cpt++] = node.getId();
 		}
 		return tmp;
 	}
@@ -142,15 +142,13 @@ public class AddEdgeDialog extends JDialog implements ActionListener {
 	public void actionPerformed(ActionEvent evt) {
 		if (evt.getSource() == ok) {
 			ferme = false;
-			if (!ferme) {
-				nbAtt = getNbAtt();
+			nbAtt = getNbAtt();
 
-				if (nbAtt != 0) {
-					attDialog = new AttributDialog(getFrame(),
-							"Attributs Node", getNbAtt());
-					if (attDialog.isExit()) {
-						ferme = true;
-					}
+			if (nbAtt != 0) {
+				attDialog = new AttributDialog(getFrame(), "Attributs Node",
+						getNbAtt());
+				if (attDialog.isExit()) {
+					ferme = true;
 				}
 
 				dispose();
