@@ -144,7 +144,6 @@ public class GraphModifier {
 		List<String> attToRemove = new ArrayList<String>();
 
 		for (String attributeKey : edge.getAttributeKeySet()) {
-			System.out.println(attributeKey);
 			if (!attributeKey.startsWith("ui.sprite")) {
 				attToRemove.add(attributeKey);
 			}
