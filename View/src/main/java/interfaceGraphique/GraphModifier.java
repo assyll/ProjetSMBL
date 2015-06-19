@@ -165,23 +165,19 @@ public class GraphModifier {
 				}
 			}
 		}
-
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 		setUILabelEdge(currentEdgeDisplay, edge);
-
+		
 		return graph;
 	}
 
 	public static void setUILabelEdge(String displayToApply, Edge edge) {
+		String attValue;
+		
 		if (displayToApply.equals("Label")) {
 			edge.setAttribute("ui.label", edge.getId());
 		} else {
-			String attValue = edge.getAttribute(displayToApply);
+			attValue = edge.getAttribute(displayToApply);
 			if (attValue != null) {
 				edge.setAttribute("ui.label", attValue);
 			}

@@ -1000,7 +1000,7 @@ public class Window extends JFrame {
 		dialog.show();
 	}
 
-	public static void setListenerOnViewer(final Viewer viewer,
+	public static void setListenerOnViewer(final JFrame frame, final Viewer viewer,
 			final Graph graph, final JTextField jTextField,
 			final boolean isGraphLoaded) {
 		// Action lors du d�placement de la souris sur le graphe
@@ -1180,7 +1180,7 @@ public class Window extends JFrame {
 		// suppression du comportement par defaut du MouseListener de la view
 		viewJson.setMouseManager(new CustomMouseManager());
 
-		setListenerOnViewer(viewerJson, graphJson, textJson, isGraphJsonLoaded);
+		setListenerOnViewer(frame, viewerJson, graphJson, textJson, isGraphJsonLoaded);
 	}
 
 	public static void initGraphPropertiesAgent() {
@@ -1201,7 +1201,7 @@ public class Window extends JFrame {
 		// suppression du comportement par defaut du MouseListener de la view
 		viewAgent.setMouseManager(new CustomMouseManager());
 
-		setListenerOnViewer(viewerAgent, graphAgent, textAgent,
+		setListenerOnViewer(frame, viewerAgent, graphAgent, textAgent,
 				isGraphAgentLoaded);
 	}
 
@@ -1356,7 +1356,7 @@ public class Window extends JFrame {
 	public static void changeDisplayEdge(JFrame frame, boolean isGraphLoaded,
 			Graph graph) {
 		String displayToApply;
-		
+
 		if (isGraphLoaded) {
 			ChangeDisplayEdgeDialog changeDisplayEdge = new ChangeDisplayEdgeDialog(
 					frame, "Change Edge Display", graph);
