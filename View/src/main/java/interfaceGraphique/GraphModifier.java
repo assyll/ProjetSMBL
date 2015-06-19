@@ -153,7 +153,6 @@ public class GraphModifier {
 			edge.removeAttribute(attributeKey);
 		}
 
-		edge.setAttribute("ui.label", ChangeEdgeDialog.getAction());
 		edge.setAttribute(MyJsonGenerator.FORMAT_EDGE_ACTION,
 				ChangeEdgeDialog.getAction());
 
@@ -167,6 +166,12 @@ public class GraphModifier {
 			}
 		}
 
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		setUILabelEdge(currentEdgeDisplay, edge);
 
 		return graph;

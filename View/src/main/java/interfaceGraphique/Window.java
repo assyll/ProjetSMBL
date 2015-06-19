@@ -700,7 +700,8 @@ public class Window extends JFrame {
 		// partie gauche
 		deleteEdgeJson.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				deleteEdge(frame, isGraphJsonLoaded, graphJson, spriteManagerJson);
+				deleteEdge(frame, isGraphJsonLoaded, graphJson,
+						spriteManagerJson);
 			}
 		});
 
@@ -866,7 +867,8 @@ public class Window extends JFrame {
 		// Action lors du clic sur l'item "Edge +" de la partie droite
 		addEdgeAgent.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				addEdge(frame, isGraphAgentLoaded, graphAgent, spriteManagerAgent);
+				addEdge(frame, isGraphAgentLoaded, graphAgent,
+						spriteManagerAgent);
 			}
 		});
 
@@ -874,7 +876,8 @@ public class Window extends JFrame {
 		// partie droite
 		deleteEdgeAgent.addActionListener(new ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				deleteEdge(frame, isGraphAgentLoaded, graphAgent, spriteManagerAgent);
+				deleteEdge(frame, isGraphAgentLoaded, graphAgent,
+						spriteManagerAgent);
 			}
 		});
 
@@ -1076,7 +1079,6 @@ public class Window extends JFrame {
 					} else if (gElement instanceof GraphicSprite) {
 						modifyEdge(frame, graph, gElement.getId());
 					}
-					view.display(viewer.getGraphicGraph(), true);
 				}
 			}
 
@@ -1353,17 +1355,16 @@ public class Window extends JFrame {
 
 	public static void changeDisplayEdge(JFrame frame, boolean isGraphLoaded,
 			Graph graph) {
+		String displayToApply;
+		
 		if (isGraphLoaded) {
 			ChangeDisplayEdgeDialog changeDisplayEdge = new ChangeDisplayEdgeDialog(
 					frame, "Change Edge Display", graph);
-			String displayToApply = changeDisplayEdge.getDisplay();
+			displayToApply = changeDisplayEdge.getDisplay();
 			if (!changeDisplayEdge.getFerme()) {
-
-				if (!displayToApply.equals(currentEdgeDisplay)) {
-					currentEdgeDisplay = displayToApply;
-					for (Edge edge : graph.getEachEdge()) {
-						GraphModifier.setUILabelEdge(displayToApply, edge);
-					}
+				currentEdgeDisplay = displayToApply;
+				for (Edge edge : graph.getEachEdge()) {
+					GraphModifier.setUILabelEdge(displayToApply, edge);
 				}
 			}
 		}
@@ -1458,8 +1459,8 @@ public class Window extends JFrame {
 		}
 	}
 
-	public static void addEdge(JFrame frame, Boolean isGraphLoaded, Graph graph,
-			SpriteManager spriteManager) {
+	public static void addEdge(JFrame frame, Boolean isGraphLoaded,
+			Graph graph, SpriteManager spriteManager) {
 		if (isGraphLoaded) {
 			AddEdgeDialog addEdgeDialog = new AddEdgeDialog(frame, "Add Edge",
 					graph);
@@ -1476,8 +1477,8 @@ public class Window extends JFrame {
 		}
 	}
 
-	public static void deleteEdge(JFrame frame, Boolean isGraphLoaded, Graph graph,
-			SpriteManager spriteManager) {
+	public static void deleteEdge(JFrame frame, Boolean isGraphLoaded,
+			Graph graph, SpriteManager spriteManager) {
 		if (isGraphLoaded && graph.getEdgeCount() != 0) {
 			DeleteEdgeDialog deleteEdgeDialog = new DeleteEdgeDialog(frame,
 					"Delete Edge", graph);
@@ -1494,7 +1495,8 @@ public class Window extends JFrame {
 		}
 	}
 
-	public static void selectEdge(JFrame frame, Boolean isGraphLoaded, Graph graph) {
+	public static void selectEdge(JFrame frame, Boolean isGraphLoaded,
+			Graph graph) {
 		if (isGraphLoaded && graph.getEdgeCount() != 0) {
 			SelectEdgeDialog selectEdgeDialog = new SelectEdgeDialog(frame,
 					"Select Edge", graph);

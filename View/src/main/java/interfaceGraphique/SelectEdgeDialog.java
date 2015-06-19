@@ -43,7 +43,7 @@ public class SelectEdgeDialog extends JDialog implements ActionListener {
 		edges = getEdges();
 		Box boite = Box.createVerticalBox();
 		JPanel panelDialog = new JPanel();
-		panelDialog.setLayout(new GridLayout(2, 2, 20, 5));
+		panelDialog.setLayout(new GridLayout(2, 2, 20, 50));
 
 		labelEdgeName = new JLabel("What's the name of the Edge?");
 		panelDialog.add(labelEdgeName);
@@ -61,7 +61,7 @@ public class SelectEdgeDialog extends JDialog implements ActionListener {
 
 		boite.add(panelDialog);
 		this.add(boite);
-		this.setBounds(400, 200, 300, 300);
+		this.setBounds(400, 200, 300, 200);
 		this.setVisible(true);
 	}
 

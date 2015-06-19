@@ -23,8 +23,8 @@ import org.graphstream.graph.Graph;
 public class ChangeEdgeDialog extends JDialog implements ActionListener {
 
 	private static JTextField actionEdge;
-	private JTextField nbAttributsEdge;
-	private JLabel labelAction, labelNbAtt;
+	private JTextField nbAttributsEdge, nameEdge;
+	private JLabel labelName, labelAction, labelNbAtt;
 	private JButton ok, cancel;
 	private JFrame frame;
 	private int nbAtt;
@@ -54,7 +54,14 @@ public class ChangeEdgeDialog extends JDialog implements ActionListener {
 		graph = g;
 		Box boite = Box.createVerticalBox();
 		JPanel panelDialog = new JPanel();
-		panelDialog.setLayout(new GridLayout(3, 2, 20, 5));
+		panelDialog.setLayout(new GridLayout(4, 2, 20, 5));
+		
+		labelName = new JLabel("Name of the edge :");
+		panelDialog.add(labelName);
+		nameEdge = new JTextField(10);
+		panelDialog.add(nameEdge);
+		nameEdge.setText(edgeId);
+		nameEdge.setEditable(false);
 
 		labelAction = new JLabel("What's the action?");
 		panelDialog.add(labelAction);

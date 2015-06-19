@@ -43,9 +43,9 @@ public class SelectNodeDialog extends JDialog implements ActionListener {
 		nodes = getNodes();
 		Box boite = Box.createVerticalBox();
 		JPanel panelDialog = new JPanel();
-		panelDialog.setLayout(new GridLayout(2, 2, 20, 5));
+		panelDialog.setLayout(new GridLayout(2, 2, 20, 50));
 
-		labelNodeName = new JLabel("What's the name of the Node?");
+		labelNodeName = new JLabel("Node's name: ");
 		panelDialog.add(labelNodeName);
 		nodeName = new JComboBox<String>(nodes);
 		panelDialog.add(nodeName);
@@ -61,7 +61,7 @@ public class SelectNodeDialog extends JDialog implements ActionListener {
 
 		boite.add(panelDialog);
 		this.add(boite);
-		this.setBounds(400, 200, 300, 300);
+		this.setBounds(400, 200, 300, 200);
 		this.setVisible(true);
 	}
 	

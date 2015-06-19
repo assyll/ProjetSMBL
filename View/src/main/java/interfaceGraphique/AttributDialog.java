@@ -65,10 +65,10 @@ public class AttributDialog extends JDialog implements ActionListener {
 
 		nbAttribut = nbAtt;
 		boite = Box.createVerticalBox();
-		panelDialog = new JPanel(new GridLayout(2, 1, 5, 5));
-		panelDialog.setPreferredSize(new Dimension(300, (nbAtt + 1) * 70));
+		panelDialog = new JPanel();
+		panelDialog.setPreferredSize(new Dimension(300, (nbAtt + 1) * 40 + 5));
 		panelAttributs = new JPanel(new GridLayout(nbAtt, 4, 5, 5));
-		panelAttributs.setPreferredSize(new Dimension(300, (nbAtt * 70)));
+		panelAttributs.setPreferredSize(new Dimension(300, (nbAtt * 40)));
 		panelAttributs.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 		panelOption = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		panelOption.setPreferredSize(new Dimension(300,70));
@@ -77,9 +77,9 @@ public class AttributDialog extends JDialog implements ActionListener {
 		for (int i = 0; i < nbAtt; i++) {
 
 			JLabel nameL = new JLabel("Name :");
-			JTextField nameT = new JTextField(10);
+			JTextField nameT = new JTextField(20);
 			JLabel valueL = new JLabel(" value :");
-			JTextField valueT = new JTextField(10);
+			JTextField valueT = new JTextField(20);
 
 			panelAttributs.add(nameL);
 			panelAttributs.add(nameT);

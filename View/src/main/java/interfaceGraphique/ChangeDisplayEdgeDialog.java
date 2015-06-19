@@ -48,9 +48,9 @@ public class ChangeDisplayEdgeDialog extends JDialog implements ActionListener {
 		tabDisplays = displays.toArray();
 		Box boite = Box.createVerticalBox();
 		JPanel panelDialog = new JPanel();
-		panelDialog.setLayout(new GridLayout(2, 2, 20, 5));
+		panelDialog.setLayout(new GridLayout(2, 2, 20, 50));
 
-		labelDisplay = new JLabel("Choose the display for edges :");
+		labelDisplay = new JLabel("Edge's display :");
 		panelDialog.add(labelDisplay);
 		edgeDisplay = new JComboBox(displays.toArray());
 		edgeDisplay.insertItemAt("Label", 1);
@@ -67,7 +67,7 @@ public class ChangeDisplayEdgeDialog extends JDialog implements ActionListener {
 
 		boite.add(panelDialog);
 		this.add(boite);
-		this.setBounds(400, 200, 300, 300);
+		this.setBounds(400, 200, 300, 200);
 		this.setVisible(true);
 	}
 
