@@ -1,5 +1,6 @@
 package generalStructure.impl;
 
+import org.graphstream.graph.Graph;
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.DynamicLabel;
 import org.neo4j.graphdb.DynamicRelationshipType;
@@ -15,6 +16,7 @@ import agents.interfaces.StateMemory;
 import agents.interfaces.TransMemory;
 import general.GraphComp;
 import generalStructure.interfaces.IGraph;
+import generalStructure.interfaces.UpdateGraph;
 
 public class GraphCompImpl extends GraphComp implements IGraph {
 
@@ -163,6 +165,17 @@ public class GraphCompImpl extends GraphComp implements IGraph {
 	
 	public void close() {
 		_graphNeo4J.shutdown();
+	}
+
+	@Override
+	protected UpdateGraph make_updateGraph() {
+		return new UpdateGraph() {
+			@Override
+			public Graph getGraph() {
+				//return GraphCompImpl.this._graphGS;
+				return null;
+			}
+		};
 	}
 
 }

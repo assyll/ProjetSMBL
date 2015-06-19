@@ -1,5 +1,6 @@
 package general;
 
+import agents.interfaces.Callable;
 import agents.interfaces.IGetThread;
 import agents.interfaces.PullMessage;
 import agents.interfaces.SendMessage;
@@ -9,6 +10,7 @@ import environnement.interfaces.EnvUpdate;
 import general.ActionProvider;
 import general.EcoAgents;
 import general.Environnement;
+import general.FenetreComp;
 import general.Forward;
 import general.GraphComp;
 import general.Launcher;
@@ -18,6 +20,7 @@ import generalStructure.interfaces.ICreateAgent;
 import generalStructure.interfaces.IGraph;
 import generalStructure.interfaces.ILog;
 import generalStructure.interfaces.IStop;
+import generalStructure.interfaces.UpdateGraph;
 import trace.ActionTrace;
 import trace.interfaces.ITakeAction;
 
@@ -51,6 +54,13 @@ public abstract class BigEco {
      * 
      */
     public GraphComp.Component graphComp();
+    
+    /**
+     * This can be called by the implementation to access the part and its provided ports.
+     * It will be initialized after the required ports are initialized and before the provided ports are initialized.
+     * 
+     */
+    public FenetreComp.Component fenetreComp();
     
     /**
      * This can be called by the implementation to access the part and its provided ports.
@@ -98,6 +108,8 @@ public abstract class BigEco {
       ((LogComp.ComponentImpl) this.logComp).start();
       assert this.graphComp != null: "This is a bug.";
       ((GraphComp.ComponentImpl) this.graphComp).start();
+      assert this.fenetreComp != null: "This is a bug.";
+      ((FenetreComp.ComponentImpl) this.fenetreComp).start();
       assert this.ecoAE != null: "This is a bug.";
       ((EcoAgents.ComponentImpl) this.ecoAE).start();
       assert this.fw != null: "This is a bug.";
@@ -131,6 +143,17 @@ public abstract class BigEco {
       	throw new RuntimeException("make_graphComp() in general.BigEco should not return null.");
       }
       this.graphComp = this.implem_graphComp._newComponent(new BridgeImpl_graphComp(), false);
+      
+    }
+    
+    private void init_fenetreComp() {
+      assert this.fenetreComp == null: "This is a bug.";
+      assert this.implem_fenetreComp == null: "This is a bug.";
+      this.implem_fenetreComp = this.implementation.make_fenetreComp();
+      if (this.implem_fenetreComp == null) {
+      	throw new RuntimeException("make_fenetreComp() in general.BigEco should not return null.");
+      }
+      this.fenetreComp = this.implem_fenetreComp._newComponent(new BridgeImpl_fenetreComp(), false);
       
     }
     
@@ -192,6 +215,7 @@ public abstract class BigEco {
     protected void initParts() {
       init_logComp();
       init_graphComp();
+      init_fenetreComp();
       init_ecoAE();
       init_fw();
       init_actionProvider();
@@ -253,6 +277,24 @@ public abstract class BigEco {
     
     public final GraphComp.Component graphComp() {
       return this.graphComp;
+    }
+    
+    private FenetreComp.Component fenetreComp;
+    
+    private FenetreComp implem_fenetreComp;
+    
+    private final class BridgeImpl_fenetreComp implements FenetreComp.Requires {
+      public final Callable callable() {
+        return BigEco.ComponentImpl.this.launcher().call();
+      }
+      
+      public final UpdateGraph updateGraph() {
+        return BigEco.ComponentImpl.this.graphComp().updateGraph();
+      }
+    }
+    
+    public final FenetreComp.Component fenetreComp() {
+      return this.fenetreComp;
     }
     
     private EcoAgents.Component ecoAE;
@@ -903,6 +945,13 @@ public abstract class BigEco {
    * 
    */
   protected abstract GraphComp make_graphComp();
+  
+  /**
+   * This should be overridden by the implementation to define how to create this sub-component.
+   * This will be called once during the construction of the component to initialize this sub-component.
+   * 
+   */
+  protected abstract FenetreComp make_fenetreComp();
   
   /**
    * This should be overridden by the implementation to define how to create this sub-component.

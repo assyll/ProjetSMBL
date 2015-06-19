@@ -12,6 +12,7 @@ import generalStructure.interfaces.IStop
 import trace.ActionTrace
 import trace.interfaces.ITakeAction
 import generalStructure.interfaces.IGraph
+import generalStructure.interfaces.UpdateGraph
 
 namespace general{
 	
@@ -29,6 +30,11 @@ namespace general{
 		part logComp: LogComp
 		
 		part graphComp: GraphComp
+		
+		part fenetreComp: FenetreComp {
+			bind callable to launcher.call
+			bind updateGraph to graphComp.updateGraph
+		}
 		
 		part ecoAE: EcoAgents {
 			bind threads to launcher.threads
@@ -118,6 +124,12 @@ namespace general{
 	
 	component GraphComp {
 		provides graph: IGraph
+		provides updateGraph: UpdateGraph
+	}
+	
+	component FenetreComp {
+		requires callable: Callable
+		requires updateGraph: UpdateGraph
 	}
 	
 	

@@ -108,6 +108,7 @@ implements TransAction {
 	
 	private void suicide() {
 		requires().suicide().suicide();
+		requires().graph().majTransitionAgent(id, null);
 	}
 
 }
