@@ -157,7 +157,7 @@ public class Window extends JFrame {
 
 	private static boolean isAutoLayoutJson, isAutoLayoutAgent,
 			isGraphJsonLoaded = false, isGraphAgentLoaded = false,
-			isDirectoryNeo4j, wantToGenerateToLeft;
+			isDirectoryNeo4j, wantToGenerateToLeft, isButton1Dragging = false;
 
 	private static SpriteManager spriteManagerJson, spriteManagerAgent;
 
@@ -1000,9 +1000,9 @@ public class Window extends JFrame {
 		dialog.show();
 	}
 
-	public static void setListenerOnViewer(final JFrame frame, final Viewer viewer,
-			final Graph graph, final JTextField jTextField,
-			final boolean isGraphLoaded) {
+	public static void setListenerOnViewer(final JFrame frame,
+			final Viewer viewer, final Graph graph,
+			final JTextField jTextField, final boolean isGraphLoaded) {
 		// Action lors du d�placement de la souris sur le graphe
 		final View view = viewer.getDefaultView();
 		final JComponent jCompView = (JComponent) view;
@@ -1042,27 +1042,30 @@ public class Window extends JFrame {
 					}
 
 					public void mouseDragged(MouseEvent e) {
-						jCompView.setCursor(cursor);
-						if (!(gElement instanceof GraphicNode)) {
-							if (x == null && y == null) {
-								x = (double) e.getX();
-								y = (double) e.getY();
-							} else {
-								x = x2;
-								y = y2;
+						if (isButton1Dragging) {
+							jCompView.setCursor(cursor);
+							if (!(gElement instanceof GraphicNode)) {
+								if (x == null && y == null) {
+									x = (double) e.getX();
+									y = (double) e.getY();
+								} else {
+									x = x2;
+									y = y2;
+								}
+								x2 = (double) e.getX();
+								y2 = (double) e.getY();
+
+								double posX = view.getCamera().getViewCenter().x;
+								double posY = view.getCamera().getViewCenter().y;
+								double posZ = view.getCamera().getViewCenter().z;
+
+								view.getCamera().setViewCenter(
+										(posX + ((x2 - x) * (-1)) / 100),
+										(posY + (y2 - y) / 100), posZ);
+							} else if (gElement instanceof GraphicNode) {
+								view.moveElementAtPx(gElement, e.getX(),
+										e.getY());
 							}
-							x2 = (double) e.getX();
-							y2 = (double) e.getY();
-
-							double posX = view.getCamera().getViewCenter().x;
-							double posY = view.getCamera().getViewCenter().y;
-							double posZ = view.getCamera().getViewCenter().z;
-
-							view.getCamera().setViewCenter(
-									(posX + ((x2 - x) * (-1)) / 100),
-									(posY + (y2 - y) / 100), posZ);
-						} else if (gElement instanceof GraphicNode) {
-							view.moveElementAtPx(gElement, e.getX(), e.getY());
 						}
 					}
 				});
@@ -1070,14 +1073,20 @@ public class Window extends JFrame {
 		jCompView.addMouseListener(new MouseListener() {
 
 			public void mouseClicked(MouseEvent e) {
-				if (isGraphLoaded) {
-					Collection<GraphicElement> gElements = findNodesOrSpritesAtWithTolerance(
-							e, view);
-					gElement = nearestElement(e, gElements);
-					if (gElement instanceof GraphicNode) {
-						modifyNode(frame, graph, gElement.getId());
-					} else if (gElement instanceof GraphicSprite) {
-						modifyEdge(frame, graph, gElement.getId());
+				if (e.getButton() == MouseEvent.BUTTON3) {
+					Collection<GraphicElement> gElements;
+
+					if (isGraphLoaded) {
+						if (gElement == null) {
+							gElements = findNodesOrSpritesAtWithTolerance(e,
+									view);
+							gElement = nearestElement(e, gElements);
+						}
+						if (gElement instanceof GraphicNode) {
+							modifyNode(frame, graph, gElement.getId());
+						} else if (gElement instanceof GraphicSprite) {
+							modifyEdge(frame, graph, gElement.getId());
+						}
 					}
 				}
 			}
@@ -1093,22 +1102,28 @@ public class Window extends JFrame {
 			}
 
 			public void mousePressed(MouseEvent e) {
-				Collection<GraphicElement> gElements = findNodesOrSpritesAtWithTolerance(
-						e, view);
-				gElement = nearestElement(e, gElements);
-				if (gElement instanceof GraphicNode) {
-					view.moveElementAtPx(gElement, e.getX(), e.getY());
+				Collection<GraphicElement> gElements;
+
+				if (e.getButton() == MouseEvent.BUTTON1) {
+					isButton1Dragging = true;
+					gElements = findNodesOrSpritesAtWithTolerance(e, view);
+					gElement = nearestElement(e, gElements);
+					if (gElement instanceof GraphicNode) {
+						view.moveElementAtPx(gElement, e.getX(), e.getY());
+					}
 				}
 			}
 
-			public void mouseReleased(MouseEvent arg0) {
-				x = null;
-				y = null;
-				gElement = null;
-				jCompView.setCursor(Cursor
-						.getPredefinedCursor(Cursor.HAND_CURSOR));
+			public void mouseReleased(MouseEvent e) {
+				if (e.getButton() == MouseEvent.BUTTON1) {
+					isButton1Dragging = false;
+					x = null;
+					y = null;
+					gElement = null;
+					jCompView.setCursor(Cursor
+							.getPredefinedCursor(Cursor.HAND_CURSOR));
+				}
 			}
-
 		});
 
 		// Action lors de l'utilisation de la molette de la souris sur le graphe
@@ -1180,7 +1195,8 @@ public class Window extends JFrame {
 		// suppression du comportement par defaut du MouseListener de la view
 		viewJson.setMouseManager(new CustomMouseManager());
 
-		setListenerOnViewer(frame, viewerJson, graphJson, textJson, isGraphJsonLoaded);
+		setListenerOnViewer(frame, viewerJson, graphJson, textJson,
+				isGraphJsonLoaded);
 	}
 
 	public static void initGraphPropertiesAgent() {
