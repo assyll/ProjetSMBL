@@ -1,37 +1,37 @@
 package general;
 
-import generalStructure.interfaces.IGraph;
+import agents.interfaces.Callable;
 import generalStructure.interfaces.UpdateGraph;
 
 @SuppressWarnings("all")
-public abstract class GraphComp {
+public class FenetreComp {
   public interface Requires {
-  }
-  
-  public interface Component extends GraphComp.Provides {
-  }
-  
-  public interface Provides {
     /**
-     * This can be called to access the provided port.
+     * This can be called by the implementation to access this required port.
      * 
      */
-    public IGraph graph();
+    public Callable callable();
     
     /**
-     * This can be called to access the provided port.
+     * This can be called by the implementation to access this required port.
      * 
      */
     public UpdateGraph updateGraph();
   }
   
+  public interface Component extends FenetreComp.Provides {
+  }
+  
+  public interface Provides {
+  }
+  
   public interface Parts {
   }
   
-  public static class ComponentImpl implements GraphComp.Component, GraphComp.Parts {
-    private final GraphComp.Requires bridge;
+  public static class ComponentImpl implements FenetreComp.Component, FenetreComp.Parts {
+    private final FenetreComp.Requires bridge;
     
-    private final GraphComp implementation;
+    private final FenetreComp implementation;
     
     public void start() {
       this.implementation.start();
@@ -42,28 +42,11 @@ public abstract class GraphComp {
       
     }
     
-    private void init_graph() {
-      assert this.graph == null: "This is a bug.";
-      this.graph = this.implementation.make_graph();
-      if (this.graph == null) {
-      	throw new RuntimeException("make_graph() in general.GraphComp should not return null.");
-      }
-    }
-    
-    private void init_updateGraph() {
-      assert this.updateGraph == null: "This is a bug.";
-      this.updateGraph = this.implementation.make_updateGraph();
-      if (this.updateGraph == null) {
-      	throw new RuntimeException("make_updateGraph() in general.GraphComp should not return null.");
-      }
-    }
-    
     protected void initProvidedPorts() {
-      init_graph();
-      init_updateGraph();
+      
     }
     
-    public ComponentImpl(final GraphComp implem, final GraphComp.Requires b, final boolean doInits) {
+    public ComponentImpl(final FenetreComp implem, final FenetreComp.Requires b, final boolean doInits) {
       this.bridge = b;
       this.implementation = implem;
       
@@ -77,18 +60,6 @@ public abstract class GraphComp {
       	initParts();
       	initProvidedPorts();
       }
-    }
-    
-    private IGraph graph;
-    
-    public IGraph graph() {
-      return this.graph;
-    }
-    
-    private UpdateGraph updateGraph;
-    
-    public UpdateGraph updateGraph() {
-      return this.updateGraph;
     }
   }
   
@@ -106,7 +77,7 @@ public abstract class GraphComp {
    */
   private boolean started = false;;
   
-  private GraphComp.ComponentImpl selfComponent;
+  private FenetreComp.ComponentImpl selfComponent;
   
   /**
    * Can be overridden by the implementation.
@@ -123,7 +94,7 @@ public abstract class GraphComp {
    * This can be called by the implementation to access the provided ports.
    * 
    */
-  protected GraphComp.Provides provides() {
+  protected FenetreComp.Provides provides() {
     assert this.selfComponent != null: "This is a bug.";
     if (!this.init) {
     	throw new RuntimeException("provides() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if provides() is needed to initialise the component.");
@@ -132,24 +103,10 @@ public abstract class GraphComp {
   }
   
   /**
-   * This should be overridden by the implementation to define the provided port.
-   * This will be called once during the construction of the component to initialize the port.
-   * 
-   */
-  protected abstract IGraph make_graph();
-  
-  /**
-   * This should be overridden by the implementation to define the provided port.
-   * This will be called once during the construction of the component to initialize the port.
-   * 
-   */
-  protected abstract UpdateGraph make_updateGraph();
-  
-  /**
    * This can be called by the implementation to access the required ports.
    * 
    */
-  protected GraphComp.Requires requires() {
+  protected FenetreComp.Requires requires() {
     assert this.selfComponent != null: "This is a bug.";
     if (!this.init) {
     	throw new RuntimeException("requires() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if requires() is needed to initialise the component.");
@@ -161,7 +118,7 @@ public abstract class GraphComp {
    * This can be called by the implementation to access the parts and their provided ports.
    * 
    */
-  protected GraphComp.Parts parts() {
+  protected FenetreComp.Parts parts() {
     assert this.selfComponent != null: "This is a bug.";
     if (!this.init) {
     	throw new RuntimeException("parts() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if parts() is needed to initialise the component.");
@@ -173,23 +130,15 @@ public abstract class GraphComp {
    * Not meant to be used to manually instantiate components (except for testing).
    * 
    */
-  public synchronized GraphComp.Component _newComponent(final GraphComp.Requires b, final boolean start) {
+  public synchronized FenetreComp.Component _newComponent(final FenetreComp.Requires b, final boolean start) {
     if (this.init) {
-    	throw new RuntimeException("This instance of GraphComp has already been used to create a component, use another one.");
+    	throw new RuntimeException("This instance of FenetreComp has already been used to create a component, use another one.");
     }
     this.init = true;
-    GraphComp.ComponentImpl  _comp = new GraphComp.ComponentImpl(this, b, true);
+    FenetreComp.ComponentImpl  _comp = new FenetreComp.ComponentImpl(this, b, true);
     if (start) {
     	_comp.start();
     }
     return _comp;
-  }
-  
-  /**
-   * Use to instantiate a component from this implementation.
-   * 
-   */
-  public GraphComp.Component newComponent() {
-    return this._newComponent(new GraphComp.Requires() {}, true);
   }
 }

@@ -323,6 +323,7 @@ public class StateMemImpl extends Memory<StateMemory> implements StateMemory {
 	@Override
 	public void setAgentIdInMyCell(List<String> agentIds) {
 		agentIdInMyCell = agentIds;
+		agentIdInMyCell.remove(_stateId);
 	}
 
 

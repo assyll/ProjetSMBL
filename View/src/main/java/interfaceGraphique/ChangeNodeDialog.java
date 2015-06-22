@@ -15,21 +15,36 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-@SuppressWarnings("serial")
-public class AddNodeDialog extends JDialog implements ActionListener {
+import jsonAndGS.MyJsonGenerator;
 
-	private JTextField nameNode, nbAttributsNode;
+import org.graphstream.graph.Graph;
+import org.graphstream.graph.Node;
+
+@SuppressWarnings("serial")
+public class ChangeNodeDialog extends JDialog implements ActionListener {
+
+	private static JTextField nameNode;
+	private JTextField nbAttributsNode;
 	private JLabel labelName, labelRoot, labelFinal, labelNbAtt;
 	private JButton ok, cancel;
 	private JFrame frame;
 	private JCheckBox rootNode, finalNode;
-	private boolean ferme;
-	private int nbAtt;
+	private static boolean ferme;
+	private boolean isSource;
+	private boolean isFinal;
+	private int nbAtt = 0;
 	private AttributDialog attDialog;
+	private String nodeName;
+	private Node oldNode;
 
-	public AddNodeDialog(JFrame f, String s) {
+	public ChangeNodeDialog(JFrame f, String s, final String nodeId, Graph graph) {
 		super(f, s, true);
 		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+
+		nodeName = nodeId;
+		oldNode = graph.getNode(nodeName);
+		isSource = oldNode.getAttribute(MyJsonGenerator.FORMAT_NODE_SOURCE);
+		isFinal = oldNode.getAttribute(MyJsonGenerator.FORMAT_NODE_FINAL);
 
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
@@ -46,16 +61,19 @@ public class AddNodeDialog extends JDialog implements ActionListener {
 		panelDialog.add(labelName);
 		nameNode = new JTextField(10);
 		panelDialog.add(nameNode);
+		nameNode.setText(nodeName);
 
 		labelRoot = new JLabel("Is it a start Node? (y/n)");
 		panelDialog.add(labelRoot);
 		rootNode = new JCheckBox();
 		panelDialog.add(rootNode);
+		rootNode.setSelected(isSource);
 
 		labelFinal = new JLabel("Is it an end Node? (y/n)");
 		panelDialog.add(labelFinal);
 		finalNode = new JCheckBox();
 		panelDialog.add(finalNode);
+		finalNode.setSelected(isFinal);
 
 		labelNbAtt = new JLabel("How many attributs?");
 		panelDialog.add(labelNbAtt);
@@ -77,7 +95,7 @@ public class AddNodeDialog extends JDialog implements ActionListener {
 		this.setVisible(true);
 	}
 
-	public String getName() {
+	public static String getNameNode() {
 		return (nameNode.getText());
 	}
 
@@ -109,7 +127,7 @@ public class AddNodeDialog extends JDialog implements ActionListener {
 		return frame;
 	}
 
-	public boolean getFerme() {
+	public static boolean getFerme() {
 		return ferme;
 	}
 
@@ -125,10 +143,12 @@ public class AddNodeDialog extends JDialog implements ActionListener {
 					ferme = true;
 				}
 			}
+
 			dispose();
 		} else if (evt.getSource() == cancel) {
 			ferme = true;
 			dispose();
 		}
 	}
+
 }

@@ -28,7 +28,7 @@ public class DeleteEdgeDialog extends JDialog implements ActionListener {
 	JLabel name;
 	JComboBox<String> edge;
 	JButton ok, cancel;
-	boolean ferme, check;
+	boolean ferme;
 	String nameNode;
 
 	@SuppressWarnings("static-access")
@@ -39,7 +39,6 @@ public class DeleteEdgeDialog extends JDialog implements ActionListener {
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				ferme = true;
-				check = false;
 			}
 		});
 		
@@ -90,14 +89,10 @@ public class DeleteEdgeDialog extends JDialog implements ActionListener {
 	public void actionPerformed(ActionEvent evt) {
 		if (evt.getSource() == ok) {
 			ferme = false;
-			if (!ferme) {
-				getName();
-				dispose();
-			}
 		} else if (evt.getSource() == cancel) {
 			ferme = true;
-			dispose();
 		}
+		dispose();
 	}
 
 }

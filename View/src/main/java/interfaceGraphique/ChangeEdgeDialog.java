@@ -8,34 +8,41 @@ import java.awt.event.WindowEvent;
 
 import javax.swing.Box;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import jsonAndGS.MyJsonGenerator;
+
+import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
-import org.graphstream.graph.Node;
 
 @SuppressWarnings("serial")
-public class AddEdgeDialog extends JDialog implements ActionListener {
+public class ChangeEdgeDialog extends JDialog implements ActionListener {
 
-	private JTextField nameEdge, actionEdge, nbAttributsEdge;
-	private JLabel labelName, labelSource, labelEnd, labelAction, labelNbAtt;
+	private static JTextField actionEdge;
+	private JTextField nbAttributsEdge, nameEdge;
+	private JLabel labelName, labelAction, labelNbAtt;
 	private JButton ok, cancel;
 	private JFrame frame;
-	private JComboBox<String> sourceEdge, endEdge;
-	private String[] nodes;
 	private int nbAtt;
 	private boolean ferme;
 	private AttributDialog attDialog;
 	private Graph graph;
+	private String edgeName, action;
+	private Edge oldEdge;
 
-	@SuppressWarnings({ "static-access", "unchecked", "rawtypes" })
-	public AddEdgeDialog(JFrame f, String s, Graph g) {
+	@SuppressWarnings({ "static-access" })
+	public ChangeEdgeDialog(JFrame f, String s, final String edgeId, Graph g) {
 		super(f, s, true);
 		this.setDefaultCloseOperation(this.DISPOSE_ON_CLOSE);
+
+		edgeName = edgeId;
+		graph = g;
+		oldEdge = graph.getEdge(edgeName);
+		action = oldEdge.getAttribute(MyJsonGenerator.FORMAT_EDGE_ACTION);
 
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
@@ -45,30 +52,22 @@ public class AddEdgeDialog extends JDialog implements ActionListener {
 
 		frame = f;
 		graph = g;
-		nodes = getNodes();
 		Box boite = Box.createVerticalBox();
 		JPanel panelDialog = new JPanel();
-		panelDialog.setLayout(new GridLayout(6, 2, 20, 5));
-
-		labelName = new JLabel("Label of Edge?");
+		panelDialog.setLayout(new GridLayout(4, 2, 20, 5));
+		
+		labelName = new JLabel("Name of the edge :");
 		panelDialog.add(labelName);
 		nameEdge = new JTextField(10);
 		panelDialog.add(nameEdge);
-
-		labelSource = new JLabel("What's the start Node?");
-		panelDialog.add(labelSource);
-		sourceEdge = new JComboBox(nodes);
-		panelDialog.add(sourceEdge);
-
-		labelEnd = new JLabel("What's the end Node?");
-		panelDialog.add(labelEnd);
-		endEdge = new JComboBox(nodes);
-		panelDialog.add(endEdge);
+		nameEdge.setText(edgeId);
+		nameEdge.setEditable(false);
 
 		labelAction = new JLabel("What's the action?");
 		panelDialog.add(labelAction);
 		actionEdge = new JTextField(10);
 		panelDialog.add(actionEdge);
+		actionEdge.setText(action);
 
 		labelNbAtt = new JLabel("How many attributs?");
 		panelDialog.add(labelNbAtt);
@@ -90,19 +89,7 @@ public class AddEdgeDialog extends JDialog implements ActionListener {
 		this.setVisible(true);
 	}
 
-	public String getLabel() {
-		return (nameEdge.getText());
-	}
-
-	public String getSource() {
-		return (sourceEdge.getSelectedItem().toString());
-	}
-
-	public String getEnd() {
-		return (endEdge.getSelectedItem().toString());
-	}
-
-	public String getAction() {
+	public static String getAction() {
 		return (actionEdge.getText());
 	}
 
@@ -120,15 +107,6 @@ public class AddEdgeDialog extends JDialog implements ActionListener {
 		} else {
 			return (attDialog.getAttributs());
 		}
-	}
-
-	public String[] getNodes() {
-		String[] tmp = new String[graph.getNodeCount()];
-		int cpt = 0;
-		for (Node node : graph.getEachNode()) {
-			tmp[cpt++] = node.getId();
-		}
-		return tmp;
 	}
 
 	public JFrame getFrame() {
@@ -150,9 +128,9 @@ public class AddEdgeDialog extends JDialog implements ActionListener {
 				if (attDialog.isExit()) {
 					ferme = true;
 				}
-
-				dispose();
 			}
+
+			dispose();
 		} else if (evt.getSource() == cancel) {
 			ferme = true;
 			dispose();

@@ -409,6 +409,7 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 	
 	private void suicide() {
 		requires().suicide().suicide();
+		requires().graph().majStateAgent(id, null);
 	}
 
 }

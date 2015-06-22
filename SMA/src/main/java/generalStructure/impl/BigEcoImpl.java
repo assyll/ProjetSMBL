@@ -10,6 +10,7 @@ import general.ActionProvider;
 import general.BigEco;
 import general.EcoAgents;
 import general.Environnement;
+import general.FenetreComp;
 import general.Forward;
 import general.GraphComp;
 import general.Launcher;
@@ -105,6 +106,11 @@ public class BigEcoImpl extends BigEco implements ICreateAgent{
 	@Override
 	protected GraphComp make_graphComp() {
 		return new GraphCompImpl(path_graph);
+	}
+
+	@Override
+	protected FenetreComp make_fenetreComp() {
+		return new FenetreCompImpl();
 	}
 }
 
