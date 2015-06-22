@@ -1,0 +1,74 @@
+{
+	"Nodes": [{
+		"Name": "S0",
+		"Source": true,
+		"Final": false
+	},
+	{
+		"Name": "S1",
+		"Source": false,
+		"Final": false
+	},{
+		"Name": "S2",
+		"Source": false,
+		"Final": false
+	},{
+		"Name": "S3",
+		"Source": false,
+		"Final": true
+	},{
+		"Name": "S4",
+		"Source": false,
+		"Final": true
+	},{
+		"Name": "S5",
+		"Source": false,
+		"Final": false
+	},{
+		"Name": "S6",
+		"Source": false,
+		"Final": false
+	},{
+		"Name": "S7",
+		"Source": false,
+		"Final": true
+	}],
+	"Edges": [{
+		"Label": "edge 1",
+		"NodeB": "S0",
+		"NodeE": "S1",
+		"Action": "A1"
+	},
+	{
+		"Label": "edge 2",
+		"NodeB": "S1",
+		"NodeE": "S2",
+		"Action": "A3"
+	},
+	{
+		"Label": "edge 3",
+		"NodeB": "S2",
+		"NodeE": "S3",
+		"Action": "A5"
+	},{
+		"Label": "edge 4",
+		"NodeB": "S2",
+		"NodeE": "S4",
+		"Action": "A6"
+	},{
+		"Label": "edge 5",
+		"NodeB": "S0",
+		"NodeE": "S5",
+		"Action": "A2"
+	},{
+		"Label": "edge 6",
+		"NodeB": "S5",
+		"NodeE": "S6",
+		"Action": "A4"
+	},{
+		"Label": "edge 7",
+		"NodeB": "S6",
+		"NodeE": "S7",
+		"Action": "A5"
+	}]
+}
