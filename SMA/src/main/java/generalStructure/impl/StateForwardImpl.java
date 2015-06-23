@@ -168,4 +168,16 @@ implements CycleAlert, ContextInfos, EnvUpdate, SendMessage, PullMessage, ILog, 
 	public void pushResponseMessage(ResponseMessage response) {
 		responseMessagesQueue.add(response);
 	}
+
+	@Override
+	public void closeGraph() {
+
+	}
+
+	@Override
+	public void deleteStateAgent(String id, boolean isRoot) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

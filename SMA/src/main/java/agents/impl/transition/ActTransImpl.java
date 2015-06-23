@@ -51,6 +51,7 @@ implements TransAction {
 			
 			// Ensuite je fais la redirection
 			requires().memory().setStateCibleId(mergeStateId);
+			System.out.println(id + ": a ete redirgé vers " + mergeStateId);
 			break;
 			
 		case SUICIDE_HIERARCHY:
@@ -66,8 +67,10 @@ implements TransAction {
 			
 			// Envoie de celle-ci
 			requires().sendMessage().sendRequestMessage(suicideRequest);
+			System.out.println(id + ": a demande a " + transChildId +" de se suicider");
 			
 			// Je me suicide
+			System.out.println(id + ": se suicide");
 			suicide();
 			
 			break;
@@ -80,7 +83,7 @@ implements TransAction {
 	
 	@Override
 	public void treateResponseMessage() {
-		System.out.println(id + "Je traite une reponse");
+		System.out.println(id + ": traite une reponse");
 		ResponseMessage response = requires().memory().getResponseMessage();
 		
 		logger("traitement de reponse");

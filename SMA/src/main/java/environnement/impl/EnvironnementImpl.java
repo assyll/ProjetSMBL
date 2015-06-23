@@ -60,11 +60,8 @@ public class EnvironnementImpl extends Environnement<EnvInfos, EnvUpdate>
 	public void move(String id, List<Action> currentPositionActions,
 			Action newAction) {
 		
-		System.out.println("laaaa111");
 		CellImpl cell = getCellByActionList(currentPositionActions);
-		System.out.println("laaaa222");
 		cell.removeStateAgent(id);
-		System.out.println("laaaa333");
 		
 		/*Map<Action,CellImpl> childrenMap = cell.getChildrenMap();
 		
@@ -88,9 +85,7 @@ public class EnvironnementImpl extends Environnement<EnvInfos, EnvUpdate>
 		newActionList.addAll(currentPositionActions);
 		newActionList.add(newAction);
 		addStateAgent(id, newActionList);
-		
-		System.out.println("iciiiiiiiiiiiiii");
-		
+			
 	}
 
 

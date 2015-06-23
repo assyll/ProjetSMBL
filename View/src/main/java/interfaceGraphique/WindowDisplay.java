@@ -87,13 +87,13 @@ public class WindowDisplay extends JFrame {
 
 		// Initialisation des bouttons de zoom
 		ImageIcon zoomIcon = new ImageIcon(
-				"./src/main/resources/buttonsIcons/zoom+.png", "zoom +");
+				"../View/src/main/resources/buttonsIcons/zoom+.png", "zoom +");
 		ImageIcon dezoomIcon = new ImageIcon(
-				"./src/main/resources/buttonsIcons/zoom-.png", "zoom -");
+				"../View/src/main/resources/buttonsIcons/zoom-.png", "zoom -");
 		ImageIcon centerIcon = new ImageIcon(
-				"./src/main/resources/buttonsIcons/center.png", "center");
+				"../View/src/main/resources/buttonsIcons/center.png", "center");
 		ImageIcon edgeDisplayIcon = new ImageIcon(
-				"./src/main/resources/buttonsIcons/edgeDisplay.png",
+				"../View/src/main/resources/buttonsIcons/edgeDisplay.png",
 				"edge display");
 
 		zoomAvant = new JButton(zoomIcon);
@@ -122,22 +122,22 @@ public class WindowDisplay extends JFrame {
 
 		// Initialisation des boutons d'option
 		ImageIcon addNodeIcon = new ImageIcon(
-				"./src/main/resources/buttonsIcons/node+.png", "node +");
+				"../View/src/main/resources/buttonsIcons/node+.png", "node +");
 		ImageIcon deleteNodeIcon = new ImageIcon(
-				"./src/main/resources/buttonsIcons/node-.png", "node -");
+				"../View/src/main/resources/buttonsIcons/node-.png", "node -");
 		ImageIcon modifNodeIcon = new ImageIcon(
-				"./src/main/resources/buttonsIcons/nodeModif.png", "node modif");
+				"../View/src/main/resources/buttonsIcons/nodeModif.png", "node modif");
 		ImageIcon addEdgeIcon = new ImageIcon(
-				"./src/main/resources/buttonsIcons/edge+.png", "edge +");
+				"../View/src/main/resources/buttonsIcons/edge+.png", "edge +");
 		ImageIcon deleteEdgeIcon = new ImageIcon(
-				"./src/main/resources/buttonsIcons/edge-.png", "edge -");
+				"../View/src/main/resources/buttonsIcons/edge-.png", "edge -");
 		ImageIcon modifEdgeIcon = new ImageIcon(
-				"./src/main/resources/buttonsIcons/edgeModif.png", "edge modif");
+				"../View/src/main/resources/buttonsIcons/edgeModif.png", "edge modif");
 		ImageIcon autoLayoutOnIcon = new ImageIcon(
-				"./src/main/resources/buttonsIcons/autoLayoutOn.png",
+				"../View/src/main/resources/buttonsIcons/autoLayoutOn.png",
 				"automatic layout on");
 		ImageIcon treeLayoutIcon = new ImageIcon(
-				"./src/main/resources/buttonsIcons/treeLayout.png",
+				"../View/src/main/resources/buttonsIcons/treeLayout.png",
 				"tree layout");
 
 		addNode = new JButton(addNodeIcon);

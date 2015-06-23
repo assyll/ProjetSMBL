@@ -56,7 +56,7 @@ public interface StateMemory {
 	public boolean isRoot(); // recuperation de l'information (est racine)
 	public boolean isFinal();
 	public Map<String, String> getChildren();
-	public List<Child> getChildrenWithSohn();
-	public List<Child> getChildrenWithoutSohn();
+	public List<Child> getChildrenWithSon();
+	public List<Child> getChildrenWithoutSon();
 	
 }

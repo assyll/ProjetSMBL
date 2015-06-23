@@ -28,57 +28,57 @@ public class MyJsonGenerator {
 	/**
 	 * Le format du champ node dans le fichier Json
 	 */
-	public static final String FORMAT_NODES = "Nodes";
+	public static final String FORMAT_NODES = "nodes";
 
 	/**
 	 * Le format du champ edge dans le fichier Json
 	 */
-	public static final String FORMAT_EDGES = "Edges";
+	public static final String FORMAT_EDGES = "edges";
 
 	/**
 	 * Le format du champ name des nodes dans le fichier Json
 	 */
-	public static final String FORMAT_NODE_NAME = "Name";
+	public static final String FORMAT_NODE_NAME = "name";
 
 	/**
 	 * Le format du champ source des nodes dans le fichier Json
 	 */
-	public static final String FORMAT_NODE_SOURCE = "Source";
+	public static final String FORMAT_NODE_SOURCE = "source";
 
 	/**
 	 * Le format du champ final des nodes dans le fichier Json
 	 */
-	public static final String FORMAT_NODE_FINAL = "Final";
+	public static final String FORMAT_NODE_FINAL = "final";
 
 	/**
 	 * Le format du champ attribut des nodes dans le fichier Json
 	 */
-	public static final String FORMAT_NODE_ATTRIBUT = "Attribut ";
+	public static final String FORMAT_NODE_ATTRIBUT = "attribut ";
 
 	/**
 	 * Le format du champ label des edges dans le fichier Json
 	 */
-	public static final String FORMAT_EDGE_LABEL = "Label";
+	public static final String FORMAT_EDGE_LABEL = "label";
 
 	/**
 	 * Le format du champ begin node des edges dans le fichier Json
 	 */
-	public static final String FORMAT_EDGE_BEGIN_NODE = "NodeB";
+	public static final String FORMAT_EDGE_BEGIN_NODE = "nodeb";
 
 	/**
 	 * Le format du champ end node des edges dans le fichier Json
 	 */
-	public static final String FORMAT_EDGE_END_NODE = "NodeE";
+	public static final String FORMAT_EDGE_END_NODE = "nodee";
 
 	/**
 	 * Le format du champ action des edges dans le fichier Json
 	 */
-	public static final String FORMAT_EDGE_ACTION = "Action";
+	public static final String FORMAT_EDGE_ACTION = "action";
 
 	/**
 	 * Le format du champ attribut des edges dans le fichier Json
 	 */
-	public static final String FORMAT_EDGE_ATTRIBUT = "Attribut ";
+	public static final String FORMAT_EDGE_ATTRIBUT = "attribut ";
 
 	/**
 	 * Génère les nodes dans le fichier Json

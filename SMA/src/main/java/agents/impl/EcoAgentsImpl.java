@@ -77,10 +77,7 @@ public class EcoAgentsImpl extends EcoAgents implements AgentTrace{
 
 	public void killAgent(String id) {
 
-		System.out.println(id+" suicide!!!!!!!");
-
-
-		System.out.println("Kill Agent");
+		System.out.println(id+": SUICIDE");
 
 		synchronized (agentsMap) {
 			agentsMap.remove(id);

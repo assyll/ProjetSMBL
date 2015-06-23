@@ -43,19 +43,13 @@ public class TransAgentComplImpl extends Agent<EnvInfos, EnvUpdate, TransAction,
 		if(createCible) {
 			// Transmet a lagent son id.
 			
-			System.out.println("laaa");
 			this.requires().create().createNewState(stateCibleId, false);
-			
-			System.out.println("iciiii");
+
 			RequestMessage request = new RequestMessage(
 					id, stateCibleId, RequestType.ADD_FATHER_WITH_USERNAME,
 					new String[] {stateSourceId, action.getUserName()});
 			
-			System.out.println("PAR LAA");
-			
 			requires().push().sendRequestMessage(request);
-			
-			System.out.println("PAR ICIII");
 		}
 		
 	}

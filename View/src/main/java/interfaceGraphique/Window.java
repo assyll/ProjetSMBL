@@ -65,7 +65,7 @@ import convertGraph.Fichier;
 @SuppressWarnings("serial")
 public class Window extends JFrame {
 
-	public final static String pathGraphTemp = "./src/test/resources/.grapheTemporaire";
+	public final static String pathGraphTemp = "../View/src/test/resources/.grapheTemporaire";
 
 	public static final String NO_FILE_SELECTED = "You have to select a file to import";
 	public static final String INPUT_VALUE_NOT_INTEGER = "You have to enter an integer \n";
@@ -169,7 +169,7 @@ public class Window extends JFrame {
 		CustomGraphRenderer.SetRenderer();
 
 		// Initialisation de la fen�tre principale
-		frame = new JFrame("Projet SMBL");
+		frame = new JFrame("Test Interface");
 
 		// Initialisation et d�finition du 1er panneau
 		panelFile = new JPanel(new GridLayout(1, 2, 20, 5));
@@ -185,15 +185,15 @@ public class Window extends JFrame {
 
 		// Initialisation des bouttons de zoom
 		ImageIcon zoomIcon = new ImageIcon(
-				"./src/main/resources/buttonsIcons/zoom+.png", "zoom +");
+				"../View/src/main/resources/buttonsIcons/zoom+.png", "zoom +");
 		ImageIcon dezoomIcon = new ImageIcon(
-				"./src/main/resources/buttonsIcons/zoom-.png", "zoom -");
+				"../View/src/main/resources/buttonsIcons/zoom-.png", "zoom -");
 		ImageIcon centerIcon = new ImageIcon(
-				"./src/main/resources/buttonsIcons/center.png", "center");
+				"../View/src/main/resources/buttonsIcons/center.png", "center");
 		ImageIcon displayIcon = new ImageIcon(
-				"./src/main/resources/buttonsIcons/display.png", "display");
+				"../View/src/main/resources/buttonsIcons/display.png", "display");
 		ImageIcon edgeDisplayIcon = new ImageIcon(
-				"./src/main/resources/buttonsIcons/edgeDisplay.png",
+				"../View/src/main/resources/buttonsIcons/edgeDisplay.png",
 				"edge display");
 
 		zoomAvantJson = new JButton(zoomIcon);
@@ -261,27 +261,27 @@ public class Window extends JFrame {
 
 		// Initialisation des boutons d'option.
 		ImageIcon addNodeIcon = new ImageIcon(
-				"./src/main/resources/buttonsIcons/node+.png", "node +");
+				"../View/src/main/resources/buttonsIcons/node+.png", "node +");
 		ImageIcon deleteNodeIcon = new ImageIcon(
-				"./src/main/resources/buttonsIcons/node-.png", "node -");
+				"../View/src/main/resources/buttonsIcons/node-.png", "node -");
 		ImageIcon modifNodeIcon = new ImageIcon(
-				"./src/main/resources/buttonsIcons/nodeModif.png", "node modif");
+				"../View/src/main/resources/buttonsIcons/nodeModif.png", "node modif");
 		ImageIcon addEdgeIcon = new ImageIcon(
-				"./src/main/resources/buttonsIcons/edge+.png", "edge +");
+				"../View/src/main/resources/buttonsIcons/edge+.png", "edge +");
 		ImageIcon deleteEdgeIcon = new ImageIcon(
-				"./src/main/resources/buttonsIcons/edge-.png", "edge -");
+				"../View/src/main/resources/buttonsIcons/edge-.png", "edge -");
 		ImageIcon modifEdgeIcon = new ImageIcon(
-				"./src/main/resources/buttonsIcons/edgeModif.png", "edge modif");
+				"../View/src/main/resources/buttonsIcons/edgeModif.png", "edge modif");
 		ImageIcon autoLayoutOnIcon = new ImageIcon(
-				"./src/main/resources/buttonsIcons/autoLayoutOn.png",
+				"../View/src/main/resources/buttonsIcons/autoLayoutOn.png",
 				"automatic layout on");
 		ImageIcon treeLayoutIcon = new ImageIcon(
-				"./src/main/resources/buttonsIcons/treeLayout.png",
+				"../View/src/main/resources/buttonsIcons/treeLayout.png",
 				"tree layout");
 		ImageIcon cleanIcon = new ImageIcon(
-				"./src/main/resources/buttonsIcons/clean.png", "clean");
+				"../View/src/main/resources/buttonsIcons/clean.png", "clean");
 		ImageIcon saveIcon = new ImageIcon(
-				"./src/main/resources/buttonsIcons/save.png", "save");
+				"../View/src/main/resources/buttonsIcons/save.png", "save");
 
 		addNodeJson = new JButton(addNodeIcon);
 		addNodeJson.setToolTipText(ADD_NODE_TT);
@@ -742,7 +742,7 @@ public class Window extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				if (isGraphJsonLoaded) {
 					JFileChooser jFileChooser = new JFileChooser(new File(
-							"./src/test/resources"));
+							"../View/src/test/resources"));
 					jFileChooser
 							.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
@@ -957,7 +957,7 @@ public class Window extends JFrame {
 
 		// TODO changer le chemin d'acces lors de la release
 		JFileChooser dialogue = new JFileChooser(new File(
-				"./src/test/resources/jsonAndGSTest"));
+				"../View/src/test/resources/jsonAndGSTest"));
 		dialogue.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 		File fichier;
 
@@ -1008,7 +1008,7 @@ public class Window extends JFrame {
 		final JComponent jCompView = (JComponent) view;
 		Toolkit toolkit = Toolkit.getDefaultToolkit();
 		Image image = toolkit
-				.getImage("./src/main/resources/mouseIcons/Drag_Hand.png");
+				.getImage("../View/src/main/resources/mouseIcons/Drag_Hand.png");
 		Point hotSpot = new Point(0, 0);
 		final Cursor cursor = toolkit.createCustomCursor(image, hotSpot,
 				"drag_hand");
@@ -1536,7 +1536,7 @@ public class Window extends JFrame {
 
 	public static void turnAutoLayoutButtonOn(JButton button) {
 		ImageIcon autoLayoutOnIcon = new ImageIcon(
-				"./src/main/resources/buttonsIcons/autoLayoutOn.png",
+				"../View/src/main/resources/buttonsIcons/autoLayoutOn.png",
 				"automatic layout on");
 		button.setIcon(autoLayoutOnIcon);
 		button.setToolTipText(AUTO_LAYOUT_ENABLED_TT);
@@ -1544,7 +1544,7 @@ public class Window extends JFrame {
 
 	public static void turnAutoLayoutButtonOff(JButton button) {
 		ImageIcon autoLayoutOffIcon = new ImageIcon(
-				"./src/main/resources/buttonsIcons/autoLayoutOff.png",
+				"../View/src/main/resources/buttonsIcons/autoLayoutOff.png",
 				"automatic layout on");
 		button.setIcon(autoLayoutOffIcon);
 		button.setToolTipText(AUTO_LAYOUT_DISABLED_TT);

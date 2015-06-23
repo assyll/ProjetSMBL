@@ -21,6 +21,7 @@ namespace general{
 		provides finishedCycle: CycleAlert
 		provides threads: IGetThread
 		requires stopProcessus: IStop
+		provides stopAllAgents: IStop
 	}
 	
 	ecosystem BigEco {

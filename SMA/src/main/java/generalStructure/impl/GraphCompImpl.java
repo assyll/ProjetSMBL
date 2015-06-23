@@ -16,18 +16,20 @@ import agents.interfaces.StateMemory;
 import agents.interfaces.TransMemory;
 import general.GraphComp;
 import generalStructure.interfaces.IGraph;
+import generalStructure.interfaces.IStop;
 import generalStructure.interfaces.UpdateGraph;
 
 public class GraphCompImpl extends GraphComp implements IGraph {
 
 	private final GraphDatabaseService _graphNeo4J;
-	
+
 	public GraphCompImpl(String path) {
 		Fichier.deleteFileOrDirectory(path);
 		_graphNeo4J =
 				new GraphDatabaseFactory().newEmbeddedDatabase(path);
+		registerShutdownHook(_graphNeo4J);
 	}
-	
+
 	@Override
 	protected IGraph make_graph() {
 		return this;
@@ -35,101 +37,105 @@ public class GraphCompImpl extends GraphComp implements IGraph {
 
 	@Override
 	public void majStateAgent(String id, StateMemory memory) {
-		
-		try (Transaction tx = _graphNeo4J.beginTx()) {
-			
-			// ------------------- maj de l'etat ------------------
-			
-			// informations neo4j utiles
-			Node node;
-			Label label = DynamicLabel.label(
-					memory.isRoot() ? "Racine" : "Noeud");
-			
-			if ((node = _graphNeo4J.findNode(label, "id", id)) != null) {
-				// Si le noeud existe alors le mettre a jour
-				
-				node.setProperty("Source", memory.isRoot());
-				node.setProperty("Final", memory.isFinal());				
-			} else {
-				// Sinon il faut creer correctement le nouveau noeud
-				node = _graphNeo4J.createNode();
-				
-				node.addLabel(label);
-				node.setProperty("name", id);
-				node.setProperty("ui.label", id);
-				node.setProperty("ui.class",
-						memory.isRoot() ? "Source" : "Node");
-				
-				node.setProperty("id", id);
-				node.setProperty("Source", memory.isRoot());
-				node.setProperty("Final", memory.isFinal());
+		if(memory != null){
+			try (Transaction tx = _graphNeo4J.beginTx()) {
+
+				// ------------------- maj de l'etat ------------------
+
+				// informations neo4j utiles
+				Node node;
+
+				Label label = DynamicLabel.label(
+						memory.isRoot() ? "Racine" : "Noeud");
+
+				if ((node = _graphNeo4J.findNode(label, "id", id)) != null) {
+					// Si le noeud existe alors le mettre a jour
+
+					node.setProperty("source", memory.isRoot());
+					node.setProperty("final", memory.isFinal());				
+				} else {
+					// Sinon il faut creer correctement le nouveau noeud
+					node = _graphNeo4J.createNode();
+
+					node.addLabel(label);
+					node.setProperty("name", id);
+					node.setProperty("ui.label", id);
+					node.setProperty("ui.class",
+							memory.isRoot() ? "Source" : "Node");
+
+					node.setProperty("id", id);
+					node.setProperty("Source", memory.isRoot());
+					node.setProperty("Final", memory.isFinal());
+				}
+
+				// ----------------------------------------------------
+				tx.success();
 			}
-			
-			// ----------------------------------------------------
-			tx.success();
 		}
 	}
-	
+
 	@Override
 	public void majTransitionAgent(String id, TransMemory memory) {
-				
-		try (Transaction tx = _graphNeo4J.beginTx()) {
-			
-			// --------------- maj de la transition ---------------
-			
-			Relationship relationship;
-			
-			if ((relationship = findRelationshipById(id)) != null) {
-				
-				// si la transition existe alors la mettre a jour (2 cas)
-				Node fatherNode = relationship.getStartNode();
-				Node childNode = relationship.getEndNode();
-				
-				// son pere a change OU son fils a change
-				if (!fatherNode.getProperty("id").
-						equals(memory.getStateSourceId())
-						|| !childNode.getProperty("id").
-						equals(memory.getStateCibleId())) {
-				
-				System.out.println("REDIRECTION ---------> ancien fils:"
-				+ childNode.getProperty("id") + ", nouveau fils:" + memory.getStateCibleId());
-				
-				try {
-					relationship.delete(); // efface la transition actuelle
-					createRelationship(id, memory); // redessine la transition
-				} catch (Exception e) {
-					
+
+		if(memory != null) {
+			try (Transaction tx = _graphNeo4J.beginTx()) {
+
+				// --------------- maj de la transition ---------------
+
+				Relationship relationship;
+
+				if ((relationship = findRelationshipById(id)) != null) {
+
+					// si la transition existe alors la mettre a jour (2 cas)
+					Node fatherNode = relationship.getStartNode();
+					Node childNode = relationship.getEndNode();
+
+					// son pere a change OU son fils a change
+					if (!fatherNode.getProperty("id").
+							equals(memory.getStateSourceId())
+							|| !childNode.getProperty("id").
+							equals(memory.getStateCibleId())) {
+
+						System.out.println("REDIRECTION ---------> ancien fils:"
+								+ childNode.getProperty("id") + ", nouveau fils:" + memory.getStateCibleId());
+
+						try {
+							relationship.delete(); // efface la transition actuelle
+							createRelationship(id, memory); // redessine la transition
+						} catch (Exception e) {
+
+						}
+
+						System.out.println("REDIRECTION DE LA TRANSITION !!!!!!!!");
+					}
+
+				} else {
+					// Sinon la creer correctement SI LE NOEUD FILS A ETE CREE !
+					createRelationship(id, memory);
 				}
-					
-					System.out.println("REDIRECTION DE LA TRANSITION !!!!!!!!");
-				}
-				
-			} else {
-				// Sinon la creer correctement SI LE NOEUD FILS A ETE CREE !
-				createRelationship(id, memory);
+
+				// ----------------------------------------------------
+				tx.success();
 			}
-			
-			// ----------------------------------------------------
-			tx.success();
 		}
 	}
-	
+
 	private Relationship createRelationship(String id, TransMemory memory) {
-		
+
 		Node fatherNode, childNode;
 		Relationship relationship = null;
-		
+
 		childNode = findNodeById(memory.getStateCibleId());
-		
+
 		if (childNode != null) {
-						
+
 			// recupere les noeuds aux deux extremites de la transition
 			fatherNode = findNodeById(memory.getStateSourceId());
-			
+
 			// creer physiquement la transition
 			relationship = fatherNode.createRelationshipTo(childNode,
 					DynamicRelationshipType.withName("Transition"));
-			
+
 			// y ajoute les attributs
 			relationship.setProperty("id", id);
 			relationship.setProperty("name", id);
@@ -137,11 +143,11 @@ public class GraphCompImpl extends GraphComp implements IGraph {
 			relationship.setProperty("action", memory.getAction().
 					getAction().getActionMap().get("action"));
 		}
-		
+
 		return relationship;
-		
+
 	}
-	
+
 	private Relationship findRelationshipById(String id) {
 		for (Node node: _graphNeo4J.getAllNodes()) {
 			for (Relationship relationship:
@@ -153,7 +159,7 @@ public class GraphCompImpl extends GraphComp implements IGraph {
 		}
 		return null;
 	}
-	
+
 	private Node findNodeById(String id) {
 		for (Node node: _graphNeo4J.getAllNodes()) {
 			if (node.getProperty("id").equals(id)) {
@@ -162,9 +168,10 @@ public class GraphCompImpl extends GraphComp implements IGraph {
 		}
 		return null;
 	}
-	
+
 	public void close() {
 		_graphNeo4J.shutdown();
+		System.out.println("Shutting down database");
 	}
 
 	@Override
@@ -178,4 +185,37 @@ public class GraphCompImpl extends GraphComp implements IGraph {
 		};
 	}
 
+	@Override
+	public void closeGraph() {
+		close();
+	}
+
+	private static void registerShutdownHook(final GraphDatabaseService graphDb) {
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			@Override
+			public void run() {
+				graphDb.shutdown();
+			}
+		});
+	}
+
+	@Override
+	public void deleteStateAgent(String id, boolean isRoot) {
+		try (Transaction tx = _graphNeo4J.beginTx()) {
+
+			// --------------- maj de la transition ---------------
+
+			Relationship relationship;
+
+			if ((relationship = findRelationshipById(id)) != null) {
+				Node node;
+				Label label = DynamicLabel.label(
+						isRoot ? "Racine" : "Noeud");
+				if ((node = _graphNeo4J.findNode(label, "id", id)) != null) {
+					
+				}
+			}
+		}
+	}
 }
+

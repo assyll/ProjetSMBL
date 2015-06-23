@@ -21,7 +21,7 @@ public class PerceiveStateImpl extends AbstractPerceive<ContextInfos, StateMemor
 
 	@Override
 	public void makePerception() {
-		System.out.println("Perception de " + id);
+		System.out.println(id + " Perception");
 
 		// J'actualise ma liste des voisins
 		requires().memory().setAgentIdInMyCell(

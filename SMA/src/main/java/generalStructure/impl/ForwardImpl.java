@@ -69,6 +69,7 @@ public class ForwardImpl extends Forward<CycleAlert, ContextInfos,EnvInfos,  Env
 	@Override
 	public void notifyStop() {
 		requires().log().closeFile();
+		requires().graph().closeGraph();
 	}
 
 	@Override

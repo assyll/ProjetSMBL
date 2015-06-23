@@ -32,7 +32,7 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 	public void move(String id, List<Action> currentPositionActions,
 			Action newAction) {
 		
-		System.out.println(id + ": Je me deplace");
+		System.out.println(id + ": JE ME DEPLACE AVEC LA NOUVELLE ACTION " + newAction.getActionMap().get("action"));
 		
 		requires().setContext().move(id, currentPositionActions, newAction);
 		
@@ -41,7 +41,7 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 
 	@Override
 	public void addStateAgent(String id) {
-		System.out.println(id + "Jajoute un etat agent");
+		System.out.println(id + ": Ajout d'un etat agent sans actions à l'environnement");
 		
 		requires().setContext().addStateAgent(id);
 		requires().finishedCycle().endOfCycleAlert(id);
@@ -50,7 +50,7 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 
 	@Override
 	public void addStateAgent(String id, List<Action> actions) {
-		System.out.println(id + "Jajoute un etat agent");
+		System.out.println(id + ": Ajout d'un etat agent ayant des actions à l'environnement");
 		
 		requires().setContext().addStateAgent(id, actions);
 		requires().finishedCycle().endOfCycleAlert(id);
@@ -59,7 +59,7 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 
 	@Override
 	public void removeAgent(String id, List<Action> actions) {
-		System.out.println(id + "Jefface un etat agent");
+		System.out.println(id + ": Suppression de l'agent etat de l'environnement");
 		
 		requires().setContext().removeAgent(id, actions);
 		requires().finishedCycle().endOfCycleAlert(id);
@@ -68,7 +68,13 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 	
 	@Override
 	public void askToMerge(List<String> agentIds) {
-		System.out.println(id + " --- FUSION --- Je demande a fusionner");
+		System.out.print(id + " --- FUSION --- demande de fusion avec : ");
+		
+		for(String agentId : agentIds) {
+			System.out.print(" -"+agentId);
+		}
+		
+		System.out.println();
 		
 		String agentIdList = "[";
 		for (String agentId: agentIds) {
@@ -81,8 +87,8 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 				// possible de fusionner ensemble.
 				RequestMessage request = new RequestMessage(
 						id, agentId, RequestType.TRY_TO_MERGE,
-						new List[] {requires().memory().getChildrenWithSohn(),
-								requires().memory().getChildrenWithoutSohn()});
+						new List[] {requires().memory().getChildrenWithSon(),
+								requires().memory().getChildrenWithoutSon()});
 				requires().sendMessage().sendRequestMessage(request);
 				// ---------------------------------------
 			}
@@ -130,6 +136,7 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 		
 		// Je cree un fils sans fils
 		String[] ids = requires().create().createNewTransition(action, this.id);
+		System.out.println(id + ": Creation de la transition "+ids[0]+" ayant comme etat d'arrive "+ids[1]);
 		
 		// mis a jour de mes connaissances
 		requires().memory().addChild(ids[1], ids[0], false);
@@ -155,17 +162,18 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 
 	@Override
 	public void doNothing() {
-		System.out.println(id + "Je ne fais rien");
+		System.out.println(id + ": Ne fais rien");
 		logger("do nothing");
 		endOfCycle();
 	}
 
 	@Override
 	public void treatRequestMessage() {
-		System.out.println(id + "Je traite une requete");
+		System.out.println(id + ": Traitement d'une requete");
 		
 		RequestMessage request = requires().memory().getRequestMessage();
 		switch ((RequestType) request.getType()) {
+		
 		case ADD_FATHER_WITH_USERNAME:
 			// Mettre a jour son pere
 			requires().memory().addFather(request.getSenderId(),
@@ -173,33 +181,35 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 			// Deviens etat courant en mettant a jour son username
 			requires().memory().setNextTraceElmtUserName(
 					((String[]) request.getInformations())[1]);
+			
+			System.out.println(id + ": MAJ du pere "+request.getSenderId()+" et en attente du prochain elmt de trace de "+ ((String[]) request.getInformations())[1]);
 			break;
 		
 		case  WAIT_FOR_NEXT_ACTION :
-			System.out.println("RECU UN NOUVEAU USERRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR");
 			String user = (String) request.getInformations();
 			requires().memory().addNewUserName(user);
+			System.out.println(id + ": attente de la prochaine action du user "+ (String) request.getInformations());
 			break;
-			
+				
 		case ADD_CHILD:
 			// Mon fils a un fils
 			String childId = request.getSenderId();
 			Child child = findChildById(childId);
 			// Mis a jour
-			if (child != null && requires().memory().getChildrenWithoutSohn().
+			if (child != null && requires().memory().getChildrenWithoutSon().
 					contains(childId)) {
 				requires().memory().addChild(
 						child.getEndStateId(), child.getTransId(), true);
+				System.out.println(id + ": add child "+ child.getEndStateId()+ " avec la transition "+child.getTransId());
 			}
 			break;
 			
 		case TRY_TO_MERGE:
-			System.out.println(id + "---FUSION--- On me demande de fusionner");
 			// On me demande de fusionner
 			// Je verifie si on peut le faire
 			boolean canMerge = isPossibleToMerge(
-					requires().memory().getChildrenWithSohn(),
-					requires().memory().getChildrenWithoutSohn(),
+					requires().memory().getChildrenWithSon(),
+					requires().memory().getChildrenWithoutSon(),
 					((List []) request.getInformations())[0],
 					((List []) request.getInformations())[1]);
 			// Je lui reponds
@@ -208,6 +218,7 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 					canMerge ? ResponseType.ACCEPT_MERGE :
 						ResponseType.REFUSE_MERGE, null);
 			requires().sendMessage().sendResponseMessage(response);
+			System.out.println(id + "---FUSION--- "+request.getSenderId() + " me demande de fusionner et ma réponse est "+ canMerge);
 			break;
 			
 		case SUICIDE_HIERARCHY:
@@ -215,15 +226,19 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 			// Je me suicide apres avoir fait la reaction en chaine.
 			// Je procede a cette demarche seulement si je n'ai pas de
 			// transition entrante.
+			System.out.println(id + ": "+request.getSenderId() +" m'a demandé de me suicider" );
 			
 			if (requires().memory().getTransFatherList().size() == 0) {
 				// Je cree et envoie la requete a tous mes transitions fils
 				for (String transId: requires().memory().getTransFatherList()) {
+					System.out.println(id + ": " + "demande a " + transId +" de se suicider" );
 					RequestMessage suicideRequest = new RequestMessage(
 							id, transId, RequestType.SUICIDE_HIERARCHY, null);
 				}
 				
 				// Ensuite je me suicide
+
+				System.out.println(id + ": " + "se suicide" );
 				suicide();
 				
 			} else {
@@ -240,18 +255,19 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 	
 	@Override
 	public void treatResponseMessage() {
-		System.out.println(id + "Je traite une reponse");
+		System.out.println(id + " a recu une reponse");
 		
 		ResponseMessage response = requires().memory().getResponseMessage();
 		switch ((ResponseType) response.getType()) {
 		case ACCEPT_MERGE:
 			// Peut fusionner avec lui, lancer la procedure de fusion
+			System.out.println(id + ": "+ response.getSenderId() +" accepte de fusionner");
 			mergeWith(response.getSenderId(), response.getInformations());
 			break;
 			
 		case REFUSE_MERGE:
 			// Peut pas fusionner avec lui, ne rien faire
-			System.out.println(id + "---FUSION--- on ma refuser la fusion");
+			System.out.println(id + ": "+ response.getSenderId() +" refuse de fusionner");
 			doNothing();
 			break;
 		}
@@ -262,7 +278,7 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 
 	@Override
 	public void sendRequestMessage(RequestMessage msg) {
-		System.out.println(id + "Jenvoie une requete");
+		System.out.println(id + ": Envoie une requette a " + msg.getReceiverId());
 		
 		this.requires().sendMessage().sendRequestMessage(msg);
 		endOfCycle();
@@ -278,12 +294,12 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 	 * @return l'objet Child du fils recherche
 	 */
 	private Child findChildById(String childId) {
-		for (Child child: requires().memory().getChildrenWithoutSohn()) {
+		for (Child child: requires().memory().getChildrenWithoutSon()) {
 			if (child.getEndStateId().equals(childId)) {
 				return child;
 			}
 		}
-		for (Child child: requires().memory().getChildrenWithSohn()) {
+		for (Child child: requires().memory().getChildrenWithSon()) {
 			if (child.getEndStateId().equals(childId)) {
 				return child;
 			}
@@ -372,7 +388,7 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 	private void mergeWith(String mergeStateId, Object infosMergeStateId) {
 		RequestMessage request;
 		
-		System.out.println(id + "--- FUSION --- Je fusionne avec " + mergeStateId);
+		System.out.println(id + ": --- FUSION --- Je fusionne avec " + mergeStateId);
 		
 		// Demande a ses transitions entrantes de mettre a jour leur fils
 		// (Les rediriger vers le noeud resultant de la fusion)

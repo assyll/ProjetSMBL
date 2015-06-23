@@ -16,7 +16,7 @@ public class MainClass {
 			"resources" + File.separator + "testfusion.txt";
 	
 	private final static String path_graph =
-			"target" + File.separator + "generatedGraphDB";
+			"target" + File.separator + "generatedGraphDB7";
 	
 	public static void main(String[] args) {
 		

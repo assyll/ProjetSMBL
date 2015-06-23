@@ -59,7 +59,7 @@ public class JsonToGS {
 		// try {
 		jParser.nextToken();
 		fieldname = jParser.getCurrentName();
-		if (MyJsonGenerator.FORMAT_NODE_NAME.equals(fieldname)) {
+		if (MyJsonGenerator.FORMAT_NODE_NAME.equals(fieldname.toLowerCase())) {
 			// current token is "Name",
 			// move to next, which is "Name"'s value
 			jParser.nextToken();
@@ -72,24 +72,24 @@ public class JsonToGS {
 
 		jParser.nextToken();
 		fieldname = jParser.getCurrentName();
-		if (MyJsonGenerator.FORMAT_NODE_SOURCE.equals(fieldname)) {
+		if (MyJsonGenerator.FORMAT_NODE_SOURCE.equals(fieldname.toLowerCase())) {
 			// current token is "Source",
 			// move to next, which is "Source"'s value
 			jParser.nextToken();
 			source = jParser.getBooleanValue();
-			node.addAttribute(fieldname, source);
+			node.addAttribute(fieldname.toLowerCase(), source);
 		} else {
 			throw new FileFormatException(FILE_FORMAT_ERROR);
 		}
 
 		jParser.nextToken();
 		fieldname = jParser.getCurrentName();
-		if (MyJsonGenerator.FORMAT_NODE_FINAL.equals(fieldname)) {
+		if (MyJsonGenerator.FORMAT_NODE_FINAL.equals(fieldname.toLowerCase())) {
 			// current token is "Final",
 			// move to next, which is "Final"'s value
 			jParser.nextToken();
 			fin = jParser.getBooleanValue();
-			node.addAttribute(fieldname, fin);
+			node.addAttribute(fieldname.toLowerCase(), fin);
 		} else {
 			throw new FileFormatException(FILE_FORMAT_ERROR);
 		}
@@ -98,7 +98,7 @@ public class JsonToGS {
 		while (jParser.nextToken() != JsonToken.END_OBJECT) {
 			fieldname = jParser.getCurrentName();
 			jParser.nextToken();
-			node.addAttribute(fieldname, jParser.getText());
+			node.addAttribute(fieldname.toLowerCase(), jParser.getText());
 		}
 	}
 
@@ -130,7 +130,7 @@ public class JsonToGS {
 		// try {
 		jParser.nextToken();
 		String fieldname = jParser.getCurrentName();
-		if (MyJsonGenerator.FORMAT_EDGE_LABEL.equals(fieldname)) {
+		if (MyJsonGenerator.FORMAT_EDGE_LABEL.equals(fieldname.toLowerCase())) {
 			// current token is "Label",
 			// move to next, which is "Label"'s value
 			jParser.nextToken();
@@ -141,7 +141,7 @@ public class JsonToGS {
 
 		jParser.nextToken();
 		fieldname = jParser.getCurrentName();
-		if (MyJsonGenerator.FORMAT_EDGE_BEGIN_NODE.equals(fieldname)) {
+		if (MyJsonGenerator.FORMAT_EDGE_BEGIN_NODE.equals(fieldname.toLowerCase())) {
 			// current token is "NodeB",
 			// move to next, which is "NodeB"'s value
 			jParser.nextToken();
@@ -152,7 +152,7 @@ public class JsonToGS {
 
 		jParser.nextToken();
 		fieldname = jParser.getCurrentName();
-		if (MyJsonGenerator.FORMAT_EDGE_END_NODE.equals(fieldname)) {
+		if (MyJsonGenerator.FORMAT_EDGE_END_NODE.equals(fieldname.toLowerCase())) {
 			// current token is "NodeE",
 			// move to next, which is "NodeE"'s value
 			jParser.nextToken();
@@ -164,12 +164,12 @@ public class JsonToGS {
 
 		jParser.nextToken();
 		fieldname = jParser.getCurrentName();
-		if (MyJsonGenerator.FORMAT_EDGE_ACTION.equals(fieldname)) {
+		if (MyJsonGenerator.FORMAT_EDGE_ACTION.equals(fieldname.toLowerCase())) {
 			// current token is "Action",
 			// move to next, which is "Action"'s value
 			jParser.nextToken();
 			action = jParser.getText();
-			edge.setAttribute(fieldname, action);
+			edge.setAttribute(fieldname.toLowerCase(), action);
 			edge.setAttribute("ui.label", action);
 		} else {
 			throw new FileFormatException(FILE_FORMAT_ERROR);
@@ -179,7 +179,7 @@ public class JsonToGS {
 		while (jParser.nextToken() != JsonToken.END_OBJECT) {
 			fieldname = jParser.getCurrentName();
 			jParser.nextToken();
-			edge.addAttribute(fieldname, jParser.getText());
+			edge.addAttribute(fieldname.toLowerCase(), jParser.getText());
 		}
 	}
 
@@ -218,7 +218,7 @@ public class JsonToGS {
 		jParser.nextToken();
 		String fieldname = jParser.getCurrentName();
 
-		if (MyJsonGenerator.FORMAT_NODES.equals(fieldname)) {
+		if (MyJsonGenerator.FORMAT_NODES.equals(fieldname.toLowerCase())) {
 			jParser.nextToken(); // current token is "[", move next
 			while (jParser.nextToken() != JsonToken.END_ARRAY) {
 				// nodes is array, loop until token equal to "]"
@@ -231,7 +231,7 @@ public class JsonToGS {
 		jParser.nextToken();
 		fieldname = jParser.getCurrentName();
 
-		if (MyJsonGenerator.FORMAT_EDGES.equals(fieldname)) {
+		if (MyJsonGenerator.FORMAT_EDGES.equals(fieldname.toLowerCase())) {
 			jParser.nextToken(); // current token is "[", move next
 			while (jParser.nextToken() != JsonToken.END_ARRAY) {
 				// transitions is array, loop until token equal to "]"

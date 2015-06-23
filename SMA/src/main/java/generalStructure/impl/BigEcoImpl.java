@@ -57,8 +57,19 @@ public class BigEcoImpl extends BigEco implements ICreateAgent{
 	protected void start() {
 		super.start();
 
-		//newDynamicAssemblyAgentEtat("user1", true);
-		
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				try {
+					Thread.sleep(250000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				
+				BigEcoImpl.this.parts().launcher().stopAllAgents().notifyStop();
+			}
+		}).start();;
 	}
 
 	@Override
@@ -78,8 +89,6 @@ public class BigEcoImpl extends BigEco implements ICreateAgent{
 
 	@Override
 	public void createNewState(String id, boolean isRoot) {
-		System.out.println("BigECO create new state "+id);
-
 		newDynamicAssemblyAgentEtat(id, isRoot);
 	}
 

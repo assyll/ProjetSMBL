@@ -336,14 +336,14 @@ public class StateMemImpl extends Memory<StateMemory> implements StateMemory {
 
 
 	@Override
-	public List<Child> getChildrenWithSohn() {
+	public List<Child> getChildrenWithSon() {
 		return _childListArrayWithWithout[0];
 	}
 
 
 
 	@Override
-	public List<Child> getChildrenWithoutSohn() {
+	public List<Child> getChildrenWithoutSon() {
 		return _childListArrayWithWithout[1];
 	}
 

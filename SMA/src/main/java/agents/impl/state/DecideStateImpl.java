@@ -51,12 +51,10 @@ public class DecideStateImpl extends AbstractDecide<StateAction, StateMemory> {
 		String transitionId = requires().memory().getTransitionWithAction(action.getAction());
 		
 		if(transitionId == null) {
-			System.out.println("JE CREE LA TRANSITION !!!!!!!!"
-					+ "!!!!!!!!!!!!!!!!!!!!!! ->   " + transitionId);
+			System.out.println(id+ ": creation de la transition " + transitionId);
 			requires().action().createTransitionAgent(action);
 		} else {
-			System.out.println("JE CREE PAS LA TRANSITION"
-					+ "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ->   " + transitionId);
+			System.out.println(id+ ": pas de creation de la transition" + transitionId);
 			//Envoyer une requete a l'etat fils pour qu'il
 			//se mette en attente d'un nouvel element de trace
 			String childId = requires().memory().
@@ -66,8 +64,7 @@ public class DecideStateImpl extends AbstractDecide<StateAction, StateMemory> {
 					new RequestMessage(id, childId,
 							RequestType.WAIT_FOR_NEXT_ACTION,
 							action.getUserName()));
-			System.out.println("ENVOIE DUN USERNAME ..................................... de "+
-							id + " a " + childId);
+			System.out.println(id+ ": transmission du nom d'utilisateur " + action.getUserName() +" a " + childId);
 		}
 	}
 	

@@ -36,6 +36,12 @@ public abstract class Launcher {
      * 
      */
     public IGetThread threads();
+    
+    /**
+     * This can be called to access the provided port.
+     * 
+     */
+    public IStop stopAllAgents();
   }
   
   public interface Parts {
@@ -79,10 +85,19 @@ public abstract class Launcher {
       }
     }
     
+    private void init_stopAllAgents() {
+      assert this.stopAllAgents == null: "This is a bug.";
+      this.stopAllAgents = this.implementation.make_stopAllAgents();
+      if (this.stopAllAgents == null) {
+      	throw new RuntimeException("make_stopAllAgents() in general.Launcher should not return null.");
+      }
+    }
+    
     protected void initProvidedPorts() {
       init_call();
       init_finishedCycle();
       init_threads();
+      init_stopAllAgents();
     }
     
     public ComponentImpl(final Launcher implem, final Launcher.Requires b, final boolean doInits) {
@@ -117,6 +132,12 @@ public abstract class Launcher {
     
     public IGetThread threads() {
       return this.threads;
+    }
+    
+    private IStop stopAllAgents;
+    
+    public IStop stopAllAgents() {
+      return this.stopAllAgents;
     }
   }
   
@@ -179,6 +200,13 @@ public abstract class Launcher {
    * 
    */
   protected abstract IGetThread make_threads();
+  
+  /**
+   * This should be overridden by the implementation to define the provided port.
+   * This will be called once during the construction of the component to initialize the port.
+   * 
+   */
+  protected abstract IStop make_stopAllAgents();
   
   /**
    * This can be called by the implementation to access the required ports.

@@ -155,4 +155,15 @@ implements CycleAlert, EnvInfos, EnvUpdate, SendMessage, PullMessage, ILog, IGra
 	public void majStateAgent(String id, StateMemory memory) {
 		eco_requires().graph().majStateAgent(id, memory);
 	}
+
+	@Override
+	public void closeGraph() {
+		
+	}
+
+	@Override
+	public void deleteStateAgent(String id, boolean isRoot) {
+		// TODO Auto-generated method stub
+		
+	}
 }

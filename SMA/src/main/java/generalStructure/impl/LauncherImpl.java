@@ -2,6 +2,7 @@ package generalStructure.impl;
 
 import general.Launcher;
 import generalStructure.interfaces.CycleAlert;
+import generalStructure.interfaces.IStop;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -18,7 +19,7 @@ import agents.interfaces.Callable;
 import agents.interfaces.Do;
 import agents.interfaces.IGetThread;
 
-public class LauncherImpl extends Launcher implements Callable, CycleAlert, IGetThread{
+public class LauncherImpl extends Launcher implements Callable, CycleAlert, IGetThread, IStop{
 
 	private int nbFinishedCycles = 0;
 	private Map<String, Thread> threads = new HashMap<String,Thread>();
@@ -56,8 +57,6 @@ public class LauncherImpl extends Launcher implements Callable, CycleAlert, IGet
 			if(!(execService == null)){
 				
 				synchronized (agents) {
-					
-					System.out.println("********************************************************");
 					for(Runnable e: agents.values() )
 						execService.execute(e);
 				}
@@ -85,8 +84,7 @@ public class LauncherImpl extends Launcher implements Callable, CycleAlert, IGet
 	public void endOfCycleAlert(String id) {
 		System.out.println(new Date() + " : Agent Etat "+id+" a fini son cycle!");
 		nbFinishedCycles++;
-
-		System.out.println("nbFinished = "+nbFinishedCycles+ " :  size = "+agents.size() + " : nbAgentPC = "+ nbAgentsPerCycle);
+		
 		if(nbFinishedCycles == 	nbAgentsPerCycle && !stop){
 			System.out.println("Run cycles!");
 			nbFinishedCycles = 0;
@@ -100,9 +98,10 @@ public class LauncherImpl extends Launcher implements Callable, CycleAlert, IGet
 			synchronized (agents) {
 				//execService.
 				agents.remove(id);
-				System.out.println("suppression--------------------------------");
+				System.out.println("suppression--------------------------------"+agents.size());
 				if(agents.size() == 0) {
 					execService.shutdownNow();
+					this.requires().stopProcessus().notifyStop();
 					System.out.println(execService.isShutdown());
 					System.out.println("Threads = "+Thread.activeCount()); 
 				}
@@ -134,13 +133,13 @@ public class LauncherImpl extends Launcher implements Callable, CycleAlert, IGet
  
 			execService = Executors.newFixedThreadPool(agents.size() + 1);
 			System.out.println("SIZE : "+this.agents.size()+" NEW SIZE : "+agents.size());
+			
 			if(this.agents.size() == 0 && !stop){
 				this.agents.clear();
 				this.agents.putAll(agents);
-				System.out.println("New Run Run Run");
 				this.run();
 			}
-			else{
+			else if (!stop){
 				this.agents.clear();
 				this.agents.putAll(agents);
 			}
@@ -153,6 +152,16 @@ public class LauncherImpl extends Launcher implements Callable, CycleAlert, IGet
 		stop = true;
 		System.out.println("STOP!");
 		
+	}
+
+	@Override
+	protected IStop make_stopAllAgents() {
+		return this;
+	}
+
+	@Override
+	public void notifyStop() {
+		this.stop();
 	}
 
 }
