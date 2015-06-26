@@ -158,7 +158,6 @@ public class Window extends JFrame {
 	private static boolean isAutoLayoutJson, isAutoLayoutAgent,
 			isGraphJsonLoaded = false, isGraphAgentLoaded = false,
 			isDirectoryNeo4j, wantToGenerateToLeft, isButton1Dragging = false;
-
 	private static SpriteManager spriteManagerJson, spriteManagerAgent;
 
 	private static GraphicElement gElement = null;
@@ -555,7 +554,7 @@ public class Window extends JFrame {
 		// Action lors du clic sur l'item "To GraphStream"
 		buttonGS.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// Visualisation du graph généré par le fichier importé
+				// Visualisation du graph gï¿½nï¿½rï¿½ par le fichier importï¿½
 				// au format .json
 
 				if (!textDirectory.getText().equals("Directory")) {
@@ -628,7 +627,7 @@ public class Window extends JFrame {
 			}
 		});
 
-		// Action lors de l'appui sur la touche entrée dans la zone de zoom de
+		// Action lors de l'appui sur la touche entrï¿½e dans la zone de zoom de
 		// la partie gauche
 		textJson.addKeyListener(new KeyListener() {
 			public void keyPressed(KeyEvent evt) {
@@ -803,7 +802,7 @@ public class Window extends JFrame {
 			}
 		});
 
-		// Action lors de l'appui sur la touche entrée dans la zone de zoom de
+		// Action lors de l'appui sur la touche entrï¿½e dans la zone de zoom de
 		// la partie droite
 		textAgent.addKeyListener(new KeyListener() {
 			public void keyPressed(KeyEvent evt) {
@@ -1628,6 +1627,16 @@ public class Window extends JFrame {
 
 	public static void main(String[] args) {
 		new Window();
+	}
+	
+	public void setRightGraph(Graph graph) {		
+		graphAgent = graph;
+		isGraphAgentLoaded = true;
+		
+		initGraphPropertiesAgent();
+		initPanelGraphAgent();
+		
+		//treeLayoutAgent.doClick();
 	}
 
 }

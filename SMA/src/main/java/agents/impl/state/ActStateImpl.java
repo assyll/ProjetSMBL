@@ -41,7 +41,7 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 
 	@Override
 	public void addStateAgent(String id) {
-		System.out.println(id + ": Ajout d'un etat agent sans actions à l'environnement");
+		System.out.println(id + ": Ajout d'un etat agent sans actions ï¿½ l'environnement");
 		
 		requires().setContext().addStateAgent(id);
 		requires().finishedCycle().endOfCycleAlert(id);
@@ -50,7 +50,7 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 
 	@Override
 	public void addStateAgent(String id, List<Action> actions) {
-		System.out.println(id + ": Ajout d'un etat agent ayant des actions à l'environnement");
+		System.out.println(id + ": Ajout d'un etat agent ayant des actions ï¿½ l'environnement");
 		
 		requires().setContext().addStateAgent(id, actions);
 		requires().finishedCycle().endOfCycleAlert(id);
@@ -70,11 +70,11 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 	public void askToMerge(List<String> agentIds) {
 		System.out.print(id + " --- FUSION --- demande de fusion avec : ");
 		
-		for(String agentId : agentIds) {
+		/*for(String agentId : agentIds) {
 			System.out.print(" -"+agentId);
 		}
 		
-		System.out.println();
+		System.out.println();*/
 		
 		String agentIdList = "[";
 		for (String agentId: agentIds) {
@@ -218,7 +218,7 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 					canMerge ? ResponseType.ACCEPT_MERGE :
 						ResponseType.REFUSE_MERGE, null);
 			requires().sendMessage().sendResponseMessage(response);
-			System.out.println(id + "---FUSION--- "+request.getSenderId() + " me demande de fusionner et ma réponse est "+ canMerge);
+			System.out.println(id + "---FUSION--- "+request.getSenderId() + " me demande de fusionner et ma rï¿½ponse est "+ canMerge);
 			break;
 			
 		case SUICIDE_HIERARCHY:
@@ -226,7 +226,7 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 			// Je me suicide apres avoir fait la reaction en chaine.
 			// Je procede a cette demarche seulement si je n'ai pas de
 			// transition entrante.
-			System.out.println(id + ": "+request.getSenderId() +" m'a demandé de me suicider" );
+			System.out.println(id + ": "+request.getSenderId() +" m'a demandï¿½ de me suicider" );
 			
 			if (requires().memory().getTransFatherList().size() == 0) {
 				// Je cree et envoie la requete a tous mes transitions fils
@@ -424,8 +424,8 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 	}
 	
 	private void suicide() {
-		requires().suicide().suicide();
 		requires().graph().majStateAgent(id, null);
+		requires().suicide().suicide();
 	}
 
 }

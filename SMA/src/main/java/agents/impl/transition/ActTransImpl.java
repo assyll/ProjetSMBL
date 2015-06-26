@@ -51,7 +51,7 @@ implements TransAction {
 			
 			// Ensuite je fais la redirection
 			requires().memory().setStateCibleId(mergeStateId);
-			System.out.println(id + ": a ete redirgé vers " + mergeStateId);
+			System.out.println(id + ": a ete redirgï¿½ vers " + mergeStateId);
 			break;
 			
 		case SUICIDE_HIERARCHY:
@@ -110,8 +110,8 @@ implements TransAction {
 	}
 	
 	private void suicide() {
-		requires().suicide().suicide();
 		requires().graph().majTransitionAgent(id, null);
+		requires().suicide().suicide();
 	}
 
 }

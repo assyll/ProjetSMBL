@@ -1,6 +1,10 @@
 package generalStructure.impl;
 
+import jsonAndGS.MyJsonGenerator;
+
+import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
+import org.graphstream.graph.implementations.MultiGraph;
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.DynamicLabel;
 import org.neo4j.graphdb.DynamicRelationshipType;
@@ -21,6 +25,7 @@ import generalStructure.interfaces.UpdateGraph;
 
 public class GraphCompImpl extends GraphComp implements IGraph {
 
+	private Graph _graphGS;
 	private final GraphDatabaseService _graphNeo4J;
 
 	public GraphCompImpl(String path) {
@@ -28,6 +33,7 @@ public class GraphCompImpl extends GraphComp implements IGraph {
 		_graphNeo4J =
 				new GraphDatabaseFactory().newEmbeddedDatabase(path);
 		registerShutdownHook(_graphNeo4J);
+		_graphGS = new MultiGraph("graph gs");
 	}
 
 	@Override
@@ -37,86 +43,109 @@ public class GraphCompImpl extends GraphComp implements IGraph {
 
 	@Override
 	public void majStateAgent(String id, StateMemory memory) {
-		if(memory != null){
-			try (Transaction tx = _graphNeo4J.beginTx()) {
+		//majStateAgentNeo4j(id, memory);
+		majStateAgentGS(id, memory);
+	}
 
-				// ------------------- maj de l'etat ------------------
+	@Override
+	public void majTransitionAgent(String id, TransMemory memory) {
+		//majTransitionAgentNeo4j(id, memory);
+		majTransitionAgentGS(id, memory);
+	}
+	
+	
+	
+	// ------------------------ NEO4J --------------------------
+	
+	private void majStateAgentNeo4j(String id, StateMemory memory) {
+		try (Transaction tx = _graphNeo4J.beginTx()) {
 
-				// informations neo4j utiles
-				Node node;
-
-				Label label = DynamicLabel.label(
-						memory.isRoot() ? "Racine" : "Noeud");
-
-				if ((node = _graphNeo4J.findNode(label, "id", id)) != null) {
+			Node node;
+			
+			if (memory == null) {
+				
+				// suicide
+				node = findNodeById(id);
+				node.delete();
+				
+			} else {
+			
+				// ------------------- maj de l'etat -----------------
+	
+				if ((node = findNodeById(id)) != null) {
 					// Si le noeud existe alors le mettre a jour
-
+	
 					node.setProperty("source", memory.isRoot());
 					node.setProperty("final", memory.isFinal());				
 				} else {
 					// Sinon il faut creer correctement le nouveau noeud
 					node = _graphNeo4J.createNode();
-
+	
+					Label label = DynamicLabel.label(
+							memory.isRoot() ? "Racine" : "Noeud");
+					
 					node.addLabel(label);
 					node.setProperty("name", id);
 					node.setProperty("ui.label", id);
 					node.setProperty("ui.class",
 							memory.isRoot() ? "Source" : "Node");
-
+	
 					node.setProperty("id", id);
 					node.setProperty("Source", memory.isRoot());
 					node.setProperty("Final", memory.isFinal());
 				}
-
-				// ----------------------------------------------------
-				tx.success();
+			
 			}
+
+			// ----------------------------------------------------
+			tx.success();
 		}
 	}
+	
+	private void majTransitionAgentNeo4j(String id, TransMemory memory) {
+		try (Transaction tx = _graphNeo4J.beginTx()) {
 
-	@Override
-	public void majTransitionAgent(String id, TransMemory memory) {
+			// --------------- maj de la transition ---------------
 
-		if(memory != null) {
-			try (Transaction tx = _graphNeo4J.beginTx()) {
-
-				// --------------- maj de la transition ---------------
-
-				Relationship relationship;
+			Relationship relationship;
+			
+			if (memory == null) {
+				
+				// suicide
+				relationship = findRelationshipById(id);
+				relationship.delete();
+				
+			} else {
 
 				if ((relationship = findRelationshipById(id)) != null) {
-
+	
 					// si la transition existe alors la mettre a jour (2 cas)
 					Node fatherNode = relationship.getStartNode();
 					Node childNode = relationship.getEndNode();
-
+	
 					// son pere a change OU son fils a change
 					if (!fatherNode.getProperty("id").
 							equals(memory.getStateSourceId())
 							|| !childNode.getProperty("id").
 							equals(memory.getStateCibleId())) {
-
-						System.out.println("REDIRECTION ---------> ancien fils:"
-								+ childNode.getProperty("id") + ", nouveau fils:" + memory.getStateCibleId());
-
+		
 						try {
 							relationship.delete(); // efface la transition actuelle
 							createRelationship(id, memory); // redessine la transition
 						} catch (Exception e) {
-
 						}
-
-						System.out.println("REDIRECTION DE LA TRANSITION !!!!!!!!");
+	
 					}
-
+	
 				} else {
 					// Sinon la creer correctement SI LE NOEUD FILS A ETE CREE !
 					createRelationship(id, memory);
 				}
-
-				// ----------------------------------------------------
-				tx.success();
+			
 			}
+
+			// ----------------------------------------------------
+			tx.success();
 		}
 	}
 
@@ -179,8 +208,7 @@ public class GraphCompImpl extends GraphComp implements IGraph {
 		return new UpdateGraph() {
 			@Override
 			public Graph getGraph() {
-				//return GraphCompImpl.this._graphGS;
-				return null;
+				return GraphCompImpl.this._graphGS;
 			}
 		};
 	}
@@ -198,24 +226,117 @@ public class GraphCompImpl extends GraphComp implements IGraph {
 			}
 		});
 	}
-
-	@Override
-	public void deleteStateAgent(String id, boolean isRoot) {
-		try (Transaction tx = _graphNeo4J.beginTx()) {
-
-			// --------------- maj de la transition ---------------
-
-			Relationship relationship;
-
-			if ((relationship = findRelationshipById(id)) != null) {
-				Node node;
-				Label label = DynamicLabel.label(
-						isRoot ? "Racine" : "Noeud");
-				if ((node = _graphNeo4J.findNode(label, "id", id)) != null) {
-					
-				}
+	
+	
+	
+	// ------------------------ GraphStream -----------------------------
+	
+	
+	private void majStateAgentGS(String id, StateMemory memory) {
+		
+		org.graphstream.graph.Node node;
+		
+		if (memory == null) {
+			
+			// suicide
+			if (_graphGS.getNode(id) != null) {
+				node = _graphGS.removeNode(id);
 			}
+			
+		} else {
+		
+			// ------------------- maj de l'etat -----------------
+
+			if ((node = _graphGS.getNode(id)) != null) {
+				// Si le noeud existe alors le mettre a jour
+
+				node.addAttribute(MyJsonGenerator.FORMAT_NODE_SOURCE, memory.isRoot());
+				node.addAttribute(MyJsonGenerator.FORMAT_NODE_FINAL, memory.isFinal());				
+			} else {
+				// Sinon il faut creer correctement le nouveau noeud
+				node = _graphGS.addNode(id);
+				
+				node.addAttribute("name", id);
+				node.addAttribute("ui.label", id);
+				node.addAttribute("ui.class",
+						memory.isRoot() ? "Source" : "Node");
+
+				node.addAttribute("id", id);
+				node.addAttribute(MyJsonGenerator.FORMAT_NODE_SOURCE, memory.isRoot());
+				node.addAttribute(MyJsonGenerator.FORMAT_NODE_FINAL, memory.isFinal());
+			}
+		
 		}
 	}
+	
+	private void majTransitionAgentGS(String id, TransMemory memory) {
+
+		Edge edge;
+		
+		if (memory == null) {
+			
+			// suicide
+			if (_graphGS.getEdge(id)) {
+				_graphGS.removeEdge(id);
+			}
+			
+		} else {
+
+			if ((edge = _graphGS.getEdge(id)) != null) {
+
+				// si la transition existe alors la mettre a jour (2 cas)
+				org.graphstream.graph.Node fatherNode = edge.getNode0();
+				org.graphstream.graph.Node childNode = edge.getNode1();
+
+				// son pere a change OU son fils a change
+				if (!fatherNode.getAttribute("id").
+						equals(memory.getStateSourceId())
+						|| !childNode.getAttribute("id").
+						equals(memory.getStateCibleId())) {
+	
+					try {
+						if (_graphGS.getEdge(id)) {
+							_graphGS.removeEdge(id);
+						}
+						createEdge(id, memory); // redessine la transition
+					} catch (Exception e) {
+					}
+
+				}
+
+			} else {
+				// Sinon la creer correctement SI LE NOEUD FILS A ETE CREE !
+				createEdge(id, memory);
+			}
+		
+		}
+	}
+	
+	private Edge createEdge(String id, TransMemory memory) {
+
+		org.graphstream.graph.Node fatherNode, childNode;
+		Edge edge = null;
+
+		childNode = _graphGS.getNode(memory.getStateCibleId());
+
+		if (childNode != null) {
+
+			// recupere les noeuds aux deux extremites de la transition
+			fatherNode = _graphGS.getNode(memory.getStateSourceId());
+
+			// creer physiquement la transition
+			edge = _graphGS.addEdge(id, fatherNode.getId(), childNode.getId());
+
+			// y ajoute les attributs
+			edge.addAttribute("id", id);
+			edge.addAttribute("name", id);
+			edge.addAttribute("ui.label", id);
+			edge.addAttribute("action", memory.getAction().
+					getAction().getActionMap().get("action"));
+		}
+
+		return edge;
+	}
+
 }
 

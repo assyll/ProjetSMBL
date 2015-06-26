@@ -161,9 +161,4 @@ implements CycleAlert, EnvInfos, EnvUpdate, SendMessage, PullMessage, ILog, IGra
 		
 	}
 
-	@Override
-	public void deleteStateAgent(String id, boolean isRoot) {
-		// TODO Auto-generated method stub
-		
-	}
 }

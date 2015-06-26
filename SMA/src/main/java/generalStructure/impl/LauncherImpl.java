@@ -21,6 +21,11 @@ import agents.interfaces.IGetThread;
 
 public class LauncherImpl extends Launcher implements Callable, CycleAlert, IGetThread, IStop{
 
+	/**
+	 * Temps en milisecondes entre deux cycles consecutifs d'un agent.
+	 */
+	public static int time_by_cycle = 3000;
+	
 	private int nbFinishedCycles = 0;
 	private Map<String, Thread> threads = new HashMap<String,Thread>();
 	private int nbAgentsTotal = 3;
@@ -89,7 +94,7 @@ public class LauncherImpl extends Launcher implements Callable, CycleAlert, IGet
 			System.out.println("Run cycles!");
 			nbFinishedCycles = 0;
 			try {
-				Thread.sleep(3000);
+				Thread.sleep(time_by_cycle);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
