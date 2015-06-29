@@ -31,6 +31,7 @@ public class StateMemImpl extends Memory<StateMemory> implements StateMemory {
 	private int _userNameIndex;
 	private List<String> agentIdInMyCell;
 	private List<Child>[] _childListArrayWithWithout;
+	private boolean _hasMoved;
 
 	public StateMemImpl(String id, boolean isRoot) {
 		_stateId = id;
@@ -54,6 +55,8 @@ public class StateMemImpl extends Memory<StateMemory> implements StateMemory {
 		_childListArrayWithWithout = new List[2];
 		_childListArrayWithWithout[0] = new ArrayList<Child>();
 		_childListArrayWithWithout[1] = new ArrayList<Child>();
+		
+		_hasMoved = false;
 		
 	}
 
@@ -224,7 +227,7 @@ public class StateMemImpl extends Memory<StateMemory> implements StateMemory {
 
 
 	@Override
-	public void addNewOutputTransition(String id, Action action) {
+	public void addNewInputTransition(String id, Action action) {
 		_inputTransitionIdByAction.put(action, id);
 	}
 
@@ -375,11 +378,19 @@ public class StateMemImpl extends Memory<StateMemory> implements StateMemory {
 		return new ArrayList<String> (_stateChildIdByTransId.keySet());
 	}
 
-
-
 	@Override
 	public void addAction(Action action, String destState) {
 		_outputTransitionIdByAction.put(action, destState);
+	}
+
+	@Override
+	public boolean hasMoved() {
+		return _hasMoved;
+	}
+
+	@Override
+	public void setHasMoved(boolean hasMoved) {
+		_hasMoved = hasMoved;
 	}
 
 

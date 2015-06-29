@@ -141,7 +141,7 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 		// mis a jour de mes connaissances
 		requires().memory().addChild(ids[1], ids[0], false);
 		requires().memory().addAction(action.getAction(), ids[0]);
-		requires().memory().addNewOutputTransition(ids[0], action.getAction());
+		requires().memory().addNewInputTransition(ids[0], action.getAction());
 		
 		// javertis mes pere du rajout de mon fils
 		for (String fatherId: requires().memory().getStateFatherList()) {

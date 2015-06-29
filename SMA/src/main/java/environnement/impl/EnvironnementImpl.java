@@ -268,7 +268,7 @@ public class EnvironnementImpl extends Environnement<EnvInfos, EnvUpdate>
 		}
 		
 		/*public  Map<Action, CellImpl> getChildrenMap(){
-			return childrenMap;
+			return childrenMap;s
 		}*/
 		
 		@Override

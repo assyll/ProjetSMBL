@@ -42,7 +42,7 @@ public interface StateMemory {
 	public boolean gotTransitionWithAction(Action action);
 	public String getTransitionWithAction(Action action); 
 	public String getChildByTransition(String transId);
-	public void addNewOutputTransition(String id, Action action);
+	public void addNewInputTransition(String id, Action action);
 	public void addChild(String stateId, String transId, boolean childWithChild);
 	public void addFather(String transId, String stateId);
 	public List<String> getStateFatherList();
@@ -58,5 +58,8 @@ public interface StateMemory {
 	public Map<String, String> getChildren();
 	public List<Child> getChildrenWithSon();
 	public List<Child> getChildrenWithoutSon();
+	
+	public boolean hasMoved();
+	public void setHasMoved(boolean hasMoved);
 	
 }
