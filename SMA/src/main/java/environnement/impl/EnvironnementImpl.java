@@ -103,6 +103,7 @@ public class EnvironnementImpl extends Environnement<EnvInfos, EnvUpdate>
 	@Override
 	public void addStateAgent(String id) {
 		this.newCell(new ArrayList<Action>()).cellInfos().addNewStateAgent(id);
+		
 	}
 
 
@@ -111,9 +112,50 @@ public class EnvironnementImpl extends Environnement<EnvInfos, EnvUpdate>
 		CellImpl cell = getCellByActionList(actions);
 		
 		if(cell != null) {
+			System.out.print("Cell [ ");
+			 
+			 for(Action action: actions)
+				 System.out.print(action.getActionMap().get("action")+" ");
+			 
+			 System.out.print("] contains: ");
+			 
+			 for(String idS: cell.getAgentIDList()) {
+				 System.out.print(idS +" ");
+			 }
+			 
+			 System.out.println();
+			 
 			cell.addNewStateAgent(id);
+			
+			System.out.print("Cell [ ");
+			 
+			 for(Action action: actions)
+				 System.out.print(action.getActionMap().get("action")+" ");
+			 
+			 System.out.print("] contains: ");
+			 
+			 for(String idS: cell.getAgentIDList()) {
+				 System.out.print(idS +" ");
+			 }
+			 
+			 System.out.println();
+			 
 		} else {
 			this.newCell(actions).cellInfos().addNewStateAgent(id);
+			 cell = getCellByActionList(actions);
+			 
+			 System.out.print("Cell [ ");
+			 
+			 for(Action action: actions)
+				 System.out.print(action.getActionMap().get("action")+" ");
+			 
+			 System.out.print("] contains: ");
+			 
+			 for(String idS: cell.getAgentIDList()) {
+				 System.out.print(idS +" ");
+			 }
+			 
+			 System.out.println();
 		}
 	}
 
