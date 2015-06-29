@@ -276,7 +276,7 @@ public class GraphCompImpl extends GraphComp implements IGraph {
 		if (memory == null) {
 			
 			// suicide
-			if (_graphGS.getEdge(id)) {
+			if (_graphGS.getEdge(id) != null) {
 				_graphGS.removeEdge(id);
 			}
 			
@@ -295,7 +295,7 @@ public class GraphCompImpl extends GraphComp implements IGraph {
 						equals(memory.getStateCibleId())) {
 	
 					try {
-						if (_graphGS.getEdge(id)) {
+						if (_graphGS.getEdge(id) != null) {
 							_graphGS.removeEdge(id);
 						}
 						createEdge(id, memory); // redessine la transition
@@ -317,12 +317,11 @@ public class GraphCompImpl extends GraphComp implements IGraph {
 		org.graphstream.graph.Node fatherNode, childNode;
 		Edge edge = null;
 
+		// recupere les noeuds aux deux extremites de la transition
+		fatherNode = _graphGS.getNode(memory.getStateSourceId());
 		childNode = _graphGS.getNode(memory.getStateCibleId());
 
-		if (childNode != null) {
-
-			// recupere les noeuds aux deux extremites de la transition
-			fatherNode = _graphGS.getNode(memory.getStateSourceId());
+		if (childNode != null && fatherNode != null) {
 
 			// creer physiquement la transition
 			edge = _graphGS.addEdge(id, fatherNode.getId(), childNode.getId());

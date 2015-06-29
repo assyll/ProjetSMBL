@@ -28,7 +28,7 @@ public class PerceiveStateImpl extends AbstractPerceive<ContextInfos, StateMemor
 				requires().getContext().getAllAgentsInCell(
 						requires().memory().getActionList()));
 		
-		
+		boolean hasRealizedAction = false;
 		ActionTrace action = null;
 		Message message;
 		
@@ -48,10 +48,12 @@ public class PerceiveStateImpl extends AbstractPerceive<ContextInfos, StateMemor
 				i--;
 				requires().memory().addAction(action);
 			}
+			
+			hasRealizedAction = (action != null);
 		}
 
 		//Sinon si je suis racine, je regarde si il y a de nouveaux noms d'utilisateurs non encore rencontr�s jusqu'ici
-		else if ((requires().memory().isRoot()) && (action == null)) {
+		if (!hasRealizedAction && (requires().memory().isRoot()) && (action == null)) {
 			System.out.println(id + ": est la racine et veut recuperer des nouveau users");
 
 			List<ActionTrace> userNameList = requires().getContext().newUsersTraceList();
@@ -63,17 +65,20 @@ public class PerceiveStateImpl extends AbstractPerceive<ContextInfos, StateMemor
 				
 				requires().memory().addAction(action);
 			}
+			hasRealizedAction = true;
 		}
 		
 		// J'essaie de recuperer une reponse
-		else if ((message = requires().getMessage().pullResponseMessage()) != null) {
+		if (!hasRealizedAction && (message = requires().getMessage().pullResponseMessage()) != null) {
 			requires().memory().setResponseMessage((ResponseMessage) message);
+			hasRealizedAction = true;
 		}
 		// J'essaie de recuperer des requete
-		else if((message = requires().getMessage().pullRequestMessage()) != null) {
+		if(!hasRealizedAction && (message = requires().getMessage().pullRequestMessage()) != null) {
 			requires().memory().setRequestMessage((RequestMessage) message);
 			System.out.println(id + ": recuperation requete de " +
 					((RequestMessage) message).getSenderId());
+			hasRealizedAction = true;
 		}
 	}
 

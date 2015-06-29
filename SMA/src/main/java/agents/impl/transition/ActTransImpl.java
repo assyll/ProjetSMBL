@@ -59,15 +59,15 @@ implements TransAction {
 			// (sans transitions entrantes) de se suicider a son tour.
 			
 			// Demande de suicide a mon fils
-			String transChildId = requires().memory().getStateCibleId();
+			String stateCibleId = requires().memory().getStateCibleId();
 			
 			// Creation de la requete
 			RequestMessage suicideRequest = new RequestMessage(
-					id, transChildId, RequestType.SUICIDE_HIERARCHY, null);
+					id, stateCibleId, RequestType.SUICIDE_HIERARCHY, null);
 			
-			// Envoie de celle-ci
+			// Envoie de la requete
 			requires().sendMessage().sendRequestMessage(suicideRequest);
-			System.out.println(id + ": a demande a " + transChildId +" de se suicider");
+			System.out.println(id + ": a demande a " + stateCibleId +" de se suicider");
 			
 			// Je me suicide
 			System.out.println(id + ": se suicide");

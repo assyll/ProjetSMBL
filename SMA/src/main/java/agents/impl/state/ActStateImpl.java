@@ -228,12 +228,14 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 			// transition entrante.
 			System.out.println(id + ": "+request.getSenderId() +" m'a demand� de me suicider" );
 			
-			if (requires().memory().getTransFatherList().size() == 0) {
+			List<String> transFatherList = requires().memory().getTransFatherList();
+			if (transFatherList.isEmpty()) {
 				// Je cree et envoie la requete a tous mes transitions fils
 				for (String transId: requires().memory().getTransFatherList()) {
 					System.out.println(id + ": " + "demande a " + transId +" de se suicider" );
 					RequestMessage suicideRequest = new RequestMessage(
 							id, transId, RequestType.SUICIDE_HIERARCHY, null);
+					requires().sendMessage().sendRequestMessage(suicideRequest);
 				}
 				
 				// Ensuite je me suicide

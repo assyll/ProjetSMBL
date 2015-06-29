@@ -1633,6 +1633,11 @@ public class Window extends JFrame {
 		graphAgent = graph;
 		isGraphAgentLoaded = true;
 		
+		textJson.setText("100 %");
+		textAgent.setText("100 %");
+		turnAutoLayoutButtonOn(structGraphAgent);
+		turnAutoLayoutButtonOn(structGraphJson);
+		
 		initGraphPropertiesAgent();
 		initPanelGraphAgent();
 		
