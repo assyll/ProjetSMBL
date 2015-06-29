@@ -52,13 +52,11 @@ public class LauncherImpl extends Launcher implements Callable, CycleAlert, IGet
 	public void run() {
 		System.out.println("Threads = "+Thread.activeCount());
 		synchronized(agents){
-		nbAgentsPerCycle = agents.size();
-		System.out.println();
-		System.out.println("-----------------------------------------------------------------------------");
-		System.out.println("Nb agents par cycle = "+nbAgentsPerCycle);
-		System.out.println("RUN!!!!!  "+ agents.size());
-
-		
+			nbAgentsPerCycle = agents.size();
+			System.out.println();
+			System.out.println("-----------------------------------------------------------------------------");
+			System.out.println("Nb agents par cycle = "+nbAgentsPerCycle);
+			System.out.println("RUN!!!!!  "+ agents.size());
 			if(!(execService == null)){
 				
 				synchronized (agents) {
@@ -66,7 +64,8 @@ public class LauncherImpl extends Launcher implements Callable, CycleAlert, IGet
 						execService.execute(e);
 				}
 
-			}}
+			}
+		}
 
 		System.out.println("End boucles");
 		//	this.requires().lancer().doIt();

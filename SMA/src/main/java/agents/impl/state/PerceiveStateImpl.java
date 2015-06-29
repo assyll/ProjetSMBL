@@ -22,11 +22,10 @@ public class PerceiveStateImpl extends AbstractPerceive<ContextInfos, StateMemor
 	@Override
 	public void makePerception() {
 		System.out.println(id + " Perception");
-
+		
 		// J'actualise ma liste des voisins
-		requires().memory().setAgentIdInMyCell(
-				requires().getContext().getAllAgentsInCell(
-						requires().memory().getActionList()));
+		requires().memory().setAgentIdInMyCell(requires().getContext().getAllAgentsInCell(
+				requires().memory().getActionList()));
 		
 		boolean hasRealizedAction = false;
 		ActionTrace action = null;

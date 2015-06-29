@@ -1,5 +1,8 @@
 package environnement.impl;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,10 +22,82 @@ import generalStructure.impl.BigEcoImpl;
 public class EnvironnementImpl extends Environnement<EnvInfos, EnvUpdate>
 		implements EnvUpdate, EnvInfos {
 
+	private FileWriter _writer;
 	private Map<Integer,List<CellImpl>> cellsByLevel = new HashMap<>();
 	
 	public EnvironnementImpl() {
 		this.newCell(new ArrayList<Action>());
+		
+		try {
+			File file = new File("target" + File.separator + "environnement.txt");
+			if (!file.exists()) {
+				file.createNewFile();
+			}
+			_writer = new FileWriter(file);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		/*cellsByLevel.put(1, new ArrayList<CellImpl>());
+		Map<String, String> mapTest = new HashMap<String, String>();
+		mapTest.put("action", "actionTest");
+		List<Action> actionsTest = new ArrayList<Action>();
+		actionsTest.add(new Action(mapTest));
+		CellImpl cellTest = new CellImpl(actionsTest);
+		cellTest.addNewStateAgent("aTest1");
+		cellsByLevel.get(1).add(cellTest);
+		cellTest.addNewStateAgent("aTest2");
+		CellImpl cellTest2 = getCellByActionList(actionsTest);
+		cellTest2.addNewStateAgent("aTest3");*/
+	}
+	
+	private void writeToFile() {
+		
+		if (_writer != null && cellsByLevel != null) {
+		synchronized (_writer) {
+		synchronized (cellsByLevel) {
+			String contenu = "------------------------\n";
+			
+			int etageMax = 0;
+			for (Integer integer: cellsByLevel.keySet()) {
+				if (integer > etageMax) {
+					etageMax = integer;
+				}
+			}
+			
+			for (int i=0; i <= etageMax; i++) {
+				List<CellImpl> cells;
+				contenu += "{etage:"+i+"} ";
+				if ((cells = cellsByLevel.get(i)) != null) {
+					for (CellImpl cell: cells) {
+						List<Action> actions = cell.getListOfActions();
+						List<String> agents = cell.getAgentIDList();
+						contenu += "{actions:";
+						for (Action a: actions) {
+							contenu += a + ", ";
+						}
+						contenu += " agents:";
+						for (String agent: agents) {
+							contenu += agent + ", ";
+						}
+						contenu += "} ";
+					}
+					contenu += "\n";
+				} else {
+					contenu += " ----- vide ------\n";
+				}
+			}
+			
+			contenu += "\n";
+			try {
+				_writer.write(contenu);
+				_writer.flush();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		}
+		}
 	}
 	
 
@@ -30,15 +105,15 @@ public class EnvironnementImpl extends Environnement<EnvInfos, EnvUpdate>
 	protected Cell<EnvInfos, EnvUpdate> make_Cell(List<Action> actionList) {
 		int level = actionList.size();
 		CellImpl cell = new CellImpl(actionList);
-
+		
 		synchronized (cellsByLevel) {
 			if (!cellsByLevel.containsKey(level)) {
 				cellsByLevel.put(level, new ArrayList<CellImpl>());
 			}
-			
 			cellsByLevel.get(level).add(cell);
 		}
 
+		writeToFile();
 		return cell;
 	}
 
@@ -56,7 +131,7 @@ public class EnvironnementImpl extends Environnement<EnvInfos, EnvUpdate>
 	@Override
 	public List<String> getAllAgentsInCell(List<Action> listActions) {
 		CellImpl cell = getCellByActionList(listActions);
-		return cell.getAgentIDList();
+		return new ArrayList<String> (cell.getAgentIDList());
 	}
 
 
@@ -78,6 +153,8 @@ public class EnvironnementImpl extends Environnement<EnvInfos, EnvUpdate>
 		} finally {
 		    l.unlock();
 		}
+		
+		writeToFile();
 		
 		/*Map<Action,CellImpl> childrenMap = cell.getChildrenMap();
 		
@@ -103,7 +180,7 @@ public class EnvironnementImpl extends Environnement<EnvInfos, EnvUpdate>
 	@Override
 	public void addStateAgent(String id) {
 		this.newCell(new ArrayList<Action>()).cellInfos().addNewStateAgent(id);
-		
+		writeToFile();
 	}
 
 
@@ -112,51 +189,11 @@ public class EnvironnementImpl extends Environnement<EnvInfos, EnvUpdate>
 		CellImpl cell = getCellByActionList(actions);
 		
 		if(cell != null) {
-			System.out.print("Cell [ ");
-			 
-			 for(Action action: actions)
-				 System.out.print(action.getActionMap().get("action")+" ");
-			 
-			 System.out.print("] contains: ");
-			 
-			 for(String idS: cell.getAgentIDList()) {
-				 System.out.print(idS +" ");
-			 }
-			 
-			 System.out.println();
-			 
 			cell.addNewStateAgent(id);
-			
-			System.out.print("Cell [ ");
-			 
-			 for(Action action: actions)
-				 System.out.print(action.getActionMap().get("action")+" ");
-			 
-			 System.out.print("] contains: ");
-			 
-			 for(String idS: cell.getAgentIDList()) {
-				 System.out.print(idS +" ");
-			 }
-			 
-			 System.out.println();
-			 
 		} else {
 			this.newCell(actions).cellInfos().addNewStateAgent(id);
-			 cell = getCellByActionList(actions);
-			 
-			 System.out.print("Cell [ ");
-			 
-			 for(Action action: actions)
-				 System.out.print(action.getActionMap().get("action")+" ");
-			 
-			 System.out.print("] contains: ");
-			 
-			 for(String idS: cell.getAgentIDList()) {
-				 System.out.print(idS +" ");
-			 }
-			 
-			 System.out.println();
 		}
+		writeToFile();
 	}
 
 
@@ -165,6 +202,7 @@ public class EnvironnementImpl extends Environnement<EnvInfos, EnvUpdate>
 		CellImpl cell = getCellByActionList(actions);
 		if(cell != null)
 			cell.removeStateAgent(id);
+		writeToFile();
 	}
 	
 	private CellImpl getCellByActionList(List<Action> actionList) {
@@ -187,17 +225,17 @@ public class EnvironnementImpl extends Environnement<EnvInfos, EnvUpdate>
 	private class CellImpl extends Cell<EnvInfos, EnvUpdate> implements CellInfo {
 
 		private List<Action> cellActionList;
-		private Map<Action, CellImpl> childrenMap;
+		//private Map<Action, CellImpl> childrenMap;
 		private List<String> agentsEtatIDList;
 		
 		public CellImpl(List<Action> actions) {
 			cellActionList = new ArrayList<>(actions);
-			childrenMap = new HashMap<>();
+			//childrenMap = new HashMap<>();
 			agentsEtatIDList = new ArrayList<String>();
 		}
 		
 		
-		public void updateChildMap(Action action, CellImpl cell){
+		/*public void updateChildMap(Action action, CellImpl cell){
 			childrenMap.put(action, cell);
 		}
 		
@@ -209,7 +247,7 @@ public class EnvironnementImpl extends Environnement<EnvInfos, EnvUpdate>
 			CellImpl child = new CellImpl(newListOfActions);
 			childrenMap.put(action, child);
 			return child;
-		}
+		}*/
 		
 		@Override
 		protected CellInfo make_cellInfos() {
@@ -217,22 +255,22 @@ public class EnvironnementImpl extends Environnement<EnvInfos, EnvUpdate>
 		}
 		@Override
 		public List<Action> getListOfActions() {
-			return cellActionList;
+			return new ArrayList<Action> (cellActionList);
 		}
 		@Override
 		public List<String> getAgentIDList() {
-			return agentsEtatIDList;
+			return new ArrayList<String> (agentsEtatIDList);
 		}
 
 		@Override
 		public void addNewStateAgent(String id) {
 			agentsEtatIDList.add(id);
-			
 		}
 		
-		public  Map<Action, CellImpl> getChildrenMap(){
+		/*public  Map<Action, CellImpl> getChildrenMap(){
 			return childrenMap;
-		}
+		}*/
+		
 		@Override
 		public void removeStateAgent(String id) {
 			agentsEtatIDList.remove(id);

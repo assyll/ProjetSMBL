@@ -68,13 +68,13 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 	
 	@Override
 	public void askToMerge(List<String> agentIds) {
-		System.out.print(id + " --- FUSION --- demande de fusion avec : ");
+		System.out.print(id + " --- FUSION --- demande de fusion avec : " + agentIds.get(0)+"...");
 		
-		for(String agentId : agentIds) {
+		/*for(String agentId : agentIds) {
 			System.out.print(agentId + " ");
 		}
 		
-		System.out.println();
+		System.out.println();*/
 		
 		String agentIdList = "[";
 		for (String agentId: agentIds) {

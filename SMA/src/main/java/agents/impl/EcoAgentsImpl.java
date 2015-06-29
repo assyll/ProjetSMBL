@@ -29,7 +29,7 @@ public class EcoAgentsImpl extends EcoAgents implements AgentTrace{
 
 	private Map<String,String> currentAgentsMap; // map<username, idAgent>
 	private Map<String,Runnable> agentsMap;
-	private  List<Runnable> listRunnable;
+	private List<Runnable> listRunnable;
 	private int nbStateAgentsCreated;
 	private int nbTransAgentsCreated;
 	private String rootId;
