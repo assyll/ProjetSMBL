@@ -152,6 +152,7 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 		
 		// Je bouge sur une autre cellule
 		move(id, actions, action.getAction());
+		requires().memory().setHasMoved(true);
 		
 		// Je finis mon cycle
 		requires().finishedCycle().endOfCycleAlert(id);

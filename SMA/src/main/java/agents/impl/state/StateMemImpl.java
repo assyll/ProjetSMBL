@@ -383,9 +383,15 @@ public class StateMemImpl extends Memory<StateMemory> implements StateMemory {
 		_outputTransitionIdByAction.put(action, destState);
 	}
 
+	/**
+	 * Consommation. Si _hasMoved a vrai alors le mettre a faux.
+	 * @return sil vient de bouger.
+	 */
 	@Override
 	public boolean hasMoved() {
-		return _hasMoved;
+		boolean retour = _hasMoved;
+		_hasMoved = false;
+		return retour;
 	}
 
 	@Override
