@@ -37,8 +37,8 @@ public class DecideStateImpl extends AbstractDecide<StateAction, StateMemory> {
 			processActionTrace(requires().memory().getNextAction());
 			
 		// Si j'ai au moins un voisin ET si je viens de bouger au cycle precedent.
-		} else if(requires().memory().getAgentIdInMyCell().size() > 0 &&
-				requires().memory().hasMoved()) {
+		} else if(requires().memory().hasMoved() &&
+				requires().memory().getAgentIdInMyCell().size() > 0) {
 			requires().action().askToMerge(requires().memory().getAgentIdInMyCell());
 			
 		// Sinon
