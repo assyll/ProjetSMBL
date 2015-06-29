@@ -47,9 +47,9 @@ public class PerceiveStateImpl extends AbstractPerceive<ContextInfos, StateMemor
 				System.out.println(id + ": a recu un element de trace (ACTION = "+action.getAction()+")");
 				i--;
 				requires().memory().addAction(action);
+				hasRealizedAction = true;
 			}
 			
-			hasRealizedAction = (action != null);
 		}
 
 		//Sinon si je suis racine, je regarde si il y a de nouveaux noms d'utilisateurs non encore rencontr�s jusqu'ici
@@ -73,8 +73,9 @@ public class PerceiveStateImpl extends AbstractPerceive<ContextInfos, StateMemor
 			requires().memory().setResponseMessage((ResponseMessage) message);
 			hasRealizedAction = true;
 		}
+		
 		// J'essaie de recuperer des requete
-		if(!hasRealizedAction && (message = requires().getMessage().pullRequestMessage()) != null) {
+		if (!hasRealizedAction && (message = requires().getMessage().pullRequestMessage()) != null) {
 			requires().memory().setRequestMessage((RequestMessage) message);
 			System.out.println(id + ": recuperation requete de " +
 					((RequestMessage) message).getSenderId());

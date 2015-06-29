@@ -70,16 +70,16 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 	public void askToMerge(List<String> agentIds) {
 		System.out.print(id + " --- FUSION --- demande de fusion avec : ");
 		
-		/*for(String agentId : agentIds) {
-			System.out.print(" -"+agentId);
+		for(String agentId : agentIds) {
+			System.out.print(agentId + " ");
 		}
 		
-		System.out.println();*/
+		System.out.println();
 		
 		String agentIdList = "[";
 		for (String agentId: agentIds) {
 			
-			if (agentId != id) {
+			if (!agentId.equals(id)) {
 				agentIdList += (agentIdList.equals("[") ? "" : " ") + agentId;
 				
 				// --------------- request ---------------

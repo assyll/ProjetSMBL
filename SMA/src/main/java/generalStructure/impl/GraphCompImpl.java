@@ -239,8 +239,10 @@ public class GraphCompImpl extends GraphComp implements IGraph {
 		if (memory == null) {
 			
 			// suicide
-			if (_graphGS.getNode(id) != null) {
+			try {
 				node = _graphGS.removeNode(id);
+			} catch (Exception e) {
+				
 			}
 			
 		} else {

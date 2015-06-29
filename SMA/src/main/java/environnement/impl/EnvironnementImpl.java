@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import trace.Action;
 import environnement.interfaces.CellInfo;
@@ -29,11 +31,13 @@ public class EnvironnementImpl extends Environnement<EnvInfos, EnvUpdate>
 		int level = actionList.size();
 		CellImpl cell = new CellImpl(actionList);
 
-		if (!cellsByLevel.containsKey(level)) {
-			cellsByLevel.put(level, new ArrayList<CellImpl>());
+		synchronized (cellsByLevel) {
+			if (!cellsByLevel.containsKey(level)) {
+				cellsByLevel.put(level, new ArrayList<CellImpl>());
+			}
+			
+			cellsByLevel.get(level).add(cell);
 		}
-		
-		cellsByLevel.get(level).add(cell);
 
 		return cell;
 	}
@@ -60,8 +64,20 @@ public class EnvironnementImpl extends Environnement<EnvInfos, EnvUpdate>
 	public void move(String id, List<Action> currentPositionActions,
 			Action newAction) {
 		
+		List<Action> newActionList = new ArrayList<Action>();
+		newActionList.addAll(currentPositionActions);
+		newActionList.add(newAction);
+		
 		CellImpl cell = getCellByActionList(currentPositionActions);
-		cell.removeStateAgent(id);
+		
+		Lock l = new ReentrantLock();
+		l.lock();
+		try {
+			cell.removeStateAgent(id);
+			addStateAgent(id, newActionList);
+		} finally {
+		    l.unlock();
+		}
 		
 		/*Map<Action,CellImpl> childrenMap = cell.getChildrenMap();
 		
@@ -80,11 +96,6 @@ public class EnvironnementImpl extends Environnement<EnvInfos, EnvUpdate>
 			
 			destionationCell.addNewStateAgent(id);	
 		}*/
-		
-		List<Action> newActionList = new ArrayList<Action>();
-		newActionList.addAll(currentPositionActions);
-		newActionList.add(newAction);
-		addStateAgent(id, newActionList);
 			
 	}
 
@@ -115,16 +126,18 @@ public class EnvironnementImpl extends Environnement<EnvInfos, EnvUpdate>
 	}
 	
 	private CellImpl getCellByActionList(List<Action> actionList) {
-		if (cellsByLevel.get(actionList.size()) == null) {
+		synchronized (cellsByLevel) {
+			if (cellsByLevel.get(actionList.size()) == null) {
+				return null;
+			}
+			
+			for(CellImpl cell:  cellsByLevel.get(actionList.size())) {
+				if(cell.getListOfActions().containsAll(actionList))
+					return cell;
+			}
+			
 			return null;
 		}
-		
-		for(CellImpl cell:  cellsByLevel.get(actionList.size())){
-			if(cell.getListOfActions().containsAll(actionList))
-				return cell;
-		}
-		
-		return null;
 	}
 
 	
@@ -139,7 +152,6 @@ public class EnvironnementImpl extends Environnement<EnvInfos, EnvUpdate>
 			cellActionList = new ArrayList<>(actions);
 			childrenMap = new HashMap<>();
 			agentsEtatIDList = new ArrayList<String>();
-			
 		}
 		
 		
