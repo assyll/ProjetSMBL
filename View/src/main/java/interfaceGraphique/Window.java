@@ -993,7 +993,7 @@ public class Window extends JFrame {
 	// clique sur generate Traces (nimporte lequel)
 	public void generateTraces(boolean oneByFile) {
 		ajouterMessageToTextColorStatut("traces Generate Dialog Opening ...");
-
+		
 		TracesGenerateDialog dialog = new TracesGenerateDialog(this, oneByFile,
 				graphJson, isGraphJsonLoaded);
 		dialog.show();

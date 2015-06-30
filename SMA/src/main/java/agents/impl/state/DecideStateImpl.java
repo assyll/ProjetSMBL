@@ -55,7 +55,7 @@ public class DecideStateImpl extends AbstractDecide<StateAction, StateMemory> {
 			System.out.println(id+ ": creation de la transition " + transitionId);
 			requires().action().createTransitionAgent(action);
 		} else {
-			System.out.println(id+ ": pas de creation de la transition" + transitionId);
+			System.out.println(id+ ": pas de creation de la transition " + transitionId);
 			//Envoyer une requete a l'etat fils pour qu'il
 			//se mette en attente d'un nouvel element de trace
 			String childId = requires().memory().

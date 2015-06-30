@@ -19,8 +19,8 @@ import org.neo4j.graphdb.traversal.Uniqueness;
 public class GeneratorTraces {
 	
 	public final static String _nameIdAttribut = "ui.label";
-	public final static String _sourceAttribut = "Source";
-	public final static String _finalAttribut = "Final";
+	public final static String _sourceAttribut = "source";
+	public final static String _finalAttribut = "final";
 
 	private String _DB_PATH;
 	private State _initState;
