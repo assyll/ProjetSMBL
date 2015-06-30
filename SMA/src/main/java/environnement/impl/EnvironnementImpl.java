@@ -140,23 +140,30 @@ implements EnvUpdate, EnvInfos {
 	public void move(String id, List<Action> currentPositionActions,
 			Action newAction) {
 
-		List<Action> newActionList = new ArrayList<Action>();
-		newActionList.addAll(currentPositionActions);
-		newActionList.add(newAction);
 
-		CellImpl cell = getCellByActionList(currentPositionActions);
 
-		Lock l = new ReentrantLock();
-		l.lock();
-		try {
-			cell.removeStateAgent(id);
-			addStateAgent(id, newActionList);
-		} finally {
-			l.unlock();
+		if(id != null && newAction != null && currentPositionActions != null 
+				&& !currentPositionActions.contains(newAction)) {
+			CellImpl cell = getCellByActionList(currentPositionActions);
+
+			if(cell != null &&
+					cell.getAgentIDList().contains(id)) {
+				List<Action> newActionList = new ArrayList<Action>();
+				newActionList.addAll(currentPositionActions);
+				newActionList.add(newAction);
+
+				Lock l = new ReentrantLock();
+				l.lock();
+				try {
+					cell.removeStateAgent(id);
+					addStateAgent(id, newActionList);
+				} finally {
+					l.unlock();
+				}
+
+				writeToFile();
+			}
 		}
-
-		writeToFile();
-
 		/*Map<Action,CellImpl> childrenMap = cell.getChildrenMap();
 
 		if(childrenMap.containsKey(newAction)){
