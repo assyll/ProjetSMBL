@@ -156,7 +156,7 @@ public class Window extends JFrame {
 			heightWindow = 700, sizeSeparator = 5;
 
 	private static boolean isAutoLayoutJson, isAutoLayoutAgent,
-			isGraphJsonLoaded = false, isGraphAgentLoaded = false,
+			isGraphJsonLoaded = false, isGraphAgentLoaded = false, 
 			isDirectoryNeo4j, wantToGenerateToLeft, isButton1Dragging = false;
 	private static SpriteManager spriteManagerJson, spriteManagerAgent;
 
@@ -1387,8 +1387,10 @@ public class Window extends JFrame {
 
 	public static void addNode(JFrame frame, boolean isGraphLoaded,
 			Graph graph, String graphName) {
+		
 		AddNodeDialog addNodeDialog = new AddNodeDialog(frame, "Add Node");
 		String nodeName = addNodeDialog.getName();
+		
 		if (!addNodeDialog.getFerme()) {
 			if (isGraphLoaded) {
 				if (!nodeName.equals("")) {
@@ -1474,8 +1476,7 @@ public class Window extends JFrame {
 		}
 	}
 
-	public static void addEdge(JFrame frame, Boolean isGraphLoaded,
-			Graph graph, SpriteManager spriteManager) {
+	public static void addEdge(JFrame frame, Boolean isGraphLoaded, Graph graph, SpriteManager spriteManager) {
 		if (isGraphLoaded) {
 			AddEdgeDialog addEdgeDialog = new AddEdgeDialog(frame, "Add Edge",
 					graph);

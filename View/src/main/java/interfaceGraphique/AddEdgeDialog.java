@@ -150,9 +150,10 @@ public class AddEdgeDialog extends JDialog implements ActionListener {
 				if (attDialog.isExit()) {
 					ferme = true;
 				}
-
-				dispose();
 			}
+
+			dispose();
+			
 		} else if (evt.getSource() == cancel) {
 			ferme = true;
 			dispose();
