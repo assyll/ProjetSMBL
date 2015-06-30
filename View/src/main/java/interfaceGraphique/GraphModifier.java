@@ -83,18 +83,17 @@ public class GraphModifier {
 		return g;
 	}
 
-	public static Graph addEdge(AddEdgeDialog e, Graph g,
-			SpriteManager spriteManager) throws NoSpecifiedNodeException {
+	public static Graph addEdge(AddEdgeDialog e, Graph g, SpriteManager spriteManager) throws NoSpecifiedNodeException {
 		String attKey, attValue;
 
 		if ((g.getNode(e.getSource()) == null)
 				|| (g.getNode(e.getEnd()) == null)) {
 			throw new NoSpecifiedNodeException(
-					"La node source ou finale n'existe pas");
+					"Le noeud source ou finale n'existe pas");
 		} else {
-			Edge edge = g
-					.addEdge(e.getLabel(), e.getSource(), e.getEnd(), true);
+			Edge edge = g.addEdge(e.getLabel(), e.getSource(), e.getEnd(), true);
 			edge.addAttribute("ui.label", e.getAction());
+			edge.addAttribute("action", e.getAction());
 
 			if (e.getNbAtt() != 0) {
 				for (String[] attribut : e.getAttributs()) {
