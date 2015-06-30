@@ -380,7 +380,7 @@ public class EnvironnementTest{
 		assertTrue(2 == environnement.getAllAgentsInCell(actionListA1).size());
 		assertTrue(0 == environnement.getAllAgentsInCell(actionListA2).size());
 		System.out.println(environnement.getAllAgentsInCell(actionListA1A2).get(0));
-		System.out.println(environnement.getAllAgentsInCell(actionListA1A2).get(1));
+		System.out.println(environnement.getAllAgentsInCell(actionListA1A2).get(1));  
 
 		assertTrue(1 == environnement.getAllAgentsInCell(actionListA1A2).size());
 		
