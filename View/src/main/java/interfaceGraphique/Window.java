@@ -1393,7 +1393,7 @@ public class Window extends JFrame {
 		
 		if (!addNodeDialog.getFerme()) {
 			if (isGraphLoaded) {
-				if (!nodeName.equals("")) {
+				if (!nodeName.equals("")) {   
 					Node node = graph.getNode(nodeName);
 					if (node == null) {
 						GraphModifier.addNode(addNodeDialog, graph);
