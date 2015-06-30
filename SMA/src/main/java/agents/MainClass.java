@@ -13,7 +13,7 @@ public class MainClass {
 	private final static String path_traces =
 			"src" + File.separator + 
 			"main" + File.separator + 
-			"resources" + File.separator + "testfusion.txt";
+			"resources" + File.separator + "test1.txt";
 	
 	private final static String path_graph =
 			"target" + File.separator + "generatedGraphDB7";

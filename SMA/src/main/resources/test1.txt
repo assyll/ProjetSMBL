@@ -1,1 +1,16 @@
-{}
+{"userName":"U1", "action":"A1", "timeStamp": "2015-03-18 07:50:56 AM"}
+{"userName":"U2", "action":"A1", "timeStamp": "2015-03-18 07:50:59 AM"}
+{"userName":"U1", "action":"A2", "timeStamp": "2015-03-18 07:55:56 AM"}
+{"userName":"U3", "action":"A1", "timeStamp": "2015-03-18 07:57:00 AM"}
+{"userName":"U1", "action":"A4", "timeStamp": "2015-03-18 07:57:16 AM"}
+{"userName":"U3", "action":"A3", "timeStamp": "2015-03-18 07:57:36 AM"}
+{"userName":"U3", "action":"A4", "timeStamp": "2015-03-18 07:57:56 AM"}
+{"userName":"U4", "action":"A1", "timeStamp": "2015-03-18 07:58:00 AM"}
+{"userName":"U4", "action":"A3", "timeStamp": "2015-03-18 07:58:10 AM"}
+{"userName":"U2", "action":"A2", "timeStamp": "2015-03-18 07:58:26 AM"}
+{"userName":"U2", "action":"A5", "timeStamp": "2015-03-18 07:59:36 AM"}
+{"userName":"U4", "action":"A6", "timeStamp": "2015-03-18 08:50:56 AM"}
+{"userName":"U4", "action":"A8", "timeStamp": "2015-03-18 08:51:56 AM"}
+{"userName":"U2", "action":"A7", "timeStamp": "2015-03-18 08:52:00 AM"}
+{"userName":"U2", "action":"A9", "timeStamp": "2015-03-18 08:53:00 AM"}
+{"userName":"U4", "action":"A9", "timeStamp": "2015-03-18 09:00:00 AM"}
