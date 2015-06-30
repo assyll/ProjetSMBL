@@ -75,8 +75,8 @@ public class GraphCompImpl extends GraphComp implements IGraph {
 				if ((node = findNodeById(id)) != null) {
 					// Si le noeud existe alors le mettre a jour
 	
-					node.setProperty("source", memory.isRoot());
-					node.setProperty("final", memory.isFinal());				
+					node.setProperty(MyJsonGenerator.FORMAT_NODE_SOURCE, memory.isRoot());
+					node.setProperty(MyJsonGenerator.FORMAT_NODE_FINAL, memory.isFinal());				
 				} else {
 					// Sinon il faut creer correctement le nouveau noeud
 					node = _graphNeo4J.createNode();
@@ -91,8 +91,8 @@ public class GraphCompImpl extends GraphComp implements IGraph {
 							memory.isRoot() ? "Source" : "Node");
 	
 					node.setProperty("id", id);
-					node.setProperty("Source", memory.isRoot());
-					node.setProperty("Final", memory.isFinal());
+					node.setProperty(MyJsonGenerator.FORMAT_NODE_SOURCE, memory.isRoot());
+					node.setProperty(MyJsonGenerator.FORMAT_NODE_FINAL, memory.isFinal());
 				}
 			
 			}

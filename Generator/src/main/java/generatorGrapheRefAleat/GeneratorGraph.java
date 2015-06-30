@@ -317,9 +317,9 @@ public class GeneratorGraph {
 	private void addAttributs(List<NodeToCreate> nodes, int nbFinal) {
 		int nbFinalCreated = 0;
 		for (NodeToCreate node: nodes) {
-			node.addAttribut("Source",
+			node.addAttribut(GeneratorTraces._sourceAttribut,
 					node.getName().equals("Racine") ? true : false);
-			node.addAttribut("Final",
+			node.addAttribut(GeneratorTraces._finalAttribut,
 					node.getTransitions().size() == 0 ? true : false);
 			node.addAttribut("ui.label", node.getName());
 			node.addAttribut("ui.class",
@@ -335,7 +335,7 @@ public class GeneratorGraph {
 				&& nbFinalCreated < nodes.size()) {
 			
 			NodeToCreate nodeAleat = chooseRandom(nodes);
-			nodeAleat.addAttribut("Final", true);
+			nodeAleat.addAttribut(GeneratorTraces._finalAttribut, true);
 			nbFinalCreated++;
 		}
 	}
@@ -348,7 +348,7 @@ public class GeneratorGraph {
 	private NodeToCreate chooseRandom(List<NodeToCreate> nodes) {
 		List<NodeToCreate> nodesNoFinal = new ArrayList<NodeToCreate>();
 		for (NodeToCreate nodeToCreate: nodes) {
-			if (!((Boolean) nodeToCreate.getAttributs().get("Final"))) {
+			if (!((Boolean) nodeToCreate.getAttributs().get(GeneratorTraces._finalAttribut))) {
 				nodesNoFinal.add(nodeToCreate);
 			}
 		}

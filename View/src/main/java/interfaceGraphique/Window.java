@@ -554,7 +554,7 @@ public class Window extends JFrame {
 		// Action lors du clic sur l'item "To GraphStream"
 		buttonGS.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// Visualisation du graph g�n�r� par le fichier import�
+				// Visualisation du graph genere par le fichier importe
 				// au format .json
 
 				if (!textDirectory.getText().equals("Directory")) {
@@ -1630,19 +1630,80 @@ public class Window extends JFrame {
 		new Window();
 	}
 	
-	public void setRightGraph(Graph graph) {		
-		graphAgent = graph;
-		isGraphAgentLoaded = true;
+	private Graph cloneGraphGS(Graph graph) {
+		Graph graphClone = new MultiGraph("clone");
 		
-		textJson.setText("100 %");
-		textAgent.setText("100 %");
-		turnAutoLayoutButtonOn(structGraphAgent);
-		turnAutoLayoutButtonOn(structGraphJson);
+		for (Node node: graph.getEachNode()) {
+			Node nodeClone = graphClone.addNode(node.getId());
+			for (String key: node.getAttributeKeySet()) {
+				nodeClone.addAttribute(key, node.getAttribute(key));
+			}
+		}
 		
-		initGraphPropertiesAgent();
-		initPanelGraphAgent();
+		for (Edge edge: graph.getEachEdge()) {
+			Edge edgeClone = graphClone.addEdge(edge.getId(),
+					edge.getNode0().getId(), edge.getNode1().getId());
+			for (String key: edge.getAttributeKeySet()) {
+				edgeClone.addAttribute(key, edge.getAttribute(key));
+			}
+		}
 		
-		//treeLayoutAgent.doClick();
+		return graphClone;
+	}
+	
+	private boolean equalsGraph(Graph graph1, Graph graph2) {
+		//TODO
+		return false;
+	}
+	
+	public void setRightGraph(Graph graph) {
+		if (!equalsGraph(graphAgent, cloneGraphGS(graph))) {
+			graphAgent = cloneGraphGS(graph);
+			
+			if (!isGraphAgentLoaded) {
+				textAgent.setText("100 %");
+				turnAutoLayoutButtonOn(structGraphAgent);
+				initGraphPropertiesAgent();
+				initPanelGraphAgent();	
+			} else {
+				
+				initGraphPropertiesAgent();
+				initPanelGraphAgent();
+				
+				/*CustomGraphRenderer.setStyleGraphBasic(graphAgent);
+				GraphModifier.setNodesClass(graphAgent);
+				spriteManagerAgent = new SpriteManager(graphAgent);
+				GraphModifier.generateSprites(graphAgent, spriteManagerAgent);
+	
+				viewerAgent = new Viewer(graphAgent,
+						Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
+				isGraphAgentLoaded = true;
+	
+				viewerAgent.enableAutoLayout();
+				isAutoLayoutAgent = true;
+	
+				viewAgent = viewerAgent.addDefaultView(false);
+	
+				// suppression du comportement par defaut du MouseListener de la view
+				viewAgent.setMouseManager(new CustomMouseManager());
+	
+				setListenerOnViewer(frame, viewerAgent, graphAgent, textAgent,
+						isGraphAgentLoaded);
+				
+				panelGraphAgent.removeAll();
+				panelGraphAgent.setLayout(new BorderLayout());
+				panelGraphAgent.add((Component) viewAgent, BorderLayout.CENTER);
+				scrollAgent.setViewportView(panelGraphAgent);*/
+			}
+			
+			try {
+				treeLayoutAgent.doClick();
+			} catch (Exception e) {
+				
+			}
+		
+		}
+		
 	}
 
 }

@@ -1,5 +1,7 @@
 package convertGraph;
 
+import generatorTracesTest.GeneratorTraces;
+
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
@@ -48,9 +50,9 @@ public class ConvertGStoNeo4j {
 				Node nodeNeo4j = graphNeo4j.createNode();
 				
 				// Ajout du label
-				Object labelNodeGS = nodeGS.getAttribute("Source");
+				Object labelNodeGS = nodeGS.getAttribute(GeneratorTraces._sourceAttribut);
 				boolean isRoot = (boolean) (labelNodeGS instanceof Boolean
-						? nodeGS.getAttribute("Source")
+						? nodeGS.getAttribute(GeneratorTraces._sourceAttribut)
 								: Boolean.parseBoolean((String) labelNodeGS));
 				
 				nodeNeo4j.addLabel(DynamicLabel.label(

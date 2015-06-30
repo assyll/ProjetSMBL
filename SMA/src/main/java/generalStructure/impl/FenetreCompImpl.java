@@ -10,7 +10,7 @@ import interfaceGraphique.Window;
 
 public class FenetreCompImpl extends FenetreComp {
 	
-	Window fenetre;
+	private Window fenetre;
 	
 	public FenetreCompImpl() {
 		fenetre = new Window();
@@ -18,7 +18,6 @@ public class FenetreCompImpl extends FenetreComp {
 	}
 	
 	public void run() {
-		
 		Timer timer = new Timer();
 		
 		timer.schedule(new TimerTask() {
@@ -29,7 +28,7 @@ public class FenetreCompImpl extends FenetreComp {
 					fenetre.setRightGraph(graph);
 				}
 			}
-		}, LauncherImpl.time_by_cycle);
+		}, LauncherImpl.time_by_cycle, LauncherImpl.time_by_cycle);
 		
 	}
 	
