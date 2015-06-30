@@ -22,6 +22,7 @@ public class StateAgentCompImpl extends Agent<ContextInfos, EnvUpdate, StateActi
 	public StateAgentCompImpl(String id, boolean isRoot) {
 		this.id = id;
 		this.isRoot = isRoot;
+		this.requires().setContext().addStateAgent(id);
 	}
 	
 	@Override

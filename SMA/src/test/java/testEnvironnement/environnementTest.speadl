@@ -1,0 +1,12 @@
+import environnement.interfaces.EnvInfos
+import environnement.interfaces.EnvUpdate
+
+namespace general{
+	
+	
+	component EnvironnementTestComp {
+		
+		part env: Environnement[EnvInfos,EnvUpdate]
+		
+	}
+}
