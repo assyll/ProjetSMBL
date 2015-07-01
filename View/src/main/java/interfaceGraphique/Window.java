@@ -1660,6 +1660,9 @@ public class Window extends JFrame {
 		if (!equalsGraph(graphAgent, cloneGraphGS(graph))) {
 			graphAgent = cloneGraphGS(graph);
 			
+			frame.setCursor(Cursor
+					.getPredefinedCursor(Cursor.WAIT_CURSOR));
+			
 			if (!isGraphAgentLoaded) {
 				textAgent.setText("100 %");
 				turnAutoLayoutButtonOn(structGraphAgent);
@@ -1694,6 +1697,13 @@ public class Window extends JFrame {
 				panelGraphAgent.setLayout(new BorderLayout());
 				panelGraphAgent.add((Component) viewAgent, BorderLayout.CENTER);
 				scrollAgent.setViewportView(panelGraphAgent);*/
+			}
+			
+			frame.setCursor(Cursor
+					.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+			
+			for (Edge edge : graphAgent.getEachEdge()) {
+				GraphModifier.setUILabelEdge("action", edge);
 			}
 			
 			try {
