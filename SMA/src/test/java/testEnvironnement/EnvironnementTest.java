@@ -350,23 +350,23 @@ public class EnvironnementTest{
 		assertTrue(2 == environnement.getCellsByLevel().size());
 
 		environnement.move("S2", new ArrayList<Action>(), actionA2);
-		
+
 		assertFalse(environnement.getAllAgentsInCell(new ArrayList<Action>()).contains("S2"));
 		assertTrue(environnement.getAllAgentsInCell(actionListA1).contains("S1"));
 		assertTrue(environnement.getAllAgentsInCell(actionListA1).contains("S0"));
 		assertTrue(environnement.getAllAgentsInCell(actionListA2).contains("S2"));
-		
+
 		assertTrue(2 == environnement.getCellsByLevel().size());
 		assertTrue(1 == environnement.getCellsByLevel().get(0).size());
 		assertTrue(2 == environnement.getCellsByLevel().get(1).size());
-		
+
 		environnement.move("S2", actionListA2, actionA1);
-		
+
 		assertFalse(environnement.getAllAgentsInCell(actionListA2).contains("S2"));
 		assertTrue(environnement.getAllAgentsInCell(actionListA1).contains("S1"));
 		assertTrue(environnement.getAllAgentsInCell(actionListA1).contains("S0"));
 		assertTrue(environnement.getAllAgentsInCell(actionListA1A2).contains("S2"));
-		
+
 		assertTrue(3 == environnement.getCellsByLevel().size());
 		assertTrue(1 == environnement.getCellsByLevel().get(0).size());
 		assertTrue(2 == environnement.getCellsByLevel().get(1).size());
@@ -375,12 +375,12 @@ public class EnvironnementTest{
 
 		//Tests avec des parametres non valides
 		environnement.move("S4", actionListA1, actionA2);
-		
+
 		assertTrue(0 == environnement.getAllAgentsInCell(new ArrayList<Action>()).size());
 		assertTrue(2 == environnement.getAllAgentsInCell(actionListA1).size());
 		assertTrue(0 == environnement.getAllAgentsInCell(actionListA2).size());
 		assertTrue(1 == environnement.getAllAgentsInCell(actionListA1A2).size());
-		
+
 
 		assertTrue(environnement.getAllAgentsInCell(actionListA1).contains("S1"));
 		assertTrue(environnement.getAllAgentsInCell(actionListA1).contains("S0"));
@@ -388,14 +388,14 @@ public class EnvironnementTest{
 		assertTrue(1 == environnement.getCellsByLevel().get(0).size());
 		assertTrue(2 == environnement.getCellsByLevel().get(1).size());
 		assertTrue(1 == environnement.getCellsByLevel().get(2).size());
-		
+
 		environnement.move("S1", actionListA1, actionA1);
-		
+
 		assertTrue(0 == environnement.getAllAgentsInCell(new ArrayList<Action>()).size());
 		assertTrue(2 == environnement.getAllAgentsInCell(actionListA1).size());
 		assertTrue(0 == environnement.getAllAgentsInCell(actionListA2).size());
 		assertTrue(1 == environnement.getAllAgentsInCell(actionListA1A2).size());
-		
+
 
 		assertTrue(environnement.getAllAgentsInCell(actionListA1).contains("S1"));
 		assertTrue(environnement.getAllAgentsInCell(actionListA1).contains("S0"));
@@ -403,29 +403,15 @@ public class EnvironnementTest{
 		assertTrue(1 == environnement.getCellsByLevel().get(0).size());
 		assertTrue(2 == environnement.getCellsByLevel().get(1).size());
 		assertTrue(1 == environnement.getCellsByLevel().get(2).size());
-		
+
 		environnement.move("S1", actionListA2, actionA1);
-		
-		assertTrue(0 == environnement.getAllAgentsInCell(new ArrayList<Action>()).size());
-		assertTrue(2 == environnement.getAllAgentsInCell(actionListA1).size());
-		assertTrue(0 == environnement.getAllAgentsInCell(actionListA2).size());
-		assertTrue(1 == environnement.getAllAgentsInCell(actionListA1A2).size());
-		
 
-		assertTrue(environnement.getAllAgentsInCell(actionListA1).contains("S1"));
-		assertTrue(environnement.getAllAgentsInCell(actionListA1).contains("S0"));
-		assertTrue(3 == environnement.getCellsByLevel().size());
-		assertTrue(1 == environnement.getCellsByLevel().get(0).size());
-		assertTrue(2 == environnement.getCellsByLevel().get(1).size());
-		assertTrue(1 == environnement.getCellsByLevel().get(2).size());
-		
-		environnement.move("S1", actionListA1A2, actionA3);
-		
 		assertTrue(0 == environnement.getAllAgentsInCell(new ArrayList<Action>()).size());
 		assertTrue(2 == environnement.getAllAgentsInCell(actionListA1).size());
 		assertTrue(0 == environnement.getAllAgentsInCell(actionListA2).size());
 		assertTrue(1 == environnement.getAllAgentsInCell(actionListA1A2).size());
-		
+
+
 		assertTrue(environnement.getAllAgentsInCell(actionListA1).contains("S1"));
 		assertTrue(environnement.getAllAgentsInCell(actionListA1).contains("S0"));
 		assertTrue(3 == environnement.getCellsByLevel().size());
@@ -434,12 +420,57 @@ public class EnvironnementTest{
 		assertTrue(1 == environnement.getCellsByLevel().get(2).size());
 
 		environnement.move("S1", actionListA1A2, actionA3);
-		
+
 		assertTrue(0 == environnement.getAllAgentsInCell(new ArrayList<Action>()).size());
 		assertTrue(2 == environnement.getAllAgentsInCell(actionListA1).size());
 		assertTrue(0 == environnement.getAllAgentsInCell(actionListA2).size());
 		assertTrue(1 == environnement.getAllAgentsInCell(actionListA1A2).size());
-		
+
+		assertTrue(environnement.getAllAgentsInCell(actionListA1).contains("S1"));
+		assertTrue(environnement.getAllAgentsInCell(actionListA1).contains("S0"));
+		assertTrue(3 == environnement.getCellsByLevel().size());
+		assertTrue(1 == environnement.getCellsByLevel().get(0).size());
+		assertTrue(2 == environnement.getCellsByLevel().get(1).size());
+		assertTrue(1 == environnement.getCellsByLevel().get(2).size());
+
+		//Tests avec des parametres nulls
+		environnement.move(null, actionListA1, actionA2);
+
+		assertTrue(0 == environnement.getAllAgentsInCell(new ArrayList<Action>()).size());
+		assertTrue(2 == environnement.getAllAgentsInCell(actionListA1).size());
+		assertTrue(0 == environnement.getAllAgentsInCell(actionListA2).size());
+		assertTrue(1 == environnement.getAllAgentsInCell(actionListA1A2).size());
+
+
+		assertTrue(environnement.getAllAgentsInCell(actionListA1).contains("S1"));
+		assertTrue(environnement.getAllAgentsInCell(actionListA1).contains("S0"));
+		assertTrue(3 == environnement.getCellsByLevel().size());
+		assertTrue(1 == environnement.getCellsByLevel().get(0).size());
+		assertTrue(2 == environnement.getCellsByLevel().get(1).size());
+		assertTrue(1 == environnement.getCellsByLevel().get(2).size());	
+
+		environnement.move("S1", null, actionA2);
+
+		assertTrue(0 == environnement.getAllAgentsInCell(new ArrayList<Action>()).size());
+		assertTrue(2 == environnement.getAllAgentsInCell(actionListA1).size());
+		assertTrue(0 == environnement.getAllAgentsInCell(actionListA2).size());
+		assertTrue(1 == environnement.getAllAgentsInCell(actionListA1A2).size());
+
+
+		assertTrue(environnement.getAllAgentsInCell(actionListA1).contains("S1"));
+		assertTrue(environnement.getAllAgentsInCell(actionListA1).contains("S0"));
+		assertTrue(3 == environnement.getCellsByLevel().size());
+		assertTrue(1 == environnement.getCellsByLevel().get(0).size());
+		assertTrue(2 == environnement.getCellsByLevel().get(1).size());
+		assertTrue(1 == environnement.getCellsByLevel().get(2).size());	
+
+		environnement.move(null, null, null);
+
+		assertTrue(0 == environnement.getAllAgentsInCell(new ArrayList<Action>()).size());
+		assertTrue(2 == environnement.getAllAgentsInCell(actionListA1).size());
+		assertTrue(0 == environnement.getAllAgentsInCell(actionListA2).size());
+		assertTrue(1 == environnement.getAllAgentsInCell(actionListA1A2).size());
+
 
 		assertTrue(environnement.getAllAgentsInCell(actionListA1).contains("S1"));
 		assertTrue(environnement.getAllAgentsInCell(actionListA1).contains("S0"));
@@ -448,4 +479,5 @@ public class EnvironnementTest{
 		assertTrue(2 == environnement.getCellsByLevel().get(1).size());
 		assertTrue(1 == environnement.getCellsByLevel().get(2).size());	
 	}
+
 }
