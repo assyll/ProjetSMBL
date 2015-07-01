@@ -13,6 +13,8 @@ import trace.ActionTrace
 import trace.interfaces.ITakeAction
 import generalStructure.interfaces.IGraph
 import generalStructure.interfaces.UpdateGraph
+import agents.IStart
+import generalStructure.interfaces.IInit
 
 namespace general{
 	
@@ -20,8 +22,10 @@ namespace general{
 		provides call: Callable
 		provides finishedCycle: CycleAlert
 		provides threads: IGetThread
+		requires start: IStart
 		requires stopProcessus: IStop
 		provides stopAllAgents: IStop
+		requires initAll: IInit
 	}
 	
 	ecosystem BigEco {
@@ -55,6 +59,8 @@ namespace general{
 		
 		part launcher: Launcher {
 			bind stopProcessus to fw.stopProcessus
+			bind start to ecoAE.startCycle
+			bind initAll to multiPlexeur.initLauncher
 		}
 		
 		part envEco: Environnement[EnvInfos, EnvUpdate]
@@ -85,8 +91,28 @@ namespace general{
 			}
 			use aFW: fw.StateForward(id, isRoot)
 		}
+		
+		part multiPlexeur: MultiPlexeurInitComp {
+		 	bind initActionProvider to actionProvider.init
+		 	bind initEnvironnement to envEco.init
+			bind initEcoAgent to ecoAE.init
+			bind initGraph to graphComp.init
+			bind initLog to logComp.init
+			bind initForward to fw.init
+		}
+		
 	}
 	
+	component MultiPlexeurInitComp {
+		provides initLauncher: IInit
+		
+		requires initActionProvider: IInit
+		requires initEnvironnement: IInit
+		requires initEcoAgent: IInit
+		requires initForward: IInit
+		requires initGraph: IInit
+		requires initLog: IInit
+	}
 	
 	ecosystem Forward[CycleAlert, ContextSA, ContextTA, ContextUpdate, Push, Pull, ActionGetter] {
 		 species StateForward (id: String, isRoot: boolean) {
@@ -117,15 +143,18 @@ namespace general{
 		 requires log: ILog
 		 requires graph: IGraph
 		 provides stopProcessus: IStop
+		 provides init: IInit
 	}
 	
 	component LogComp {
 		provides log: ILog
+		provides init: IInit
 	}
 	
 	component GraphComp {
 		provides graph: IGraph
 		provides updateGraph: UpdateGraph
+		provides init: IInit
 	}
 	
 	component FenetreComp {

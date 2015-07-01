@@ -20,20 +20,28 @@ import agents.interfaces.StateMemory;
 import agents.interfaces.TransMemory;
 import general.GraphComp;
 import generalStructure.interfaces.IGraph;
+import generalStructure.interfaces.IInit;
 import generalStructure.interfaces.IStop;
 import generalStructure.interfaces.UpdateGraph;
 
-public class GraphCompImpl extends GraphComp implements IGraph {
+public class GraphCompImpl extends GraphComp implements IGraph, IInit {
 
+	private String _path;
 	private Graph _graphGS;
-	private final GraphDatabaseService _graphNeo4J;
+	private GraphDatabaseService _graphNeo4J;
 
 	public GraphCompImpl(String path) {
-		Fichier.deleteFileOrDirectory(path);
-		_graphNeo4J =
-				new GraphDatabaseFactory().newEmbeddedDatabase(path);
-		registerShutdownHook(_graphNeo4J);
-		_graphGS = new MultiGraph("graph gs");
+		_path = path;
+		init();
+	}
+	
+	@Override
+	public void init() {
+		Fichier.deleteFileOrDirectory(_path);
+		//_graphNeo4J =
+				//new GraphDatabaseFactory().newEmbeddedDatabase(_path);
+		//registerShutdownHook(_graphNeo4J);
+		_graphGS = new MultiGraph(_path);
 	}
 
 	@Override
@@ -199,7 +207,7 @@ public class GraphCompImpl extends GraphComp implements IGraph {
 	}
 
 	public void close() {
-		_graphNeo4J.shutdown();
+		//_graphNeo4J.shutdown();
 		System.out.println("Shutting down database");
 	}
 
@@ -326,7 +334,7 @@ public class GraphCompImpl extends GraphComp implements IGraph {
 		if (childNode != null && fatherNode != null) {
 
 			// creer physiquement la transition
-			edge = _graphGS.addEdge(id, fatherNode.getId(), childNode.getId());
+			edge = _graphGS.addEdge(id, fatherNode.getId(), childNode.getId(), true);
 
 			// y ajoute les attributs
 			edge.addAttribute("id", id);
@@ -337,6 +345,11 @@ public class GraphCompImpl extends GraphComp implements IGraph {
 		}
 
 		return edge;
+	}
+
+	@Override
+	protected IInit make_init() {
+		return this;
 	}
 
 }

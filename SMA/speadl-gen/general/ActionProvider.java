@@ -3,6 +3,7 @@ package general;
 import general.FET;
 import general.TraceActionParser;
 import general.TraceElementEater;
+import generalStructure.interfaces.IInit;
 import trace.interfaces.ITakeAction;
 import trace.interfaces.TraceElement;
 
@@ -15,6 +16,12 @@ public abstract class ActionProvider {
   }
   
   public interface Provides {
+    /**
+     * This can be called to access the provided port.
+     * 
+     */
+    public IInit init();
+    
     /**
      * This can be called to access the provided port.
      * 
@@ -100,8 +107,16 @@ public abstract class ActionProvider {
       init_tee();
     }
     
+    private void init_init() {
+      assert this.init == null: "This is a bug.";
+      this.init = this.implementation.make_init();
+      if (this.init == null) {
+      	throw new RuntimeException("make_init() in general.ActionProvider should not return null.");
+      }
+    }
+    
     protected void initProvidedPorts() {
-      
+      init_init();
     }
     
     public ComponentImpl(final ActionProvider implem, final ActionProvider.Requires b, final boolean doInits) {
@@ -118,6 +133,12 @@ public abstract class ActionProvider {
       	initParts();
       	initProvidedPorts();
       }
+    }
+    
+    private IInit init;
+    
+    public IInit init() {
+      return this.init;
     }
     
     public ITakeAction actionGetter() {
@@ -202,6 +223,13 @@ public abstract class ActionProvider {
     }
     return this.selfComponent;
   }
+  
+  /**
+   * This should be overridden by the implementation to define the provided port.
+   * This will be called once during the construction of the component to initialize the port.
+   * 
+   */
+  protected abstract IInit make_init();
   
   /**
    * This can be called by the implementation to access the required ports.

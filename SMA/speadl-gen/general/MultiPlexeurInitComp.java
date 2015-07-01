@@ -1,15 +1,48 @@
 package general;
 
-import generalStructure.interfaces.IGraph;
 import generalStructure.interfaces.IInit;
-import generalStructure.interfaces.UpdateGraph;
 
 @SuppressWarnings("all")
-public abstract class GraphComp {
+public abstract class MultiPlexeurInitComp {
   public interface Requires {
+    /**
+     * This can be called by the implementation to access this required port.
+     * 
+     */
+    public IInit initActionProvider();
+    
+    /**
+     * This can be called by the implementation to access this required port.
+     * 
+     */
+    public IInit initEnvironnement();
+    
+    /**
+     * This can be called by the implementation to access this required port.
+     * 
+     */
+    public IInit initEcoAgent();
+    
+    /**
+     * This can be called by the implementation to access this required port.
+     * 
+     */
+    public IInit initForward();
+    
+    /**
+     * This can be called by the implementation to access this required port.
+     * 
+     */
+    public IInit initGraph();
+    
+    /**
+     * This can be called by the implementation to access this required port.
+     * 
+     */
+    public IInit initLog();
   }
   
-  public interface Component extends GraphComp.Provides {
+  public interface Component extends MultiPlexeurInitComp.Provides {
   }
   
   public interface Provides {
@@ -17,28 +50,16 @@ public abstract class GraphComp {
      * This can be called to access the provided port.
      * 
      */
-    public IGraph graph();
-    
-    /**
-     * This can be called to access the provided port.
-     * 
-     */
-    public UpdateGraph updateGraph();
-    
-    /**
-     * This can be called to access the provided port.
-     * 
-     */
-    public IInit init();
+    public IInit initLauncher();
   }
   
   public interface Parts {
   }
   
-  public static class ComponentImpl implements GraphComp.Component, GraphComp.Parts {
-    private final GraphComp.Requires bridge;
+  public static class ComponentImpl implements MultiPlexeurInitComp.Component, MultiPlexeurInitComp.Parts {
+    private final MultiPlexeurInitComp.Requires bridge;
     
-    private final GraphComp implementation;
+    private final MultiPlexeurInitComp implementation;
     
     public void start() {
       this.implementation.start();
@@ -49,37 +70,19 @@ public abstract class GraphComp {
       
     }
     
-    private void init_graph() {
-      assert this.graph == null: "This is a bug.";
-      this.graph = this.implementation.make_graph();
-      if (this.graph == null) {
-      	throw new RuntimeException("make_graph() in general.GraphComp should not return null.");
-      }
-    }
-    
-    private void init_updateGraph() {
-      assert this.updateGraph == null: "This is a bug.";
-      this.updateGraph = this.implementation.make_updateGraph();
-      if (this.updateGraph == null) {
-      	throw new RuntimeException("make_updateGraph() in general.GraphComp should not return null.");
-      }
-    }
-    
-    private void init_init() {
-      assert this.init == null: "This is a bug.";
-      this.init = this.implementation.make_init();
-      if (this.init == null) {
-      	throw new RuntimeException("make_init() in general.GraphComp should not return null.");
+    private void init_initLauncher() {
+      assert this.initLauncher == null: "This is a bug.";
+      this.initLauncher = this.implementation.make_initLauncher();
+      if (this.initLauncher == null) {
+      	throw new RuntimeException("make_initLauncher() in general.MultiPlexeurInitComp should not return null.");
       }
     }
     
     protected void initProvidedPorts() {
-      init_graph();
-      init_updateGraph();
-      init_init();
+      init_initLauncher();
     }
     
-    public ComponentImpl(final GraphComp implem, final GraphComp.Requires b, final boolean doInits) {
+    public ComponentImpl(final MultiPlexeurInitComp implem, final MultiPlexeurInitComp.Requires b, final boolean doInits) {
       this.bridge = b;
       this.implementation = implem;
       
@@ -95,22 +98,10 @@ public abstract class GraphComp {
       }
     }
     
-    private IGraph graph;
+    private IInit initLauncher;
     
-    public IGraph graph() {
-      return this.graph;
-    }
-    
-    private UpdateGraph updateGraph;
-    
-    public UpdateGraph updateGraph() {
-      return this.updateGraph;
-    }
-    
-    private IInit init;
-    
-    public IInit init() {
-      return this.init;
+    public IInit initLauncher() {
+      return this.initLauncher;
     }
   }
   
@@ -128,7 +119,7 @@ public abstract class GraphComp {
    */
   private boolean started = false;;
   
-  private GraphComp.ComponentImpl selfComponent;
+  private MultiPlexeurInitComp.ComponentImpl selfComponent;
   
   /**
    * Can be overridden by the implementation.
@@ -145,7 +136,7 @@ public abstract class GraphComp {
    * This can be called by the implementation to access the provided ports.
    * 
    */
-  protected GraphComp.Provides provides() {
+  protected MultiPlexeurInitComp.Provides provides() {
     assert this.selfComponent != null: "This is a bug.";
     if (!this.init) {
     	throw new RuntimeException("provides() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if provides() is needed to initialise the component.");
@@ -158,27 +149,13 @@ public abstract class GraphComp {
    * This will be called once during the construction of the component to initialize the port.
    * 
    */
-  protected abstract IGraph make_graph();
-  
-  /**
-   * This should be overridden by the implementation to define the provided port.
-   * This will be called once during the construction of the component to initialize the port.
-   * 
-   */
-  protected abstract UpdateGraph make_updateGraph();
-  
-  /**
-   * This should be overridden by the implementation to define the provided port.
-   * This will be called once during the construction of the component to initialize the port.
-   * 
-   */
-  protected abstract IInit make_init();
+  protected abstract IInit make_initLauncher();
   
   /**
    * This can be called by the implementation to access the required ports.
    * 
    */
-  protected GraphComp.Requires requires() {
+  protected MultiPlexeurInitComp.Requires requires() {
     assert this.selfComponent != null: "This is a bug.";
     if (!this.init) {
     	throw new RuntimeException("requires() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if requires() is needed to initialise the component.");
@@ -190,7 +167,7 @@ public abstract class GraphComp {
    * This can be called by the implementation to access the parts and their provided ports.
    * 
    */
-  protected GraphComp.Parts parts() {
+  protected MultiPlexeurInitComp.Parts parts() {
     assert this.selfComponent != null: "This is a bug.";
     if (!this.init) {
     	throw new RuntimeException("parts() can't be accessed until a component has been created from this implementation, use start() instead of the constructor if parts() is needed to initialise the component.");
@@ -202,23 +179,15 @@ public abstract class GraphComp {
    * Not meant to be used to manually instantiate components (except for testing).
    * 
    */
-  public synchronized GraphComp.Component _newComponent(final GraphComp.Requires b, final boolean start) {
+  public synchronized MultiPlexeurInitComp.Component _newComponent(final MultiPlexeurInitComp.Requires b, final boolean start) {
     if (this.init) {
-    	throw new RuntimeException("This instance of GraphComp has already been used to create a component, use another one.");
+    	throw new RuntimeException("This instance of MultiPlexeurInitComp has already been used to create a component, use another one.");
     }
     this.init = true;
-    GraphComp.ComponentImpl  _comp = new GraphComp.ComponentImpl(this, b, true);
+    MultiPlexeurInitComp.ComponentImpl  _comp = new MultiPlexeurInitComp.ComponentImpl(this, b, true);
     if (start) {
     	_comp.start();
     }
     return _comp;
-  }
-  
-  /**
-   * Use to instantiate a component from this implementation.
-   * 
-   */
-  public GraphComp.Component newComponent() {
-    return this._newComponent(new GraphComp.Requires() {}, true);
   }
 }

@@ -15,12 +15,16 @@ import generalStructure.interfaces.ILog
 import trace.ActionTrace
 import generalStructure.interfaces.IGraph
 import agents.interfaces.ISuicide
+import agents.IStart
+import generalStructure.interfaces.IInit
 
 namespace general{
 
 	ecosystem EcoAgents/*[ActionableState, ActionableTransition, ContextSA, ContextTA, ContextUpdate, StateSharedMemory, TransSharedMemory, Push, Pull] */{
 		requires threads: IGetThread
 		requires createAgent: ICreateAgent
+		provides startCycle: IStart
+		provides init: IInit
 		
 		species StateAgent (id: String, isRoot: boolean) {
 			provides cycle: Do = agentComponent.cycle

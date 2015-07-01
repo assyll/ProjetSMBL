@@ -1,5 +1,6 @@
 package general;
 
+import agents.IStart;
 import agents.interfaces.Do;
 import agents.interfaces.IGetThread;
 import agents.interfaces.ISuicide;
@@ -16,6 +17,7 @@ import general.Agent;
 import generalStructure.interfaces.CycleAlert;
 import generalStructure.interfaces.ICreateAgent;
 import generalStructure.interfaces.IGraph;
+import generalStructure.interfaces.IInit;
 import generalStructure.interfaces.ILog;
 import trace.ActionTrace;
 
@@ -39,6 +41,17 @@ public abstract class EcoAgents {
   }
   
   public interface Provides {
+    /**
+     * This can be called to access the provided port.
+     * 
+     */
+    public IStart startCycle();
+    
+    /**
+     * This can be called to access the provided port.
+     * 
+     */
+    public IInit init();
   }
   
   public interface Parts {
@@ -58,8 +71,25 @@ public abstract class EcoAgents {
       
     }
     
+    private void init_startCycle() {
+      assert this.startCycle == null: "This is a bug.";
+      this.startCycle = this.implementation.make_startCycle();
+      if (this.startCycle == null) {
+      	throw new RuntimeException("make_startCycle() in general.EcoAgents should not return null.");
+      }
+    }
+    
+    private void init_init() {
+      assert this.init == null: "This is a bug.";
+      this.init = this.implementation.make_init();
+      if (this.init == null) {
+      	throw new RuntimeException("make_init() in general.EcoAgents should not return null.");
+      }
+    }
+    
     protected void initProvidedPorts() {
-      
+      init_startCycle();
+      init_init();
     }
     
     public ComponentImpl(final EcoAgents implem, final EcoAgents.Requires b, final boolean doInits) {
@@ -76,6 +106,18 @@ public abstract class EcoAgents {
       	initParts();
       	initProvidedPorts();
       }
+    }
+    
+    private IStart startCycle;
+    
+    public IStart startCycle() {
+      return this.startCycle;
+    }
+    
+    private IInit init;
+    
+    public IInit init() {
+      return this.init;
     }
   }
   
@@ -785,6 +827,20 @@ public abstract class EcoAgents {
     }
     return this.selfComponent;
   }
+  
+  /**
+   * This should be overridden by the implementation to define the provided port.
+   * This will be called once during the construction of the component to initialize the port.
+   * 
+   */
+  protected abstract IStart make_startCycle();
+  
+  /**
+   * This should be overridden by the implementation to define the provided port.
+   * This will be called once during the construction of the component to initialize the port.
+   * 
+   */
+  protected abstract IInit make_init();
   
   /**
    * This can be called by the implementation to access the required ports.

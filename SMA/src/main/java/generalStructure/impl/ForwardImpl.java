@@ -6,6 +6,7 @@ import environnement.interfaces.EnvUpdate;
 import general.Forward;
 import generalStructure.interfaces.CycleAlert;
 import generalStructure.interfaces.ICreateAgent;
+import generalStructure.interfaces.IInit;
 import generalStructure.interfaces.IStop;
 
 import java.util.ArrayList;
@@ -22,7 +23,9 @@ import agents.interfaces.PullMessage;
 import agents.interfaces.SendMessage;
 
 
-public class ForwardImpl extends Forward<CycleAlert, ContextInfos,EnvInfos,  EnvUpdate, SendMessage, PullMessage, ITakeAction> implements SendMessage, IStop {
+public class ForwardImpl extends Forward<CycleAlert, ContextInfos,EnvInfos,
+EnvUpdate, SendMessage, PullMessage, ITakeAction>
+implements SendMessage, IStop, IInit {
 
 	private int nbState;
 	private int nbTrans;
@@ -31,6 +34,11 @@ public class ForwardImpl extends Forward<CycleAlert, ContextInfos,EnvInfos,  Env
 	private String rootId;
 
 	public ForwardImpl() {
+		init();
+	}
+	
+	@Override
+	public void init() {
 		stateFwList = new HashMap<String, StateForwardImpl>();
 		transFwList = new HashMap<String, TransForwardImpl>();
 		nbState = 0;
@@ -114,6 +122,11 @@ public class ForwardImpl extends Forward<CycleAlert, ContextInfos,EnvInfos,  Env
 		} else {
 			// ERREUR -> le forward du destinataire nexiste pas !
 		}
+	}
+
+	@Override
+	protected IInit make_init() {
+		return this;
 	}
 
 }

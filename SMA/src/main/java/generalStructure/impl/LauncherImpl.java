@@ -15,11 +15,13 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import agents.impl.EcoAgentsImpl;
 import agents.interfaces.Callable;
 import agents.interfaces.Do;
 import agents.interfaces.IGetThread;
 
-public class LauncherImpl extends Launcher implements Callable, CycleAlert, IGetThread, IStop{
+public class LauncherImpl extends Launcher
+implements Callable, CycleAlert, IGetThread, IStop {
 
 	/**
 	 * Temps en milisecondes entre deux cycles consecutifs d'un agent.
@@ -32,7 +34,18 @@ public class LauncherImpl extends Launcher implements Callable, CycleAlert, IGet
 	private ExecutorService execService = null;
 	private Map<String,Runnable> agents = new HashMap<String,Runnable>();
 	private int nbAgentsPerCycle = 0;
+	
+	boolean _launched = false;
+	boolean _pause = true;
 	boolean stop = false;
+	
+	public void init() {
+		execService = null;
+		nbAgentsPerCycle = 0;
+		nbFinishedCycles = 0;
+		threads = new HashMap<String,Thread>();
+		agents = new HashMap<String,Runnable>();
+	}
 
 	/*	@Override
 	protected void start() {
@@ -47,28 +60,58 @@ public class LauncherImpl extends Launcher implements Callable, CycleAlert, IGet
 			}
 		});
 	}*/
+	
+	/**
+	 * Commence le tout premier cycle du premier agent.
+	 */
+	public void startCycle() {
+		_launched = true;
+		System.out.println("START CYCLE !!!!!!!");
+		requires().start().run_start();
+	}
+	
+	public void setPause() {
+		_pause = stop ? false : !_pause;
+		stop = false;
+	}
+	
+	public boolean getPause() {
+		return _pause;
+	}
+	
+	public boolean getStop() {
+		return stop;
+	}
 
 	@Override
 	public void run() {
-		System.out.println("Threads = "+Thread.activeCount());
-		synchronized(agents){
-			nbAgentsPerCycle = agents.size();
-			System.out.println();
-			System.out.println("-----------------------------------------------------------------------------");
-			System.out.println("Nb agents par cycle = "+nbAgentsPerCycle);
-			System.out.println("RUN!!!!!  "+ agents.size());
-			if(!(execService == null)){
-				
-				synchronized (agents) {
-					for(Runnable e: agents.values() )
-						execService.execute(e);
+		
+		if (!_launched) {
+			startCycle();
+		} else if (stop) {
+			_launched = false;
+		} else if (!_pause) {
+		
+			System.out.println("Threads = "+Thread.activeCount());
+			synchronized(agents){
+				nbAgentsPerCycle = agents.size();
+				System.out.println();
+				System.out.println("-----------------------------------------------------------------------------");
+				System.out.println("Nb agents par cycle = "+nbAgentsPerCycle);
+				System.out.println("RUN!!!!!  "+ agents.size());
+				if(!(execService == null)){
+					
+					synchronized (agents) {
+						for(Runnable e: agents.values() )
+							execService.execute(e);
+					}
+	
 				}
-
 			}
+	
+			System.out.println("End boucles");
+			//this.requires().lancer().doIt();
 		}
-
-		System.out.println("End boucles");
-		//	this.requires().lancer().doIt();
 
 	}
 
@@ -90,6 +133,7 @@ public class LauncherImpl extends Launcher implements Callable, CycleAlert, IGet
 		nbFinishedCycles++;
 		
 		if(nbFinishedCycles == 	nbAgentsPerCycle && !stop){
+			
 			System.out.println("Run cycles!");
 			nbFinishedCycles = 0;
 			try {
@@ -98,7 +142,8 @@ public class LauncherImpl extends Launcher implements Callable, CycleAlert, IGet
 				e.printStackTrace();
 			}
 			this.run();
-		} else if(stop){
+		} else if (stop) {
+			_launched = false;
 			synchronized (agents) {
 				//execService.
 				agents.remove(id);
@@ -107,7 +152,7 @@ public class LauncherImpl extends Launcher implements Callable, CycleAlert, IGet
 					execService.shutdownNow();
 					this.requires().stopProcessus().notifyStop();
 					System.out.println(execService.isShutdown());
-					System.out.println("Threads = "+Thread.activeCount()); 
+					System.out.println("Threads = "+Thread.activeCount());
 				}
 			}
 		}
@@ -155,7 +200,12 @@ public class LauncherImpl extends Launcher implements Callable, CycleAlert, IGet
 	public void stop() {
 		stop = true;
 		System.out.println("STOP!");
-		
+		initSMA();
+	}
+	
+	private void initSMA() {
+		init();
+		requires().initAll().init();
 	}
 
 	@Override

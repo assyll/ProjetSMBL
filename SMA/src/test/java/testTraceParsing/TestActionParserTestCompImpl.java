@@ -18,12 +18,7 @@ public class TestActionParserTestCompImpl extends TraceActionParserTestComp{
 	
 	@Override
 	protected FET make_fet() {
-		try {
-			return new FETImpl(path);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			return null;
-		}
+		return new FETImpl(path);
 	}
 
 	@Override

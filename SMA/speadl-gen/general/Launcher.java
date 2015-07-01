@@ -1,8 +1,10 @@
 package general;
 
+import agents.IStart;
 import agents.interfaces.Callable;
 import agents.interfaces.IGetThread;
 import generalStructure.interfaces.CycleAlert;
+import generalStructure.interfaces.IInit;
 import generalStructure.interfaces.IStop;
 
 @SuppressWarnings("all")
@@ -12,7 +14,19 @@ public abstract class Launcher {
      * This can be called by the implementation to access this required port.
      * 
      */
+    public IStart start();
+    
+    /**
+     * This can be called by the implementation to access this required port.
+     * 
+     */
     public IStop stopProcessus();
+    
+    /**
+     * This can be called by the implementation to access this required port.
+     * 
+     */
+    public IInit initAll();
   }
   
   public interface Component extends Launcher.Provides {

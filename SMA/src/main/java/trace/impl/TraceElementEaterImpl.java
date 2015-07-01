@@ -2,6 +2,7 @@ package trace.impl;
 
 
 import general.TraceElementEater;
+import generalStructure.interfaces.IInit;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -18,14 +19,24 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 
-public class TraceElementEaterImpl extends TraceElementEater implements Runnable, ITakeAction{
+public class TraceElementEaterImpl extends TraceElementEater
+implements Runnable, ITakeAction, IInit {
+	
+	private Thread _thread;
 	private Map<String, List<ActionTrace>> actionsByUserMap = new HashMap<>();
 	private List<String> newUsersList = new LinkedList<String>();
 
 	@Override
-	public void run() {
-
-		new Thread(new Runnable() {
+	public void init() {
+		actionsByUserMap = new HashMap<>();
+		newUsersList = new LinkedList<String>();
+		
+		if (_thread != null) {
+			_thread.interrupt();
+			_thread = null;
+		}
+		
+		_thread = new Thread(new Runnable() {
 
 			@Override
 			public void run() {
@@ -45,15 +56,21 @@ public class TraceElementEaterImpl extends TraceElementEater implements Runnable
 					action = (ActionTrace) TraceElementEaterImpl.this.requires().traceElement().getNextElement();
 				}
 			}
-		}).start();
-
+		});
+		
+		_thread.start();
+		
+	}
+	
+	@Override
+	public void run() {
+		_thread.start();
 	}
 
 	@Override
 	protected void start(){
 		super.start();
-		this.run();
-
+		init();
 	}
 
 	@Override
@@ -86,7 +103,9 @@ public class TraceElementEaterImpl extends TraceElementEater implements Runnable
 		return actionTraceList;
 	}
 
-
-
+	@Override
+	protected IInit make_init() {
+		return this;
+	}
 
 }

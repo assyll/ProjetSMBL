@@ -7,17 +7,21 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import general.LogComp;
+import generalStructure.interfaces.IInit;
 import generalStructure.interfaces.ILog;
 
-public class LogCompImpl extends LogComp implements ILog {
+public class LogCompImpl extends LogComp implements ILog, IInit {
 
 	private final String _path;
 	private FileWriter _writer;
 	
-	public LogCompImpl(String path) {
-		
+	public LogCompImpl(String path) {	
 		_path = path;
-		
+		init();
+	}
+	
+	@Override
+	public void init() {
 		try {
 			File file = new File(_path);
 			if (!file.exists()) {
@@ -27,7 +31,6 @@ public class LogCompImpl extends LogComp implements ILog {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
 	}
 	
 	@Override
@@ -66,6 +69,11 @@ public class LogCompImpl extends LogComp implements ILog {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	protected IInit make_init() {
+		return this;
 	}
 
 }
