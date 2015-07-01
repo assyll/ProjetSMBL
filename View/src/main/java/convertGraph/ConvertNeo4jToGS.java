@@ -40,7 +40,7 @@ public class ConvertNeo4jToGS {
 		// Parcours du graphe Neo4j
 		try (Transaction tx = _graphNeo4j.beginTx()) {
 			
-			@SuppressWarnings({ "deprecation", "unused" })
+			@SuppressWarnings("deprecation")
 			Iterator<org.neo4j.graphdb.Node> iteratorNodesNeo4j =
 					_graphNeo4j.getAllNodes().iterator();
 			

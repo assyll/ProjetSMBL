@@ -1642,7 +1642,7 @@ public class Window extends JFrame {
 		
 		for (Edge edge: graph.getEachEdge()) {
 			Edge edgeClone = graphClone.addEdge(edge.getId(),
-					edge.getNode0().getId(), edge.getNode1().getId());
+					edge.getNode0().getId(), edge.getNode1().getId(), true);
 			for (String key: edge.getAttributeKeySet()) {
 				edgeClone.addAttribute(key, edge.getAttribute(key));
 			}
@@ -1664,39 +1664,13 @@ public class Window extends JFrame {
 					.getPredefinedCursor(Cursor.WAIT_CURSOR));
 			
 			if (!isGraphAgentLoaded) {
-				textAgent.setText("100 %");
 				turnAutoLayoutButtonOn(structGraphAgent);
 				initGraphPropertiesAgent();
-				initPanelGraphAgent();	
+				initPanelGraphAgent();
 			} else {
 				
 				initGraphPropertiesAgent();
 				initPanelGraphAgent();
-				
-				/*CustomGraphRenderer.setStyleGraphBasic(graphAgent);
-				GraphModifier.setNodesClass(graphAgent);
-				spriteManagerAgent = new SpriteManager(graphAgent);
-				GraphModifier.generateSprites(graphAgent, spriteManagerAgent);
-	
-				viewerAgent = new Viewer(graphAgent,
-						Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
-				isGraphAgentLoaded = true;
-	
-				viewerAgent.enableAutoLayout();
-				isAutoLayoutAgent = true;
-	
-				viewAgent = viewerAgent.addDefaultView(false);
-	
-				// suppression du comportement par defaut du MouseListener de la view
-				viewAgent.setMouseManager(new CustomMouseManager());
-	
-				setListenerOnViewer(frame, viewerAgent, graphAgent, textAgent,
-						isGraphAgentLoaded);
-				
-				panelGraphAgent.removeAll();
-				panelGraphAgent.setLayout(new BorderLayout());
-				panelGraphAgent.add((Component) viewAgent, BorderLayout.CENTER);
-				scrollAgent.setViewportView(panelGraphAgent);*/
 			}
 			
 			frame.setCursor(Cursor

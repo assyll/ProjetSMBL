@@ -326,7 +326,7 @@ public class GraphCompImpl extends GraphComp implements IGraph {
 		if (childNode != null && fatherNode != null) {
 
 			// creer physiquement la transition
-			edge = _graphGS.addEdge(id, fatherNode.getId(), childNode.getId());
+			edge = _graphGS.addEdge(id, fatherNode.getId(), childNode.getId(), true);
 
 			// y ajoute les attributs
 			edge.addAttribute("id", id);
