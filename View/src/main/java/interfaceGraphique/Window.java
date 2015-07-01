@@ -20,6 +20,7 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.image.ImageObserver;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
@@ -31,6 +32,7 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -96,6 +98,8 @@ public class Window extends JFrame {
 	public static final String TREE_LAYOUT_TT = "Apply a tree layout";
 	public static final String CLEAN_TT = "Clean the view";
 	public static final String SAVE_TT = "Save the graph";
+	public static final String PATH_TRACES_SMA_MESSAGE_DEFAULT =
+			"Click here to import traces ->";
 
 	public static final Dimension buttonsSize = new Dimension(25, 25);
 
@@ -108,7 +112,8 @@ public class Window extends JFrame {
 	private static JFrame frame;
 
 	private JPanel panelFile, panelGraph, panelZoomJson, panelZoomAgent,
-			panelModifJson, panelModifAgent, panelOptionJSon, panelOptionAgent;
+			panelModifJson, panelModifAgent, panelOptionJSon, panelOptionAgent,
+			panelPlayPause;
 
 	private static JPanel panelGraphJson, panelGraphAgent;
 
@@ -131,7 +136,10 @@ public class Window extends JFrame {
 			zoomAvantAgent, zoomArrAgent, zoomCenterAgent, displayAgent,
 			changeEdgeDisplayAgent, addNodeAgent, deleteNodeAgent,
 			modifNodeAgent, addEdgeAgent, deleteEdgeAgent, modifEdgeAgent,
-			structGraphAgent, treeLayoutAgent, cleanGraphAgent;
+			structGraphAgent, treeLayoutAgent, cleanGraphAgent,
+			playPauseButton, stopButton, pathTracesSMAButton;
+	
+	private JLabel pathTracesSMALabel;
 
 	private JMenuBar menu_bar1;
 
@@ -167,20 +175,24 @@ public class Window extends JFrame {
 	public Window() {
 		CustomGraphRenderer.SetRenderer();
 
-		// Initialisation de la fen�tre principale
+		// Initialisation de la fenetre principale
 		frame = new JFrame("Test Interface");
 
-		// Initialisation et d�finition du 1er panneau
+		// Initialisation et definition du 1er panneau
 		panelFile = new JPanel(new GridLayout(1, 2, 20, 5));
 		panelFile.setBorder(BorderFactory.createCompoundBorder(
 				BorderFactory.createTitledBorder("JSon File"),
 				BorderFactory.createEmptyBorder(1, 1, 1, 1)));
 
-		// Initialisation et d�finition du 2�me panneau
+		// Initialisation et definition du 2eme panneau
 		panelGraph = new JPanel(new BorderLayout());
 		panelGraph.setBorder(BorderFactory.createCompoundBorder(
 				BorderFactory.createTitledBorder("Graphs"),
 				BorderFactory.createEmptyBorder(1, 1, 1, 1)));
+		
+		// Initialisation du panel lecture pause
+		panelPlayPause = new JPanel();
+		panelPlayPause.setLayout(new BoxLayout(panelPlayPause, BoxLayout.LINE_AXIS));
 
 		// Initialisation des bouttons de zoom
 		ImageIcon zoomIcon = new ImageIcon(
@@ -194,7 +206,41 @@ public class Window extends JFrame {
 		ImageIcon edgeDisplayIcon = new ImageIcon(
 				"../View/src/main/resources/buttonsIcons/edgeDisplay.png",
 				"edge display");
+		ImageIcon playPauseIcon = new ImageIcon("../View/src/main/resources/"
+				+ "buttonsIcons/play_pause.png", "play/pause");
+		ImageIcon stopIcon = new ImageIcon("../View/src/main/resources/"
+				+ "buttonsIcons/stop.png", "stop");
 
+		playPauseButton = new JButton(playPauseIcon);
+		playPauseButton.setPreferredSize(buttonsSize);
+		stopButton = new JButton(stopIcon);
+		stopButton.setPreferredSize(buttonsSize);
+		
+		pathTracesSMAButton = new JButton(">");
+		pathTracesSMALabel = new JLabel(PATH_TRACES_SMA_MESSAGE_DEFAULT);
+		
+		pathTracesSMAButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser dialogue = new JFileChooser(new File(
+						"../View/src/test/resources/jsonAndGSTest"));
+				dialogue.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+				File fichier;
+
+				if (dialogue.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+					
+					// Recupere le fichier a importer
+					fichier = dialogue.getSelectedFile();
+					pathTracesSMALabel.setText(fichier.toString());
+				}
+			}
+		});
+		
+		panelPlayPause.add(playPauseButton);
+		panelPlayPause.add(stopButton);
+		panelPlayPause.add(pathTracesSMALabel);
+		panelPlayPause.add(pathTracesSMAButton);
+		
 		zoomAvantJson = new JButton(zoomIcon);
 		zoomAvantJson.setToolTipText(ZOOM_TT);
 		zoomAvantJson.setPreferredSize(buttonsSize);
@@ -456,6 +502,8 @@ public class Window extends JFrame {
 		scrollStatut.setViewportView(textColorStatut);
 		panelGraphJson = new JPanel();
 		panelGraphAgent = new JPanel();
+		
+		panelPlayPause.setSize(ImageObserver.WIDTH, 50);
 
 		// Action lors du clic sur l'item "Import to left"
 		importLeftMenu.addActionListener(new ActionListener() {
@@ -923,6 +971,7 @@ public class Window extends JFrame {
 		splitPaneVerticale
 				.setDividerLocation((widthWindow - sizeSeparator + 350) / 3);
 
+		panelGraph.add(panelPlayPause, BorderLayout.NORTH);
 		panelGraph.add(panelOptionAgent, BorderLayout.EAST);
 		panelGraph.add(panelOptionJSon, BorderLayout.WEST);
 		panelGraph.add(splitPaneVerticale, BorderLayout.CENTER);
@@ -1688,6 +1737,16 @@ public class Window extends JFrame {
 		
 		}
 		
+	}
+	
+	public void setListenerPlayPauseButton(ActionListener actionListener) {
+		if (!pathTracesSMALabel.equals(PATH_TRACES_SMA_MESSAGE_DEFAULT)) {
+			playPauseButton.addActionListener(actionListener);
+		}
+	}
+	
+	public void setListenerStopButton(ActionListener actionListener) {
+		stopButton.addActionListener(actionListener);
 	}
 
 }

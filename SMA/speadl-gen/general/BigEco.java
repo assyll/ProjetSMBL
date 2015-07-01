@@ -1,5 +1,6 @@
 package general;
 
+import agents.IStart;
 import agents.interfaces.Callable;
 import agents.interfaces.IGetThread;
 import agents.interfaces.PullMessage;
@@ -367,6 +368,10 @@ public abstract class BigEco {
     private final class BridgeImpl_launcher implements Launcher.Requires {
       public final IStop stopProcessus() {
         return BigEco.ComponentImpl.this.fw().stopProcessus();
+      }
+      
+      public final IStart start() {
+        return BigEco.ComponentImpl.this.ecoAE().startCycle();
       }
     }
     

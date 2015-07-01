@@ -53,7 +53,6 @@ public class TraceElementEaterImpl extends TraceElementEater implements Runnable
 	protected void start(){
 		super.start();
 		this.run();
-
 	}
 
 	@Override

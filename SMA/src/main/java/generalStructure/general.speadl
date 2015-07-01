@@ -13,6 +13,7 @@ import trace.ActionTrace
 import trace.interfaces.ITakeAction
 import generalStructure.interfaces.IGraph
 import generalStructure.interfaces.UpdateGraph
+import agents.IStart
 
 namespace general{
 	
@@ -20,6 +21,7 @@ namespace general{
 		provides call: Callable
 		provides finishedCycle: CycleAlert
 		provides threads: IGetThread
+		requires start: IStart
 		requires stopProcessus: IStop
 		provides stopAllAgents: IStop
 	}
@@ -55,6 +57,7 @@ namespace general{
 		
 		part launcher: Launcher {
 			bind stopProcessus to fw.stopProcessus
+			bind start to ecoAE.startCycle
 		}
 		
 		part envEco: Environnement[EnvInfos, EnvUpdate]

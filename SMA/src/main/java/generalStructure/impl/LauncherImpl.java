@@ -32,6 +32,9 @@ public class LauncherImpl extends Launcher implements Callable, CycleAlert, IGet
 	private ExecutorService execService = null;
 	private Map<String,Runnable> agents = new HashMap<String,Runnable>();
 	private int nbAgentsPerCycle = 0;
+	
+	boolean _launched = false;
+	boolean _pause = true;
 	boolean stop = false;
 
 	/*	@Override
@@ -47,28 +50,54 @@ public class LauncherImpl extends Launcher implements Callable, CycleAlert, IGet
 			}
 		});
 	}*/
+	
+	/**
+	 * Commence le tout premier cycle du premier agent.
+	 */
+	public void startCycle() {
+		_launched = true;
+		requires().start().run_start();
+	}
+	
+	public void setPause() {
+		_pause = !_pause;
+	}
+	
+	public boolean getPause() {
+		return _pause;
+	}
+	
+	public boolean getStop() {
+		return stop;
+	}
 
 	@Override
 	public void run() {
-		System.out.println("Threads = "+Thread.activeCount());
-		synchronized(agents){
-			nbAgentsPerCycle = agents.size();
-			System.out.println();
-			System.out.println("-----------------------------------------------------------------------------");
-			System.out.println("Nb agents par cycle = "+nbAgentsPerCycle);
-			System.out.println("RUN!!!!!  "+ agents.size());
-			if(!(execService == null)){
-				
-				synchronized (agents) {
-					for(Runnable e: agents.values() )
-						execService.execute(e);
+		
+		if (!_launched) {
+			startCycle();
+		} else if (!_pause) {
+		
+			System.out.println("Threads = "+Thread.activeCount());
+			synchronized(agents){
+				nbAgentsPerCycle = agents.size();
+				System.out.println();
+				System.out.println("-----------------------------------------------------------------------------");
+				System.out.println("Nb agents par cycle = "+nbAgentsPerCycle);
+				System.out.println("RUN!!!!!  "+ agents.size());
+				if(!(execService == null)){
+					
+					synchronized (agents) {
+						for(Runnable e: agents.values() )
+							execService.execute(e);
+					}
+	
 				}
-
 			}
+	
+			System.out.println("End boucles");
+			//	this.requires().lancer().doIt();
 		}
-
-		System.out.println("End boucles");
-		//	this.requires().lancer().doIt();
 
 	}
 

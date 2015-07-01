@@ -28,7 +28,7 @@ import agents.interfaces.SendMessage;
 public class BigEcoImpl extends BigEco implements ICreateAgent{
 
 	private final String path_graph;
-	private final String path_traces;
+	private String path_traces;
 
 	private Thread t = null;
 

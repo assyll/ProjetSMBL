@@ -14,6 +14,7 @@ import java.util.Map;
 
 import trace.Action;
 import trace.ActionTrace;
+import agents.IStart;
 import agents.impl.state.StateAgentCompImpl;
 import agents.impl.transition.TransAgentComplImpl;
 import agents.interfaces.AgentTrace;
@@ -41,17 +42,6 @@ public class EcoAgentsImpl extends EcoAgents implements AgentTrace{
 		nbStateAgentsCreated = 0;
 		nbTransAgentsCreated = 0;
 		rootId = "";
-	}
-
-	@Override
-	protected void start() {
-		super.start();
-		
-		if(nbStateAgentsCreated == 0) {
-			rootId = "S0";
-			requires().createAgent().createNewState(rootId, true);
-			nbStateAgentsCreated++;
-		}
 	}
 	
 	@Override
@@ -250,6 +240,20 @@ public class EcoAgentsImpl extends EcoAgents implements AgentTrace{
 			return this;
 		}
 
+	}
+
+	@Override
+	protected IStart make_startCycle() {
+		return new IStart() {
+			@Override
+			public void run_start() {
+				if(nbStateAgentsCreated == 0) {
+					rootId = "S0";
+					requires().createAgent().createNewState(rootId, true);
+					nbStateAgentsCreated++;
+				}
+			}
+		};
 	}
 
 }

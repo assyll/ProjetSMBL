@@ -199,7 +199,7 @@ public class GraphCompImpl extends GraphComp implements IGraph {
 	}
 
 	public void close() {
-		_graphNeo4J.shutdown();
+		//_graphNeo4J.shutdown();
 		System.out.println("Shutting down database");
 	}
 
