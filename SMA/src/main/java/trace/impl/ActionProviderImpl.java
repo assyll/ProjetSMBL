@@ -4,12 +4,13 @@ import general.ActionProvider;
 import general.FET;
 import general.TraceActionParser;
 import general.TraceElementEater;
+import generalStructure.interfaces.IInit;
 
 import java.io.FileNotFoundException;
 
 import trace.interfaces.ITakeAction;
 
-public class ActionProviderImpl extends ActionProvider {
+public class ActionProviderImpl extends ActionProvider implements IInit {
 
 	private String path;
 	
@@ -18,12 +19,14 @@ public class ActionProviderImpl extends ActionProvider {
 	}
 	
 	@Override
+	public void init() {
+		parts().fet().init();
+		parts().tee().init();
+	}
+	
+	@Override
 	protected FET make_fet() {
-		try {
-			return new FETImpl(path);
-		} catch (FileNotFoundException e) {
-			return null;
-		}
+		return new FETImpl(path);
 	}
 
 	@Override
@@ -34,6 +37,11 @@ public class ActionProviderImpl extends ActionProvider {
 	@Override
 	protected TraceActionParser make_traceParser() {
 		return new TraceActionParserImpl();
+	}
+
+	@Override
+	protected IInit make_init() {
+		return this;
 	}
 
 }

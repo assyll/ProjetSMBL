@@ -18,14 +18,26 @@ import environnement.interfaces.EnvUpdate;
 import general.Environnement;
 import general.Forward;
 import generalStructure.impl.BigEcoImpl;
+import generalStructure.interfaces.IInit;
 
 public class EnvironnementImpl extends Environnement<EnvInfos, EnvUpdate>
-implements EnvUpdate, EnvInfos {
+implements EnvUpdate, EnvInfos, IInit {
 
 	private FileWriter _writer;
-	private Map<Integer,List<CellImpl>> cellsByLevel = new HashMap<>();
+	private Map<Integer,List<CellImpl>> cellsByLevel;
 
 	public EnvironnementImpl() {
+		init();
+	}
+	
+	@Override
+	protected IInit make_init() {
+		return this;
+	}
+	
+	@Override
+	public void init() {
+		cellsByLevel = new HashMap<>();
 		this.newCell(new ArrayList<Action>());
 
 		try {
@@ -37,18 +49,6 @@ implements EnvUpdate, EnvInfos {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-		/*cellsByLevel.put(1, new ArrayList<CellImpl>());
-		Map<String, String> mapTest = new HashMap<String, String>();
-		mapTest.put("action", "actionTest");
-		List<Action> actionsTest = new ArrayList<Action>();
-		actionsTest.add(new Action(mapTest));
-		CellImpl cellTest = new CellImpl(actionsTest);
-		cellTest.addNewStateAgent("aTest1");
-		cellsByLevel.get(1).add(cellTest);
-		cellTest.addNewStateAgent("aTest2");
-		CellImpl cellTest2 = getCellByActionList(actionsTest);
-		cellTest2.addNewStateAgent("aTest3");*/
 	}
 
 	public Map<Integer, List<CellImpl>> getCellsByLevel() {
@@ -164,23 +164,6 @@ implements EnvUpdate, EnvInfos {
 				writeToFile();
 			}
 		}
-		/*Map<Action,CellImpl> childrenMap = cell.getChildrenMap();
-
-		if(childrenMap.containsKey(newAction)){
-			childrenMap.get(newAction).addNewStateAgent(id);
-		} else {
-			List<Action> newListOfActions = new ArrayList<Action>(currentPositionActions);
-			newListOfActions.add(newAction);
-			CellImpl destionationCell = getCellByActionList(newListOfActions);
-
-			if(destionationCell != null){
-				cell.updateChildMap(newAction, destionationCell);
-			} else {
-				destionationCell = cell.addChild(newAction);
-			}
-
-			destionationCell.addNewStateAgent(id);	
-		}*/
 
 	}
 

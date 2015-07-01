@@ -6,6 +6,7 @@ import environnement.interfaces.EnvUpdate;
 import general.Agent;
 import general.EcoAgents;
 import generalStructure.interfaces.ICreateAgent;
+import generalStructure.interfaces.IInit;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,7 +27,7 @@ import agents.interfaces.StateMemory;
 import agents.interfaces.TransAction;
 import agents.interfaces.TransMemory;
 
-public class EcoAgentsImpl extends EcoAgents implements AgentTrace{
+public class EcoAgentsImpl extends EcoAgents implements AgentTrace, IInit {
 
 	private Map<String,String> currentAgentsMap; // map<username, idAgent>
 	private Map<String,Runnable> agentsMap;
@@ -36,6 +37,11 @@ public class EcoAgentsImpl extends EcoAgents implements AgentTrace{
 	private String rootId;
 
 	public EcoAgentsImpl(){
+		init();
+	}
+	
+	@Override
+	public void init() {
 		currentAgentsMap = new HashMap<String,String>();
 		agentsMap = new HashMap<String,Runnable>();
 		listRunnable = new ArrayList<Runnable>();
@@ -84,6 +90,27 @@ public class EcoAgentsImpl extends EcoAgents implements AgentTrace{
 		}
 
 		return agent ;
+	}
+	
+	@Override
+	protected IStart make_startCycle() {
+		return new IStart() {
+			@Override
+			public void run_start() {
+				System.out.println("RUN_START");
+				if(nbStateAgentsCreated == 0) {
+					System.out.println("CREATION NOUVEAU AGENT");
+					rootId = "S0";
+					requires().createAgent().createNewState(rootId, true);
+					nbStateAgentsCreated++;
+				}
+			}
+		};
+	}
+
+	@Override
+	protected IInit make_init() {
+		return this;
 	}
 	
 
@@ -240,20 +267,6 @@ public class EcoAgentsImpl extends EcoAgents implements AgentTrace{
 			return this;
 		}
 
-	}
-
-	@Override
-	protected IStart make_startCycle() {
-		return new IStart() {
-			@Override
-			public void run_start() {
-				if(nbStateAgentsCreated == 0) {
-					rootId = "S0";
-					requires().createAgent().createNewState(rootId, true);
-					nbStateAgentsCreated++;
-				}
-			}
-		};
 	}
 
 }

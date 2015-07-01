@@ -15,11 +15,13 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import agents.impl.EcoAgentsImpl;
 import agents.interfaces.Callable;
 import agents.interfaces.Do;
 import agents.interfaces.IGetThread;
 
-public class LauncherImpl extends Launcher implements Callable, CycleAlert, IGetThread, IStop{
+public class LauncherImpl extends Launcher
+implements Callable, CycleAlert, IGetThread, IStop {
 
 	/**
 	 * Temps en milisecondes entre deux cycles consecutifs d'un agent.
@@ -36,6 +38,14 @@ public class LauncherImpl extends Launcher implements Callable, CycleAlert, IGet
 	boolean _launched = false;
 	boolean _pause = true;
 	boolean stop = false;
+	
+	public void init() {
+		execService = null;
+		nbAgentsPerCycle = 0;
+		nbFinishedCycles = 0;
+		threads = new HashMap<String,Thread>();
+		agents = new HashMap<String,Runnable>();
+	}
 
 	/*	@Override
 	protected void start() {
@@ -56,11 +66,13 @@ public class LauncherImpl extends Launcher implements Callable, CycleAlert, IGet
 	 */
 	public void startCycle() {
 		_launched = true;
+		System.out.println("START CYCLE !!!!!!!");
 		requires().start().run_start();
 	}
 	
 	public void setPause() {
-		_pause = !_pause;
+		_pause = stop ? false : !_pause;
+		stop = false;
 	}
 	
 	public boolean getPause() {
@@ -76,6 +88,8 @@ public class LauncherImpl extends Launcher implements Callable, CycleAlert, IGet
 		
 		if (!_launched) {
 			startCycle();
+		} else if (stop) {
+			_launched = false;
 		} else if (!_pause) {
 		
 			System.out.println("Threads = "+Thread.activeCount());
@@ -96,7 +110,7 @@ public class LauncherImpl extends Launcher implements Callable, CycleAlert, IGet
 			}
 	
 			System.out.println("End boucles");
-			//	this.requires().lancer().doIt();
+			//this.requires().lancer().doIt();
 		}
 
 	}
@@ -119,6 +133,7 @@ public class LauncherImpl extends Launcher implements Callable, CycleAlert, IGet
 		nbFinishedCycles++;
 		
 		if(nbFinishedCycles == 	nbAgentsPerCycle && !stop){
+			
 			System.out.println("Run cycles!");
 			nbFinishedCycles = 0;
 			try {
@@ -127,7 +142,8 @@ public class LauncherImpl extends Launcher implements Callable, CycleAlert, IGet
 				e.printStackTrace();
 			}
 			this.run();
-		} else if(stop){
+		} else if (stop) {
+			_launched = false;
 			synchronized (agents) {
 				//execService.
 				agents.remove(id);
@@ -136,7 +152,7 @@ public class LauncherImpl extends Launcher implements Callable, CycleAlert, IGet
 					execService.shutdownNow();
 					this.requires().stopProcessus().notifyStop();
 					System.out.println(execService.isShutdown());
-					System.out.println("Threads = "+Thread.activeCount()); 
+					System.out.println("Threads = "+Thread.activeCount());
 				}
 			}
 		}
@@ -184,7 +200,12 @@ public class LauncherImpl extends Launcher implements Callable, CycleAlert, IGet
 	public void stop() {
 		stop = true;
 		System.out.println("STOP!");
-		
+		initSMA();
+	}
+	
+	private void initSMA() {
+		init();
+		requires().initAll().init();
 	}
 
 	@Override

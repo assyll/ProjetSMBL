@@ -1,6 +1,7 @@
 package trace.impl;
 
 import general.FET;
+import generalStructure.interfaces.IInit;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -9,16 +10,33 @@ import java.io.IOException;
 import trace.interfaces.TraceElement;
 
 
-public class FETImpl extends FET implements TraceElement {
+public class FETImpl extends FET implements TraceElement, IInit {
 
-	FileReader _reader;
-	int _index ;
+	private FileReader _reader;
+	private String _path;
+	private int _index ;
 
-	public FETImpl(String filePath) throws FileNotFoundException 
-	{
-		_reader = new FileReader(filePath);
-		_index = 0;
-
+	public FETImpl(String filePath) {
+		_path = filePath;
+		init();
+	}
+	
+	public void setPath(String path) {
+		_path = path;
+	}
+	
+	@Override
+	public void init() {
+		try {
+			_index = 0;
+			if (_reader != null) {
+				_reader.close();
+				_reader = null;
+			}
+			_reader = new FileReader(_path);
+		} catch (Exception e) {
+			
+		}
 	}
 
 	public String getNextElement() 
@@ -72,6 +90,11 @@ public class FETImpl extends FET implements TraceElement {
 
 	@Override
 	protected TraceElement make_traceElement() {
+		return this;
+	}
+
+	@Override
+	protected IInit make_init() {
 		return this;
 	}
 

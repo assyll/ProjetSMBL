@@ -16,6 +16,7 @@ import trace.ActionTrace
 import generalStructure.interfaces.IGraph
 import agents.interfaces.ISuicide
 import agents.IStart
+import generalStructure.interfaces.IInit
 
 namespace general{
 
@@ -23,6 +24,7 @@ namespace general{
 		requires threads: IGetThread
 		requires createAgent: ICreateAgent
 		provides startCycle: IStart
+		provides init: IInit
 		
 		species StateAgent (id: String, isRoot: boolean) {
 			provides cycle: Do = agentComponent.cycle

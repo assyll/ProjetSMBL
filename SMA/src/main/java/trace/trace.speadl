@@ -1,9 +1,11 @@
 import trace.interfaces.ITakeAction
 import trace.interfaces.TraceElement
+import generalStructure.interfaces.IInit
 
 namespace general{
 	component FET{
 		provides traceElement: TraceElement
+		provides init: IInit
 	}
 	
 	component TraceActionParser {
@@ -14,10 +16,12 @@ namespace general{
 	component TraceElementEater {
 		requires traceElement: TraceElement
 		provides actionGetter: ITakeAction
+		provides init: IInit
 	}
 	
 	component ActionProvider {
 		
+		provides init: IInit
 		provides actionGetter : ITakeAction = tee.actionGetter
 		
 		part fet: FET

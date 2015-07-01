@@ -15,6 +15,7 @@ import general.Forward;
 import general.GraphComp;
 import general.Launcher;
 import general.LogComp;
+import general.MultiPlexeurInitComp;
 import generalStructure.interfaces.CycleAlert;
 import generalStructure.interfaces.ICreateAgent;
 import trace.Action;
@@ -25,7 +26,7 @@ import agents.impl.EcoAgentsImpl;
 import agents.interfaces.PullMessage;
 import agents.interfaces.SendMessage;
 
-public class BigEcoImpl extends BigEco implements ICreateAgent{
+public class BigEcoImpl extends BigEco implements ICreateAgent {
 
 	private final String path_graph;
 	private String path_traces;
@@ -120,6 +121,11 @@ public class BigEcoImpl extends BigEco implements ICreateAgent{
 	@Override
 	protected FenetreComp make_fenetreComp() {
 		return new FenetreCompImpl();
+	}
+
+	@Override
+	protected MultiPlexeurInitComp make_multiPlexeur() {
+		return new MultiPlexeurInitCompImpl();
 	}
 }
 

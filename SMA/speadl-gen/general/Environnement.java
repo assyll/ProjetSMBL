@@ -1,6 +1,7 @@
 package general;
 
 import environnement.interfaces.CellInfo;
+import generalStructure.interfaces.IInit;
 import java.util.List;
 import trace.Action;
 
@@ -24,6 +25,12 @@ public abstract class Environnement<Context, ContextUpdate> {
      * 
      */
     public ContextUpdate envUpdate();
+    
+    /**
+     * This can be called to access the provided port.
+     * 
+     */
+    public IInit init();
   }
   
   public interface Parts<Context, ContextUpdate> {
@@ -59,9 +66,18 @@ public abstract class Environnement<Context, ContextUpdate> {
       }
     }
     
+    private void init_init() {
+      assert this.init == null: "This is a bug.";
+      this.init = this.implementation.make_init();
+      if (this.init == null) {
+      	throw new RuntimeException("make_init() in general.Environnement<Context, ContextUpdate> should not return null.");
+      }
+    }
+    
     protected void initProvidedPorts() {
       init_envInfos();
       init_envUpdate();
+      init_init();
     }
     
     public ComponentImpl(final Environnement<Context, ContextUpdate> implem, final Environnement.Requires<Context, ContextUpdate> b, final boolean doInits) {
@@ -90,6 +106,12 @@ public abstract class Environnement<Context, ContextUpdate> {
     
     public ContextUpdate envUpdate() {
       return this.envUpdate;
+    }
+    
+    private IInit init;
+    
+    public IInit init() {
+      return this.init;
     }
   }
   
@@ -328,6 +350,13 @@ public abstract class Environnement<Context, ContextUpdate> {
    * 
    */
   protected abstract ContextUpdate make_envUpdate();
+  
+  /**
+   * This should be overridden by the implementation to define the provided port.
+   * This will be called once during the construction of the component to initialize the port.
+   * 
+   */
+  protected abstract IInit make_init();
   
   /**
    * This can be called by the implementation to access the required ports.

@@ -3,12 +3,14 @@ import environnement.interfaces.EnvUpdate
 import java.util.List
 import trace.Action
 import environnement.interfaces.CellInfo
+import generalStructure.interfaces.IInit
 
 namespace general{
 	
 	ecosystem Environnement [Context, ContextUpdate] {
 		provides envInfos: Context
 		provides envUpdate: ContextUpdate
+		provides init: IInit
 		
 		species Cell(actions : List[Action]) {
 			provides cellInfos: CellInfo

@@ -20,20 +20,28 @@ import agents.interfaces.StateMemory;
 import agents.interfaces.TransMemory;
 import general.GraphComp;
 import generalStructure.interfaces.IGraph;
+import generalStructure.interfaces.IInit;
 import generalStructure.interfaces.IStop;
 import generalStructure.interfaces.UpdateGraph;
 
-public class GraphCompImpl extends GraphComp implements IGraph {
+public class GraphCompImpl extends GraphComp implements IGraph, IInit {
 
+	private String _path;
 	private Graph _graphGS;
-	private final GraphDatabaseService _graphNeo4J;
+	private GraphDatabaseService _graphNeo4J;
 
 	public GraphCompImpl(String path) {
-		Fichier.deleteFileOrDirectory(path);
-		_graphNeo4J =
-				new GraphDatabaseFactory().newEmbeddedDatabase(path);
-		registerShutdownHook(_graphNeo4J);
-		_graphGS = new MultiGraph("graph gs");
+		_path = path;
+		init();
+	}
+	
+	@Override
+	public void init() {
+		Fichier.deleteFileOrDirectory(_path);
+		//_graphNeo4J =
+				//new GraphDatabaseFactory().newEmbeddedDatabase(_path);
+		//registerShutdownHook(_graphNeo4J);
+		_graphGS = new MultiGraph(_path);
 	}
 
 	@Override
@@ -337,6 +345,11 @@ public class GraphCompImpl extends GraphComp implements IGraph {
 		}
 
 		return edge;
+	}
+
+	@Override
+	protected IInit make_init() {
+		return this;
 	}
 
 }

@@ -1,6 +1,7 @@
 package general;
 
 import generalStructure.interfaces.IGraph;
+import generalStructure.interfaces.IInit;
 import generalStructure.interfaces.ILog;
 import generalStructure.interfaces.IStop;
 
@@ -59,6 +60,12 @@ public abstract class Forward<CycleAlert, ContextSA, ContextTA, ContextUpdate, P
      * 
      */
     public IStop stopProcessus();
+    
+    /**
+     * This can be called to access the provided port.
+     * 
+     */
+    public IInit init();
   }
   
   public interface Parts<CycleAlert, ContextSA, ContextTA, ContextUpdate, Push, Pull, ActionGetter> {
@@ -94,9 +101,18 @@ public abstract class Forward<CycleAlert, ContextSA, ContextTA, ContextUpdate, P
       }
     }
     
+    private void init_init() {
+      assert this.init == null: "This is a bug.";
+      this.init = this.implementation.make_init();
+      if (this.init == null) {
+      	throw new RuntimeException("make_init() in general.Forward<CycleAlert, ContextSA, ContextTA, ContextUpdate, Push, Pull, ActionGetter> should not return null.");
+      }
+    }
+    
     protected void initProvidedPorts() {
       init_l();
       init_stopProcessus();
+      init_init();
     }
     
     public ComponentImpl(final Forward<CycleAlert, ContextSA, ContextTA, ContextUpdate, Push, Pull, ActionGetter> implem, final Forward.Requires<CycleAlert, ContextSA, ContextTA, ContextUpdate, Push, Pull, ActionGetter> b, final boolean doInits) {
@@ -125,6 +141,12 @@ public abstract class Forward<CycleAlert, ContextSA, ContextTA, ContextUpdate, P
     
     public IStop stopProcessus() {
       return this.stopProcessus;
+    }
+    
+    private IInit init;
+    
+    public IInit init() {
+      return this.init;
     }
   }
   
@@ -882,6 +904,13 @@ public abstract class Forward<CycleAlert, ContextSA, ContextTA, ContextUpdate, P
    * 
    */
   protected abstract IStop make_stopProcessus();
+  
+  /**
+   * This should be overridden by the implementation to define the provided port.
+   * This will be called once during the construction of the component to initialize the port.
+   * 
+   */
+  protected abstract IInit make_init();
   
   /**
    * This can be called by the implementation to access the required ports.

@@ -16,9 +16,11 @@ import general.Forward;
 import general.GraphComp;
 import general.Launcher;
 import general.LogComp;
+import general.MultiPlexeurInitComp;
 import generalStructure.interfaces.CycleAlert;
 import generalStructure.interfaces.ICreateAgent;
 import generalStructure.interfaces.IGraph;
+import generalStructure.interfaces.IInit;
 import generalStructure.interfaces.ILog;
 import generalStructure.interfaces.IStop;
 import generalStructure.interfaces.UpdateGraph;
@@ -97,6 +99,13 @@ public abstract class BigEco {
      * 
      */
     public Environnement.Component<EnvInfos, EnvUpdate> envEco();
+    
+    /**
+     * This can be called by the implementation to access the part and its provided ports.
+     * It will be initialized after the required ports are initialized and before the provided ports are initialized.
+     * 
+     */
+    public MultiPlexeurInitComp.Component multiPlexeur();
   }
   
   public static class ComponentImpl implements BigEco.Component, BigEco.Parts {
@@ -121,6 +130,8 @@ public abstract class BigEco {
       ((Launcher.ComponentImpl) this.launcher).start();
       assert this.envEco != null: "This is a bug.";
       ((Environnement.ComponentImpl<EnvInfos, EnvUpdate>) this.envEco).start();
+      assert this.multiPlexeur != null: "This is a bug.";
+      ((MultiPlexeurInitComp.ComponentImpl) this.multiPlexeur).start();
       this.implementation.start();
       this.implementation.started = true;
     }
@@ -213,6 +224,17 @@ public abstract class BigEco {
       
     }
     
+    private void init_multiPlexeur() {
+      assert this.multiPlexeur == null: "This is a bug.";
+      assert this.implem_multiPlexeur == null: "This is a bug.";
+      this.implem_multiPlexeur = this.implementation.make_multiPlexeur();
+      if (this.implem_multiPlexeur == null) {
+      	throw new RuntimeException("make_multiPlexeur() in general.BigEco should not return null.");
+      }
+      this.multiPlexeur = this.implem_multiPlexeur._newComponent(new BridgeImpl_multiPlexeur(), false);
+      
+    }
+    
     protected void initParts() {
       init_logComp();
       init_graphComp();
@@ -222,6 +244,7 @@ public abstract class BigEco {
       init_actionProvider();
       init_launcher();
       init_envEco();
+      init_multiPlexeur();
     }
     
     private void init_creatAgent() {
@@ -373,6 +396,10 @@ public abstract class BigEco {
       public final IStart start() {
         return BigEco.ComponentImpl.this.ecoAE().startCycle();
       }
+      
+      public final IInit initAll() {
+        return BigEco.ComponentImpl.this.multiPlexeur().initLauncher();
+      }
     }
     
     public final Launcher.Component launcher() {
@@ -388,6 +415,40 @@ public abstract class BigEco {
     
     public final Environnement.Component<EnvInfos, EnvUpdate> envEco() {
       return this.envEco;
+    }
+    
+    private MultiPlexeurInitComp.Component multiPlexeur;
+    
+    private MultiPlexeurInitComp implem_multiPlexeur;
+    
+    private final class BridgeImpl_multiPlexeur implements MultiPlexeurInitComp.Requires {
+      public final IInit initActionProvider() {
+        return BigEco.ComponentImpl.this.actionProvider().init();
+      }
+      
+      public final IInit initEnvironnement() {
+        return BigEco.ComponentImpl.this.envEco().init();
+      }
+      
+      public final IInit initEcoAgent() {
+        return BigEco.ComponentImpl.this.ecoAE().init();
+      }
+      
+      public final IInit initGraph() {
+        return BigEco.ComponentImpl.this.graphComp().init();
+      }
+      
+      public final IInit initLog() {
+        return BigEco.ComponentImpl.this.logComp().init();
+      }
+      
+      public final IInit initForward() {
+        return BigEco.ComponentImpl.this.fw().init();
+      }
+    }
+    
+    public final MultiPlexeurInitComp.Component multiPlexeur() {
+      return this.multiPlexeur;
     }
   }
   
@@ -992,6 +1053,13 @@ public abstract class BigEco {
    * 
    */
   protected abstract Environnement<EnvInfos, EnvUpdate> make_envEco();
+  
+  /**
+   * This should be overridden by the implementation to define how to create this sub-component.
+   * This will be called once during the construction of the component to initialize this sub-component.
+   * 
+   */
+  protected abstract MultiPlexeurInitComp make_multiPlexeur();
   
   /**
    * Not meant to be used to manually instantiate components (except for testing).

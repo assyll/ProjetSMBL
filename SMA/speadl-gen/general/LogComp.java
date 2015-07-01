@@ -1,5 +1,6 @@
 package general;
 
+import generalStructure.interfaces.IInit;
 import generalStructure.interfaces.ILog;
 
 @SuppressWarnings("all")
@@ -16,6 +17,12 @@ public abstract class LogComp {
      * 
      */
     public ILog log();
+    
+    /**
+     * This can be called to access the provided port.
+     * 
+     */
+    public IInit init();
   }
   
   public interface Parts {
@@ -43,8 +50,17 @@ public abstract class LogComp {
       }
     }
     
+    private void init_init() {
+      assert this.init == null: "This is a bug.";
+      this.init = this.implementation.make_init();
+      if (this.init == null) {
+      	throw new RuntimeException("make_init() in general.LogComp should not return null.");
+      }
+    }
+    
     protected void initProvidedPorts() {
       init_log();
+      init_init();
     }
     
     public ComponentImpl(final LogComp implem, final LogComp.Requires b, final boolean doInits) {
@@ -67,6 +83,12 @@ public abstract class LogComp {
     
     public ILog log() {
       return this.log;
+    }
+    
+    private IInit init;
+    
+    public IInit init() {
+      return this.init;
     }
   }
   
@@ -115,6 +137,13 @@ public abstract class LogComp {
    * 
    */
   protected abstract ILog make_log();
+  
+  /**
+   * This should be overridden by the implementation to define the provided port.
+   * This will be called once during the construction of the component to initialize the port.
+   * 
+   */
+  protected abstract IInit make_init();
   
   /**
    * This can be called by the implementation to access the required ports.
