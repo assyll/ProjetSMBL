@@ -36,7 +36,6 @@ public class ActionTrace {
 	@Override
 	public boolean equals(Object obj) {
 		if(obj instanceof ActionTrace){
-			System.out.println("action "+ _action.equals(((ActionTrace)obj).getAction()));
 			if(_action.equals(((ActionTrace)obj).getAction()) && (_userName.equals(((ActionTrace)obj).getUserName())))
 				return true;
 			
