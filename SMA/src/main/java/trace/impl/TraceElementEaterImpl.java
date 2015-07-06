@@ -40,11 +40,17 @@ implements ITakeAction, IInit {
 
 			@Override
 			public void run() {
-				System.out.println("trace run !!!!!!!!!!!!!!!!");
 
 				ActionTrace action = null;
+				
 				while (action == null) {
 					action = (ActionTrace) TraceElementEaterImpl.this.requires().traceElement().getNextElement();
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 
 				while(action != null) {

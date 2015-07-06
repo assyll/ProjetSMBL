@@ -1327,7 +1327,7 @@ public class Window extends JFrame {
 					&& attKey != MyJsonGenerator.FORMAT_NODE_SOURCE
 					&& attKey != MyJsonGenerator.FORMAT_NODE_FINAL
 					&& !attKey.startsWith("ui.")) {
-				attValue = node.getAttribute(attKey);
+				attValue = node.getAttribute(attKey) + "";
 				s += attKey + " : " + attValue + "<br/>";
 			}
 		}

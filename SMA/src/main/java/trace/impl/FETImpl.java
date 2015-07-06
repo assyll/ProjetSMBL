@@ -13,12 +13,11 @@ import trace.interfaces.TraceElement;
 
 public class FETImpl extends FET implements TraceElement, IInit, IPath {
 
-	private FileReader _reader;
+	private FileReader _reader = null;
 	private String _path;
 	private int _index ;
 
 	public FETImpl(String filePath) {
-		_path = null;//filePath;
 		init();
 	}
 	
