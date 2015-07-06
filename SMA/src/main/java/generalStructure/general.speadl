@@ -15,6 +15,8 @@ import generalStructure.interfaces.IGraph
 import generalStructure.interfaces.UpdateGraph
 import agents.IStart
 import generalStructure.interfaces.IInit
+import generalStructure.interfaces.IControl
+import generalStructure.interfaces.IPath
 
 namespace general{
 	
@@ -26,6 +28,7 @@ namespace general{
 		requires stopProcessus: IStop
 		provides stopAllAgents: IStop
 		requires initAll: IInit
+		provides control: IControl
 	}
 	
 	ecosystem BigEco {
@@ -39,6 +42,8 @@ namespace general{
 		part fenetreComp: FenetreComp {
 			bind callable to launcher.call
 			bind updateGraph to graphComp.updateGraph
+			bind control to launcher.control
+			bind setPath to actionProvider.path
 		}
 		
 		part ecoAE: EcoAgents {
@@ -160,6 +165,8 @@ namespace general{
 	component FenetreComp {
 		requires callable: Callable
 		requires updateGraph: UpdateGraph
+		requires control: IControl
+		requires setPath: IPath
 	}
 	
 	

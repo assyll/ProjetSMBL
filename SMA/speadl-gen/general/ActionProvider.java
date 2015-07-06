@@ -4,6 +4,7 @@ import general.FET;
 import general.TraceActionParser;
 import general.TraceElementEater;
 import generalStructure.interfaces.IInit;
+import generalStructure.interfaces.IPath;
 import trace.interfaces.ITakeAction;
 import trace.interfaces.TraceElement;
 
@@ -27,6 +28,12 @@ public abstract class ActionProvider {
      * 
      */
     public ITakeAction actionGetter();
+    
+    /**
+     * This can be called to access the provided port.
+     * 
+     */
+    public IPath path();
   }
   
   public interface Parts {
@@ -143,6 +150,10 @@ public abstract class ActionProvider {
     
     public ITakeAction actionGetter() {
       return this.tee().actionGetter();
+    }
+    
+    public IPath path() {
+      return this.fet().path();
     }
     
     private FET.Component fet;

@@ -18,10 +18,12 @@ import general.Launcher;
 import general.LogComp;
 import general.MultiPlexeurInitComp;
 import generalStructure.interfaces.CycleAlert;
+import generalStructure.interfaces.IControl;
 import generalStructure.interfaces.ICreateAgent;
 import generalStructure.interfaces.IGraph;
 import generalStructure.interfaces.IInit;
 import generalStructure.interfaces.ILog;
+import generalStructure.interfaces.IPath;
 import generalStructure.interfaces.IStop;
 import generalStructure.interfaces.UpdateGraph;
 import trace.ActionTrace;
@@ -314,6 +316,14 @@ public abstract class BigEco {
       
       public final UpdateGraph updateGraph() {
         return BigEco.ComponentImpl.this.graphComp().updateGraph();
+      }
+      
+      public final IControl control() {
+        return BigEco.ComponentImpl.this.launcher().control();
+      }
+      
+      public final IPath setPath() {
+        return BigEco.ComponentImpl.this.actionProvider().path();
       }
     }
     

@@ -1739,10 +1739,17 @@ public class Window extends JFrame {
 		
 	}
 	
+	public String getPathTracesSMA() {
+		return pathTracesSMALabel.getText().equals(PATH_TRACES_SMA_MESSAGE_DEFAULT)
+				? null : pathTracesSMALabel.getText();
+	}
+	
+	public void initPathTracesSMA() {
+		pathTracesSMALabel.setText(PATH_TRACES_SMA_MESSAGE_DEFAULT);
+	}
+	
 	public void setListenerPlayPauseButton(ActionListener actionListener) {
-		if (!pathTracesSMALabel.equals(PATH_TRACES_SMA_MESSAGE_DEFAULT)) {
-			playPauseButton.addActionListener(actionListener);
-		}
+		playPauseButton.addActionListener(actionListener);
 	}
 	
 	public void setListenerStopButton(ActionListener actionListener) {

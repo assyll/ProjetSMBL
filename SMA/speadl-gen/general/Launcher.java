@@ -4,6 +4,7 @@ import agents.IStart;
 import agents.interfaces.Callable;
 import agents.interfaces.IGetThread;
 import generalStructure.interfaces.CycleAlert;
+import generalStructure.interfaces.IControl;
 import generalStructure.interfaces.IInit;
 import generalStructure.interfaces.IStop;
 
@@ -56,6 +57,12 @@ public abstract class Launcher {
      * 
      */
     public IStop stopAllAgents();
+    
+    /**
+     * This can be called to access the provided port.
+     * 
+     */
+    public IControl control();
   }
   
   public interface Parts {
@@ -107,11 +114,20 @@ public abstract class Launcher {
       }
     }
     
+    private void init_control() {
+      assert this.control == null: "This is a bug.";
+      this.control = this.implementation.make_control();
+      if (this.control == null) {
+      	throw new RuntimeException("make_control() in general.Launcher should not return null.");
+      }
+    }
+    
     protected void initProvidedPorts() {
       init_call();
       init_finishedCycle();
       init_threads();
       init_stopAllAgents();
+      init_control();
     }
     
     public ComponentImpl(final Launcher implem, final Launcher.Requires b, final boolean doInits) {
@@ -152,6 +168,12 @@ public abstract class Launcher {
     
     public IStop stopAllAgents() {
       return this.stopAllAgents;
+    }
+    
+    private IControl control;
+    
+    public IControl control() {
+      return this.control;
     }
   }
   
@@ -221,6 +243,13 @@ public abstract class Launcher {
    * 
    */
   protected abstract IStop make_stopAllAgents();
+  
+  /**
+   * This should be overridden by the implementation to define the provided port.
+   * This will be called once during the construction of the component to initialize the port.
+   * 
+   */
+  protected abstract IControl make_control();
   
   /**
    * This can be called by the implementation to access the required ports.

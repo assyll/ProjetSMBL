@@ -2,6 +2,7 @@ package generalStructure.impl;
 
 import general.Launcher;
 import generalStructure.interfaces.CycleAlert;
+import generalStructure.interfaces.IControl;
 import generalStructure.interfaces.IStop;
 
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ import agents.interfaces.Do;
 import agents.interfaces.IGetThread;
 
 public class LauncherImpl extends Launcher
-implements Callable, CycleAlert, IGetThread, IStop {
+implements Callable, CycleAlert, IGetThread, IStop, IControl {
 
 	/**
 	 * Temps en milisecondes entre deux cycles consecutifs d'un agent.
@@ -70,15 +71,21 @@ implements Callable, CycleAlert, IGetThread, IStop {
 		requires().start().run_start();
 	}
 	
+	@Override
 	public void setPause() {
+		if (stop) {
+			initSMA();
+		}
 		_pause = stop ? false : !_pause;
 		stop = false;
 	}
 	
+	@Override
 	public boolean getPause() {
 		return _pause;
 	}
 	
+	@Override
 	public boolean getStop() {
 		return stop;
 	}
@@ -200,7 +207,7 @@ implements Callable, CycleAlert, IGetThread, IStop {
 	public void stop() {
 		stop = true;
 		System.out.println("STOP!");
-		initSMA();
+		//initSMA();
 	}
 	
 	private void initSMA() {
@@ -216,6 +223,12 @@ implements Callable, CycleAlert, IGetThread, IStop {
 	@Override
 	public void notifyStop() {
 		this.stop();
+	}
+
+	@Override
+	protected IControl make_control() {
+		// TODO Auto-generated method stub
+		return this;
 	}
 
 }

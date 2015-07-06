@@ -1,6 +1,7 @@
 package general;
 
 import generalStructure.interfaces.IInit;
+import generalStructure.interfaces.IPath;
 import trace.interfaces.TraceElement;
 
 @SuppressWarnings("all")
@@ -23,6 +24,12 @@ public abstract class FET {
      * 
      */
     public IInit init();
+    
+    /**
+     * This can be called to access the provided port.
+     * 
+     */
+    public IPath path();
   }
   
   public interface Parts {
@@ -58,9 +65,18 @@ public abstract class FET {
       }
     }
     
+    private void init_path() {
+      assert this.path == null: "This is a bug.";
+      this.path = this.implementation.make_path();
+      if (this.path == null) {
+      	throw new RuntimeException("make_path() in general.FET should not return null.");
+      }
+    }
+    
     protected void initProvidedPorts() {
       init_traceElement();
       init_init();
+      init_path();
     }
     
     public ComponentImpl(final FET implem, final FET.Requires b, final boolean doInits) {
@@ -89,6 +105,12 @@ public abstract class FET {
     
     public IInit init() {
       return this.init;
+    }
+    
+    private IPath path;
+    
+    public IPath path() {
+      return this.path;
     }
   }
   
@@ -144,6 +166,13 @@ public abstract class FET {
    * 
    */
   protected abstract IInit make_init();
+  
+  /**
+   * This should be overridden by the implementation to define the provided port.
+   * This will be called once during the construction of the component to initialize the port.
+   * 
+   */
+  protected abstract IPath make_path();
   
   /**
    * This can be called by the implementation to access the required ports.

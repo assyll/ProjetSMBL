@@ -20,7 +20,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 
 public class TraceElementEaterImpl extends TraceElementEater
-implements Runnable, ITakeAction, IInit {
+implements ITakeAction, IInit {
 	
 	private Thread _thread;
 	private Map<String, List<ActionTrace>> actionsByUserMap = new HashMap<>();
@@ -30,18 +30,22 @@ implements Runnable, ITakeAction, IInit {
 	public void init() {
 		actionsByUserMap = new HashMap<>();
 		newUsersList = new LinkedList<String>();
-		
+				
 		if (_thread != null) {
 			_thread.interrupt();
 			_thread = null;
 		}
-		
+				
 		_thread = new Thread(new Runnable() {
 
 			@Override
 			public void run() {
+				System.out.println("trace run !!!!!!!!!!!!!!!!");
 
-				ActionTrace action = (ActionTrace) TraceElementEaterImpl.this.requires().traceElement().getNextElement();
+				ActionTrace action = null;
+				while (action == null) {
+					action = (ActionTrace) TraceElementEaterImpl.this.requires().traceElement().getNextElement();
+				}
 
 				while(action != null) {
 					if (!actionsByUserMap.containsKey(action.getUserName())) {
@@ -60,11 +64,6 @@ implements Runnable, ITakeAction, IInit {
 		
 		_thread.start();
 		
-	}
-	
-	@Override
-	public void run() {
-		_thread.start();
 	}
 
 	@Override

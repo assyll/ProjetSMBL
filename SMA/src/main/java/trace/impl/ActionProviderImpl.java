@@ -20,8 +20,8 @@ public class ActionProviderImpl extends ActionProvider implements IInit {
 	
 	@Override
 	public void init() {
-		parts().fet().init();
-		parts().tee().init();
+		parts().fet().init().init();
+		parts().tee().init().init();
 	}
 	
 	@Override

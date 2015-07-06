@@ -1,6 +1,8 @@
 package general;
 
 import agents.interfaces.Callable;
+import generalStructure.interfaces.IControl;
+import generalStructure.interfaces.IPath;
 import generalStructure.interfaces.UpdateGraph;
 
 @SuppressWarnings("all")
@@ -17,6 +19,18 @@ public class FenetreComp {
      * 
      */
     public UpdateGraph updateGraph();
+    
+    /**
+     * This can be called by the implementation to access this required port.
+     * 
+     */
+    public IControl control();
+    
+    /**
+     * This can be called by the implementation to access this required port.
+     * 
+     */
+    public IPath setPath();
   }
   
   public interface Component extends FenetreComp.Provides {

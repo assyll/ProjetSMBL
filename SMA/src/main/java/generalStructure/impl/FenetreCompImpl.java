@@ -20,14 +20,21 @@ public class FenetreCompImpl extends FenetreComp {
 		fenetre.setListenerPlayPauseButton(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				((LauncherImpl) requires().callable()).setPause();
-				requires().callable().run();
+				String pathTraces;
+				if ((pathTraces = fenetre.getPathTracesSMA()) != null) {
+					requires().setPath().setPath(pathTraces);
+					requires().control().setPause();
+					requires().callable().run();
+				} else {
+					fenetre.ajouterMessageToTextColorStatut("Veuillez importer un fichier trace");
+				}
 			}
 		});
 		
 		fenetre.setListenerStopButton(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				fenetre.initPathTracesSMA();
 				requires().callable().stop();
 			}
 		});
@@ -41,8 +48,9 @@ public class FenetreCompImpl extends FenetreComp {
 		timer.schedule(new TimerTask() {
 			@Override
 			public void run() {
-				if (!((LauncherImpl) requires().callable()).getPause() &&
-						!((LauncherImpl) requires().callable()).getStop()) {
+				if (!requires().control().getPause() &&
+						!requires().control().getStop()) {
+					
 					Graph graph = requires().updateGraph().getGraph();
 					if (graph != null) {
 						fenetre.setRightGraph(graph);
