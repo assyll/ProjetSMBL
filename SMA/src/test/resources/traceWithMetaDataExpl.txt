@@ -1,0 +1,2 @@
+{"userName":"#SYS#","event":"NONE","action":"START","actionTarget":"WEBAPP","data":{},"timeStamp":"2015-01-15 01:00:50 AM"}
+{"userName":"lder","event":"NONE","action":"OPEN","actionTarget":"SCREEN","data":{"title":"Incubator","codePhase":"PHASE_ACCUEIL","mode":"DESK"},"timeStamp":"2015-01-15 01:02:54 AM"}

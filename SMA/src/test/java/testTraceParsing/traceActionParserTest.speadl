@@ -1,0 +1,15 @@
+import trace.interfaces.TraceElement
+
+namespace general{
+	
+	component TraceActionParserTestComp {
+		
+		provides actionTrace : TraceElement = tap.actionTrace
+		
+		part fet: FET 
+		
+		part tap : TraceActionParser {
+			bind traceElement to fet.traceElement
+		}
+	}
+}

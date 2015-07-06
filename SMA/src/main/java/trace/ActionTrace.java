@@ -33,4 +33,16 @@ public class ActionTrace {
 	}
 	
 
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof ActionTrace){
+			if(_action.equals(((ActionTrace)obj).getAction()) && (_userName.equals(((ActionTrace)obj).getUserName())))
+				return true;
+			
+			return false;
+		}
+		else {
+			return false;
+		}
+	}
 }
