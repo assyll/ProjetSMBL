@@ -58,7 +58,7 @@ public class BigEcoImpl extends BigEco implements ICreateAgent {
 	protected void start() {
 		super.start();
 
-		new Thread(new Runnable() {
+		/*new Thread(new Runnable() {
 
 			@Override
 			public void run() {
@@ -70,7 +70,7 @@ public class BigEcoImpl extends BigEco implements ICreateAgent {
 				
 				BigEcoImpl.this.parts().launcher().stopAllAgents().notifyStop();
 			}
-		}).start();;
+		}).start();*/
 	}
 
 	@Override

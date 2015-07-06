@@ -75,8 +75,10 @@ implements Callable, CycleAlert, IGetThread, IStop, IControl {
 	public void setPause() {
 		if (stop) {
 			initSMA();
+			_pause = false;
+		} else {
+			_pause = !_pause;
 		}
-		_pause = stop ? false : !_pause;
 		stop = false;
 	}
 	
