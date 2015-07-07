@@ -392,12 +392,12 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 		
 		// Parcours les enfants du premier etat
 		for (Child child1: children1) {
-			// recupere l'id de la transition
-			String transId1 = child1.getTransId();
-			// recupere le fils avec le meme id de transition
-			Child child2 = findChildByTransId(children2, transId1);
+			// recupere l'action
+			Action action = child1.getAction();
+			// recupere le fils avec la meme action
+			Child child2 = findChildByAction(children2, action);
 			// Si ces enfants n'ont pas le meme id, retourner FAUX
-			if (child1.getEndStateId().equals(child2.getEndStateId())) {
+			if (!child1.getEndStateId().equals(child2.getEndStateId())) {
 				return false;
 			}
 		}
@@ -406,15 +406,15 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 	}
 	
 	/**
-	 * Cherche le fils dont l'id de sa transition est la meme que celle
-	 * passee en parametre.
+	 * Cherche le fils dont l'action menant a lui est la meme que celle entree
+	 * en parametre.
 	 * @param children les fils
-	 * @param transId l'id de la transition
-	 * @return le fils avec cette meme transition
+	 * @param action l'action
+	 * @return le fils avec cette meme ation
 	 */
-	private Child findChildByTransId(List<Child> children, String transId) {
+	private Child findChildByAction(List<Child> children, Action action) {
 		for (Child child: children) {
-			if (child.getTransId().equals(transId)) {
+			if (child.getAction().equals(action)) {
 				return child;
 			}
 		}
