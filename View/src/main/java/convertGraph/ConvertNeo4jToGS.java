@@ -66,7 +66,7 @@ public class ConvertNeo4jToGS {
 				// Ajout de l'attribut source
 				boolean isSource = nodeNeo4j.
 						getLabels().iterator().next().name().equals("Racine");
-				nodeGS.addAttribute(GeneratorTraces._sourceAttribut, isSource ? "true" : "false");
+				nodeGS.addAttribute(GeneratorTraces._sourceAttribut, isSource ? true : false);
 				
 				// Enregistrement des relationship du noeud
 				Iterator<Relationship> iteratorRelationship =
