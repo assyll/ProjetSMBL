@@ -237,8 +237,19 @@ public class StateMemImpl extends Memory<StateMemory> implements StateMemory {
 	public void addChild(String stateId, String transId,
 			Action action, boolean childWithChild) {
 		_stateChildIdByTransId.put(transId, stateId);
+		
+		// ajout a la nouvelle liste
+		Child child = new Child(transId, stateId, action);
 		_childListArrayWithWithout[childWithChild ? 0 : 1].
-			add(new Child(transId, stateId, action));
+			add(child);
+		
+		// suppression (ou pas) a lancienne liste
+		try {
+			_childListArrayWithWithout[!childWithChild ? 0 : 1].
+			remove(child);
+		} catch (Exception e) {
+			
+		}
 	}
 
 
