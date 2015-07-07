@@ -8,6 +8,7 @@ import java.util.Map;
 
 import trace.Action;
 import trace.ActionTrace;
+import agents.Knowledge;
 import agents.impl.AbstractAct;
 import agents.impl.Child;
 import agents.impl.RequestMessage;
@@ -84,11 +85,11 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 				
 				// --------------- request ---------------
 				// Je lui envoie mes fils afin qu'il puisse evaluer si cest
-				// possible de fusionner ensemble.
+				// possible de fusionner ensemble et mes informations qui lui
+				// seront peut-etre utiles.
 				RequestMessage request = new RequestMessage(
 						id, agentId, RequestType.TRY_TO_MERGE,
-						new List[] {requires().memory().getChildrenWithSon(),
-								requires().memory().getChildrenWithoutSon()});
+						newKnowledge());
 				requires().sendMessage().sendRequestMessage(request);
 				// ---------------------------------------
 			}
@@ -139,7 +140,7 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 		System.out.println(id + ": Creation de la transition "+ids[0]+" ayant comme etat d'arrive "+ids[1]);
 		
 		// mis a jour de mes connaissances
-		requires().memory().addChild(ids[1], ids[0], false);
+		requires().memory().addChild(ids[1], ids[0], action.getAction(), false);
 		requires().memory().addAction(action.getAction(), ids[0]);
 		requires().memory().addNewInputTransition(ids[0], action.getAction());
 		
@@ -200,7 +201,8 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 			if (child != null && requires().memory().getChildrenWithoutSon().
 					contains(childId)) {
 				requires().memory().addChild(
-						child.getEndStateId(), child.getTransId(), true);
+						child.getEndStateId(), child.getTransId(),
+						child.getAction(), true);
 				System.out.println(id + ": add child "+ child.getEndStateId()+ " avec la transition "+child.getTransId());
 			}
 			break;
@@ -211,14 +213,24 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 			boolean canMerge = isPossibleToMerge(
 					requires().memory().getChildrenWithSon(),
 					requires().memory().getChildrenWithoutSon(),
-					((List []) request.getInformations())[0],
-					((List []) request.getInformations())[1]);
+					((Knowledge) request.getInformations()).getChildrenWithSohn(),
+					((Knowledge) request.getInformations()).getChildrenWithoutSohn());
+			
 			// Je lui reponds
 			ResponseMessage response =
 					new ResponseMessage(id, request.getSenderId(),
 					canMerge ? ResponseType.ACCEPT_MERGE :
-						ResponseType.REFUSE_MERGE, null);
+						ResponseType.REFUSE_MERGE,
+						requires().memory().getAllChildren());
 			requires().sendMessage().sendResponseMessage(response);
+			
+			// Si j'accepte, je met a jour mes connaissances
+			if (canMerge) {
+				System.out.println(id+" : met a jour mes conaissances"
+						+ "envoyees par " + request.getSenderId());
+				updateKnowledge((Knowledge) request.getInformations());
+			}
+			
 			System.out.println(id + "---FUSION--- "+request.getSenderId() + " me demande de fusionner et ma r�ponse est "+ canMerge);
 			break;
 			
@@ -233,9 +245,19 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 			List<String> transFatherList = requires().memory().getTransFatherList();
 			transFatherList.remove(request.getSenderId());
 			
+			// J'envoie mes informations a mon agent etat 'symetrique'
+			String brotherId = (String) request.getInformations();
+			if (brotherId != null) {
+				System.out.println(id + ": jenvoie mes infos"
+						+ " a mon brother ("+brotherId+")");
+				RequestMessage infosMessage = new RequestMessage(id, brotherId,
+						RequestType.SEND_INFOS, newKnowledge());
+				requires().sendMessage().sendRequestMessage(infosMessage);
+			}
+			
 			if (transFatherList.isEmpty()) {
 				// Je cree et envoie la requete a tous mes transitions fils
-				for (String transId: requires().memory().getTransFatherList()) {
+				for (String transId: requires().memory().getTransChildList()) {
 					System.out.println(id + ": " + "demande a " + transId +" de se suicider" );
 					RequestMessage suicideRequest = new RequestMessage(
 							id, transId, RequestType.SUICIDE_HIERARCHY, null);
@@ -253,10 +275,25 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 			
 			break;
 			
+		case SEND_INFOS:
+			// Mon agent symetrique menvoie des informations.
+			// Jactualise mes connaissances.
+			System.out.println(id+" :Je recupere les infos envoyees par "
+			+request.getSenderId());
+			updateKnowledge((Knowledge) request.getInformations());
+			
+			break;
+			
 		}
 		
 		requires().memory().removeRequestMsg();
 		endOfCycle();
+	}
+	
+	private void updateKnowledge(Knowledge knowledge) {
+		for (String userName: knowledge.getUserNames()) {
+			requires().memory().addNewUserName(userName);
+		}
 	}
 	
 	@Override
@@ -268,7 +305,8 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 		case ACCEPT_MERGE:
 			// Peut fusionner avec lui, lancer la procedure de fusion
 			System.out.println(id + ": "+ response.getSenderId() +" accepte de fusionner");
-			mergeWith(response.getSenderId(), response.getInformations());
+			mergeWith(response.getSenderId(), response.getInformations(),
+					(List<Child>) response.getInformations());
 			break;
 			
 		case REFUSE_MERGE:
@@ -390,8 +428,12 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 	 * @param mergeStateId id de l'agent resultant de la fusion
 	 * @param infosMergeStateId toutes informations utiles de l'agent
 	 *                          resultant de la fusion
+	 * @param childrenFusionState liste des fils de l'etat resultant de
+	 *                            la fusion
 	 */
-	private void mergeWith(String mergeStateId, Object infosMergeStateId) {
+	private void mergeWith(String mergeStateId, Object infosMergeStateId,
+			List<Child> childrenFusionState) {
+		
 		RequestMessage request;
 		
 		System.out.println(id + ": --- FUSION --- Je fusionne avec " + mergeStateId);
@@ -404,8 +446,11 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 			requires().sendMessage().sendRequestMessage(request);
 		}
 		
-		// Demande a ses transitions sortantes de se suicider
-		// Ne pas oublier de faire une reaction en chaine
+		// Demande a ses transitions sortantes de se suicider.
+		// Envoie aussi l'agent etat symetrique (celui qui resulte
+		// de la fusion) afin qu'il puisse envoyer ses connaissances
+		// avant de se suicider.
+		// Ne pas oublier de faire une reaction en chaine.
 		// cad: les transitions sortantes demandent a leur tour
 		//      a leurs etats d'arrives de se suicider s'ils n'ont pas
 		//      de transition entrante. Et ces etats qui se suicident
@@ -413,7 +458,8 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 		//      suicider ect ...
 		for (String transId: requires().memory().getTransChildList()) {
 			request = new RequestMessage(
-					id, transId, RequestType.SUICIDE_HIERARCHY, null);
+					id, transId, RequestType.SUICIDE_HIERARCHY,
+					getStateIdWithSameAction(transId, childrenFusionState));
 			requires().sendMessage().sendRequestMessage(request);
 		}
 		
@@ -429,9 +475,49 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 		
 	}
 	
+	/**
+	 * Renvoie l'id de l'agent etat dans la liste des childrenFusionState
+	 * dont l'action est la meme que celle de la transition entree en 
+	 * parametre.
+	 * @param transId transition
+	 * @param childrenFusionState liste des etats fils de l'etat resultant
+	 *                            de la fusion
+	 * @return l'id de l'agent etat dont l'action permettant d'arriver a lui
+	 *         par l'etat resultant de la fusion est la meme que celle de
+	 *         la transition entree en parametre
+	 */
+	private String getStateIdWithSameAction(String transId,
+			List<Child> childrenFusionState) {
+		
+		Action action = null;
+		for (Child child: requires().memory().getAllChildren()) {
+			if (child.getTransId().equals(transId)) {
+				action = child.getAction();
+			}
+		}
+		
+		for (Child child: childrenFusionState) {
+			if (child.getAction().equals(action)) {
+				return child.getEndStateId();
+			}
+		}
+		
+		return null;
+	}
+	
 	private void suicide() {
 		requires().graph().majStateAgent(id, null);
 		requires().suicide().suicide();
+	}
+	
+	/**
+	 * Renvoie ses connaissances sous la forme d'objet.
+	 * @return ses conaissances en Knowledge
+	 */
+	private Knowledge newKnowledge() {
+		return new Knowledge(requires().memory().getUserNameWaitingForTraceList(),
+				requires().memory().getChildrenWithSon(),
+				requires().memory().getChildrenWithoutSon());
 	}
 
 }

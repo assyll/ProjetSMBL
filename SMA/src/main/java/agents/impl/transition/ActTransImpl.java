@@ -63,7 +63,8 @@ implements TransAction {
 			
 			// Creation de la requete
 			RequestMessage suicideRequest = new RequestMessage(
-					id, stateCibleId, RequestType.SUICIDE_HIERARCHY, null);
+					id, stateCibleId, RequestType.SUICIDE_HIERARCHY,
+					(String) request.getInformations());
 			
 			// Envoie de la requete
 			requires().sendMessage().sendRequestMessage(suicideRequest);

@@ -20,6 +20,9 @@ package agents.impl;
  *                    
  * ASK_THE_FATHER_TO_MERGE:  permet de demander a ses peres s'il veut et peut
  *                           fusionner apres que moi je viens de faire.
+ *                           
+ * SEND_INFOS:               permet a un agent d'envoyer ses informations a
+ *                           un autre agent.
  */
 public enum RequestType implements Type {
 	TRY_TO_MERGE,
@@ -28,5 +31,6 @@ public enum RequestType implements Type {
 	WAIT_FOR_NEXT_ACTION,
 	UPDATE_CHILD,
 	SUICIDE_HIERARCHY,
-	ASK_THE_FATHER_TO_MERGE;
+	ASK_THE_FATHER_TO_MERGE,
+	SEND_INFOS;
 }

@@ -234,10 +234,11 @@ public class StateMemImpl extends Memory<StateMemory> implements StateMemory {
 
 
 	@Override
-	public void addChild(String stateId, String transId, boolean childWithChild) {
+	public void addChild(String stateId, String transId,
+			Action action, boolean childWithChild) {
 		_stateChildIdByTransId.put(transId, stateId);
 		_childListArrayWithWithout[childWithChild ? 0 : 1].
-			add(new Child(transId, stateId));
+			add(new Child(transId, stateId, action));
 	}
 
 
@@ -397,6 +398,16 @@ public class StateMemImpl extends Memory<StateMemory> implements StateMemory {
 	@Override
 	public void setHasMoved(boolean hasMoved) {
 		_hasMoved = hasMoved;
+	}
+
+
+
+	@Override
+	public List<Child> getAllChildren() {
+		List<Child> children = new ArrayList<>();
+		children.addAll(_childListArrayWithWithout[0]);
+		children.addAll(_childListArrayWithWithout[1]);
+		return children;
 	}
 
 
