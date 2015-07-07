@@ -372,6 +372,7 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 			List<Child> childWith1, List<Child> childWithout1,
 			List<Child> childWith2, List<Child> childWithout2) {
 		System.out.println("NB FILS AVEC FILS = "+ childWith1.size()+"  "+childWith2.size());
+		System.out.println("NB FILS SANS FILS");
 		// 1er cas: ils n'ont que des fils sans fils
 		if (childWith1.size() == 0 && childWith2.size() == 0) {
 			System.out.println("1er cas");
@@ -401,17 +402,24 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 	private boolean actionsLeadSameState(
 			List<Child> children1, List<Child> children2) {
 
+		// Si ils nont pas le meme nombre de fils avec fils, retouner FAUX
+		if (children1.size() != children2.size()) {
+			return false;
+		}
+		
 		// Parcours les enfants du premier etat
 		for (Child child1: children1) {
 			// recupere l'action
 			Action action = child1.getAction();
 			// recupere le fils avec la meme action
 			Child child2 = findChildByAction(children2, action);
-			// Si ces enfants n'ont pas le meme id, retourner FAUX
-			if ((child2 != null) && !child1.getEndStateId().equals(child2.getEndStateId())) {
+			// Si il n y a pas detat symetrique a celui-ci ou
+			// si ces enfants n'ont pas le meme id, retourner FAUX
+			if (child2 == null || !child1.getEndStateId().equals(child2.getEndStateId())) {
 				return false;
 			}
 		}
+		
 		// Si tout cest bien passe, retourner VRAI
 		return true;
 	}
