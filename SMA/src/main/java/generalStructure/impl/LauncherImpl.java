@@ -159,7 +159,7 @@ implements Callable, CycleAlert, IGetThread, IStop, IControl {
 				System.out.println("suppression--------------------------------"+agents.size());
 				if(agents.size() == 0) {
 					execService.shutdownNow();
-					this.requires().stopProcessus().notifyStop();
+					//this.requires().stopProcessus().notifyStop();
 					System.out.println(execService.isShutdown());
 					System.out.println("Threads = "+Thread.activeCount());
 				}
