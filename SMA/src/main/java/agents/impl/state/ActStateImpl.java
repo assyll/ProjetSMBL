@@ -77,6 +77,7 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 
 		System.out.println();*/
 
+		int nbDemandes = 0;
 		String agentIdList = "[";
 		for (String agentId: agentIds) {
 
@@ -91,9 +92,12 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 						id, agentId, RequestType.TRY_TO_MERGE,
 						newKnowledge());
 				requires().sendMessage().sendRequestMessage(request);
+				nbDemandes++;
 				// ---------------------------------------
 			}
 		}
+		
+		initMergeResponse(nbDemandes);
 
 		logger("asks to merge", "receiver agent id", agentIdList);
 		endOfCycle();
@@ -311,6 +315,7 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 		ResponseMessage response = requires().memory().getResponseMessage();
 		switch ((ResponseType) response.getType()) {
 		case ACCEPT_MERGE:
+			incrementeMergeResponse();
 			// Peut fusionner avec lui, lancer la procedure de fusion
 			System.out.println(id + ": "+ response.getSenderId() +" accepte de fusionner");
 			mergeWith(response.getSenderId(), response.getInformations(),
@@ -318,6 +323,7 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 			break;
 
 		case REFUSE_MERGE:
+			incrementeMergeResponse();
 			// Peut pas fusionner avec lui, ne rien faire
 			System.out.println(id + ": "+ response.getSenderId() +" refuse de fusionner");
 			doNothing();
@@ -537,6 +543,32 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 		return new Knowledge(requires().memory().getUserNameWaitingForTraceList(),
 				requires().memory().getChildrenWithSon(),
 				requires().memory().getChildrenWithoutSon());
+	}
+	
+	/**
+	 * Remet le jeton.
+	 */
+	public void giveToken() {
+		requires().setContext().giveToken(requires().memory().getActionList());
+	}
+	
+	public void initMergeResponse(int max) {
+		requires().memory().setMergeResponse(0);
+		requires().memory().setMaxMergeResponse(max);
+		System.out.println(id+" : jattends la reponse de " + max+ " agents");
+	}
+	
+	public void incrementeMergeResponse() {
+		System.out.println(id+" : un agent ma repondu");
+		int nbMergeResponse = requires().memory().getMergeResponse();
+		requires().memory().setMergeResponse(
+				nbMergeResponse + 1);
+		
+		// toutes les reponses ont etes recues
+		if (nbMergeResponse + 1 == requires().memory().getMaxMergeResponse()) {
+			System.out.println(id+" : tous les agents mont repondus: jdepose le jeton");
+			giveToken();
+		}
 	}
 
 }

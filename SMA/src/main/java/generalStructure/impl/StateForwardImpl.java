@@ -191,4 +191,14 @@ implements CycleAlert, ContextInfos, EnvUpdate, SendMessage, PullMessage, ILog, 
 		}
 	}
 
+	@Override
+	public boolean getToken(List<Action> listeActions) {
+		return eco_requires().h().getToken(listeActions);
+	}
+
+	@Override
+	public void giveToken(List<Action> actions) {
+		eco_requires().k().giveToken(actions);
+	}
+
 }

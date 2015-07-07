@@ -23,6 +23,17 @@ public class PerceiveStateImpl extends AbstractPerceive<ContextInfos, StateMemor
 	public void makePerception() {
 		System.out.println(id + " Perception");
 		
+		// Je prends le jeton (ou pas) pour mautoriser a fusion si besoin (ou pas)
+		requires().memory().setTokenOnMyCell(
+				requires().getContext().getToken(
+						requires().memory().getActionList()));
+		
+		if (requires().memory().hasTokenOnMyCell()) {
+			System.out.println(id+" : jai pris un jeton");
+		} else {
+			System.out.println(id+" : jnai pas pu prendre de jeton");
+		}
+		
 		// J'actualise ma liste des voisins
 		requires().memory().setAgentIdInMyCell(requires().getContext().getAllAgentsInCell(
 				requires().memory().getActionList()));

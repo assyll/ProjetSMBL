@@ -12,6 +12,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import trace.Action;
 import environnement.interfaces.CellInfo;
+import environnement.interfaces.CellUpdate;
 import environnement.interfaces.ContextInfos;
 import environnement.interfaces.EnvInfos;
 import environnement.interfaces.EnvUpdate;
@@ -199,6 +200,16 @@ implements EnvUpdate, EnvInfos, IInit {
 			writeToFile();
 		}
 	}
+	
+	@Override
+	public boolean getToken(List<Action> listeActions) {
+		return getCellByActionList(listeActions).getToken();
+	}
+
+	@Override
+	public void giveToken(List<Action> actions) {
+		getCellByActionList(actions).giveToken();
+	}
 
 	private CellImpl getCellByActionList(List<Action> actionList) {
 		synchronized (cellsByLevel) {
@@ -215,12 +226,15 @@ implements EnvUpdate, EnvInfos, IInit {
 		}
 	}
 
-	private class CellImpl extends Cell<EnvInfos, EnvUpdate> implements CellInfo {
+	private class CellImpl extends Cell<EnvInfos, EnvUpdate>
+	implements CellInfo, CellUpdate {
 
+		private boolean hasToken;
 		private List<Action> cellActionList;
 		private List<String> agentsEtatIDList;
 
 		public CellImpl(List<Action> actions) {
+			hasToken = true;
 			cellActionList = new ArrayList<>(actions);
 			agentsEtatIDList = new ArrayList<String>();
 		}
@@ -247,6 +261,34 @@ implements EnvUpdate, EnvInfos, IInit {
 		@Override
 		public void removeStateAgent(String id) {
 			agentsEtatIDList.remove(id);
+		}
+
+		/**
+		 * Donne la permission de fusionner en retirant le jeton.
+		 * S'il peut, le jeton est consomme.
+		 */
+		@Override
+		public boolean getToken() {
+			synchronized (new Boolean(hasToken)) {
+				boolean hadToken = hasToken;
+				hasToken = false;
+				return hadToken;
+			}
+		}
+		
+		/**
+		 * Remet le jeton qu'il avait pris.
+		 */
+		@Override
+		public void giveToken() {
+			synchronized(new Boolean(hasToken)) {
+				hasToken = true;
+			}
+		}
+
+		@Override
+		protected CellUpdate make_cellUpdate() {
+			return this;
 		}
 
 	}

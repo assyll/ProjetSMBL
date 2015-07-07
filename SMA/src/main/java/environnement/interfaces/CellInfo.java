@@ -10,4 +10,5 @@ public interface CellInfo {
 	public List<String> getAgentIDList();
 	public void addNewStateAgent(String id);
 	public void removeStateAgent(String id);
+	public boolean getToken();
 }

@@ -17,6 +17,9 @@ import agents.interfaces.StateMemory;
 
 public class StateMemImpl extends Memory<StateMemory> implements StateMemory {
 
+	private int mergeResponses;
+	private int mergeResponsesMax;
+	private boolean _token;
 	private String _stateId;
 	private boolean _waitingForTraceElmt, _gotRequest, _waitingForResponse, _gotResponse, _actionsToProcess;
 	private List<String> _userNameWaitingForTraceList;
@@ -34,6 +37,8 @@ public class StateMemImpl extends Memory<StateMemory> implements StateMemory {
 	private boolean _hasMoved;
 
 	public StateMemImpl(String id, boolean isRoot) {
+		mergeResponses = 0;
+		mergeResponsesMax = 0;
 		_stateId = id;
 		this._isRoot = isRoot;
 		_waitingForTraceElmt = false;
@@ -419,6 +424,48 @@ public class StateMemImpl extends Memory<StateMemory> implements StateMemory {
 		children.addAll(_childListArrayWithWithout[0]);
 		children.addAll(_childListArrayWithWithout[1]);
 		return children;
+	}
+
+
+
+	@Override
+	public boolean hasTokenOnMyCell() {
+		return _token;
+	}
+
+
+
+	@Override
+	public void setTokenOnMyCell(boolean token) {
+		_token = token;
+	}
+
+
+
+	@Override
+	public int getMergeResponse() {
+		return mergeResponses;
+	}
+
+
+
+	@Override
+	public void setMergeResponse(int nb) {
+		mergeResponses = nb;
+	}
+
+
+
+	@Override
+	public int getMaxMergeResponse() {
+		return mergeResponsesMax;
+	}
+
+
+
+	@Override
+	public void setMaxMergeResponse(int max) {
+		mergeResponsesMax = max;
 	}
 
 

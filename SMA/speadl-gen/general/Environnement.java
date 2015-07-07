@@ -1,6 +1,7 @@
 package general;
 
 import environnement.interfaces.CellInfo;
+import environnement.interfaces.CellUpdate;
 import generalStructure.interfaces.IInit;
 import java.util.List;
 import trace.Action;
@@ -128,6 +129,12 @@ public abstract class Environnement<Context, ContextUpdate> {
        * 
        */
       public CellInfo cellInfos();
+      
+      /**
+       * This can be called to access the provided port.
+       * 
+       */
+      public CellUpdate cellUpdate();
     }
     
     public interface Parts<Context, ContextUpdate> {
@@ -155,8 +162,17 @@ public abstract class Environnement<Context, ContextUpdate> {
         }
       }
       
+      private void init_cellUpdate() {
+        assert this.cellUpdate == null: "This is a bug.";
+        this.cellUpdate = this.implementation.make_cellUpdate();
+        if (this.cellUpdate == null) {
+        	throw new RuntimeException("make_cellUpdate() in general.Environnement$Cell<Context, ContextUpdate> should not return null.");
+        }
+      }
+      
       protected void initProvidedPorts() {
         init_cellInfos();
+        init_cellUpdate();
       }
       
       public ComponentImpl(final Environnement.Cell<Context, ContextUpdate> implem, final Environnement.Cell.Requires<Context, ContextUpdate> b, final boolean doInits) {
@@ -179,6 +195,12 @@ public abstract class Environnement<Context, ContextUpdate> {
       
       public CellInfo cellInfos() {
         return this.cellInfos;
+      }
+      
+      private CellUpdate cellUpdate;
+      
+      public CellUpdate cellUpdate() {
+        return this.cellUpdate;
       }
     }
     
@@ -227,6 +249,13 @@ public abstract class Environnement<Context, ContextUpdate> {
      * 
      */
     protected abstract CellInfo make_cellInfos();
+    
+    /**
+     * This should be overridden by the implementation to define the provided port.
+     * This will be called once during the construction of the component to initialize the port.
+     * 
+     */
+    protected abstract CellUpdate make_cellUpdate();
     
     /**
      * This can be called by the implementation to access the required ports.

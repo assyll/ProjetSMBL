@@ -63,4 +63,12 @@ public interface StateMemory {
 	public boolean hasMoved();
 	public void setHasMoved(boolean hasMoved);
 	
+	public void setTokenOnMyCell(boolean token);
+	public boolean hasTokenOnMyCell();
+	
+	public int getMergeResponse();
+	public void setMergeResponse(int nb);
+	public int getMaxMergeResponse();
+	public void setMaxMergeResponse(int max);
+	
 }

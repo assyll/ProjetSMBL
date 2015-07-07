@@ -10,4 +10,6 @@ public interface EnvUpdate {
 	public void addStateAgent(String id);
 	public void addStateAgent(String id, List<Action> actions);
 	public void removeAgent(String id, List<Action> actions);
+	
+	public void giveToken(List<Action> actions);
 }
