@@ -161,4 +161,9 @@ implements CycleAlert, EnvInfos, EnvUpdate, SendMessage, PullMessage, ILog, IGra
 		
 	}
 
+	@Override
+	public RequestMessage pullRequestMessageFromChild() {
+		return null;
+	}
+
 }

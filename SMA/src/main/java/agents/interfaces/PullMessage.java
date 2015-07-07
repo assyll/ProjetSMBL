@@ -7,5 +7,6 @@ public interface PullMessage {
 
 	public RequestMessage pullRequestMessage();
 	public ResponseMessage pullResponseMessage();
+	public RequestMessage pullRequestMessageFromChild();
 	
 }

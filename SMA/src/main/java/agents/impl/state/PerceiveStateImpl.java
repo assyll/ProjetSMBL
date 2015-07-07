@@ -31,7 +31,17 @@ public class PerceiveStateImpl extends AbstractPerceive<ContextInfos, StateMemor
 		ActionTrace action = null;
 		Message message;
 		
-		if(requires().memory().isWaitingForTraceElmt()) {
+		// J'essaie de recuperer des requete
+		if ( !requires().memory().hasGotRequestMessage() &&
+				(message = requires().getMessage().pullRequestMessageFromChild()) != null) {
+			System.out.println("***************************--------------------****************");
+			requires().memory().setRequestMessage((RequestMessage) message);
+			System.out.println(id + ": recuperation requete de " +
+					((RequestMessage) message).getSenderId());
+			hasRealizedAction = true;
+		}
+		
+		if(!hasRealizedAction && requires().memory().isWaitingForTraceElmt()) {
 			System.out.println(id + ": attend un prochain element de trace");
 			//J'essai de recuperer la prochaine trace via le forward et de la mettre dans la memoire de l'agent
 			List<String> userNameList = requires().memory().getUserNameWaitingForTraceList();
@@ -68,13 +78,15 @@ public class PerceiveStateImpl extends AbstractPerceive<ContextInfos, StateMemor
 		}
 		
 		// J'essaie de recuperer une reponse
-		if (!hasRealizedAction && (message = requires().getMessage().pullResponseMessage()) != null) {
+		if (!hasRealizedAction && !requires().memory().hasGotResponseMessage()
+				&& (message = requires().getMessage().pullResponseMessage()) != null) {
 			requires().memory().setResponseMessage((ResponseMessage) message);
 			hasRealizedAction = true;
 		}
 		
 		// J'essaie de recuperer des requete
-		if (!hasRealizedAction && (message = requires().getMessage().pullRequestMessage()) != null) {
+		if (!hasRealizedAction && !requires().memory().hasGotRequestMessage() && 
+				(message = requires().getMessage().pullRequestMessage()) != null) {
 			requires().memory().setRequestMessage((RequestMessage) message);
 			System.out.println(id + ": recuperation requete de " +
 					((RequestMessage) message).getSenderId());

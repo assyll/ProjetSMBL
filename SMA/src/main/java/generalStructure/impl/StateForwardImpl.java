@@ -16,6 +16,7 @@ import trace.Action;
 import trace.ActionTrace;
 import trace.interfaces.ITakeAction;
 import agents.impl.RequestMessage;
+import agents.impl.RequestType;
 import agents.impl.ResponseMessage;
 import agents.interfaces.PullMessage;
 import agents.interfaces.SendMessage;
@@ -26,6 +27,8 @@ public class StateForwardImpl extends StateForward<CycleAlert, ContextInfos, Env
 implements CycleAlert, ContextInfos, EnvUpdate, SendMessage, PullMessage, ILog, IGraph {
 
 	private List<RequestMessage> requestMessagesQueue;
+	private List<RequestMessage> requestMessagesFromChildQueue;
+
 	private List<ResponseMessage> responseMessagesQueue;
 	private List<ActionTrace> traceElementQueue;
 	private String id;
@@ -34,6 +37,7 @@ implements CycleAlert, ContextInfos, EnvUpdate, SendMessage, PullMessage, ILog, 
 		this.id = id;
 		requestMessagesQueue = new LinkedList<>();
 		responseMessagesQueue = new LinkedList<>();
+		requestMessagesFromChildQueue = new LinkedList<RequestMessage>();
 		traceElementQueue = new LinkedList<>();
 	}
 	
@@ -162,7 +166,11 @@ implements CycleAlert, ContextInfos, EnvUpdate, SendMessage, PullMessage, ILog, 
 	}
 	
 	public void pushRequestMessage(RequestMessage request) {
-		requestMessagesQueue.add(request);
+		if(request.getType().equals(RequestType.ADD_CHILD)) {
+			requestMessagesFromChildQueue.add(request);
+		} else {
+			requestMessagesQueue.add(request);
+		}
 	}
 	
 	public void pushResponseMessage(ResponseMessage response) {
@@ -172,6 +180,15 @@ implements CycleAlert, ContextInfos, EnvUpdate, SendMessage, PullMessage, ILog, 
 	@Override
 	public void closeGraph() {
 
+	}
+
+	@Override
+	public RequestMessage pullRequestMessageFromChild() {
+		try {
+			return requestMessagesFromChildQueue.remove(0);
+		} catch (Exception e) {
+			return null;
+		}
 	}
 
 }

@@ -206,8 +206,8 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 			String childId = request.getSenderId();
 			Child child = findChildById(childId);
 			// Mis a jour
-			if (child != null && requires().memory().getChildrenWithoutSon().
-					contains(childId)) {
+			
+			if (child != null ) {
 				requires().memory().addChild(
 						child.getEndStateId(), child.getTransId(),
 						child.getAction(), true);
@@ -408,7 +408,7 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 			// recupere le fils avec la meme action
 			Child child2 = findChildByAction(children2, action);
 			// Si ces enfants n'ont pas le meme id, retourner FAUX
-			if (!child1.getEndStateId().equals(child2.getEndStateId())) {
+			if ((child2 != null) && !child1.getEndStateId().equals(child2.getEndStateId())) {
 				return false;
 			}
 		}
