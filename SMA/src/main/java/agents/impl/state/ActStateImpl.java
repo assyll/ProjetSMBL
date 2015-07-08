@@ -69,7 +69,7 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 
 	@Override
 	public void askToMerge(List<String> agentIds) {
-		System.out.print(id + " --- FUSION --- demande de fusion avec : " + agentIds.get(0)+"...");
+		System.out.print(id + " --- FUSION --- demande de fusion ...");
 
 		/*for(String agentId : agentIds) {
 			System.out.print(agentId + " ");
@@ -77,6 +77,7 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 
 		System.out.println();*/
 
+		initMergeResponse();
 		int nbDemandes = 0;
 		String agentIdList = "[";
 		for (String agentId: agentIds) {
@@ -97,7 +98,7 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 			}
 		}
 		
-		initMergeResponse(nbDemandes);
+		initMaxMergeResponse(nbDemandes);
 
 		logger("asks to merge", "receiver agent id", agentIdList);
 		endOfCycle();
@@ -329,9 +330,10 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 		ResponseMessage response = requires().memory().getResponseMessage();
 		switch ((ResponseType) response.getType()) {
 		case ACCEPT_MERGE:
-			incrementeMergeResponse();
+			freeToken();
 			// Peut fusionner avec lui, lancer la procedure de fusion
 			System.out.println(id + ": "+ response.getSenderId() +" accepte de fusionner");
+			
 			mergeWith(response.getSenderId(), response.getInformations(),
 					(List<Child>) response.getInformations());
 			break;
@@ -545,6 +547,7 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 	}
 
 	private void suicide() {
+		requires().setContext().removeAgent(id, requires().memory().getActionList());
 		requires().graph().majStateAgent(id, null);
 		requires().suicide().suicide();
 	}
@@ -568,10 +571,24 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 		requires().setContext().giveToken(requires().memory().getActionList());
 	}
 	
-	public void initMergeResponse(int max) {
+	public void initMergeResponse() {
 		requires().memory().setMergeResponse(0);
+	}
+	
+	public void initMaxMergeResponse(int max) {
 		requires().memory().setMaxMergeResponse(max);
 		System.out.println(id+" : jattends la reponse de " + max+ " agents");
+	}
+	
+	/**
+	 * Je libere le jeton si je lai.
+	 * Je met max a -1 pour par quil redonne le jeton dans incremente.
+	 */
+	public void freeToken() {
+		if (requires().memory().hasTokenOnMyCell()) {
+			requires().memory().setMaxMergeResponse(-1);
+			giveToken();
+		}
 	}
 	
 	public void incrementeMergeResponse() {

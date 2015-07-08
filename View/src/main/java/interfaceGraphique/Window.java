@@ -1680,6 +1680,7 @@ public class Window extends JFrame {
 	}
 	
 	private Graph cloneGraphGS(Graph graph) {
+		
 		Graph graphClone = new MultiGraph("clone");
 		
 		for (Node node: graph.getEachNode()) {
@@ -1700,41 +1701,38 @@ public class Window extends JFrame {
 		return graphClone;
 	}
 	
-	private boolean equalsGraph(Graph graph1, Graph graph2) {
-		//TODO
-		return false;
-	}
-	
 	public void setRightGraph(Graph graph) {
-		if (!equalsGraph(graphAgent, cloneGraphGS(graph))) {
+			
+		try {
 			graphAgent = cloneGraphGS(graph);
+		} catch (Exception e) {
 			
-			frame.setCursor(Cursor
-					.getPredefinedCursor(Cursor.WAIT_CURSOR));
-			
-			if (!isGraphAgentLoaded) {
-				turnAutoLayoutButtonOn(structGraphAgent);
-				initGraphPropertiesAgent();
-				initPanelGraphAgent();
-			} else {
-				
-				initGraphPropertiesAgent();
-				initPanelGraphAgent();
-			}
-			
-			frame.setCursor(Cursor
-					.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-			
-			for (Edge edge : graphAgent.getEachEdge()) {
-				GraphModifier.setUILabelEdge("action", edge);
-			}
-			
-			try {
-				treeLayoutAgent.doClick();
-			} catch (Exception e) {
-				
-			}
+		}
 		
+		frame.setCursor(Cursor
+				.getPredefinedCursor(Cursor.WAIT_CURSOR));
+		
+		if (!isGraphAgentLoaded) {
+			turnAutoLayoutButtonOn(structGraphAgent);
+			initGraphPropertiesAgent();
+			initPanelGraphAgent();
+		} else {
+			
+			initGraphPropertiesAgent();
+			initPanelGraphAgent();
+		}
+		
+		frame.setCursor(Cursor
+				.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+		
+		for (Edge edge : graphAgent.getEachEdge()) {
+			GraphModifier.setUILabelEdge("action", edge);
+		}
+		
+		try {
+			treeLayoutAgent.doClick();
+		} catch (Exception e) {
+			
 		}
 		
 	}
