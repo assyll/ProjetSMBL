@@ -35,8 +35,10 @@ public class StateMemImpl extends Memory<StateMemory> implements StateMemory {
 	private List<String> agentIdInMyCell;
 	private List<Child>[] _childListArrayWithWithout;
 	private boolean _hasMoved;
+	private boolean _isWaitingToMerge;
 
 	public StateMemImpl(String id, boolean isRoot) {
+		_isWaitingToMerge = false;
 		mergeResponses = 0;
 		mergeResponsesMax = 0;
 		_stateId = id;
@@ -466,6 +468,20 @@ public class StateMemImpl extends Memory<StateMemory> implements StateMemory {
 	@Override
 	public void setMaxMergeResponse(int max) {
 		mergeResponsesMax = max;
+	}
+
+
+
+	@Override
+	public boolean isWaitingToMerge() {
+		return _isWaitingToMerge;
+	}
+
+
+
+	@Override
+	public void setWaitingToMerge(boolean wantToMerge) {
+		_isWaitingToMerge = wantToMerge;
 	}
 
 

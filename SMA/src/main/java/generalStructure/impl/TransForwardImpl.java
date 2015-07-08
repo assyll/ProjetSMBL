@@ -172,8 +172,8 @@ implements CycleAlert, EnvInfos, EnvUpdate, SendMessage, PullMessage, ILog, IGra
 	}
 
 	@Override
-	public boolean getToken(List<Action> listeActions) {
-		return eco_requires().h().getToken(listeActions);
+	public boolean takeToken(List<Action> listeActions) {
+		return eco_requires().k().takeToken(listeActions);
 	}
 
 }

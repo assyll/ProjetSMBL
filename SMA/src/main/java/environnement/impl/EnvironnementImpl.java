@@ -200,15 +200,15 @@ implements EnvUpdate, EnvInfos, IInit {
 			writeToFile();
 		}
 	}
-	
-	@Override
-	public boolean getToken(List<Action> listeActions) {
-		return getCellByActionList(listeActions).getToken();
-	}
 
 	@Override
 	public void giveToken(List<Action> actions) {
 		getCellByActionList(actions).giveToken();
+	}
+	
+	@Override
+	public boolean takeToken(List<Action> listeActions) {
+		return getCellByActionList(listeActions).takeToken();
 	}
 
 	private CellImpl getCellByActionList(List<Action> actionList) {
@@ -262,19 +262,6 @@ implements EnvUpdate, EnvInfos, IInit {
 		public void removeStateAgent(String id) {
 			agentsEtatIDList.remove(id);
 		}
-
-		/**
-		 * Donne la permission de fusionner en retirant le jeton.
-		 * S'il peut, le jeton est consomme.
-		 */
-		@Override
-		public boolean getToken() {
-			synchronized (new Boolean(hasToken)) {
-				boolean hadToken = hasToken;
-				hasToken = false;
-				return hadToken;
-			}
-		}
 		
 		/**
 		 * Remet le jeton qu'il avait pris.
@@ -289,6 +276,18 @@ implements EnvUpdate, EnvInfos, IInit {
 		@Override
 		protected CellUpdate make_cellUpdate() {
 			return this;
+		}
+
+		/**
+		 * Prend le jeton s'il y est.
+		 */
+		@Override
+		public boolean takeToken() {
+			synchronized (new Boolean(hasToken)) {
+				boolean hadToken = hasToken;
+				hasToken = false;
+				return hadToken;
+			}
 		}
 
 	}

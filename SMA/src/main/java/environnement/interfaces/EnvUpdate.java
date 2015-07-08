@@ -11,5 +11,6 @@ public interface EnvUpdate {
 	public void addStateAgent(String id, List<Action> actions);
 	public void removeAgent(String id, List<Action> actions);
 	
+	public boolean takeToken(List<Action> listeActions);
 	public void giveToken(List<Action> actions);
 }

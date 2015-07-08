@@ -295,6 +295,20 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 			updateKnowledge((Knowledge) request.getInformations());
 
 			break;
+			
+		case ASK_THE_FATHER_TO_MERGE:
+			System.out.println(id+": ---FUSION--- un fils me notifie de fusionner");
+			// Un de mes fils a fusionne, jtente de fusionner a mon tour
+			if (requires().memory().getAgentIdInMyCell().size() > 0) {
+				System.out.println(id+": ---FUSION--- jaccepte et tente de fusionner");
+				requires().memory().setWaitingToMerge(true);
+				tryToTakeToken();
+			} else {
+				System.out.println(id+": ---FUSION--- jpeux pas fusionner");
+				doNothing();
+			}
+			
+			break;
 
 		}
 
@@ -549,6 +563,8 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 	 * Remet le jeton.
 	 */
 	public void giveToken() {
+		System.out.println(id+" ---- JETON ---- je remet le jeton !");
+		requires().memory().setTokenOnMyCell(false);
 		requires().setContext().giveToken(requires().memory().getActionList());
 	}
 	
@@ -569,6 +585,16 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 			System.out.println(id+" : tous les agents mont repondus: jdepose le jeton");
 			giveToken();
 		}
+	}
+
+	@Override
+	public void tryToTakeToken() {
+		System.out.println(id+" ------ JETON ------- Je tente de prendre un jeton");
+		boolean token = requires().setContext().takeToken(
+				requires().memory().getActionList());
+		requires().memory().setTokenOnMyCell(token);
+		System.out.println(id+" ------ JETON ------- " + (token ? "PRIS" : "PAS PRIS"));
+		endOfCycle();
 	}
 
 }

@@ -20,9 +20,7 @@ public class DecideStateImpl extends AbstractDecide<StateAction, StateMemory> {
 	@Override
 	public void makeDecision() {
 		System.out.println("Decision de " + id);
-		
-		boolean wantToMerge = false;
-		
+				
 		// Si j'ai une reponse a traiter
 		if (requires().memory().hasGotResponseMessage()) {
 			System.out.println(id + ": reponse recu");
@@ -38,13 +36,18 @@ public class DecideStateImpl extends AbstractDecide<StateAction, StateMemory> {
 			System.out.println(id + ": element de trace recu");
 			processActionTrace(requires().memory().getNextAction());
 			
-		// Si j'ai au moins un voisin ET si je viens de bouger au cycle precedent
-		// ET jai la possibilite de prendre un jeton sur ma cellule
-		} else if (requires().memory().hasTokenOnMyCell() &&
-				requires().memory().hasMoved() &&
-				requires().memory().getAgentIdInMyCell().size() > 0) {
-			wantToMerge = true;
+		// Si j'ai un jeton
+		} else if (requires().memory().hasTokenOnMyCell()) {
 			requires().action().askToMerge(requires().memory().getAgentIdInMyCell());
+			requires().memory().setWaitingToMerge(false);
+			
+		// Si j'ai au moins un voisin ET si je viens de bouger au cycle precedent
+		// OU je suis en attente de fusion
+		} else if (requires().memory().isWaitingToMerge() ||
+				(requires().memory().hasMoved() &&
+				requires().memory().getAgentIdInMyCell().size() > 0)) {
+			requires().memory().setWaitingToMerge(true);
+			requires().action().tryToTakeToken();
 			
 		// Sinon
 		} else {
@@ -52,11 +55,6 @@ public class DecideStateImpl extends AbstractDecide<StateAction, StateMemory> {
 			requires().action().doNothing();
 		}
 		
-		// S'il veut pas fusionner, remettre le jeton
-		if (!wantToMerge) {
-			System.out.println(id+" : jfusionne pas donc jremet le jeton");
-			((ActStateImpl) requires().action()).giveToken();
-		}
 	}
 	
 	public void processActionTrace(ActionTrace action){

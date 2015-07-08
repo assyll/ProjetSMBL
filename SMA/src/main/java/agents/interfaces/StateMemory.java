@@ -63,6 +63,9 @@ public interface StateMemory {
 	public boolean hasMoved();
 	public void setHasMoved(boolean hasMoved);
 	
+	public boolean isWaitingToMerge();
+	public void setWaitingToMerge(boolean wantToMerge);
+	
 	public void setTokenOnMyCell(boolean token);
 	public boolean hasTokenOnMyCell();
 	
