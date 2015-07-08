@@ -16,13 +16,14 @@ import environnement.interfaces.CellUpdate;
 import environnement.interfaces.ContextInfos;
 import environnement.interfaces.EnvInfos;
 import environnement.interfaces.EnvUpdate;
+import environnement.interfaces.IWriteEnv;
 import general.Environnement;
 import general.Forward;
 import generalStructure.impl.BigEcoImpl;
 import generalStructure.interfaces.IInit;
 
 public class EnvironnementImpl extends Environnement<EnvInfos, EnvUpdate>
-implements EnvUpdate, EnvInfos, IInit {
+implements EnvUpdate, EnvInfos, IInit, IWriteEnv {
 
 	private FileWriter _writer;
 	private Map<Integer,List<CellImpl>> cellsByLevel;
@@ -56,7 +57,8 @@ implements EnvUpdate, EnvInfos, IInit {
 		return cellsByLevel;
 	}
 
-	private void writeToFile() {
+	@Override
+	public void writeToFile() {
 
 		if (_writer != null && cellsByLevel != null) {
 			synchronized (_writer) {
@@ -85,6 +87,7 @@ implements EnvUpdate, EnvInfos, IInit {
 								for (String agent: agents) {
 									contenu += agent + ", ";
 								}
+								contenu += cell.hasToken ? "(o)" : "(x)";
 								contenu += "} ";
 							}
 							contenu += "\n";
@@ -117,7 +120,7 @@ implements EnvUpdate, EnvInfos, IInit {
 			cellsByLevel.get(level).add(cell);
 		}
 
-		writeToFile();
+		//writeToFile();
 		return cell;
 	}
 
@@ -162,7 +165,7 @@ implements EnvUpdate, EnvInfos, IInit {
 					l.unlock();
 				}
 
-				writeToFile();
+				//writeToFile();
 			}
 		}
 
@@ -172,7 +175,7 @@ implements EnvUpdate, EnvInfos, IInit {
 	public void addStateAgent(String id) {
 		if(id != null) {
 			cellsByLevel.get(0).get(0).addNewStateAgent(id);
-			writeToFile();
+			//writeToFile();
 		}
 	}
 
@@ -186,7 +189,7 @@ implements EnvUpdate, EnvInfos, IInit {
 			} else {
 				this.newCell(actions).cellInfos().addNewStateAgent(id);
 			}
-			writeToFile();
+			//writeToFile();
 		}
 	}
 
@@ -197,7 +200,7 @@ implements EnvUpdate, EnvInfos, IInit {
 			CellImpl cell = getCellByActionList(actions);
 			if(cell != null)
 				cell.removeStateAgent(id);
-			writeToFile();
+			//writeToFile();
 		}
 	}
 
@@ -229,7 +232,7 @@ implements EnvUpdate, EnvInfos, IInit {
 	private class CellImpl extends Cell<EnvInfos, EnvUpdate>
 	implements CellInfo, CellUpdate {
 
-		private boolean hasToken;
+		private Boolean hasToken;
 		private List<Action> cellActionList;
 		private List<String> agentsEtatIDList;
 
@@ -268,8 +271,8 @@ implements EnvUpdate, EnvInfos, IInit {
 		 */
 		@Override
 		public void giveToken() {
-			synchronized(new Boolean(hasToken)) {
-				hasToken = true;
+			synchronized(hasToken) {
+				hasToken = new Boolean(true);
 			}
 		}
 
@@ -283,13 +286,18 @@ implements EnvUpdate, EnvInfos, IInit {
 		 */
 		@Override
 		public boolean takeToken() {
-			synchronized (new Boolean(hasToken)) {
+			synchronized (hasToken) {
 				boolean hadToken = hasToken;
-				hasToken = false;
+				hasToken = new Boolean(false);
 				return hadToken;
 			}
 		}
 
+	}
+
+	@Override
+	protected IWriteEnv make_writeEnv() {
+		return this;
 	}
 
 }

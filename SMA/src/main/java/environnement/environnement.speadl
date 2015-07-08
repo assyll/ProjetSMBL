@@ -5,6 +5,7 @@ import trace.Action
 import environnement.interfaces.CellInfo
 import generalStructure.interfaces.IInit
 import environnement.interfaces.CellUpdate
+import environnement.interfaces.IWriteEnv
 
 namespace general{
 	
@@ -12,6 +13,7 @@ namespace general{
 		provides envInfos: Context
 		provides envUpdate: ContextUpdate
 		provides init: IInit
+		provides writeEnv: IWriteEnv
 		
 		species Cell(actions : List[Action]) {
 			provides cellInfos: CellInfo

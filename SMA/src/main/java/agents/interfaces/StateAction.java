@@ -19,4 +19,5 @@ public interface StateAction {
 	public void sendRequestMessage(RequestMessage msg);
 	public void askToMerge(List<String> agentIdInMyCell);
 	public void tryToTakeToken();
+	public void endOfCycle();
 }

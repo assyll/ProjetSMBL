@@ -141,10 +141,11 @@ implements Callable, CycleAlert, IGetThread, IStop, IControl {
 		System.out.println(new Date() + " : Agent Etat "+id+" a fini son cycle!");
 		nbFinishedCycles++;
 		
-		if(nbFinishedCycles == 	nbAgentsPerCycle && !stop){
+		if(nbFinishedCycles == 	nbAgentsPerCycle && !stop) {
 			
 			System.out.println("Run cycles!");
 			nbFinishedCycles = 0;
+			requires().writeEnv().writeToFile();
 			try {
 				Thread.sleep(time_by_cycle);
 			} catch (InterruptedException e) {

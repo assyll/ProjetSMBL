@@ -8,6 +8,7 @@ import agents.interfaces.SendMessage;
 import environnement.interfaces.ContextInfos;
 import environnement.interfaces.EnvInfos;
 import environnement.interfaces.EnvUpdate;
+import environnement.interfaces.IWriteEnv;
 import general.ActionProvider;
 import general.EcoAgents;
 import general.Environnement;
@@ -409,6 +410,10 @@ public abstract class BigEco {
       
       public final IInit initAll() {
         return BigEco.ComponentImpl.this.multiPlexeur().initLauncher();
+      }
+      
+      public final IWriteEnv writeEnv() {
+        return BigEco.ComponentImpl.this.envEco().writeEnv();
       }
     }
     

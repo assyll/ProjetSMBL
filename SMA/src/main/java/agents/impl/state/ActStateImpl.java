@@ -370,6 +370,7 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 		endOfCycle();
 	}
 
+	@Override
 	public void endOfCycle() {
 		this.requires().finishedCycle().endOfCycleAlert(id);
 	}
@@ -563,9 +564,11 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 	}
 
 	private void suicide() {
+		freeToken();
 		requires().setContext().removeAgent(id, requires().memory().getActionList());
 		requires().graph().majStateAgent(id, null);
 		requires().suicide().suicide();
+		logger("suicide");
 	}
 
 	/**
@@ -628,7 +631,7 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 				requires().memory().getActionList());
 		requires().memory().setTokenOnMyCell(token);
 		System.out.println(id+" ------ JETON ------- " + (token ? "PRIS" : "PAS PRIS"));
-		endOfCycle();
+		//endOfCycle();
 	}
 
 }

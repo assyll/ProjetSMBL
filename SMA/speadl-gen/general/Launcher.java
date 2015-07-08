@@ -3,6 +3,7 @@ package general;
 import agents.IStart;
 import agents.interfaces.Callable;
 import agents.interfaces.IGetThread;
+import environnement.interfaces.IWriteEnv;
 import generalStructure.interfaces.CycleAlert;
 import generalStructure.interfaces.IControl;
 import generalStructure.interfaces.IInit;
@@ -28,6 +29,12 @@ public abstract class Launcher {
      * 
      */
     public IInit initAll();
+    
+    /**
+     * This can be called by the implementation to access this required port.
+     * 
+     */
+    public IWriteEnv writeEnv();
   }
   
   public interface Component extends Launcher.Provides {

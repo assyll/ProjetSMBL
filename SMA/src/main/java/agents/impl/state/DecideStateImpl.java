@@ -48,12 +48,13 @@ public class DecideStateImpl extends AbstractDecide<StateAction, StateMemory> {
 				requires().memory().getAgentIdInMyCell().size() > 0)) {
 			requires().memory().setWaitingToMerge(true);
 			requires().action().tryToTakeToken();
+			requires().action().endOfCycle();
 			
 		// Sinon
 		} else {
 			System.out.println(id + ": rien a faire");
 			requires().action().doNothing();
-			((ActStateImpl) requires().action()).endOfCycle();
+			requires().action().endOfCycle();
 		}
 		
 	}

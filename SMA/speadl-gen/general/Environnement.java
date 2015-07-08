@@ -2,6 +2,7 @@ package general;
 
 import environnement.interfaces.CellInfo;
 import environnement.interfaces.CellUpdate;
+import environnement.interfaces.IWriteEnv;
 import generalStructure.interfaces.IInit;
 import java.util.List;
 import trace.Action;
@@ -32,6 +33,12 @@ public abstract class Environnement<Context, ContextUpdate> {
      * 
      */
     public IInit init();
+    
+    /**
+     * This can be called to access the provided port.
+     * 
+     */
+    public IWriteEnv writeEnv();
   }
   
   public interface Parts<Context, ContextUpdate> {
@@ -75,10 +82,19 @@ public abstract class Environnement<Context, ContextUpdate> {
       }
     }
     
+    private void init_writeEnv() {
+      assert this.writeEnv == null: "This is a bug.";
+      this.writeEnv = this.implementation.make_writeEnv();
+      if (this.writeEnv == null) {
+      	throw new RuntimeException("make_writeEnv() in general.Environnement<Context, ContextUpdate> should not return null.");
+      }
+    }
+    
     protected void initProvidedPorts() {
       init_envInfos();
       init_envUpdate();
       init_init();
+      init_writeEnv();
     }
     
     public ComponentImpl(final Environnement<Context, ContextUpdate> implem, final Environnement.Requires<Context, ContextUpdate> b, final boolean doInits) {
@@ -113,6 +129,12 @@ public abstract class Environnement<Context, ContextUpdate> {
     
     public IInit init() {
       return this.init;
+    }
+    
+    private IWriteEnv writeEnv;
+    
+    public IWriteEnv writeEnv() {
+      return this.writeEnv;
     }
   }
   
@@ -386,6 +408,13 @@ public abstract class Environnement<Context, ContextUpdate> {
    * 
    */
   protected abstract IInit make_init();
+  
+  /**
+   * This should be overridden by the implementation to define the provided port.
+   * This will be called once during the construction of the component to initialize the port.
+   * 
+   */
+  protected abstract IWriteEnv make_writeEnv();
   
   /**
    * This can be called by the implementation to access the required ports.
