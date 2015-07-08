@@ -33,6 +33,11 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 	public void move(String id, List<Action> currentPositionActions,
 			Action newAction) {
 
+		// Jremet le jeton au cas ou si je lai
+		if (requires().memory().hasTokenOnMyCell()) {
+			giveToken();
+		}
+		
 		System.out.println(id + ": JE ME DEPLACE AVEC LA NOUVELLE ACTION " + newAction.getActionMap().get("action"));
 
 		requires().setContext().move(id, currentPositionActions, newAction);
@@ -77,7 +82,9 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 
 		System.out.println();*/
 
+		initMaxMergeResponse(-1);
 		initMergeResponse();
+		
 		int nbDemandes = 0;
 		String agentIdList = "[";
 		for (String agentId: agentIds) {
@@ -321,6 +328,10 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 		for (String userName: knowledge.getUserNames()) {
 			requires().memory().addNewUserName(userName);
 		}
+		for (String transId: knowledge.getFatherIdList().keySet()) {
+			requires().memory().addFather(transId,
+					knowledge.getFatherIdList().get(transId));
+		}
 	}
 
 	@Override
@@ -486,6 +497,10 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 					id, transId, RequestType.UPDATE_CHILD, mergeStateId);
 			requires().sendMessage().sendRequestMessage(request);
 		}
+		
+		// Donne a letat resultant de la fusion ses nouveaux peres
+		request = new RequestMessage(id, mergeStateId, RequestType.SEND_INFOS,
+				newKnowledge());
 
 		// Demande a ses transitions sortantes de se suicider.
 		// Envoie aussi l'agent etat symetrique (celui qui resulte
@@ -559,7 +574,8 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 	private Knowledge newKnowledge() {
 		return new Knowledge(requires().memory().getUserNameWaitingForTraceList(),
 				requires().memory().getChildrenWithSon(),
-				requires().memory().getChildrenWithoutSon());
+				requires().memory().getChildrenWithoutSon(),
+				requires().memory().getFathers());
 	}
 	
 	/**
@@ -585,21 +601,19 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 	 * Je met max a -1 pour par quil redonne le jeton dans incremente.
 	 */
 	public void freeToken() {
-		if (requires().memory().hasTokenOnMyCell()) {
-			requires().memory().setMaxMergeResponse(-1);
-			giveToken();
-		}
+		requires().memory().setMaxMergeResponse(-1);
+		giveToken();
 	}
 	
 	public void incrementeMergeResponse() {
 		System.out.println(id+" : un agent ma repondu");
 		int nbMergeResponse = requires().memory().getMergeResponse();
 		requires().memory().setMergeResponse(
-				nbMergeResponse + 1);
+				nbMergeResponse = nbMergeResponse + 1);
 		
 		// toutes les reponses ont etes recues
-		if (nbMergeResponse + 1 == requires().memory().getMaxMergeResponse()) {
-			System.out.println(id+" : tous les agents mont repondus: jdepose le jeton");
+		if (nbMergeResponse >= requires().memory().getMaxMergeResponse()) {
+			System.out.println(id+" ----- JETON ----- tous repondus: jdepose le jeton");
 			giveToken();
 		}
 	}

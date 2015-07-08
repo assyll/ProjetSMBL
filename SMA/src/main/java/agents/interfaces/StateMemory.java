@@ -74,4 +74,6 @@ public interface StateMemory {
 	public int getMaxMergeResponse();
 	public void setMaxMergeResponse(int max);
 	
+	public Map<String, String> getFathers();
+	
 }

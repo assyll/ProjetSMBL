@@ -485,4 +485,14 @@ public class StateMemImpl extends Memory<StateMemory> implements StateMemory {
 	}
 
 
+
+	/**
+	 * transId, stateId
+	 */
+	@Override
+	public Map<String, String> getFathers() {
+		return _stateFatherIdByTransId;
+	}
+
+
 }
