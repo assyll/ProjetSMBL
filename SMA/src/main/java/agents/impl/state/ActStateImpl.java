@@ -34,9 +34,7 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 			Action newAction) {
 
 		// Jremet le jeton au cas ou si je lai
-		if (requires().memory().hasTokenOnMyCell()) {
-			giveToken();
-		}
+		freeToken();
 		
 		System.out.println(id + ": JE ME DEPLACE AVEC LA NOUVELLE ACTION " + newAction.getActionMap().get("action"));
 
@@ -176,7 +174,7 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 		requires().memory().setHasMoved(true);
 
 		// Je finis mon cycle
-		requires().finishedCycle().endOfCycleAlert(id);
+		endOfCycle();
 
 		// Je retourne le couple (mon id, l'id de la transition fille)
 		return ids;
@@ -184,9 +182,12 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 
 	@Override
 	public void doNothing() {
+		// Jremet le jeton au cas ou si je lai
+		freeToken();
+		
 		System.out.println(id + ": Ne fais rien");
 		logger("do nothing");
-		endOfCycle();
+		//endOfCycle();
 	}
 
 	@Override
@@ -369,7 +370,7 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 		endOfCycle();
 	}
 
-	private void endOfCycle() {
+	public void endOfCycle() {
 		this.requires().finishedCycle().endOfCycleAlert(id);
 	}
 
@@ -601,8 +602,10 @@ public class ActStateImpl extends AbstractAct<StateAction, EnvUpdate, StateMemor
 	 * Je met max a -1 pour par quil redonne le jeton dans incremente.
 	 */
 	public void freeToken() {
-		requires().memory().setMaxMergeResponse(-1);
-		giveToken();
+		if (requires().memory().hasTokenOnMyCell()) {
+			requires().memory().setMaxMergeResponse(-1);
+			giveToken();
+		}
 	}
 	
 	public void incrementeMergeResponse() {

@@ -53,6 +53,7 @@ public class DecideStateImpl extends AbstractDecide<StateAction, StateMemory> {
 		} else {
 			System.out.println(id + ": rien a faire");
 			requires().action().doNothing();
+			((ActStateImpl) requires().action()).endOfCycle();
 		}
 		
 	}

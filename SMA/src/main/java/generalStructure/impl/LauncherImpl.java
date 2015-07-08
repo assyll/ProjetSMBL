@@ -27,7 +27,7 @@ implements Callable, CycleAlert, IGetThread, IStop, IControl {
 	/**
 	 * Temps en milisecondes entre deux cycles consecutifs d'un agent.
 	 */
-	public static int time_by_cycle = 3000;
+	public static int time_by_cycle = 500;
 	
 	private int nbFinishedCycles = 0;
 	private Map<String, Thread> threads = new HashMap<String,Thread>();
